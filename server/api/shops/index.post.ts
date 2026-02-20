@@ -4,7 +4,7 @@
  */
 
 import { connectToDatabase } from '@/server/utils/db'
-import { Shop, Category } from '@/server/models'
+import { Shop } from '@/server/models'
 import { shopCreateSchema } from '@/shared/schemas'
 import { requireEditor } from '@/server/utils/auth'
 import { generateSlug, generateUniqueSlug } from '@/server/utils/slug'
@@ -20,12 +20,6 @@ export default defineEventHandler(
     // Validace vstupu
     const body = await readBody(event)
     const data = shopCreateSchema.parse(body)
-
-    // Ověřit, že kategorie existuje
-    const category = await Category.findById(data.categoryId)
-    if (!category) {
-      throw createNotFoundError('Kategorie')
-    }
 
     // Generovat slug pokud není zadán
     const slug =
@@ -43,7 +37,6 @@ export default defineEventHandler(
 
     // Vrátit s populací
     const populated = await Shop.findById(shop._id)
-      .populate('categoryId', 'name slug icon color')
       .populate('floorId', 'name level')
       .lean()
 

@@ -4,7 +4,7 @@
  */
 
 import { connectToDatabase } from '@/server/utils/db'
-import { Shop, Category } from '@/server/models'
+import { Shop } from '@/server/models'
 import { shopUpdateSchema } from '@/shared/schemas'
 import { requireEditor } from '@/server/utils/auth'
 import { generateUniqueSlug } from '@/server/utils/slug'
@@ -28,14 +28,6 @@ export default defineEventHandler(
     const body = await readBody(event)
     const data = shopUpdateSchema.parse(body)
 
-    // Pokud se mění kategorie, ověřit že existuje
-    if (data.categoryId && data.categoryId !== shop.categoryId.toString()) {
-      const category = await Category.findById(data.categoryId)
-      if (!category) {
-        throw createNotFoundError('Kategorie')
-      }
-    }
-
     // Pokud se mění název a není explicitně zadán slug, vygenerovat nový
     if (data.name && data.name !== shop.name && !data.slug) {
       data.slug = await generateUniqueSlug(data.name, async (s) => {
@@ -58,7 +50,6 @@ export default defineEventHandler(
 
     // Vrátit s populací
     const populated = await Shop.findById(id)
-      .populate('categoryId', 'name slug icon color')
       .populate('floorId', 'name level')
       .lean()
 

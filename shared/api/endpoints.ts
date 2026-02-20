@@ -87,25 +87,6 @@ export const shopsEndpoints = {
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
-// CATEGORIES (KATEGORIE) ENDPOINTS
-// ==========================================
-export const categoriesEndpoints = {
-  list: {
-    method: 'GET',
-    path: '/api/categories',
-    description: 'Seznam kategorií',
-    auth: false,
-  },
-  create: {
-    method: 'POST',
-    path: '/api/categories',
-    description: 'Vytvoření kategorie',
-    auth: true,
-    roles: ['admin'],
-  },
-} as const satisfies Record<string, EndpointDefinition>
-
-// ==========================================
 // EVENTS/NEWS (AKCE/NOVINKY) ENDPOINTS
 // ==========================================
 export const eventsEndpoints = {
@@ -420,7 +401,6 @@ export const bannersEndpoints = {
 export const endpoints = {
   auth: authEndpoints,
   shops: shopsEndpoints,
-  categories: categoriesEndpoints,
   events: eventsEndpoints,
   health: {
     check: {

@@ -12,7 +12,6 @@
 import { endpoints, type EndpointDefinition, type HttpMethod } from '@/shared/api/endpoints'
 import type {
   Shop,
-  Category,
   Event,
   Service,
   Floor,
@@ -28,8 +27,6 @@ import type {
   ShopCreateInput,
   ShopUpdateInput,
   ShopFilterQueryInput,
-  CategoryCreateInput,
-  CategoryUpdateInput,
   EventCreateInput,
   EventUpdateInput,
   EventFilterQueryInput,
@@ -202,42 +199,6 @@ export const apiClient = {
 
     async delete(id: string): Promise<void> {
       return apiFetch<void>(endpoints.shops.delete, { id }, {}, { withAuth: true })
-    },
-  },
-
-  // ------------------------------------------
-  // CATEGORIES
-  // ------------------------------------------
-  categories: {
-    async list(): Promise<Category[]> {
-      const response = await apiFetch<{ data: Category[] }>(endpoints.categories.list)
-      return response.data
-    },
-
-    async detail(id: string): Promise<Category> {
-      return apiFetch<Category>(endpoints.categories.detail, { id })
-    },
-
-    async create(data: CategoryCreateInput): Promise<Category> {
-      return apiFetch<Category, CategoryCreateInput>(
-        endpoints.categories.create,
-        {},
-        { body: data },
-        { withAuth: true }
-      )
-    },
-
-    async update(id: string, data: CategoryUpdateInput): Promise<Category> {
-      return apiFetch<Category, CategoryUpdateInput>(
-        endpoints.categories.update,
-        { id },
-        { body: data },
-        { withAuth: true }
-      )
-    },
-
-    async delete(id: string): Promise<void> {
-      return apiFetch<void>(endpoints.categories.delete, { id }, {}, { withAuth: true })
     },
   },
 

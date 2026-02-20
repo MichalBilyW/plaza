@@ -21,10 +21,11 @@ export default defineEventHandler(
     }
 
     return {
-      id: user._id.toString(),
+      _id: user._id.toString(),
       email: user.email,
       name: user.name,
       role: user.role,
+      isActive: user.isActive,
     }
   })
 )

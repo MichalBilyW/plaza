@@ -18,14 +18,10 @@ export default defineEventHandler(
     const query = getQuery(event)
     const validatedQuery = shopFilterQuerySchema.parse(query)
 
-    const { page, limit, sort, order, categoryId, floorId, search, isActive } = validatedQuery
+    const { page, limit, sort, order, floorId, search, isActive } = validatedQuery
 
     // Sestavení filtru
     const filter: FilterQuery<IShopDocument> = {}
-
-    if (categoryId) {
-      filter.categoryId = categoryId
-    }
 
     if (floorId) {
       filter.floorId = floorId
@@ -50,9 +46,8 @@ export default defineEventHandler(
     const sortOrder = order === 'desc' ? -1 : 1
     const sortObj: Record<string, 1 | -1> = { [sortField]: sortOrder }
 
-    // Dotaz s populací kategorie
+    // Dotaz s populací
     const shops = await Shop.find(filter)
-      .populate('categoryId', 'name slug icon color')
       .populate('floorId', 'name level')
       .sort(sortObj)
       .skip((page - 1) * limit)
@@ -63,9 +58,7 @@ export default defineEventHandler(
     const data = shops.map((shop) => ({
       ...shop,
       _id: shop._id.toString(),
-      category: shop.categoryId,
       floor: shop.floorId,
-      categoryId: typeof shop.categoryId === 'object' ? (shop.categoryId as { _id: unknown })._id?.toString() : shop.categoryId?.toString(),
       floorId: shop.floorId ? (typeof shop.floorId === 'object' ? (shop.floorId as { _id: unknown })._id?.toString() : shop.floorId?.toString()) : undefined,
     }))
 

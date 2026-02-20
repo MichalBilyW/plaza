@@ -38,7 +38,6 @@ export interface IShop {
   logo?: string
   coverImage?: string
   gallery?: string[]
-  categoryId: Types.ObjectId
   phone?: string
   email?: string
   website?: string
@@ -144,12 +143,6 @@ const shopSchema = new Schema<IShopDocument>(
     logo: String,
     coverImage: String,
     gallery: [String],
-    categoryId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Category',
-      required: [true, 'Kategorie je povinná'],
-      index: true,
-    },
     phone: String,
     email: {
       type: String,
@@ -193,7 +186,6 @@ const shopSchema = new Schema<IShopDocument>(
     toJSON: {
       transform: (_doc, ret) => {
         ret._id = ret._id.toString()
-        if (ret.categoryId) ret.categoryId = ret.categoryId.toString()
         if (ret.floorId) ret.floorId = ret.floorId.toString()
         if (ret.unitIds) ret.unitIds = ret.unitIds.map((id: Types.ObjectId) => id.toString())
         delete ret.__v
@@ -209,7 +201,6 @@ const shopSchema = new Schema<IShopDocument>(
 
 shopSchema.index({ name: 'text', description: 'text' })
 shopSchema.index({ isActive: 1, sortOrder: 1 })
-shopSchema.index({ categoryId: 1, isActive: 1 })
 shopSchema.index({ floorId: 1, isActive: 1 })
 
 // ==========================================

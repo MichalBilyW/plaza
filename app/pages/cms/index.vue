@@ -1,8 +1,8 @@
 <template>
   <div class="p-8">
     <div class="mb-8">
-      <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-      <p class="text-gray-500 mt-1">Přehled obsahu webu OC Plaza Liberec</p>
+      <h1 class="text-2xl font-bold text-gray-900">{{ $t('cms.dashboard.title') }}</h1>
+      <p class="text-gray-500 mt-1">{{ $t('cms.dashboard.subtitle') }}</p>
     </div>
 
     <!-- Stats -->
@@ -16,7 +16,7 @@
           </div>
           <div>
             <p class="text-2xl font-bold">{{ stats?.shops || 0 }}</p>
-            <p class="text-gray-500 text-sm">Obchodů</p>
+            <p class="text-gray-500 text-sm">{{ $t('cms.dashboard.stats.shops') }}</p>
           </div>
         </div>
       </div>
@@ -30,21 +30,7 @@
           </div>
           <div>
             <p class="text-2xl font-bold">{{ stats?.events || 0 }}</p>
-            <p class="text-gray-500 text-sm">Událostí</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl p-6 shadow-sm">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-            </svg>
-          </div>
-          <div>
-            <p class="text-2xl font-bold">{{ stats?.categories || 0 }}</p>
-            <p class="text-gray-500 text-sm">Kategorií</p>
+            <p class="text-gray-500 text-sm">{{ $t('cms.dashboard.stats.events') }}</p>
           </div>
         </div>
       </div>
@@ -58,7 +44,7 @@
           </div>
           <div>
             <p class="text-2xl font-bold">{{ stats?.services || 0 }}</p>
-            <p class="text-gray-500 text-sm">Služeb</p>
+            <p class="text-gray-500 text-sm">{{ $t('cms.dashboard.stats.services') }}</p>
           </div>
         </div>
       </div>
@@ -67,7 +53,7 @@
     <!-- Quick actions -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div class="bg-white rounded-xl p-6 shadow-sm">
-        <h2 class="text-lg font-semibold mb-4">Rychlé akce</h2>
+        <h2 class="text-lg font-semibold mb-4">{{ $t('cms.dashboard.quickActions') }}</h2>
         <div class="space-y-2">
           <NuxtLink
             to="/cms/obchody/novy"
@@ -76,7 +62,7 @@
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
-            <span>Přidat nový obchod</span>
+            <span>{{ $t('cms.dashboard.addShop') }}</span>
           </NuxtLink>
           <NuxtLink
             to="/cms/akce/nova"
@@ -85,7 +71,7 @@
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
-            <span>Přidat novou událost</span>
+            <span>{{ $t('cms.dashboard.addEvent') }}</span>
           </NuxtLink>
           <NuxtLink
             to="/cms/kategorie/nova"
@@ -94,15 +80,15 @@
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
-            <span>Přidat novou kategorii</span>
+            <span>{{ $t('cms.dashboard.addCategory') }}</span>
           </NuxtLink>
         </div>
       </div>
 
       <div class="bg-white rounded-xl p-6 shadow-sm">
-        <h2 class="text-lg font-semibold mb-4">Nadcházející události</h2>
+        <h2 class="text-lg font-semibold mb-4">{{ $t('cms.dashboard.upcomingEvents') }}</h2>
         <div v-if="upcomingEvents?.length === 0" class="text-gray-500 text-center py-8">
-          Žádné nadcházející události
+          {{ $t('cms.dashboard.noUpcomingEvents') }}
         </div>
         <div v-else class="space-y-3">
           <div
@@ -121,14 +107,14 @@
             <div class="flex-1">
               <p class="font-medium">{{ event.title }}</p>
               <p class="text-sm text-gray-500">
-                {{ event.published ? 'Publikováno' : 'Koncept' }}
+                {{ event.published ? $t('events.published') : $t('events.draft') }}
               </p>
             </div>
             <NuxtLink
               :to="`/cms/akce/${event._id}`"
               class="text-plaza-600 hover:text-plaza-700 text-sm font-medium"
             >
-              Upravit
+              {{ $t('common.edit') }}
             </NuxtLink>
           </div>
         </div>
@@ -145,8 +131,10 @@ definePageMeta({
   middleware: 'cms'
 })
 
+const { t } = useI18n()
+
 usePlazaSeo({
-  title: 'Dashboard',
+  title: t('cms.dashboard.title'),
   noIndex: true
 })
 

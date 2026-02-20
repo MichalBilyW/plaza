@@ -92,7 +92,6 @@ export const shopCreateSchema = z.object({
   logo: z.string().optional(),
   coverImage: z.string().optional(),
   gallery: z.array(z.string()).optional(),
-  categoryId: objectIdSchema,
   phone: phoneSchema,
   email: emailSchema.optional(),
   website: urlSchema,
@@ -116,7 +115,6 @@ export const shopCreateSchema = z.object({
 export const shopUpdateSchema = shopCreateSchema.partial()
 
 export const shopFilterQuerySchema = paginationQuerySchema.extend({
-  categoryId: objectIdSchema.optional(),
   floorId: objectIdSchema.optional(),
   search: z.string().max(100).optional(),
   isActive: z.coerce.boolean().optional(),
@@ -125,25 +123,6 @@ export const shopFilterQuerySchema = paginationQuerySchema.extend({
 export type ShopCreateInput = z.infer<typeof shopCreateSchema>
 export type ShopUpdateInput = z.infer<typeof shopUpdateSchema>
 export type ShopFilterQueryInput = z.input<typeof shopFilterQuerySchema>
-
-// ==========================================
-// CATEGORY SCHÉMATA
-// ==========================================
-
-export const categoryCreateSchema = z.object({
-  name: z.string().min(2).max(50),
-  slug: slugSchema.optional(),
-  description: z.string().max(500).optional(),
-  icon: z.string().optional(),
-  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Barva musí být ve formátu #RRGGBB').optional(),
-  sortOrder: z.number().int().default(0),
-  isActive: z.boolean().default(true),
-})
-
-export const categoryUpdateSchema = categoryCreateSchema.partial()
-
-export type CategoryCreateInput = z.infer<typeof categoryCreateSchema>
-export type CategoryUpdateInput = z.infer<typeof categoryUpdateSchema>
 
 // ==========================================
 // EVENT SCHÉMATA
@@ -340,7 +319,6 @@ export type BannerUpdateInput = z.infer<typeof bannerUpdateSchema>
 // ==========================================
 
 export const shopsQuerySchema = paginationQuerySchema.extend({
-  categoryId: objectIdSchema.optional(),
   floorId: objectIdSchema.optional(),
   search: z.string().optional(),
   active: z.coerce.boolean().optional(),

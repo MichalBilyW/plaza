@@ -14,7 +14,6 @@ export default defineEventHandler(
     const id = getRouterParam(event, 'id')
 
     const shop = await Shop.findById(id)
-      .populate('categoryId', 'name slug icon color')
       .populate('floorId', 'name level')
       .populate('unitIds', 'code area')
       .lean()
@@ -27,7 +26,6 @@ export default defineEventHandler(
     return {
       ...shop,
       _id: shop._id.toString(),
-      category: shop.categoryId,
       floor: shop.floorId,
       units: shop.unitIds,
     }

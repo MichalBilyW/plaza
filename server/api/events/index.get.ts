@@ -1,6 +1,6 @@
 /**
  * GET /api/events
- * Seznam událostí s filtrováním a stránkováním
+ * Seznam akcí a novinek s filtrováním a stránkováním
  */
 
 import { connectToDatabase } from '@/server/utils/db'

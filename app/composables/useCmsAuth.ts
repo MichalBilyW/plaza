@@ -44,10 +44,11 @@ export const useCmsAuth = () => {
   const fetchUser = async () => {
     isLoading.value = true
     try {
-      const { data } = await useFetch<User>('/api/auth/me', {
+      // Používáme $fetch místo useFetch aby se necachovala data
+      const userData = await $fetch<User>('/api/auth/me', {
         credentials: 'include'
       })
-      user.value = data.value
+      user.value = userData
 
       // Načíst CSRF z cookie pokud existuje
       if (import.meta.client) {

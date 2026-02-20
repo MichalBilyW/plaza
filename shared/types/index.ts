@@ -60,8 +60,6 @@ export interface Shop extends BaseEntity {
   logo?: string
   coverImage?: string
   gallery?: string[]
-  categoryId: string
-  category?: Category
 
   // Kontakty
   phone?: string
@@ -90,19 +88,6 @@ export interface Shop extends BaseEntity {
   sortOrder: number
   seoTitle?: string
   seoDescription?: string
-}
-
-// ==========================================
-// CATEGORY (KATEGORIE)
-// ==========================================
-export interface Category extends BaseEntity {
-  name: string
-  slug: string
-  description?: string
-  icon?: string
-  color?: string
-  sortOrder: number
-  isActive: boolean
 }
 
 // ==========================================
@@ -280,7 +265,6 @@ export interface PaginationQuery {
 
 /** Query parametry pro filtrování obchodů */
 export interface ShopFilterQuery extends PaginationQuery {
-  categoryId?: string
   floorId?: string
   search?: string
   isActive?: boolean

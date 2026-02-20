@@ -5,24 +5,23 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div class="max-w-2xl">
           <h1 class="text-4xl md:text-5xl font-bold mb-6">
-            Vítejte v OC Plaza Liberec
+            {{ $t('home.hero.title') }}
           </h1>
           <p class="text-xl text-plaza-100 mb-8">
-            Vaše oblíbené nákupní centrum v srdci Liberce. Objevte přes 100 obchodů,
-            restaurací a služeb pod jednou střechou.
+            {{ $t('home.hero.subtitle') }}
           </p>
           <div class="flex flex-wrap gap-4">
             <NuxtLink
               to="/obchody"
               class="px-6 py-3 bg-white text-plaza-600 font-semibold rounded-lg hover:bg-plaza-50 transition-colors"
             >
-              Prohlédnout obchody
+              {{ $t('home.hero.cta.shops') }}
             </NuxtLink>
             <NuxtLink
               to="/akce"
               class="px-6 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
             >
-              Aktuální akce
+              {{ $t('home.hero.cta.events') }}
             </NuxtLink>
           </div>
         </div>
@@ -40,8 +39,8 @@
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Otevírací doba</h3>
-              <p class="text-gray-600">Po–Ne: 9:00 – 21:00</p>
+              <h3 class="font-semibold">{{ $t('home.quickInfo.openingHours') }}</h3>
+              <p class="text-gray-600">{{ $t('home.quickInfo.openingHoursValue') }}</p>
             </div>
           </div>
 
@@ -53,8 +52,8 @@
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Adresa</h3>
-              <p class="text-gray-600">Dr. Milady Horákové 1015/108</p>
+              <h3 class="font-semibold">{{ $t('home.quickInfo.address') }}</h3>
+              <p class="text-gray-600">{{ $t('home.quickInfo.addressValue') }}</p>
             </div>
           </div>
 
@@ -65,8 +64,8 @@
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Parkování zdarma</h3>
-              <p class="text-gray-600">Přes 1000 parkovacích míst</p>
+              <h3 class="font-semibold">{{ $t('home.quickInfo.parking') }}</h3>
+              <p class="text-gray-600">{{ $t('home.quickInfo.parkingValue') }}</p>
             </div>
           </div>
         </div>
@@ -77,9 +76,9 @@
     <section class="py-16">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-8">
-          <h2 class="text-2xl font-bold">Naše obchody</h2>
+          <h2 class="text-2xl font-bold">{{ $t('home.sections.shops') }}</h2>
           <NuxtLink to="/obchody" class="text-plaza-600 hover:text-plaza-700 font-medium">
-            Zobrazit vše →
+            {{ $t('common.showAllArrow') }}
           </NuxtLink>
         </div>
 
@@ -112,9 +111,6 @@
             <h3 class="font-semibold group-hover:text-plaza-600 transition-colors">
               {{ shop.name }}
             </h3>
-            <p class="text-sm text-gray-500">
-              {{ shop.categoryId?.name || 'Obchod' }}
-            </p>
           </NuxtLink>
         </div>
       </div>
@@ -124,9 +120,9 @@
     <section class="py-16 bg-gray-100">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-8">
-          <h2 class="text-2xl font-bold">Nadcházející akce</h2>
+          <h2 class="text-2xl font-bold">{{ $t('home.sections.events') }}</h2>
           <NuxtLink to="/akce" class="text-plaza-600 hover:text-plaza-700 font-medium">
-            Zobrazit vše →
+            {{ $t('common.showAllArrow') }}
           </NuxtLink>
         </div>
 
@@ -141,7 +137,7 @@
         </div>
 
         <div v-else-if="events?.length === 0" class="text-center py-12 text-gray-500">
-          Momentálně nejsou naplánovány žádné akce.
+          {{ $t('events.noEvents') }}
         </div>
 
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -180,9 +176,11 @@
 <script setup lang="ts">
 import type { Shop, Event } from '@/shared/types'
 
+const { t } = useI18n()
+
 usePlazaSeo({
-  title: 'OC Plaza Liberec',
-  description: 'Nákupní centrum v srdci Liberce. Objevte přes 100 obchodů, restaurací a služeb pod jednou střechou.'
+  title: t('seo.home.title'),
+  description: t('seo.home.description')
 })
 
 // Načíst obchody
