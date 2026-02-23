@@ -69,6 +69,20 @@ export default defineNuxtConfig({
     },
   },
 
+  // Vite configuration - aliasy pro klientskou stranu
+  vite: {
+    resolve: {
+      alias: {
+        '@/shared': resolve(__dirname, 'shared'),
+      },
+    },
+  },
+
+  // Aliasy pro TypeScript a Vue komponenty
+  alias: {
+    '@/shared': resolve(__dirname, 'shared'),
+  },
+
   // App configuration
   app: {
     head: {

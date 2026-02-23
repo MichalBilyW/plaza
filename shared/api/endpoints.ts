@@ -218,45 +218,6 @@ export const floorsEndpoints = {
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
-// UNITS (JEDNOTKY/MAP SLOTS) ENDPOINTS
-// ==========================================
-export const unitsEndpoints = {
-  list: {
-    method: 'GET',
-    path: '/api/units',
-    description: 'Seznam jednotek s filtrováním podle patra',
-    auth: false,
-  },
-  detail: {
-    method: 'GET',
-    path: '/api/units/:id',
-    description: 'Detail jednotky',
-    auth: false,
-  },
-  create: {
-    method: 'POST',
-    path: '/api/units',
-    description: 'Vytvoření jednotky',
-    auth: true,
-    roles: ['admin'],
-  },
-  update: {
-    method: 'PUT',
-    path: '/api/units/:id',
-    description: 'Úprava jednotky (vč. přiřazení obchodu)',
-    auth: true,
-    roles: ['admin', 'editor'],
-  },
-  delete: {
-    method: 'DELETE',
-    path: '/api/units/:id',
-    description: 'Smazání jednotky',
-    auth: true,
-    roles: ['admin'],
-  },
-} as const satisfies Record<string, EndpointDefinition>
-
-// ==========================================
 // USERS (UŽIVATELÉ CMS) ENDPOINTS
 // ==========================================
 export const usersEndpoints = {
@@ -396,12 +357,31 @@ export const bannersEndpoints = {
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
+// MAP (MAPA CENTRA) ENDPOINTS
+// ==========================================
+export const mapEndpoints = {
+  units: {
+    method: 'GET',
+    path: '/api/map/units',
+    description: 'Seznam jednotek mapy s obsazeností',
+    auth: false,
+  },
+  unitsByFloor: {
+    method: 'GET',
+    path: '/api/map/units?level=:level',
+    description: 'Jednotky pro konkrétní patro',
+    auth: false,
+  },
+} as const satisfies Record<string, EndpointDefinition>
+
+// ==========================================
 // AGREGOVANÝ OBJEKT VŠECH ENDPOINTŮ
 // ==========================================
 export const endpoints = {
   auth: authEndpoints,
   shops: shopsEndpoints,
   events: eventsEndpoints,
+  map: mapEndpoints,
   health: {
     check: {
       method: 'GET',

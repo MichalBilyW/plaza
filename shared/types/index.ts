@@ -33,10 +33,19 @@ export interface OpeningHoursEntry {
 }
 
 export interface SpecialOpeningHours {
-  date: string // ISO date string
+  /** Jednotlivý den - použij date NEBO období (dateFrom + dateTo) */
+  date?: string // ISO date string
+  /** Začátek období */
+  dateFrom?: string // ISO date string
+  /** Konec období */
+  dateTo?: string // ISO date string
+  /** Hodina otevření */
   open?: string
+  /** Hodina zavření */
   close?: string
+  /** Je zavřeno */
   closed?: boolean
+  /** Popisek (např. "Sila vánoce", "Státní svátek") */
   note?: string
 }
 
@@ -76,8 +85,14 @@ export interface Shop extends BaseEntity {
   // Umístění
   floorId?: string
   floor?: Floor
-  unitIds?: string[]
-  units?: Unit[]
+  unitCode?: string
+  mapPosition?: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+  mapPolygon?: string
 
   // Otevírací doby
   openingHours?: OpeningHoursEntry[]
@@ -161,33 +176,6 @@ export interface Floor extends BaseEntity {
   mapImage?: string // SVG nebo obrázek mapy patra
   isActive: boolean
   sortOrder: number
-}
-
-// ==========================================
-// UNIT (JEDNOTKA NA MAPĚ)
-// ==========================================
-export interface Unit extends BaseEntity {
-  code: string // Identifikátor jednotky např. "A101"
-  floorId: string
-  floor?: Floor
-
-  // Umístění na mapě (SVG coordinates nebo polygon)
-  mapPosition?: {
-    x: number
-    y: number
-    width: number
-    height: number
-  }
-  mapPolygon?: string // SVG path data
-
-  // Přiřazený obchod (může být null = volná jednotka)
-  shopId?: string
-  shop?: Shop
-
-  // Metadata
-  area?: number // m²
-  isActive: boolean
-  isVacant: boolean
 }
 
 // ==========================================
@@ -277,6 +265,21 @@ export interface EventFilterQuery extends PaginationQuery {
   search?: string
   fromDate?: string
   toDate?: string
+}
+
+// ==========================================
+// GENERAL INFO (OBECNÉ INFORMACE O CENTRU)
+// ==========================================
+export interface GeneralInfo extends BaseEntity {
+  title?: string
+  shortText?: string
+  text?: string
+  mainImage?: string
+  openingHours?: OpeningHoursEntry[]
+  specialOpeningHours?: SpecialOpeningHours[]
+  facebook?: string
+  instagram?: string
+  gallery?: string[]
 }
 
 // ==========================================

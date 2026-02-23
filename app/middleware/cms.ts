@@ -41,8 +41,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
       })
     }
   } catch (error) {
-    // Re-throw pokud je to naše 403 chyba
-    if (error && typeof error === 'object' && 'statusCode' in error) {
+    // Re-throw pouze 403 chybu (forbidden), 401 přesměruje na login
+    if (error && typeof error === 'object' && 'statusCode' in error && error.statusCode === 403) {
       throw error
     }
     user.value = null

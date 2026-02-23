@@ -78,7 +78,7 @@ const floorSchema = new Schema<IFloorDocument>(
 // INDEXES
 // ==========================================
 
-floorSchema.index({ level: 1 })
+// level a slug mají index: true přímo ve schématu
 floorSchema.index({ isActive: 1, sortOrder: 1 })
 
 // ==========================================

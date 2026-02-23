@@ -178,6 +178,7 @@ watch(userData, (newData) => {
 const errors = reactive<Record<string, string>>({})
 const submitError = ref('')
 const submitting = ref(false)
+const flash = useFlashMessages()
 
 const handleSubmit = async () => {
   // Reset errors
@@ -203,14 +204,21 @@ const handleSubmit = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updateData)
     })
+    flash.success(t('cms.flash.userUpdated'))
     await navigateTo('/cms/spravci')
   } catch (err: unknown) {
     const error = err as { data?: { details?: Record<string, string>; message?: string } }
     if (error.data?.details) {
       Object.assign(errors, error.data.details)
-    } else {
-      submitError.value = error.data?.message || t('common.error')
     }
+    const errorMessage = error.data?.message || t('cms.flash.userSaveError')
+    submitError.value = errorMessage
+    flash.error(errorMessage)
+    // Scroll na chybu
+    nextTick(() => {
+      const errorEl = document.querySelector('.text-red-600, .border-red-500') as HTMLElement
+      errorEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
   } finally {
     submitting.value = false
   }

@@ -24,21 +24,27 @@ export const useCmsAuth = () => {
   const getCsrfFromCookie = (): string | null => {
     if (import.meta.server) return null
     const match = document.cookie.match(/csrf_token=([^;]+)/)
-    return match ? match[1] : null
+    return match?.[1] ?? null
   }
 
   // Fetch s CSRF tokenem
-  const secureFetch = async <T>(url: string, options: RequestInit = {}): Promise<T> => {
+  const secureFetch = async <T>(url: string, options: {
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+    body?: unknown
+    headers?: Record<string, string>
+  } = {}): Promise<T> => {
     const token = csrfToken.value || getCsrfFromCookie()
 
-    return $fetch<T>(url, {
-      ...options,
+    const result = await $fetch<T>(url, {
+      method: options.method,
+      body: options.body as Record<string, unknown> | undefined,
       credentials: 'include',
       headers: {
         ...options.headers,
         ...(token ? { 'X-CSRF-Token': token } : {}),
       },
-    } as Parameters<typeof $fetch>[1])
+    })
+    return result as T
   }
 
   const fetchUser = async () => {

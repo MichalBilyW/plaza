@@ -16,24 +16,48 @@ import { z } from 'zod'
 /** MongoDB ObjectId validátor */
 export const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Neplatné ID')
 
-/** Slug validátor */
+/** Volitelný ObjectId - prázdný string = nezadáno */
+export const optionalObjectIdSchema = z.preprocess(
+  (val) => (val === '' ? undefined : val),
+  objectIdSchema.optional()
+)
+
+/** Slug validátor - pro povinný slug */
 export const slugSchema = z
   .string()
   .min(2, 'Slug musí mít alespoň 2 znaky')
   .max(100, 'Slug může mít maximálně 100 znaků')
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug může obsahovat pouze malá písmena, čísla a pomlčky')
 
+/**
+ * Volitelný slug - prázdný string nebo undefined znamená "generovat automaticky"
+ * Pokud je slug zadán (neprázdný), musí splnit validaci
+ */
+export const optionalSlugSchema = z.preprocess(
+  (val) => (val === '' ? undefined : val),
+  slugSchema.optional()
+)
+
 /** Email validátor */
 export const emailSchema = z.string().email('Neplatný email')
 
-/** Phone validátor */
-export const phoneSchema = z
-  .string()
-  .regex(/^\+?[0-9\s-]{9,}$/, 'Neplatné telefonní číslo')
-  .optional()
+/** Volitelný email - prázdný string = nezadáno */
+export const optionalEmailSchema = z.preprocess(
+  (val) => (val === '' ? undefined : val),
+  emailSchema.optional()
+)
 
-/** URL validátor */
-export const urlSchema = z.string().url('Neplatná URL adresa').optional()
+/** Phone validátor - prázdný string = nezadáno */
+export const phoneSchema = z.preprocess(
+  (val) => (val === '' ? undefined : val),
+  z.string().regex(/^\+?[0-9\s-]{9,}$/, 'Neplatné telefonní číslo').optional()
+)
+
+/** URL validátor - prázdný string = nezadáno */
+export const urlSchema = z.preprocess(
+  (val) => (val === '' ? undefined : val),
+  z.string().url('Neplatná URL adresa').optional()
+)
 
 /** Čas ve formátu HH:mm */
 export const timeSchema = z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Čas musí být ve formátu HH:mm')
@@ -60,12 +84,24 @@ export const openingHoursEntrySchema = z.object({
 })
 
 export const specialOpeningHoursSchema = z.object({
-  date: z.string().datetime(),
+  /** Jednotlivý den */
+  date: z.string().optional(),
+  /** Začátek období */
+  dateFrom: z.string().optional(),
+  /** Konec období */
+  dateTo: z.string().optional(),
+  /** Hodina otevření */
   open: timeSchema.optional(),
+  /** Hodina zavření */
   close: timeSchema.optional(),
+  /** Je zavřeno */
   closed: z.boolean().optional(),
+  /** Popisek */
   note: z.string().max(200).optional(),
-})
+}).refine(
+  (data) => data.date || (data.dateFrom && data.dateTo),
+  { message: 'Musí být zadáno datum nebo období' }
+)
 
 // ==========================================
 // PAGINATION SCHÉMATA
@@ -86,14 +122,14 @@ export type PaginationQueryInput = z.input<typeof paginationQuerySchema>
 
 export const shopCreateSchema = z.object({
   name: z.string().min(2, 'Název musí mít alespoň 2 znaky').max(100),
-  slug: slugSchema.optional(), // Automaticky generováno pokud není zadáno
+  slug: optionalSlugSchema, // Automaticky generováno pokud není zadáno
   description: z.string().max(5000).optional(),
   shortDescription: z.string().max(300).optional(),
   logo: z.string().optional(),
   coverImage: z.string().optional(),
   gallery: z.array(z.string()).optional(),
   phone: phoneSchema,
-  email: emailSchema.optional(),
+  email: optionalEmailSchema,
   website: urlSchema,
   socialLinks: z
     .object({
@@ -102,12 +138,20 @@ export const shopCreateSchema = z.object({
       twitter: urlSchema,
     })
     .optional(),
-  floorId: objectIdSchema.optional(),
-  unitIds: z.array(objectIdSchema).optional(),
+  floorId: optionalObjectIdSchema,
+  unitCode: z.string().max(20).optional(),
+  mapPosition: z
+    .object({
+      x: z.number(),
+      y: z.number(),
+      width: z.number(),
+      height: z.number(),
+    })
+    .optional(),
+  mapPolygon: z.string().optional(),
   openingHours: z.array(openingHoursEntrySchema).optional(),
   specialOpeningHours: z.array(specialOpeningHoursSchema).optional(),
   isActive: z.boolean().default(true),
-  sortOrder: z.number().int().default(0),
   seoTitle: z.string().max(60).optional(),
   seoDescription: z.string().max(160).optional(),
 })
@@ -117,7 +161,15 @@ export const shopUpdateSchema = shopCreateSchema.partial()
 export const shopFilterQuerySchema = paginationQuerySchema.extend({
   floorId: objectIdSchema.optional(),
   search: z.string().max(100).optional(),
-  isActive: z.coerce.boolean().optional(),
+  isActive: z.preprocess(
+    (val) => {
+      if (val === '' || val === undefined || val === null) return undefined
+      if (val === 'true' || val === true) return true
+      if (val === 'false' || val === false) return false
+      return undefined
+    },
+    z.boolean().optional()
+  ),
 })
 
 export type ShopCreateInput = z.infer<typeof shopCreateSchema>
@@ -132,7 +184,7 @@ export const publishStatusSchema = z.enum(['draft', 'published', 'archived'])
 
 export const eventCreateSchema = z.object({
   title: z.string().min(3, 'Název musí mít alespoň 3 znaky').max(200),
-  slug: slugSchema.optional(),
+  slug: optionalSlugSchema,
   content: z.string().min(10, 'Obsah musí mít alespoň 10 znaků'),
   excerpt: z.string().max(500).optional(),
   coverImage: z.string().optional(),
@@ -168,15 +220,15 @@ export type EventFilterQueryInput = z.input<typeof eventFilterQuerySchema>
 
 export const serviceCreateSchema = z.object({
   name: z.string().min(2).max(100),
-  slug: slugSchema.optional(),
+  slug: optionalSlugSchema,
   description: z.string().min(10).max(2000),
   shortDescription: z.string().max(300).optional(),
   icon: z.string().optional(),
   image: z.string().optional(),
   location: z.string().max(200).optional(),
-  floorId: objectIdSchema.optional(),
+  floorId: optionalObjectIdSchema,
   phone: phoneSchema,
-  email: emailSchema.optional(),
+  email: optionalEmailSchema,
   isActive: z.boolean().default(true),
   sortOrder: z.number().int().default(0),
 })
@@ -192,7 +244,7 @@ export type ServiceUpdateInput = z.infer<typeof serviceUpdateSchema>
 
 export const floorCreateSchema = z.object({
   name: z.string().min(1).max(50),
-  slug: slugSchema.optional(),
+  slug: optionalSlugSchema,
   level: z.number().int(),
   description: z.string().max(500).optional(),
   mapImage: z.string().optional(),
@@ -204,40 +256,6 @@ export const floorUpdateSchema = floorCreateSchema.partial()
 
 export type FloorCreateInput = z.infer<typeof floorCreateSchema>
 export type FloorUpdateInput = z.infer<typeof floorUpdateSchema>
-
-// ==========================================
-// UNIT SCHÉMATA
-// ==========================================
-
-export const unitCreateSchema = z.object({
-  code: z.string().min(1).max(20),
-  floorId: objectIdSchema,
-  mapPosition: z
-    .object({
-      x: z.number(),
-      y: z.number(),
-      width: z.number(),
-      height: z.number(),
-    })
-    .optional(),
-  mapPolygon: z.string().optional(),
-  shopId: objectIdSchema.optional(),
-  area: z.number().positive().optional(),
-  isActive: z.boolean().default(true),
-  isVacant: z.boolean().default(true),
-})
-
-export const unitUpdateSchema = unitCreateSchema.partial()
-
-export const unitFilterQuerySchema = paginationQuerySchema.extend({
-  floorId: objectIdSchema.optional(),
-  shopId: objectIdSchema.optional(),
-  isVacant: z.coerce.boolean().optional(),
-})
-
-export type UnitCreateInput = z.infer<typeof unitCreateSchema>
-export type UnitUpdateInput = z.infer<typeof unitUpdateSchema>
-export type UnitFilterQueryInput = z.input<typeof unitFilterQuerySchema>
 
 // ==========================================
 // USER SCHÉMATA
@@ -254,7 +272,10 @@ export const userCreateSchema = z.object({
 })
 
 export const userUpdateSchema = userCreateSchema.partial().omit({ password: true }).extend({
-  password: z.string().min(8).optional(),
+  password: z.preprocess(
+    (val) => (val === '' ? undefined : val),
+    z.string().min(8, 'Heslo musí mít alespoň 8 znaků').optional()
+  ),
 })
 
 export type UserCreateInput = z.infer<typeof userCreateSchema>
@@ -277,7 +298,7 @@ export type LoginInput = z.infer<typeof loginSchema>
 
 export const pageCreateSchema = z.object({
   title: z.string().min(2).max(200),
-  slug: slugSchema.optional(),
+  slug: optionalSlugSchema,
   content: z.string().min(10),
   excerpt: z.string().max(500).optional(),
   status: publishStatusSchema.default('draft'),
@@ -334,3 +355,22 @@ export const eventsQuerySchema = paginationQuerySchema.extend({
 })
 
 export type EventsQueryInput = z.input<typeof eventsQuerySchema>
+
+// ==========================================
+// GENERAL INFO SCHÉMATA
+// ==========================================
+
+export const generalInfoUpdateSchema = z.object({
+  title: z.string().max(200).optional(),
+  shortText: z.string().max(500).optional(),
+  text: z.string().max(10000).optional(),
+  mainImage: z.string().optional(),
+  openingHours: z.array(openingHoursEntrySchema).optional(),
+  specialOpeningHours: z.array(specialOpeningHoursSchema).optional(),
+  facebook: urlSchema,
+  instagram: urlSchema,
+  gallery: z.array(z.string()).max(10, 'Maximálně 10 fotek v galerii').optional(),
+})
+
+export type GeneralInfoUpdateInput = z.infer<typeof generalInfoUpdateSchema>
+

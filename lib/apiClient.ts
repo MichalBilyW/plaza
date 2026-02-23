@@ -15,7 +15,6 @@ import type {
   Event,
   Service,
   Floor,
-  Unit,
   User,
   Page,
   Banner,
@@ -34,9 +33,6 @@ import type {
   ServiceUpdateInput,
   FloorCreateInput,
   FloorUpdateInput,
-  UnitCreateInput,
-  UnitUpdateInput,
-  UnitFilterQueryInput,
   UserCreateInput,
   UserUpdateInput,
   PageCreateInput,
@@ -318,45 +314,6 @@ export const apiClient = {
 
     async delete(id: string): Promise<void> {
       return apiFetch<void>(endpoints.floors.delete, { id }, {}, { withAuth: true })
-    },
-  },
-
-  // ------------------------------------------
-  // UNITS
-  // ------------------------------------------
-  units: {
-    async list(query?: UnitFilterQueryInput): Promise<PaginatedResponse<Unit>> {
-      return apiFetch<PaginatedResponse<Unit>>(
-        endpoints.units.list,
-        {},
-        { query: query as Record<string, unknown> }
-      )
-    },
-
-    async detail(id: string): Promise<Unit> {
-      return apiFetch<Unit>(endpoints.units.detail, { id })
-    },
-
-    async create(data: UnitCreateInput): Promise<Unit> {
-      return apiFetch<Unit, UnitCreateInput>(
-        endpoints.units.create,
-        {},
-        { body: data },
-        { withAuth: true }
-      )
-    },
-
-    async update(id: string, data: UnitUpdateInput): Promise<Unit> {
-      return apiFetch<Unit, UnitUpdateInput>(
-        endpoints.units.update,
-        { id },
-        { body: data },
-        { withAuth: true }
-      )
-    },
-
-    async delete(id: string): Promise<void> {
-      return apiFetch<void>(endpoints.units.delete, { id }, {}, { withAuth: true })
     },
   },
 

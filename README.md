@@ -248,7 +248,6 @@ docker run -p 3000:3000 \
 | Auth | 3 | ✅ |
 | Shops | 5 | ✅ |
 | Events | 7 | ✅ |
-| Categories | 2 | ✅ |
 | Health | 1 | ✅ |
 
 ## 🧑‍💻 Vývojářské konvence

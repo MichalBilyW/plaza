@@ -29,10 +29,8 @@ export default defineEventHandler(
 
     if (typeof isActive === 'boolean') {
       filter.isActive = isActive
-    } else {
-      // Pro veřejné API defaultně jen aktivní
-      filter.isActive = true
     }
+    // Pokud isActive není specifikováno, vracíme všechny obchody
 
     if (search) {
       filter.$text = { $search: search }
@@ -42,9 +40,9 @@ export default defineEventHandler(
     const total = await Shop.countDocuments(filter)
 
     // Sestavení sort objektu
-    const sortField = sort || 'sortOrder'
-    const sortOrder = order === 'desc' ? -1 : 1
-    const sortObj: Record<string, 1 | -1> = { [sortField]: sortOrder }
+    const sortField = sort || 'name'
+    const sortDirection = order === 'desc' ? -1 : 1
+    const sortObj: Record<string, 1 | -1> = { [sortField]: sortDirection }
 
     // Dotaz s populací
     const shops = await Shop.find(filter)

@@ -94,10 +94,7 @@
             <p v-if="errors.confirmPassword" class="mt-1 text-sm text-red-600">{{ errors.confirmPassword }}</p>
           </div>
 
-          <!-- Success/Error messages -->
-          <div v-if="successMessage" class="p-4 bg-green-50 text-green-600 rounded-lg">
-            {{ successMessage }}
-          </div>
+          <!-- Error message -->
           <div v-if="submitError" class="p-4 bg-red-50 text-red-600 rounded-lg">
             {{ submitError }}
           </div>
@@ -140,23 +137,30 @@ const passwordForm = reactive({
 
 const errors = reactive<Record<string, string>>({})
 const submitError = ref('')
-const successMessage = ref('')
 const submitting = ref(false)
+const flash = useFlashMessages()
 
 const handleChangePassword = async () => {
   // Reset messages
   Object.keys(errors).forEach(key => delete errors[key])
   submitError.value = ''
-  successMessage.value = ''
 
   // Client-side validation
   if (passwordForm.newPassword !== passwordForm.confirmPassword) {
     errors.confirmPassword = t('cms.account.passwordMismatch')
+    nextTick(() => {
+      const errorEl = document.querySelector('.text-red-600, .border-red-500') as HTMLElement
+      errorEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
     return
   }
 
   if (passwordForm.newPassword.length < 8) {
     errors.newPassword = t('cms.account.passwordTooShort')
+    nextTick(() => {
+      const errorEl = document.querySelector('.text-red-600, .border-red-500') as HTMLElement
+      errorEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
     return
   }
 
@@ -174,14 +178,20 @@ const handleChangePassword = async () => {
     passwordForm.newPassword = ''
     passwordForm.confirmPassword = ''
 
-    successMessage.value = t('cms.account.passwordChanged')
+    flash.success(t('cms.flash.passwordChanged'))
   } catch (err: unknown) {
     const error = err as { data?: { details?: Record<string, string>; message?: string } }
     if (error.data?.details) {
       Object.assign(errors, error.data.details)
-    } else {
-      submitError.value = error.data?.message || t('common.error')
     }
+    const errorMessage = error.data?.message || t('cms.flash.passwordChangeError')
+    submitError.value = errorMessage
+    flash.error(errorMessage)
+    // Scroll na chybu
+    nextTick(() => {
+      const errorEl = document.querySelector('.text-red-600, .border-red-500') as HTMLElement
+      errorEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
   } finally {
     submitting.value = false
   }

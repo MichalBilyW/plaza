@@ -30,68 +30,70 @@
     </div>
 
     <!-- Desktop: Table -->
-    <div v-else class="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden">
-      <table class="w-full">
+    <div v-else class="hidden lg:block bg-white rounded-xl shadow-sm overflow-x-auto">
+      <table class="w-full min-w-[800px]">
         <thead class="bg-gray-50 border-b">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <CmsSortableHeader field="name" :sort-icon="getSortIcon('name')" @sort="toggleSort">
               {{ $t('cms.users.name') }}
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            </CmsSortableHeader>
+            <CmsSortableHeader field="email" :sort-icon="getSortIcon('email')" @sort="toggleSort">
               {{ $t('cms.users.email') }}
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            </CmsSortableHeader>
+            <CmsSortableHeader field="role" :sort-icon="getSortIcon('role')" class="w-24" @sort="toggleSort">
               {{ $t('cms.users.role') }}
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            </CmsSortableHeader>
+            <CmsSortableHeader field="isActive" :sort-icon="getSortIcon('isActive')" class="w-24" @sort="toggleSort">
               {{ $t('cms.users.status') }}
-            </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            </CmsSortableHeader>
+            <CmsSortableHeader field="lastLoginAt" :sort-icon="getSortIcon('lastLoginAt')" class="w-32" @sort="toggleSort">
               {{ $t('cms.users.lastLogin') }}
-            </th>
-            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            </CmsSortableHeader>
+            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
               {{ $t('cms.users.actions') }}
             </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr v-for="user in users" :key="user._id" class="hover:bg-gray-50">
-            <td class="px-6 py-4 whitespace-nowrap">
+          <tr v-for="user in sortedUsers" :key="user._id" class="hover:bg-gray-50">
+            <td class="px-4 py-3">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-plaza-600 flex items-center justify-center text-white text-sm font-medium">
+                <div class="w-8 h-8 rounded-full bg-plaza-600 flex items-center justify-center text-white text-sm font-medium flex-shrink-0">
                   {{ user.name?.charAt(0)?.toUpperCase() || '?' }}
                 </div>
-                <span class="font-medium text-gray-900">{{ user.name }}</span>
+                <NuxtLink :to="`/cms/spravci/${user._id}`" class="font-medium text-gray-900 hover:text-plaza-600 truncate">
+                  {{ user.name }}
+                </NuxtLink>
               </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+            <td class="px-4 py-3 text-gray-500 truncate max-w-[200px]">
               {{ user.email }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-4 py-3">
               <span
                 :class="[
-                  'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                  'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
                   user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
                 ]"
               >
                 {{ user.role === 'admin' ? $t('cms.roles.admin') : $t('cms.roles.editor') }}
               </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-4 py-3">
               <span
                 :class="[
-                  'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                  'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
                   user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                 ]"
               >
                 {{ user.isActive ? $t('cms.users.active') : $t('cms.users.inactive') }}
               </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">
+            <td class="px-4 py-3 text-gray-500 text-sm">
               {{ user.lastLoginAt ? formatDate(user.lastLoginAt) : '–' }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right">
-              <div class="flex items-center justify-end gap-2">
+            <td class="px-4 py-3 text-right">
+              <div class="flex items-center justify-end gap-1">
                 <NuxtLink
                   :to="`/cms/spravci/${user._id}`"
                   class="text-plaza-600 hover:text-plaza-700 p-1"
@@ -119,26 +121,49 @@
     </div>
 
     <!-- Mobile/Tablet: Cards -->
-    <div v-if="users?.length" class="lg:hidden space-y-4">
+    <div v-if="users?.length" class="lg:hidden space-y-3">
       <div
-        v-for="user in users"
+        v-for="user in sortedUsers"
         :key="user._id"
-        class="bg-white rounded-xl shadow-sm p-4"
+        class="bg-white rounded-xl shadow-sm p-3"
       >
-        <div class="flex items-start gap-3">
+        <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-full bg-plaza-600 flex items-center justify-center text-white font-medium flex-shrink-0">
             {{ user.name?.charAt(0)?.toUpperCase() || '?' }}
           </div>
           <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between gap-2">
-              <div class="min-w-0">
-                <h3 class="font-medium text-gray-900 truncate">{{ user.name }}</h3>
-                <p class="text-sm text-gray-500 truncate">{{ user.email }}</p>
-              </div>
+            <div class="flex items-center justify-between gap-2">
+              <NuxtLink :to="`/cms/spravci/${user._id}`" class="font-medium text-gray-900 hover:text-plaza-600 truncate">
+                {{ user.name }}
+              </NuxtLink>
               <div class="flex items-center gap-1 flex-shrink-0">
+                <span
+                  :class="[
+                    'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
+                    user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                  ]"
+                >
+                  {{ user.role === 'admin' ? $t('cms.roles.admin') : $t('cms.roles.editor') }}
+                </span>
+                <span
+                  :class="[
+                    'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
+                    user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  ]"
+                >
+                  {{ user.isActive ? $t('cms.users.active') : $t('cms.users.inactive') }}
+                </span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 truncate mt-0.5">{{ user.email }}</p>
+            <div class="flex items-center justify-between mt-2">
+              <p v-if="user.lastLoginAt" class="text-xs text-gray-400">
+                {{ formatDate(user.lastLoginAt) }}
+              </p>
+              <div class="flex items-center gap-1 ml-auto">
                 <NuxtLink
                   :to="`/cms/spravci/${user._id}`"
-                  class="text-plaza-600 hover:text-plaza-700 p-2"
+                  class="text-plaza-600 hover:text-plaza-700 p-1"
                   :title="$t('common.edit')"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +173,7 @@
                 <button
                   v-if="user._id !== currentUserId"
                   @click="confirmDelete(user)"
-                  class="text-red-600 hover:text-red-700 p-2"
+                  class="text-red-600 hover:text-red-700 p-1"
                   :title="$t('common.delete')"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,27 +182,6 @@
                 </button>
               </div>
             </div>
-            <div class="flex flex-wrap items-center gap-2 mt-3">
-              <span
-                :class="[
-                  'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                  user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
-                ]"
-              >
-                {{ user.role === 'admin' ? $t('cms.roles.admin') : $t('cms.roles.editor') }}
-              </span>
-              <span
-                :class="[
-                  'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                  user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                ]"
-              >
-                {{ user.isActive ? $t('cms.users.active') : $t('cms.users.inactive') }}
-              </span>
-            </div>
-            <p v-if="user.lastLoginAt" class="text-xs text-gray-400 mt-2">
-              {{ $t('cms.users.lastLogin') }}: {{ formatDate(user.lastLoginAt) }}
-            </p>
           </div>
         </div>
       </div>
@@ -226,6 +230,7 @@ definePageMeta({
 
 const { t } = useI18n()
 const { user: currentUser, secureFetch } = useCmsAuth()
+const flash = useFlashMessages()
 
 usePlazaSeo({
   title: t('cms.users.title'),
@@ -240,6 +245,10 @@ const { data, pending, error, refresh } = await useFetch<{ data: User[]; paginat
 })
 
 const users = computed(() => data.value?.data || [])
+
+// Sorting
+const { toggleSort, getSortIcon, sortedItems } = useTableSort(users)
+const sortedUsers = sortedItems
 
 // Delete
 const userToDelete = ref<User | null>(null)
@@ -257,9 +266,11 @@ const deleteUser = async () => {
     await secureFetch(`/api/users/${userToDelete.value._id}`, {
       method: 'DELETE'
     })
+    flash.success(t('cms.flash.userDeleted'))
     userToDelete.value = null
     await refresh()
   } catch (err) {
+    flash.error(t('cms.flash.userDeleteError'))
     console.error('Error deleting user:', err)
   } finally {
     deleting.value = false

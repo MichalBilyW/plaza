@@ -1,5 +1,8 @@
 <template>
   <div class="min-h-screen flex">
+    <!-- Flash Messages -->
+    <CmsFlashMessages />
+
     <!-- Mobile header -->
     <header class="lg:hidden fixed top-0 left-0 right-0 z-40 bg-gray-900 text-white px-4 py-3 flex items-center justify-between">
       <NuxtLink to="/cms" class="text-lg font-bold text-plaza-400">
@@ -61,39 +64,76 @@
           </NuxtLink>
 
           <NuxtLink
-            to="/cms/obchody"
+            to="/cms/obecne-informace"
             class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
-            :class="{ 'bg-gray-800': $route.path.startsWith('/cms/obchody') }"
+            :class="{ 'bg-gray-800': $route.path.startsWith('/cms/obecne-informace') }"
+            @click="sidebarOpen = false"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ $t('cms.sidebar.generalInfo') }}
+          </NuxtLink>
+
+          <NuxtLink
+            to="/cms/obchody"
+            class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-cms-shops-900/30 transition-colors group"
+            :class="$route.path.startsWith('/cms/obchody') ? 'bg-cms-shops-900/40 border-l-2 border-cms-shops-400' : ''"
+            @click="sidebarOpen = false"
+          >
+            <svg class="w-5 h-5 text-cms-shops-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span :class="$route.path.startsWith('/cms/obchody') ? 'text-cms-shops-300' : 'group-hover:text-cms-shops-300'">{{ $t('cms.sidebar.shops') }}</span>
+          </NuxtLink>
+
+          <NuxtLink
+            to="/cms/akce"
+            class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-cms-events-900/30 transition-colors group"
+            :class="$route.path.startsWith('/cms/akce') ? 'bg-cms-events-900/40 border-l-2 border-cms-events-400' : ''"
+            @click="sidebarOpen = false"
+          >
+            <svg class="w-5 h-5 text-cms-events-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span :class="$route.path.startsWith('/cms/akce') ? 'text-cms-events-300' : 'group-hover:text-cms-events-300'">{{ $t('cms.sidebar.events') }}</span>
+          </NuxtLink>
+
+          <NuxtLink
+            to="/cms/sluzby"
+            class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-cms-services-900/30 transition-colors group"
+            :class="$route.path.startsWith('/cms/sluzby') ? 'bg-cms-services-900/40 border-l-2 border-cms-services-400' : ''"
+            @click="sidebarOpen = false"
+          >
+            <svg class="w-5 h-5 text-cms-services-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span :class="$route.path.startsWith('/cms/sluzby') ? 'text-cms-services-300' : 'group-hover:text-cms-services-300'">{{ $t('cms.sidebar.services') }}</span>
+          </NuxtLink>
+
+          <!-- Patra -->
+          <NuxtLink
+            to="/cms/patra"
+            class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
+			:class="{ 'bg-gray-800': $route.path.startsWith('/cms/patra') }"
             @click="sidebarOpen = false"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            {{ $t('cms.sidebar.shops') }}
+            {{ $t('cms.sidebar.floors') }}
           </NuxtLink>
 
           <NuxtLink
-            to="/cms/akce"
+            to="/cms/mapa"
             class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
-            :class="{ 'bg-gray-800': $route.path.startsWith('/cms/akce') }"
+            :class="{ 'bg-gray-800': $route.path.startsWith('/cms/mapa') }"
             @click="sidebarOpen = false"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5a1 1 0 011-1h2a1 1 0 011 1v11.382a1 1 0 01.553.894l-.003.316c-.005.248-.01.494-.01.736a1 1 0 001.447.894L15 18m6-2l-5.447 2.724A1 1 0 0113 16.382V5a1 1 0 011-1h2a1 1 0 011 1v11.382a1 1 0 01.553.894l-.003.316c-.005.248-.01.494-.01.736a1 1 0 001.447.894L21 18z" />
             </svg>
-            {{ $t('cms.sidebar.events') }}
-          </NuxtLink>
-
-          <NuxtLink
-            to="/cms/sluzby"
-            class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
-            :class="{ 'bg-gray-800': $route.path.startsWith('/cms/sluzby') }"
-            @click="sidebarOpen = false"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            {{ $t('cms.sidebar.services') }}
+            {{ $t('cms.sidebar.map') }}
           </NuxtLink>
 
           <NuxtLink

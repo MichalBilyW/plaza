@@ -51,7 +51,7 @@ function getJwtConfig() {
   const config = useRuntimeConfig()
   return {
     secret: config.jwtSecret,
-    accessTokenExpiresIn: '15m',     // Krátká expirace pro access token
+    accessTokenExpiresIn: '7d',      // 7 dní pro access token
     refreshTokenExpiresIn: '7d',     // Dlouhá expirace pro refresh token
     refreshTokenExpiresMs: 7 * 24 * 60 * 60 * 1000, // 7 dní v ms
   }
@@ -108,13 +108,13 @@ const COOKIE_BASE_OPTIONS = {
 }
 
 export function setAuthCookies(event: H3Event, accessToken: string, refreshToken: string): void {
-  // Access token - krátká expirace
+  // Access token - 7 dní
   setCookie(event, ACCESS_TOKEN_COOKIE, accessToken, {
     ...COOKIE_BASE_OPTIONS,
-    maxAge: 15 * 60, // 15 minut
+    maxAge: 7 * 24 * 60 * 60, // 7 dní
   })
 
-  // Refresh token - dlouhá expirace
+  // Refresh token - 7 dní
   setCookie(event, REFRESH_TOKEN_COOKIE, refreshToken, {
     ...COOKIE_BASE_OPTIONS,
     maxAge: 7 * 24 * 60 * 60, // 7 dní

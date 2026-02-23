@@ -17,7 +17,9 @@ export interface IOpeningHoursEntry {
 }
 
 export interface ISpecialOpeningHours {
-  date: Date
+  date?: Date
+  dateFrom?: Date
+  dateTo?: Date
   open?: string
   close?: string
   closed?: boolean
@@ -28,6 +30,13 @@ export interface ISocialLinks {
   facebook?: string
   instagram?: string
   twitter?: string
+}
+
+export interface IMapPosition {
+  x: number
+  y: number
+  width: number
+  height: number
 }
 
 export interface IShop {
@@ -43,11 +52,12 @@ export interface IShop {
   website?: string
   socialLinks?: ISocialLinks
   floorId?: Types.ObjectId
-  unitIds?: Types.ObjectId[]
+  unitCode?: string
+  mapPosition?: IMapPosition
+  mapPolygon?: string
   openingHours?: IOpeningHoursEntry[]
   specialOpeningHours?: ISpecialOpeningHours[]
   isActive: boolean
-  sortOrder: number
   seoTitle?: string
   seoDescription?: string
 }
@@ -88,10 +98,18 @@ const openingHoursEntrySchema = new Schema(
 
 const specialOpeningHoursSchema = new Schema(
   {
+    // Jednotlivý den
     date: {
       type: Date,
-      required: true,
     },
+    // Období od-do
+    dateFrom: {
+      type: Date,
+    },
+    dateTo: {
+      type: Date,
+    },
+    // Otevírací hodiny
     open: String,
     close: String,
     closed: Boolean,
@@ -155,22 +173,25 @@ const shopSchema = new Schema<IShopDocument>(
       ref: 'Floor',
       index: true,
     },
-    unitIds: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Unit',
-      },
-    ],
+    unitCode: {
+      type: String,
+      trim: true,
+      maxlength: 20,
+      index: true,
+    },
+    mapPosition: {
+      x: Number,
+      y: Number,
+      width: Number,
+      height: Number,
+    },
+    mapPolygon: String,
     openingHours: [openingHoursEntrySchema],
     specialOpeningHours: [specialOpeningHoursSchema],
     isActive: {
       type: Boolean,
       default: true,
       index: true,
-    },
-    sortOrder: {
-      type: Number,
-      default: 0,
     },
     seoTitle: {
       type: String,
@@ -187,7 +208,6 @@ const shopSchema = new Schema<IShopDocument>(
       transform: (_doc, ret) => {
         ret._id = ret._id.toString()
         if (ret.floorId) ret.floorId = ret.floorId.toString()
-        if (ret.unitIds) ret.unitIds = ret.unitIds.map((id: Types.ObjectId) => id.toString())
         delete ret.__v
         return ret
       },
@@ -200,7 +220,6 @@ const shopSchema = new Schema<IShopDocument>(
 // ==========================================
 
 shopSchema.index({ name: 'text', description: 'text' })
-shopSchema.index({ isActive: 1, sortOrder: 1 })
 shopSchema.index({ floorId: 1, isActive: 1 })
 
 // ==========================================

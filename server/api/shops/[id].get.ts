@@ -15,7 +15,6 @@ export default defineEventHandler(
 
     const shop = await Shop.findById(id)
       .populate('floorId', 'name level')
-      .populate('unitIds', 'code area')
       .lean()
 
     if (!shop) {
@@ -27,7 +26,6 @@ export default defineEventHandler(
       ...shop,
       _id: shop._id.toString(),
       floor: shop.floorId,
-      units: shop.unitIds,
     }
   })
 )

@@ -3,9 +3,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold mb-2">{{ $t('shops.title') }}</h1>
+        <h1 class="text-3xl font-bold mb-2">{{ t('shops.title') }}</h1>
         <p class="text-gray-600">
-          {{ $t('shops.description') }}
+          {{ t('shops.description') }}
         </p>
       </div>
 
@@ -16,7 +16,7 @@
           <input
             v-model="search"
             type="text"
-            :placeholder="$t('shops.search')"
+            :placeholder="t('shops.search')"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-plaza-500"
           />
         </div>
@@ -36,8 +36,8 @@
         <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
-        <h3 class="text-lg font-medium text-gray-900 mb-1">{{ $t('shops.noShops') }}</h3>
-        <p class="text-gray-500">{{ $t('shops.noShopsHint') }}</p>
+        <h3 class="text-lg font-medium text-gray-900 mb-1">{{ t('shops.noShops') }}</h3>
+        <p class="text-gray-500">{{ t('shops.noShopsHint') }}</p>
       </div>
 
       <!-- Shops grid -->
@@ -100,8 +100,15 @@ usePlazaSeo({
 const search = ref('')
 const page = ref(1)
 
-// Debounced search
-const debouncedSearch = refDebounced(search, 300)
+// Debounced search (vlastní implementace)
+const debouncedSearch = ref('')
+let debounceTimeout: ReturnType<typeof setTimeout> | null = null
+watch(search, (newValue) => {
+  if (debounceTimeout) clearTimeout(debounceTimeout)
+  debounceTimeout = setTimeout(() => {
+    debouncedSearch.value = newValue
+  }, 300)
+})
 
 // Load shops
 const { data: shopsData, pending, refresh } = await useFetch<{ data: Shop[]; meta: { total: number; totalPages: number } }>('/api/shops', {
