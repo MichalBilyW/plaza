@@ -6,7 +6,11 @@
     <!-- Mobile header -->
     <header class="lg:hidden fixed top-0 left-0 right-0 z-40 bg-gray-900 text-white px-4 py-3 flex items-center justify-between">
       <NuxtLink to="/cms" class="text-lg font-bold text-plaza-400">
-        {{ $t('cms.title') }}
+          <img
+			src="/images/logo_plaza.png"
+			alt="Plaza Liberec Logo"
+			width="50"
+			/>
       </NuxtLink>
       <button
         @click="sidebarOpen = true"
@@ -37,7 +41,11 @@
     >
       <div class="p-6 flex items-center justify-between">
         <NuxtLink to="/cms" class="flex items-center gap-2" @click="sidebarOpen = false">
-          <span class="text-xl font-bold text-plaza-400">{{ $t('cms.title') }}</span>
+          <img
+			src="/images/logo_plaza.png"
+			:alt="$t('common.logoAlt')"
+			width="100"
+			/>
         </NuxtLink>
         <button
           @click="sidebarOpen = false"
@@ -73,6 +81,18 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             {{ $t('cms.sidebar.generalInfo') }}
+          </NuxtLink>
+
+          <NuxtLink
+            to="/cms/kategorie"
+            class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-purple-900/30 transition-colors group"
+            :class="$route.path.startsWith('/cms/kategorie') ? 'bg-purple-900/40 border-l-2 border-purple-400' : ''"
+            @click="sidebarOpen = false"
+          >
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            <span :class="$route.path.startsWith('/cms/kategorie') ? 'text-purple-300' : 'group-hover:text-purple-300'">{{ $t('cms.sidebar.categories') }}</span>
           </NuxtLink>
 
           <NuxtLink

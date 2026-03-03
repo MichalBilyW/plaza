@@ -52,6 +52,7 @@ export interface IShop {
   website?: string
   socialLinks?: ISocialLinks
   floorId?: Types.ObjectId
+  categoryId?: Types.ObjectId
   unitCode?: string
   mapPosition?: IMapPosition
   mapPolygon?: string
@@ -173,6 +174,11 @@ const shopSchema = new Schema<IShopDocument>(
       ref: 'Floor',
       index: true,
     },
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
+      index: true,
+    },
     unitCode: {
       type: String,
       trim: true,
@@ -208,6 +214,7 @@ const shopSchema = new Schema<IShopDocument>(
       transform: (_doc, ret) => {
         ret._id = ret._id.toString()
         if (ret.floorId) ret.floorId = ret.floorId.toString()
+        if (ret.categoryId) ret.categoryId = ret.categoryId.toString()
         delete ret.__v
         return ret
       },
@@ -221,6 +228,7 @@ const shopSchema = new Schema<IShopDocument>(
 
 shopSchema.index({ name: 'text', description: 'text' })
 shopSchema.index({ floorId: 1, isActive: 1 })
+shopSchema.index({ categoryId: 1, isActive: 1 })
 
 // ==========================================
 // MODEL

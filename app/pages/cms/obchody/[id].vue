@@ -120,6 +120,23 @@
         </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Kategorie -->
+          <div>
+            <label for="categoryId" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ t('cms.shops.category') }}
+            </label>
+            <select
+              id="categoryId"
+              v-model="form.categoryId"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
+            >
+              <option value="">{{ t('cms.shops.selectCategory') }}</option>
+              <option v-for="category in categories" :key="category._id" :value="category._id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+
           <!-- Patro -->
           <div>
             <label for="floorId" class="block text-sm font-medium text-gray-700 mb-1">
@@ -573,7 +590,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Shop, Floor, DayOfWeek, OpeningHoursEntry } from '~~/shared/types'
+import type { Shop, Floor, DayOfWeek, OpeningHoursEntry, Category } from '~~/shared/types'
 import { getUnitsForFloor, type MapUnit } from '~~/shared/map/units'
 
 definePageMeta({
@@ -638,6 +655,7 @@ const form = reactive({
     twitter: ''
   },
   floorId: '',
+  categoryId: '',
   unitCode: '',
   openingHours: [] as OpeningHoursFormEntry[],
   specialOpeningHours: [] as SpecialOpeningHoursFormEntry[],
@@ -683,6 +701,10 @@ watch(shop, (newShop) => {
     form.floorId = typeof newShop.floorId === 'object' && newShop.floorId?._id
       ? newShop.floorId._id
       : (newShop.floorId || '')
+    // categoryId může být string nebo populovaný objekt
+    form.categoryId = typeof newShop.categoryId === 'object' && newShop.categoryId?._id
+      ? newShop.categoryId._id
+      : (newShop.categoryId || '')
     form.unitCode = newShop.unitCode || ''
     form.isActive = newShop.isActive ?? true
     form.seoTitle = newShop.seoTitle || ''
@@ -732,6 +754,12 @@ const { data: floorsData } = await useFetch<{ data: Floor[] }>('/api/floors', {
   query: { limit: 100 }
 })
 const floors = computed(() => floorsData.value?.data || [])
+
+// Fetch categories
+const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/categories', {
+  query: { limit: 100 }
+})
+const categories = computed(() => categoriesData.value?.data || [])
 
 // Fetch map units with occupancy
 const { data: mapData, refresh: refreshMapData } = await useFetch<{
@@ -804,6 +832,7 @@ const handleSubmit = async () => {
       email: form.email.trim() || undefined,
       website: form.website.trim() || undefined,
       floorId: form.floorId || undefined,
+      categoryId: form.categoryId || undefined,
       unitCode: form.unitCode.trim() || undefined,
       isActive: form.isActive,
       seoTitle: form.seoTitle.trim() || undefined,

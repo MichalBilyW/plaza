@@ -9,6 +9,19 @@ import { paginationQuerySchema } from '@/shared/schemas'
 import { defineApiHandler } from '@/server/utils/errors'
 import type { FilterQuery } from 'mongoose'
 import type { IFloorDocument } from '@/server/models/Floor'
+import { z } from 'zod'
+
+const floorFilterQuerySchema = paginationQuerySchema.extend({
+  isActive: z.preprocess(
+    (val) => {
+      if (val === '' || val === undefined || val === null) return undefined
+      if (val === 'true' || val === true) return true
+      if (val === 'false' || val === false) return false
+      return undefined
+    },
+    z.boolean().optional()
+  ),
+})
 
 export default defineEventHandler(
   defineApiHandler(async (event) => {
@@ -16,12 +29,19 @@ export default defineEventHandler(
 
     // Parse a validace query parametrů
     const query = getQuery(event)
-    const validatedQuery = paginationQuerySchema.parse(query)
+    const validatedQuery = floorFilterQuerySchema.parse(query)
 
-    const { page, limit, sort, order } = validatedQuery
+    const { page, limit, sort, order, isActive } = validatedQuery
 
-    // Pro veřejné API defaultně jen aktivní
-    const filter: FilterQuery<IFloorDocument> = { isActive: true }
+    // Sestavení filtru
+    const filter: FilterQuery<IFloorDocument> = {}
+
+    // Pokud je isActive specifikováno, filtrovat podle něj
+    // Pro veřejné API (FE) se bude volat s isActive=true
+    // Pro CMS se volá bez parametru - vrátí všechna patra
+    if (typeof isActive === 'boolean') {
+      filter.isActive = isActive
+    }
 
     // Celkový počet
     const total = await Floor.countDocuments(filter)

@@ -18,13 +18,17 @@ export default defineEventHandler(
     const query = getQuery(event)
     const validatedQuery = shopFilterQuerySchema.parse(query)
 
-    const { page, limit, sort, order, floorId, search, isActive } = validatedQuery
+    const { page, limit, sort, order, floorId, categoryId, search, isActive } = validatedQuery
 
     // Sestavení filtru
     const filter: FilterQuery<IShopDocument> = {}
 
     if (floorId) {
       filter.floorId = floorId
+    }
+
+    if (categoryId) {
+      filter.categoryId = categoryId
     }
 
     if (typeof isActive === 'boolean') {
@@ -47,6 +51,7 @@ export default defineEventHandler(
     // Dotaz s populací
     const shops = await Shop.find(filter)
       .populate('floorId', 'name level')
+      .populate('categoryId', 'name slug icon color')
       .sort(sortObj)
       .skip((page - 1) * limit)
       .limit(limit)
@@ -58,6 +63,8 @@ export default defineEventHandler(
       _id: shop._id.toString(),
       floor: shop.floorId,
       floorId: shop.floorId ? (typeof shop.floorId === 'object' ? (shop.floorId as { _id: unknown })._id?.toString() : shop.floorId?.toString()) : undefined,
+      category: shop.categoryId,
+      categoryId: shop.categoryId ? (typeof shop.categoryId === 'object' ? (shop.categoryId as { _id: unknown })._id?.toString() : shop.categoryId?.toString()) : undefined,
     }))
 
     return {

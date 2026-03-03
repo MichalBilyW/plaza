@@ -59,6 +59,18 @@ export interface BaseEntity {
 }
 
 // ==========================================
+// CATEGORY (KATEGORIE OBCHODŮ)
+// ==========================================
+export interface Category extends BaseEntity {
+  name: string
+  slug: string
+  description?: string
+  isActive: boolean
+  sortOrder: number
+  shopCount?: number // Virtuální pole - počet obchodů v kategorii
+}
+
+// ==========================================
 // SHOP (OBCHOD)
 // ==========================================
 export interface Shop extends BaseEntity {
@@ -85,6 +97,8 @@ export interface Shop extends BaseEntity {
   // Umístění
   floorId?: string
   floor?: Floor
+  categoryId?: string
+  category?: Category
   unitCode?: string
   mapPosition?: {
     x: number
@@ -254,6 +268,7 @@ export interface PaginationQuery {
 /** Query parametry pro filtrování obchodů */
 export interface ShopFilterQuery extends PaginationQuery {
   floorId?: string
+  categoryId?: string
   search?: string
   isActive?: boolean
 }

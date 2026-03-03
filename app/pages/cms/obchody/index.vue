@@ -40,6 +40,18 @@
             </option>
           </select>
         </div>
+        <!-- Category filter -->
+        <div class="w-full md:w-48">
+          <select
+            v-model="selectedCategory"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-cms-shops-500"
+          >
+            <option value="">{{ t('cms.shops.allCategories') }}</option>
+            <option v-for="category in categories" :key="category._id" :value="category._id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
         <!-- Status filter -->
         <div class="w-full md:w-48">
           <select
@@ -161,12 +173,13 @@
                 </NuxtLink>
                 <NuxtLink
                   :to="`/cms/obchody/${shop._id}`"
-                  class="text-cms-shops-600 hover:text-cms-shops-700 p-1"
+                  class="flex items-center gap-1 text-cms-shops-600 hover:text-cms-shops-700 p-1"
                   :title="t('common.edit')"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
+				  <span class="text-[10px]" v-html="t('common.edit')" />
                 </NuxtLink>
                 <button
                   @click="confirmDelete(shop)"
@@ -281,7 +294,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Shop, Floor, PaginatedResponse } from '@/shared/types'
+import type { Shop, Floor, Category, PaginatedResponse } from '@/shared/types'
 
 definePageMeta({
   layout: 'cms',
@@ -300,6 +313,7 @@ usePlazaSeo({
 // State
 const search = ref('')
 const selectedFloor = ref('')
+const selectedCategory = ref('')
 const selectedStatus = ref('')
 const page = ref(1)
 
@@ -319,6 +333,12 @@ const { data: floorsData } = await useFetch<{ data: Floor[] }>('/api/floors', {
 })
 const floors = computed(() => floorsData.value?.data || [])
 
+// Load categories for filter
+const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/categories', {
+  query: { limit: 100 }
+})
+const categories = computed(() => categoriesData.value?.data || [])
+
 // Load shops
 const { data: shopsData, pending, error, refresh } = await useFetch<PaginatedResponse<Shop>>('/api/shops', {
   query: computed(() => ({
@@ -326,9 +346,10 @@ const { data: shopsData, pending, error, refresh } = await useFetch<PaginatedRes
     limit: 20,
     search: debouncedSearch.value || undefined,
     floorId: selectedFloor.value || undefined,
+    categoryId: selectedCategory.value || undefined,
     isActive: selectedStatus.value !== '' ? selectedStatus.value === 'true' : undefined,
   })),
-  watch: [page, debouncedSearch, selectedFloor, selectedStatus]
+  watch: [page, debouncedSearch, selectedFloor, selectedCategory, selectedStatus]
 })
 
 const shops = computed(() => shopsData.value?.data || [])

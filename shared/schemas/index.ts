@@ -117,6 +117,37 @@ export const paginationQuerySchema = z.object({
 export type PaginationQueryInput = z.input<typeof paginationQuerySchema>
 
 // ==========================================
+// CATEGORY SCHÉMATA
+// ==========================================
+
+export const categoryCreateSchema = z.object({
+  name: z.string().min(2, 'Název musí mít alespoň 2 znaky').max(100),
+  slug: optionalSlugSchema,
+  description: z.string().max(500).optional(),
+  isActive: z.boolean().default(true),
+  sortOrder: z.number().int().default(0),
+})
+
+export const categoryUpdateSchema = categoryCreateSchema.partial()
+
+export const categoryFilterQuerySchema = paginationQuerySchema.extend({
+  search: z.string().max(100).optional(),
+  isActive: z.preprocess(
+    (val) => {
+      if (val === '' || val === undefined || val === null) return undefined
+      if (val === 'true' || val === true) return true
+      if (val === 'false' || val === false) return false
+      return undefined
+    },
+    z.boolean().optional()
+  ),
+})
+
+export type CategoryCreateInput = z.infer<typeof categoryCreateSchema>
+export type CategoryUpdateInput = z.infer<typeof categoryUpdateSchema>
+export type CategoryFilterQueryInput = z.input<typeof categoryFilterQuerySchema>
+
+// ==========================================
 // SHOP SCHÉMATA
 // ==========================================
 
@@ -139,6 +170,7 @@ export const shopCreateSchema = z.object({
     })
     .optional(),
   floorId: optionalObjectIdSchema,
+  categoryId: optionalObjectIdSchema,
   unitCode: z.string().max(20).optional(),
   mapPosition: z
     .object({
@@ -160,6 +192,7 @@ export const shopUpdateSchema = shopCreateSchema.partial()
 
 export const shopFilterQuerySchema = paginationQuerySchema.extend({
   floorId: objectIdSchema.optional(),
+  categoryId: objectIdSchema.optional(),
   search: z.string().max(100).optional(),
   isActive: z.preprocess(
     (val) => {

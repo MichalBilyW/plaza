@@ -15,6 +15,7 @@ export default defineEventHandler(
 
     const shop = await Shop.findById(id)
       .populate('floorId', 'name level')
+      .populate('categoryId', 'name slug icon color')
       .lean()
 
     if (!shop) {
@@ -26,6 +27,7 @@ export default defineEventHandler(
       ...shop,
       _id: shop._id.toString(),
       floor: shop.floorId,
+      category: shop.categoryId,
     }
   })
 )

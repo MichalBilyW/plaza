@@ -179,6 +179,45 @@ export const servicesEndpoints = {
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
+// CATEGORIES (KATEGORIE OBCHODŮ) ENDPOINTS
+// ==========================================
+export const categoriesEndpoints = {
+  list: {
+    method: 'GET',
+    path: '/api/categories',
+    description: 'Seznam kategorií obchodů',
+    auth: false,
+  },
+  detail: {
+    method: 'GET',
+    path: '/api/categories/:id',
+    description: 'Detail kategorie',
+    auth: false,
+  },
+  create: {
+    method: 'POST',
+    path: '/api/categories',
+    description: 'Vytvoření kategorie',
+    auth: true,
+    roles: ['admin', 'editor'],
+  },
+  update: {
+    method: 'PUT',
+    path: '/api/categories/:id',
+    description: 'Úprava kategorie',
+    auth: true,
+    roles: ['admin', 'editor'],
+  },
+  delete: {
+    method: 'DELETE',
+    path: '/api/categories/:id',
+    description: 'Smazání kategorie',
+    auth: true,
+    roles: ['admin'],
+  },
+} as const satisfies Record<string, EndpointDefinition>
+
+// ==========================================
 // FLOORS (PATRA) ENDPOINTS
 // ==========================================
 export const floorsEndpoints = {
@@ -380,6 +419,7 @@ export const mapEndpoints = {
 export const endpoints = {
   auth: authEndpoints,
   shops: shopsEndpoints,
+  categories: categoriesEndpoints,
   events: eventsEndpoints,
   map: mapEndpoints,
   health: {

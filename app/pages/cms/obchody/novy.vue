@@ -96,6 +96,23 @@
         </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Kategorie -->
+          <div>
+            <label for="categoryId" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ t('cms.shops.category') }}
+            </label>
+            <select
+              id="categoryId"
+              v-model="form.categoryId"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
+            >
+              <option value="">{{ t('cms.shops.selectCategory') }}</option>
+              <option v-for="category in categories" :key="category._id" :value="category._id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+
           <!-- Patro -->
           <div>
             <label for="floorId" class="block text-sm font-medium text-gray-700 mb-1">
@@ -503,7 +520,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Floor, DayOfWeek } from '~~/shared/types'
+import type { Floor, DayOfWeek, Category } from '~~/shared/types'
 import { getUnitsForFloor, type MapUnit } from '~~/shared/map/units'
 
 definePageMeta({
@@ -551,6 +568,7 @@ const form = reactive({
     twitter: ''
   },
   floorId: '',
+  categoryId: '',
   unitCode: '',
   openingHours: daysOfWeek.map(day => ({
     day,
@@ -591,6 +609,12 @@ const { data: floorsData } = await useFetch<{ data: Floor[] }>('/api/floors', {
   query: { limit: 100 }
 })
 const floors = computed(() => floorsData.value?.data || [])
+
+// Fetch categories
+const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/categories', {
+  query: { limit: 100 }
+})
+const categories = computed(() => categoriesData.value?.data || [])
 
 // Fetch map units with occupancy
 const { data: mapData } = await useFetch<{
@@ -660,6 +684,7 @@ const handleSubmit = async () => {
     if (form.email) data.email = form.email.trim()
     if (form.website) data.website = form.website.trim()
     if (form.floorId) data.floorId = form.floorId
+    if (form.categoryId) data.categoryId = form.categoryId
     if (form.unitCode) data.unitCode = form.unitCode.trim()
     if (form.seoTitle) data.seoTitle = form.seoTitle.trim()
     if (form.seoDescription) data.seoDescription = form.seoDescription.trim()

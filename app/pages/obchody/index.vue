@@ -20,6 +20,18 @@
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-plaza-500"
           />
         </div>
+        <!-- Category filter -->
+        <div v-if="categories.length > 0" class="w-full md:w-56">
+          <select
+            v-model="selectedCategory"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-plaza-500"
+          >
+            <option value="">{{ t('shops.allCategories') }}</option>
+            <option v-for="category in categories" :key="category._id" :value="category._id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <!-- Loading state -->
@@ -62,8 +74,11 @@
           <h3 class="font-semibold group-hover:text-plaza-600 transition-colors">
             {{ shop.name }}
           </h3>
-          <p v-if="shop.floorId" class="text-xs text-gray-400 mt-1">
-            {{ shop.floorId.name }}
+          <p v-if="shop.floor" class="text-xs text-gray-400 mt-1">
+            {{ shop.floor.name }}
+          </p>
+          <p v-if="shop.category" class="text-xs text-purple-500 mt-1">
+            {{ shop.category.name }}
           </p>
         </NuxtLink>
       </div>
@@ -87,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Shop } from '@/shared/types'
+import type { Shop, Category } from '@/shared/types'
 
 const { t } = useI18n()
 
@@ -98,6 +113,7 @@ usePlazaSeo({
 
 // State
 const search = ref('')
+const selectedCategory = ref('')
 const page = ref(1)
 
 // Debounced search (vlastní implementace)
@@ -110,22 +126,29 @@ watch(search, (newValue) => {
   }, 300)
 })
 
+// Load categories (only with at least 1 shop)
+const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/categories', {
+  query: { limit: 100, withShopsOnly: 'true', isActive: 'true' }
+})
+const categories = computed(() => categoriesData.value?.data || [])
+
 // Load shops
 const { data: shopsData, pending, refresh } = await useFetch<{ data: Shop[]; meta: { total: number; totalPages: number } }>('/api/shops', {
   query: computed(() => ({
     page: page.value,
     limit: 12,
-    active: true,
-    search: debouncedSearch.value || undefined
+    isActive: true,
+    search: debouncedSearch.value || undefined,
+    categoryId: selectedCategory.value || undefined
   })),
-  watch: [page, debouncedSearch]
+  watch: [page, debouncedSearch, selectedCategory]
 })
 
 const shops = computed(() => shopsData.value?.data || [])
 const totalPages = computed(() => shopsData.value?.meta.totalPages || 1)
 
 // Reset page when filters change
-watch([debouncedSearch], () => {
+watch([debouncedSearch, selectedCategory], () => {
   page.value = 1
 })
 </script>
