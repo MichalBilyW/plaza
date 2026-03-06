@@ -397,7 +397,6 @@ export const generalInfoUpdateSchema = z.object({
   title: z.string().max(200).optional(),
   shortText: z.string().max(500).optional(),
   text: z.string().max(10000).optional(),
-  mainImage: z.string().optional(),
   openingHours: z.array(openingHoursEntrySchema).optional(),
   specialOpeningHours: z.array(specialOpeningHoursSchema).optional(),
   facebook: urlSchema,
@@ -406,4 +405,14 @@ export const generalInfoUpdateSchema = z.object({
 })
 
 export type GeneralInfoUpdateInput = z.infer<typeof generalInfoUpdateSchema>
+
+// ==========================================
+// HOMEPAGE SCHÉMATA
+// ==========================================
+
+export const homepageUpdateSchema = z.object({
+  heroImage: z.string().optional(),
+})
+
+export type HomepageUpdateInput = z.infer<typeof homepageUpdateSchema>
 

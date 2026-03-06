@@ -43,7 +43,7 @@
         <NuxtLink to="/cms" class="flex items-center gap-2" @click="sidebarOpen = false">
           <img
 			src="/images/logo_plaza.png"
-			:alt="$t('common.logoAlt')"
+			:alt="$t('common.altLogo')"
 			width="100"
 			/>
         </NuxtLink>
@@ -66,21 +66,21 @@
             @click="sidebarOpen = false"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
             </svg>
             {{ $t('cms.sidebar.dashboard') }}
           </NuxtLink>
 
           <NuxtLink
-            to="/cms/obecne-informace"
+            to="/cms/hlavni-stranka"
             class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
-            :class="{ 'bg-gray-800': $route.path.startsWith('/cms/obecne-informace') }"
+            :class="{ 'bg-gray-800': $route.path.startsWith('/cms/hlavni-stranka') }"
             @click="sidebarOpen = false"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
-            {{ $t('cms.sidebar.generalInfo') }}
+            {{ $t('cms.sidebar.homepage') }}
           </NuxtLink>
 
           <NuxtLink
@@ -131,7 +131,6 @@
             <span :class="$route.path.startsWith('/cms/sluzby') ? 'text-cms-services-300' : 'group-hover:text-cms-services-300'">{{ $t('cms.sidebar.services') }}</span>
           </NuxtLink>
 
-          <!-- Patra -->
           <NuxtLink
             to="/cms/patra"
             class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
@@ -154,6 +153,18 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5a1 1 0 011-1h2a1 1 0 011 1v11.382a1 1 0 01.553.894l-.003.316c-.005.248-.01.494-.01.736a1 1 0 001.447.894L15 18m6-2l-5.447 2.724A1 1 0 0113 16.382V5a1 1 0 011-1h2a1 1 0 011 1v11.382a1 1 0 01.553.894l-.003.316c-.005.248-.01.494-.01.736a1 1 0 001.447.894L21 18z" />
             </svg>
             {{ $t('cms.sidebar.map') }}
+          </NuxtLink>
+
+          <NuxtLink
+            to="/cms/obecne-informace"
+            class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
+            :class="{ 'bg-gray-800': $route.path.startsWith('/cms/obecne-informace') }"
+            @click="sidebarOpen = false"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ $t('cms.sidebar.generalInfo') }}
           </NuxtLink>
 
           <NuxtLink

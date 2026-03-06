@@ -289,12 +289,18 @@ export interface GeneralInfo extends BaseEntity {
   title?: string
   shortText?: string
   text?: string
-  mainImage?: string
   openingHours?: OpeningHoursEntry[]
   specialOpeningHours?: SpecialOpeningHours[]
   facebook?: string
   instagram?: string
   gallery?: string[]
+}
+
+// ==========================================
+// HOMEPAGE (NASTAVENÍ HLAVNÍ STRÁNKY)
+// ==========================================
+export interface Homepage extends BaseEntity {
+  heroImage?: string
 }
 
 // ==========================================

@@ -87,14 +87,6 @@
 					<!-- Média -->
 					<div>
 						<div class="space-y-6">
-							<!-- Hlavní fotka -->
-							<CmsImageUpload
-								v-model="form.mainImage"
-								:label="t('cms.generalInfo.mainImage')"
-								:hint="t('cms.generalInfo.mainImageHint')"
-								preview-class="w-full h-48"
-							/>
-
 							<!-- Galerie -->
 							<CmsGalleryUpload
 								v-model="form.gallery"
@@ -408,7 +400,6 @@ const form = reactive({
 	title: "",
 	shortText: "",
 	text: "",
-	mainImage: "",
 	facebook: "",
 	instagram: "",
 	gallery: [] as string[],
@@ -436,7 +427,6 @@ watch(
 			form.title = info.title || "";
 			form.shortText = info.shortText || "";
 			form.text = info.text || "";
-			form.mainImage = info.mainImage || "";
 			form.facebook = info.facebook || "";
 			form.instagram = info.instagram || "";
 			form.gallery = info.gallery || [];
@@ -494,15 +484,14 @@ const handleSubmit = async () => {
 
 	try {
 		// Prepare data
-		const data: Record<string, unknown> = {};
-
-		if (form.title) data.title = form.title.trim();
-		if (form.shortText) data.shortText = form.shortText.trim();
-		if (form.text) data.text = form.text.trim();
-		if (form.mainImage) data.mainImage = form.mainImage.trim();
-		if (form.facebook) data.facebook = form.facebook.trim();
-		if (form.instagram) data.instagram = form.instagram.trim();
-		if (form.gallery.length) data.gallery = form.gallery;
+		const data: Record<string, unknown> = {
+			title: form.title?.trim() || "",
+			shortText: form.shortText?.trim() || "",
+			text: form.text?.trim() || "",
+			facebook: form.facebook?.trim() || "",
+			instagram: form.instagram?.trim() || "",
+			gallery: form.gallery || [],
+		};
 
 		// Opening hours
 		const openingHours = form.openingHours.map((entry) => ({

@@ -30,7 +30,6 @@ export interface IGeneralInfo {
   title?: string
   shortText?: string
   text?: string
-  mainImage?: string
   openingHours?: IOpeningHoursEntry[]
   specialOpeningHours?: ISpecialOpeningHours[]
   facebook?: string
@@ -93,9 +92,6 @@ const generalInfoSchema = new Schema<IGeneralInfoDocument>(
     text: {
       type: String,
       maxlength: 10000,
-    },
-    mainImage: {
-      type: String,
     },
     openingHours: [openingHoursEntrySchema],
     specialOpeningHours: [specialOpeningHoursSchema],

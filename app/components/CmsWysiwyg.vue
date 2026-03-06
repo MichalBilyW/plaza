@@ -380,6 +380,40 @@ import { TableRow } from '@tiptap/extension-table-row'
 import { TableCell } from '@tiptap/extension-table-cell'
 import { TableHeader } from '@tiptap/extension-table-header'
 
+// Define extensions array once to avoid HMR duplication
+const editorExtensions = [
+  StarterKit.configure({
+    // Ensure no conflicts with custom extensions
+  }),
+  Underline,
+  Link.configure({
+    openOnClick: false,
+    HTMLAttributes: {
+      class: 'text-plaza-600 underline hover:text-plaza-800',
+    },
+  }),
+  TextAlign.configure({
+    types: ['heading', 'paragraph'],
+  }),
+  Table.configure({
+    resizable: true,
+    HTMLAttributes: {
+      class: 'border-collapse border border-gray-300',
+    },
+  }),
+  TableRow,
+  TableHeader.configure({
+    HTMLAttributes: {
+      class: 'border border-gray-300 bg-gray-100 p-2 font-semibold text-left',
+    },
+  }),
+  TableCell.configure({
+    HTMLAttributes: {
+      class: 'border border-gray-300 p-2',
+    },
+  }),
+]
+
 // Custom Image extension with style attribute support
 const CustomImage = Image.extend({
   addAttributes() {
@@ -509,39 +543,12 @@ const handleDrop = (view: unknown, event: DragEvent) => {
 const editor = useEditor({
   content: props.modelValue || '',
   extensions: [
-    StarterKit,
-    Underline,
-    Link.configure({
-      openOnClick: false,
-      HTMLAttributes: {
-        class: 'text-plaza-600 underline hover:text-plaza-800',
-      },
-    }),
+    ...editorExtensions,
     CustomImage.configure({
       inline: false,
       allowBase64: false,
       HTMLAttributes: {
         class: 'max-w-full h-auto rounded-lg',
-      },
-    }),
-    TextAlign.configure({
-      types: ['heading', 'paragraph'],
-    }),
-    Table.configure({
-      resizable: true,
-      HTMLAttributes: {
-        class: 'border-collapse border border-gray-300',
-      },
-    }),
-    TableRow,
-    TableHeader.configure({
-      HTMLAttributes: {
-        class: 'border border-gray-300 bg-gray-100 p-2 font-semibold text-left',
-      },
-    }),
-    TableCell.configure({
-      HTMLAttributes: {
-        class: 'border border-gray-300 p-2',
       },
     }),
   ],
