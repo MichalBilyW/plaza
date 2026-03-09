@@ -4,8 +4,10 @@
       {{ label }}
     </label>
 
-    <!-- Toolbar -->
-    <div v-if="editor" class="flex flex-wrap gap-1 p-2 bg-gray-50 border border-gray-300 rounded-t-lg border-b-0">
+    <!-- Scrollable editor wrapper -->
+    <div class="max-h-[70vh] overflow-y-auto border border-gray-300 rounded-lg">
+      <!-- Toolbar -->
+      <div v-if="editor" class="sticky top-0 z-10 flex flex-wrap gap-1 p-2 bg-gray-50 border-b border-gray-300">
       <!-- Text formatting -->
       <button
         type="button"
@@ -285,50 +287,78 @@
       <div class="w-px bg-gray-300 mx-1"></div>
 
       <!-- Table -->
-      <button
-        type="button"
-        class="p-2 rounded hover:bg-gray-200 transition-colors"
-        @click="insertTable"
-        title="Vložit tabulku"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M10 3v18M14 3v18M3 6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6z" />
-        </svg>
-      </button>
+      <div ref="tableMenuWrapper" class="relative">
+        <button
+          type="button"
+          class="p-2 rounded hover:bg-gray-200 transition-colors"
+          :class="{ 'bg-gray-200 text-plaza-600': editor.isActive('table') }"
+          @click="editor.isActive('table') ? toggleTableMenu() : insertTable()"
+          title="Tabulka"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M10 3v18M14 3v18M3 6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3H6a3 3 0 01-3-3V6z" />
+          </svg>
+        </button>
 
-      <!-- Table controls (when in table) -->
-      <template v-if="editor.isActive('table')">
-        <button
-          type="button"
-          class="p-2 rounded hover:bg-gray-200 transition-colors"
-          @click="editor.chain().focus().addColumnAfter().run()"
-          title="Přidat sloupec"
+        <!-- Table dropdown menu -->
+        <div
+          v-if="showTableMenu && editor.isActive('table')"
+          class="absolute left-0 top-full mt-1 z-50 bg-white border border-gray-300 rounded-lg shadow-lg p-2 min-w-[200px]"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6" />
-          </svg>
-        </button>
-        <button
-          type="button"
-          class="p-2 rounded hover:bg-gray-200 transition-colors"
-          @click="editor.chain().focus().addRowAfter().run()"
-          title="Přidat řádek"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m0 0l-4-4m4 4l4-4" />
-          </svg>
-        </button>
-        <button
-          type="button"
-          class="p-2 rounded hover:bg-gray-200 transition-colors text-red-500"
-          @click="editor.chain().focus().deleteTable().run()"
-          title="Smazat tabulku"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </button>
-      </template>
+          <div class="text-xs font-semibold text-gray-500 px-2 py-1 border-b border-gray-200 mb-1">Úpravy tabulky</div>
+
+          <div class="text-xs font-medium text-gray-400 px-2 py-1 mt-1">Sloupce</div>
+          <button type="button" class="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded" @click="tableAction('addColumnBefore')">
+            + Přidat sloupec vlevo
+          </button>
+          <button type="button" class="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded" @click="tableAction('addColumnAfter')">
+            + Přidat sloupec vpravo
+          </button>
+          <button type="button" class="w-full text-left px-2 py-1.5 text-sm hover:bg-red-50 text-red-600 rounded" @click="tableAction('deleteColumn')">
+            × Smazat sloupec
+          </button>
+
+          <div class="text-xs font-medium text-gray-400 px-2 py-1 mt-2">Řádky</div>
+          <button type="button" class="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded" @click="tableAction('addRowBefore')">
+            + Přidat řádek nad
+          </button>
+          <button type="button" class="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded" @click="tableAction('addRowAfter')">
+            + Přidat řádek pod
+          </button>
+          <button type="button" class="w-full text-left px-2 py-1.5 text-sm hover:bg-red-50 text-red-600 rounded" @click="tableAction('deleteRow')">
+            × Smazat řádek
+          </button>
+
+          <div class="text-xs font-medium text-gray-400 px-2 py-1 mt-2">Buňky</div>
+          <button
+            type="button"
+            class="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+            :class="{ 'opacity-50 cursor-not-allowed': !editor.can().mergeCells() }"
+            :disabled="!editor.can().mergeCells()"
+            @click="tableAction('mergeCells')"
+          >
+            Sloučit buňky
+          </button>
+          <button
+            type="button"
+            class="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+            :class="{ 'opacity-50 cursor-not-allowed': !editor.can().splitCell() }"
+            :disabled="!editor.can().splitCell()"
+            @click="tableAction('splitCell')"
+          >
+            Rozdělit buňku
+          </button>
+          <button type="button" class="w-full text-left px-2 py-1.5 text-sm hover:bg-gray-100 rounded" @click="tableAction('toggleHeaderCell')">
+            Přepnout záhlaví
+          </button>
+
+          <div class="border-t border-gray-200 mt-2 pt-2">
+            <button type="button" class="w-full text-left px-2 py-1.5 text-sm hover:bg-red-50 text-red-600 rounded" @click="tableAction('deleteTable')">
+              🗑 Smazat celou tabulku
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div class="w-px bg-gray-300 mx-1"></div>
 
@@ -356,13 +386,14 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10H11a8 8 0 00-8 8v2m18-10l-6 6m6-6l-6-6" />
         </svg>
       </button>
-    </div>
+      </div>
 
-    <!-- Editor content -->
-    <EditorContent
-      :editor="editor"
-      class="prose prose-sm max-w-none border border-gray-300 rounded-b-lg p-4 min-h-[200px] focus-within:ring-2 focus-within:ring-plaza-500 focus-within:border-transparent bg-white"
-    />
+      <!-- Editor content -->
+      <EditorContent
+        :editor="editor"
+        class="prose prose-sm max-w-none p-4 min-h-[200px] focus-within:ring-2 focus-within:ring-plaza-500 bg-white"
+      />
+    </div>
 
     <p v-if="hint" class="mt-1 text-xs text-gray-500">{{ hint }}</p>
   </div>
@@ -446,6 +477,68 @@ const emit = defineEmits<{
 const { secureFetch } = useCmsAuth()
 const imageInput = ref<HTMLInputElement | null>(null)
 const uploading = ref(false)
+const tableMenuWrapper = ref<HTMLElement | null>(null)
+
+// Table menu state
+const showTableMenu = ref(false)
+
+const toggleTableMenu = () => {
+  showTableMenu.value = !showTableMenu.value
+}
+
+// Close table menu when clicking outside
+const handleClickOutside = (event: MouseEvent) => {
+  if (tableMenuWrapper.value && !tableMenuWrapper.value.contains(event.target as Node)) {
+    showTableMenu.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
+// Table action helper
+const tableAction = (action: string) => {
+  if (!editor.value) return
+
+  switch (action) {
+    case 'addColumnBefore':
+      editor.value.chain().focus().addColumnBefore().run()
+      break
+    case 'addColumnAfter':
+      editor.value.chain().focus().addColumnAfter().run()
+      break
+    case 'deleteColumn':
+      editor.value.chain().focus().deleteColumn().run()
+      break
+    case 'addRowBefore':
+      editor.value.chain().focus().addRowBefore().run()
+      break
+    case 'addRowAfter':
+      editor.value.chain().focus().addRowAfter().run()
+      break
+    case 'deleteRow':
+      editor.value.chain().focus().deleteRow().run()
+      break
+    case 'mergeCells':
+      editor.value.chain().focus().mergeCells().run()
+      break
+    case 'splitCell':
+      editor.value.chain().focus().splitCell().run()
+      break
+    case 'toggleHeaderCell':
+      editor.value.chain().focus().toggleHeaderCell().run()
+      break
+    case 'deleteTable':
+      editor.value.chain().focus().deleteTable().run()
+      showTableMenu.value = false
+      break
+  }
+}
 
 // Upload image to server
 const uploadImage = async (file: File): Promise<string | null> => {
