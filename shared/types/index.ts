@@ -114,6 +114,8 @@ export interface Shop extends BaseEntity {
 
   // Metadata
   isActive: boolean
+  /** Datum plánovaného zveřejnění obchodu */
+  publishDate?: string
   sortOrder: number
   seoTitle?: string
   seoDescription?: string

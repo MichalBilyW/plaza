@@ -184,6 +184,7 @@ export const shopCreateSchema = z.object({
   openingHours: z.array(openingHoursEntrySchema).optional(),
   specialOpeningHours: z.array(specialOpeningHoursSchema).optional(),
   isActive: z.boolean().default(true),
+  publishDate: z.string().datetime().nullable().optional(),
   seoTitle: z.string().max(60).optional(),
   seoDescription: z.string().max(160).optional(),
 })

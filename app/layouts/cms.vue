@@ -234,3 +234,112 @@ watch(() => route.path, () => {
   opacity: 0;
 }
 </style>
+
+<style>
+/* Custom CMS Checkbox Styles */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  min-width: 1.25rem;
+  min-height: 1.25rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease-in-out;
+}
+
+input[type="checkbox"]:hover {
+  border-color: #9ca3af;
+}
+
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  border-color: #3b82f6;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%) rotate(45deg);
+  width: 0.3rem;
+  height: 0.6rem;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+}
+
+/* Disabled state */
+input[type="checkbox"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Color variants using Tailwind's text color classes */
+input[type="checkbox"].text-cms-shops-600:checked,
+input[type="checkbox"][class*="text-cms-shops"]:checked {
+  background-color: #0891b2;
+  border-color: #0891b2;
+}
+
+input[type="checkbox"].text-cms-categories-600:checked,
+input[type="checkbox"][class*="text-cms-categories"]:checked {
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+}
+
+input[type="checkbox"].text-cms-events-600:checked,
+input[type="checkbox"][class*="text-cms-events"]:checked {
+  background-color: #ea580c;
+  border-color: #ea580c;
+}
+
+input[type="checkbox"].text-cms-services-600:checked,
+input[type="checkbox"][class*="text-cms-services"]:checked {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+
+/* Focus ring color variants */
+input[type="checkbox"].focus\:ring-cms-shops-500:focus {
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.3);
+}
+
+input[type="checkbox"].focus\:ring-cms-categories-500:focus {
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+}
+
+input[type="checkbox"].focus\:ring-cms-events-500:focus {
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.3);
+}
+
+input[type="checkbox"].focus\:ring-cms-services-500:focus {
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.3);
+}
+
+/* Responsive - slightly smaller on mobile */
+@media (max-width: 640px) {
+  input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    min-width: 1.125rem;
+    min-height: 1.125rem;
+  }
+
+  input[type="checkbox"]:checked::after {
+    width: 0.25rem;
+    height: 0.5rem;
+  }
+}
+</style>

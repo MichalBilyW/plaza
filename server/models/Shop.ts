@@ -59,6 +59,7 @@ export interface IShop {
   openingHours?: IOpeningHoursEntry[]
   specialOpeningHours?: ISpecialOpeningHours[]
   isActive: boolean
+  publishDate?: Date
   seoTitle?: string
   seoDescription?: string
 }
@@ -197,6 +198,11 @@ const shopSchema = new Schema<IShopDocument>(
     isActive: {
       type: Boolean,
       default: true,
+      index: true,
+    },
+    publishDate: {
+      type: Date,
+      default: null,
       index: true,
     },
     seoTitle: {

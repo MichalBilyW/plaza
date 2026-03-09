@@ -509,17 +509,52 @@
           {{ t('cms.shops.settings') }}
         </h2>
 
-        <div class="flex flex-wrap items-center gap-6">
-          <label class="inline-flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              v-model="form.isActive"
-              class="w-4 h-4 text-cms-shops-600 rounded focus:ring-cms-shops-500"
-            />
-            <span class="text-sm font-medium text-gray-700">{{ t('cms.shops.isActive') }}</span>
-          </label>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Je aktivní -->
+          <div class="flex items-center">
+            <label class="inline-flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                v-model="form.isActive"
+                class="w-4 h-4 text-cms-shops-600 rounded focus:ring-cms-shops-500"
+              />
+              <span class="text-sm font-medium text-gray-700">{{ t('cms.shops.isActive') }}</span>
+            </label>
+          </div>
 
-
+          <!-- Datum zveřejnění -->
+          <div>
+            <label for="publishDate" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ t('cms.shops.publishDate') }}
+            </label>
+            <div class="relative">
+              <input
+                id="publishDate"
+                v-model="form.publishDate"
+                type="date"
+                class="peer w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent focus:text-gray-900"
+                :class="{ 'text-transparent': !form.publishDate }"
+              />
+              <span
+                v-if="!form.publishDate"
+                class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none peer-focus:hidden"
+              >
+                {{ t('cms.shops.publishDateEmpty') }}
+              </span>
+            </div>
+            <p class="mt-1 text-xs text-gray-500">{{ t('cms.shops.publishDateHint') }}</p>
+            <button
+              v-if="form.publishDate"
+              type="button"
+              @click="form.publishDate = ''"
+              class="mt-2 inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-800 transition-colors"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              {{ t('cms.shops.clearPublishDate') }}
+            </button>
+          </div>
         </div>
 
         <!-- Metadata -->
@@ -660,6 +695,7 @@ const form = reactive({
   openingHours: [] as OpeningHoursFormEntry[],
   specialOpeningHours: [] as SpecialOpeningHoursFormEntry[],
   isActive: true,
+  publishDate: '',
   seoTitle: '',
   seoDescription: ''
 })
@@ -707,6 +743,7 @@ watch(shop, (newShop) => {
       : (newShop.categoryId || '')
     form.unitCode = newShop.unitCode || ''
     form.isActive = newShop.isActive ?? true
+    form.publishDate = newShop.publishDate ? new Date(newShop.publishDate).toISOString().split('T')[0] : ''
     form.seoTitle = newShop.seoTitle || ''
     form.seoDescription = newShop.seoDescription || ''
 
@@ -835,6 +872,7 @@ const handleSubmit = async () => {
       categoryId: form.categoryId || undefined,
       unitCode: form.unitCode.trim() || undefined,
       isActive: form.isActive,
+      publishDate: form.publishDate ? new Date(form.publishDate).toISOString() : null,
       seoTitle: form.seoTitle.trim() || undefined,
       seoDescription: form.seoDescription.trim() || undefined
     }
