@@ -9,21 +9,21 @@ import { requireEditor } from '@/server/utils/auth'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (e) => {
-    requireEditor(e)
+	defineApiHandler(async (e) => {
+		requireEditor(e)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    const id = getRouterParam(e, 'id')
+		const id = getRouterParam(e, 'id')
 
-    const eventDoc = await Event.findById(id)
-    if (!eventDoc) {
-      throw createNotFoundError('Událost')
-    }
+		const eventDoc = await Event.findById(id)
+		if (!eventDoc) {
+			throw createNotFoundError('Událost')
+		}
 
-    eventDoc.published = true
-    await eventDoc.save()
+		eventDoc.published = true
+		await eventDoc.save()
 
-    return eventDoc.toJSON()
-  })
+		return eventDoc.toJSON()
+	}),
 )

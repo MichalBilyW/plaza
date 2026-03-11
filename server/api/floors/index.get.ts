@@ -12,66 +12,63 @@ import type { IFloorDocument } from '@/server/models/Floor'
 import { z } from 'zod'
 
 const floorFilterQuerySchema = paginationQuerySchema.extend({
-  isActive: z.preprocess(
-    (val) => {
-      if (val === '' || val === undefined || val === null) return undefined
-      if (val === 'true' || val === true) return true
-      if (val === 'false' || val === false) return false
-      return undefined
-    },
-    z.boolean().optional()
-  ),
+	isActive: z.preprocess((val) => {
+		if (val === '' || val === undefined || val === null) return undefined
+		if (val === 'true' || val === true) return true
+		if (val === 'false' || val === false) return false
+		return undefined
+	}, z.boolean().optional()),
 })
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    await connectToDatabase()
+	defineApiHandler(async (event) => {
+		await connectToDatabase()
 
-    // Parse a validace query parametrů
-    const query = getQuery(event)
-    const validatedQuery = floorFilterQuerySchema.parse(query)
+		// Parse a validace query parametrů
+		const query = getQuery(event)
+		const validatedQuery = floorFilterQuerySchema.parse(query)
 
-    const { page, limit, sort, order, isActive } = validatedQuery
+		const { page, limit, sort, order, isActive } = validatedQuery
 
-    // Sestavení filtru
-    const filter: FilterQuery<IFloorDocument> = {}
+		// Sestavení filtru
+		const filter: FilterQuery<IFloorDocument> = {}
 
-    // Pokud je isActive specifikováno, filtrovat podle něj
-    // Pro veřejné API (FE) se bude volat s isActive=true
-    // Pro CMS se volá bez parametru - vrátí všechna patra
-    if (typeof isActive === 'boolean') {
-      filter.isActive = isActive
-    }
+		// Pokud je isActive specifikováno, filtrovat podle něj
+		// Pro veřejné API (FE) se bude volat s isActive=true
+		// Pro CMS se volá bez parametru - vrátí všechna patra
+		if (typeof isActive === 'boolean') {
+			filter.isActive = isActive
+		}
 
-    // Celkový počet
-    const total = await Floor.countDocuments(filter)
+		// Celkový počet
+		const total = await Floor.countDocuments(filter)
 
-    // Sestavení sort objektu
-    const sortField = sort || 'level'
-    const sortOrder = order === 'desc' ? -1 : 1
-    const sortObj: Record<string, 1 | -1> = { [sortField]: sortOrder }
+		// Sestavení sort objektu
+		const sortField = sort || 'level'
+		const sortOrder = order === 'desc' ? -1 : 1
+		const sortObj: Record<string, 1 | -1> = { [sortField]: sortOrder }
 
-    // Dotaz
-    const floors = await Floor.find(filter)
-      .sort(sortObj)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean()
+		// Dotaz
+		const floors = await Floor.find(filter)
+			.sort(sortObj)
+			.skip((page - 1) * limit)
+			.limit(limit)
+			.lean()
 
-    // Transformace pro konzistentní response
-    const data = floors.map((floor) => ({
-      ...floor,
-      _id: floor._id.toString(),
-    }))
+		// Transformace pro konzistentní response
+		const data = floors.map((floor) => ({
+			...floor,
+			_id: floor._id.toString(),
+		}))
 
-    return {
-      data,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    }
-  })
+		return {
+			data,
+			pagination: {
+				page,
+				limit,
+				total,
+				totalPages: Math.ceil(total / limit),
+			},
+		}
+	}),
 )

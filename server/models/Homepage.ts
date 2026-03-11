@@ -2,19 +2,20 @@
  * Homepage Model - Nastavení hlavní stránky (singleton)
  */
 
-import mongoose, { Schema, Document, Model } from 'mongoose'
+import type { Document, Model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose'
 
 // ==========================================
 // INTERFACES
 // ==========================================
 
 export interface IHomepage {
-  heroImage?: string
+	heroImage?: string
 }
 
 export interface IHomepageDocument extends IHomepage, Document {
-  createdAt: Date
-  updatedAt: Date
+	createdAt: Date
+	updatedAt: Date
 }
 
 // ==========================================
@@ -22,15 +23,15 @@ export interface IHomepageDocument extends IHomepage, Document {
 // ==========================================
 
 const homepageSchema = new Schema(
-  {
-    heroImage: {
-      type: String,
-      trim: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
+	{
+		heroImage: {
+			type: String,
+			trim: true,
+		},
+	},
+	{
+		timestamps: true,
+	},
 )
 
 // ==========================================
@@ -38,11 +39,11 @@ const homepageSchema = new Schema(
 // ==========================================
 
 homepageSchema.statics.getOrCreate = async function () {
-  let homepage = await this.findOne()
-  if (!homepage) {
-    homepage = await this.create({})
-  }
-  return homepage
+	let homepage = await this.findOne()
+	if (!homepage) {
+		homepage = await this.create({})
+	}
+	return homepage
 }
 
 // ==========================================
@@ -50,9 +51,9 @@ homepageSchema.statics.getOrCreate = async function () {
 // ==========================================
 
 interface IHomepageModel extends Model<IHomepageDocument> {
-  getOrCreate(): Promise<IHomepageDocument>
+	getOrCreate(): Promise<IHomepageDocument>
 }
 
 export const Homepage =
-  (mongoose.models.Homepage as IHomepageModel) ||
-  mongoose.model<IHomepageDocument, IHomepageModel>('Homepage', homepageSchema)
+	(mongoose.models.Homepage as IHomepageModel) ||
+	mongoose.model<IHomepageDocument, IHomepageModel>('Homepage', homepageSchema)

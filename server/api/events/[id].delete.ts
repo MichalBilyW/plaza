@@ -1,6 +1,6 @@
 /**
  * DELETE /api/events/:id
- * Smazání události
+ * Smazání akce
  */
 
 import { connectToDatabase } from '@/server/utils/db'
@@ -9,20 +9,20 @@ import { requireAdmin } from '@/server/utils/auth'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (e) => {
-    requireAdmin(e)
+	defineApiHandler(async (e) => {
+		requireAdmin(e)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    const id = getRouterParam(e, 'id')
+		const id = getRouterParam(e, 'id')
 
-    const eventDoc = await Event.findById(id)
-    if (!eventDoc) {
-      throw createNotFoundError('Událost')
-    }
+		const eventDoc = await Event.findById(id)
+		if (!eventDoc) {
+			throw createNotFoundError('Akce')
+		}
 
-    await eventDoc.deleteOne()
+		await eventDoc.deleteOne()
 
-    return { success: true, message: 'Událost byla smazána' }
-  })
+		return { success: true, message: 'Akce byla smazána' }
+	}),
 )

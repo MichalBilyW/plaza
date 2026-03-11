@@ -1,64 +1,75 @@
 /**
  * GET /api/events
- * Seznam akcí a novinek s filtrováním a stránkováním
+ * Seznam akcí s filtrováním a stránkováním
  */
 
 import { connectToDatabase } from '@/server/utils/db'
 import { Event } from '@/server/models'
-import { eventsQuerySchema } from '@/shared/schemas'
+import { eventFilterQuerySchema } from '@/shared/schemas'
 import { defineApiHandler } from '@/server/utils/errors'
 import type { FilterQuery } from 'mongoose'
-import type { IEvent } from '@/server/models'
+import type { IEvent } from '@/server/models/Event'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    await connectToDatabase()
+	defineApiHandler(async (event) => {
+		await connectToDatabase()
 
-    const query = getQuery(event)
-    const filters = eventsQuerySchema.parse(query)
+		const query = getQuery(event)
+		const filters = eventFilterQuerySchema.parse(query)
 
-    // Sestavení filtru
-    const filter: FilterQuery<IEvent> = {}
+		// Sestavení filtru
+		const filter: FilterQuery<IEvent> = {}
 
-    if (filters.published !== undefined) {
-      filter.published = filters.published
-    }
+		if (filters.isActive !== undefined) {
+			filter.isActive = filters.isActive
+		}
 
-    // Defaultně zobrazit jen nadcházející nebo probíhající události
-    if (filters.upcoming) {
-      filter.endDate = { $gte: new Date() }
-    }
+		if (filters.shopId) {
+			filter.shopId = filters.shopId
+		}
 
-    if (filters.search) {
-      filter.$or = [
-        { title: { $regex: filters.search, $options: 'i' } },
-        { description: { $regex: filters.search, $options: 'i' } }
-      ]
-    }
+		if (filters.search) {
+			filter.name = { $regex: filters.search, $options: 'i' }
+		}
 
-    // Stránkování
-    const page = filters.page || 1
-    const limit = filters.limit || 20
-    const skip = (page - 1) * limit
+		// Stránkování
+		const page = filters.page || 1
+		const limit = filters.limit || 20
+		const skip = (page - 1) * limit
 
-    // Získání dat
-    const [events, total] = await Promise.all([
-      Event.find(filter)
-        .sort({ startDate: 1 })
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Event.countDocuments(filter)
-    ])
+		// Řazení
+		const sortField = filters.sort || 'sortOrder'
+		const sortOrder = filters.order === 'desc' ? -1 : 1
+		const sort: Record<string, 1 | -1> = { [sortField]: sortOrder }
 
-    return {
-      data: events,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit)
-      }
-    }
-  })
+		// Získání dat s populací obchodu
+		const [events, total] = await Promise.all([
+			Event.find(filter)
+				.populate('shopId', 'name logo slug')
+				.sort(sort)
+				.skip(skip)
+				.limit(limit)
+				.lean(),
+			Event.countDocuments(filter),
+		])
+
+		// Transformace - přejmenovat shopId na shop pro konzistenci
+		const transformedEvents = events.map((e) => ({
+			...e,
+			_id: e._id.toString(),
+			shop: e.shopId,
+			shopId:
+				typeof e.shopId === 'object' && e.shopId?._id ? e.shopId._id.toString() : e.shopId,
+		}))
+
+		return {
+			data: transformedEvents,
+			meta: {
+				total,
+				page,
+				limit,
+				totalPages: Math.ceil(total / limit),
+			},
+		}
+	}),
 )

@@ -103,21 +103,21 @@ Systém správy CMS uživatelů s podporou rolí a oprávnění.
 
 ```typescript
 interface IUser {
-  email: string          // Unikátní, lowercase, trimmed
-  password: string       // Hashované (bcrypt), select: false
-  name: string
-  role: 'admin' | 'editor'
-  isActive: boolean      // Deaktivovaný uživatel se nemůže přihlásit
-  lastLoginAt?: Date     // Nastaveno při každém přihlášení
+	email: string // Unikátní, lowercase, trimmed
+	password: string // Hashované (bcrypt), select: false
+	name: string
+	role: 'admin' | 'editor'
+	isActive: boolean // Deaktivovaný uživatel se nemůže přihlásit
+	lastLoginAt?: Date // Nastaveno při každém přihlášení
 }
 ```
 
 ## Role a oprávnění
 
-| Role | Oprávnění |
-|------|-----------|
-| **admin** | Plný přístup - správa obchodů, akcí, služeb a dalších správců |
-| **editor** | Správa obchodů, akcí, služeb (bez přístupu ke správcům) |
+| Role       | Oprávnění                                                     |
+| ---------- | ------------------------------------------------------------- |
+| **admin**  | Plný přístup - správa obchodů, akcí, služeb a dalších správců |
+| **editor** | Správa obchodů, akcí, služeb (bez přístupu ke správcům)       |
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -134,11 +134,13 @@ interface IUser {
 ## API Endpointy
 
 ### `GET /api/users` - Seznam správců
+
 - **Pouze admin**
 - Podporuje paginaci (`page`, `limit`) a řazení (`sort`, `order`)
 - Vrací seznam uživatelů bez hesla
 
 ### `POST /api/users` - Vytvoření správce
+
 - **Pouze admin** + CSRF ochrana
 - Validace: email, name (2-100 znaků), password (min 8 znaků), role
 - Kontrola duplicitního emailu
@@ -156,10 +158,12 @@ interface IUser {
 ```
 
 ### `GET /api/users/:id` - Detail správce
+
 - **Pouze admin**
 - Validace ObjectId
 
 ### `PUT /api/users/:id` - Úprava správce
+
 - **Pouze admin** + CSRF ochrana
 - Všechna pole jsou volitelná
 - Pokud je zadáno heslo, je zahashováno
@@ -177,6 +181,7 @@ interface IUser {
 ```
 
 ### `DELETE /api/users/:id` - Smazání správce
+
 - **Pouze admin** + CSRF ochrana
 - **Nelze smazat sám sebe**
 - Při smazání automaticky zneplatní všechny sessions uživatele
@@ -193,17 +198,18 @@ interface IUser {
 ### Přístupová kontrola
 
 Middleware `cms.ts` kontroluje:
+
 1. Přihlášení uživatele (přístup k `/api/auth/me`)
 2. Pro `/cms/spravci/*` stránky vyžaduje roli `admin`
 
 ```typescript
 // Kontrola oprávnění v middleware
 if (to.path.startsWith('/cms/spravci') && userData.role !== 'admin') {
-  throw createError({
-    statusCode: 403,
-    statusMessage: 'Forbidden',
-    message: 'Nemáte oprávnění k zobrazení této stránky'
-  })
+	throw createError({
+		statusCode: 403,
+		statusMessage: 'Forbidden',
+		message: 'Nemáte oprávnění k zobrazení této stránky',
+	})
 }
 ```
 
@@ -220,22 +226,22 @@ const { user, isAdmin, secureFetch, logout } = useCmsAuth()
 
 ## Bezpečnostní opatření
 
-| Ochrana | Implementace |
-|---------|--------------|
-| **Heslo** | bcrypt hash, nikdy se nevrací v API (select: false) |
-| **CSRF** | Všechny mutace vyžadují X-CSRF-Token header |
-| **Role** | requireAdmin() helper kontroluje token a roli |
-| **Self-delete** | Nelze smazat vlastní účet |
+| Ochrana             | Implementace                                             |
+| ------------------- | -------------------------------------------------------- |
+| **Heslo**           | bcrypt hash, nikdy se nevrací v API (select: false)      |
+| **CSRF**            | Všechny mutace vyžadují X-CSRF-Token header              |
+| **Role**            | requireAdmin() helper kontroluje token a roli            |
+| **Self-delete**     | Nelze smazat vlastní účet                                |
 | **Session cleanup** | Při smazání uživatele se zneplatní všechny jeho sessions |
 
 ---
 
 ### 4. Bezpečnostní mechanismy
 
-| Mechanismus | Účel |
-| --- | --- |
-| **Token rotation** | Každý refresh generuje nový refresh token - starý je neplatný |
+| Mechanismus               | Účel                                                                              |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| **Token rotation**        | Každý refresh generuje nový refresh token - starý je neplatný                     |
 | **Token theft detection** | Pokud někdo použije starý refresh token → zneplatní SE VŠECHNY sessions uživatele |
-| **CSRF token** | Ochrana proti CSRF útokům na state-changing operace |
-| **HTTP-only cookies** | JavaScript nemá přístup k tokenům |
-| **Rate limiting** | Ochrana proti brute-force |
+| **CSRF token**            | Ochrana proti CSRF útokům na state-changing operace                               |
+| **HTTP-only cookies**     | JavaScript nemá přístup k tokenům                                                 |
+| **Rate limiting**         | Ochrana proti brute-force                                                         |

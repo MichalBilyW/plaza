@@ -10,53 +10,53 @@ import { paginationQuerySchema } from '@/shared/schemas'
 import { defineApiHandler } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    // Pouze admin může vidět seznam správců
-    requireAdmin(event)
+	defineApiHandler(async (event) => {
+		// Pouze admin může vidět seznam správců
+		requireAdmin(event)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    // Parse query parametrů
-    const query = getQuery(event)
-    const validatedQuery = paginationQuerySchema.parse(query)
+		// Parse query parametrů
+		const query = getQuery(event)
+		const validatedQuery = paginationQuerySchema.parse(query)
 
-    const { page, limit, sort, order } = validatedQuery
+		const { page, limit, sort, order } = validatedQuery
 
-    // Celkový počet
-    const total = await User.countDocuments()
+		// Celkový počet
+		const total = await User.countDocuments()
 
-    // Sestavení sort objektu
-    const sortField = sort || 'createdAt'
-    const sortOrder = order === 'desc' ? -1 : 1
-    const sortObj: Record<string, 1 | -1> = { [sortField]: sortOrder }
+		// Sestavení sort objektu
+		const sortField = sort || 'createdAt'
+		const sortOrder = order === 'desc' ? -1 : 1
+		const sortObj: Record<string, 1 | -1> = { [sortField]: sortOrder }
 
-    // Dotaz
-    const users = await User.find()
-      .sort(sortObj)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean()
+		// Dotaz
+		const users = await User.find()
+			.sort(sortObj)
+			.skip((page - 1) * limit)
+			.limit(limit)
+			.lean()
 
-    // Transformace pro konzistentní response
-    const data = users.map((user) => ({
-      _id: user._id.toString(),
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      isActive: user.isActive,
-      lastLoginAt: user.lastLoginAt?.toISOString(),
-      createdAt: user.createdAt.toISOString(),
-      updatedAt: user.updatedAt.toISOString(),
-    }))
+		// Transformace pro konzistentní response
+		const data = users.map((user) => ({
+			_id: user._id.toString(),
+			email: user.email,
+			name: user.name,
+			role: user.role,
+			isActive: user.isActive,
+			lastLoginAt: user.lastLoginAt?.toISOString(),
+			createdAt: user.createdAt.toISOString(),
+			updatedAt: user.updatedAt.toISOString(),
+		}))
 
-    return {
-      data,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    }
-  })
+		return {
+			data,
+			pagination: {
+				page,
+				limit,
+				total,
+				totalPages: Math.ceil(total / limit),
+			},
+		}
+	}),
 )

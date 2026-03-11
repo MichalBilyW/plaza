@@ -9,21 +9,21 @@ import { requireAdmin } from '@/server/utils/auth'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    // Mazání pouze pro adminy
-    requireAdmin(event)
+	defineApiHandler(async (event) => {
+		// Mazání pouze pro adminy
+		requireAdmin(event)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    const id = getRouterParam(event, 'id')
+		const id = getRouterParam(event, 'id')
 
-    const shop = await Shop.findById(id)
-    if (!shop) {
-      throw createNotFoundError('Obchod')
-    }
+		const shop = await Shop.findById(id)
+		if (!shop) {
+			throw createNotFoundError('Obchod')
+		}
 
-    await shop.deleteOne()
+		await shop.deleteOne()
 
-    return { success: true, message: 'Obchod byl smazán' }
-  })
+		return { success: true, message: 'Obchod byl smazán' }
+	}),
 )

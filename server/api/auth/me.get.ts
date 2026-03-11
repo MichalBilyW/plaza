@@ -9,23 +9,23 @@ import { requireAuth } from '@/server/utils/auth'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    const authUser = requireAuth(event)
+	defineApiHandler(async (event) => {
+		const authUser = requireAuth(event)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    const user = await User.findById(authUser.id)
+		const user = await User.findById(authUser.id)
 
-    if (!user || !user.isActive) {
-      throw createNotFoundError('Uživatel')
-    }
+		if (!user || !user.isActive) {
+			throw createNotFoundError('Uživatel')
+		}
 
-    return {
-      _id: user._id.toString(),
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      isActive: user.isActive,
-    }
-  })
+		return {
+			_id: user._id.toString(),
+			email: user.email,
+			name: user.name,
+			role: user.role,
+			isActive: user.isActive,
+		}
+	}),
 )

@@ -9,29 +9,29 @@ import { requireAdmin } from '@/server/utils/auth'
 import { defineApiHandler, createNotFoundError, createValidationError } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    // Mazání pouze pro adminy
-    requireAdmin(event)
+	defineApiHandler(async (event) => {
+		// Mazání pouze pro adminy
+		requireAdmin(event)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    const id = getRouterParam(event, 'id')
+		const id = getRouterParam(event, 'id')
 
-    const category = await Category.findById(id)
-    if (!category) {
-      throw createNotFoundError('Kategorie')
-    }
+		const category = await Category.findById(id)
+		if (!category) {
+			throw createNotFoundError('Kategorie')
+		}
 
-    // Zkontrolovat, zda kategorie neobsahuje obchody
-    const shopsCount = await Shop.countDocuments({ categoryId: id })
-    if (shopsCount > 0) {
-      throw createValidationError(
-        `Nelze smazat kategorii obsahující ${shopsCount} obchodů. Nejprve přesuňte nebo smažte obchody.`
-      )
-    }
+		// Zkontrolovat, zda kategorie neobsahuje obchody
+		const shopsCount = await Shop.countDocuments({ categoryId: id })
+		if (shopsCount > 0) {
+			throw createValidationError(
+				`Nelze smazat kategorii obsahující ${shopsCount} obchodů. Nejprve přesuňte nebo smažte obchody.`,
+			)
+		}
 
-    await category.deleteOne()
+		await category.deleteOne()
 
-    return { success: true, message: 'Kategorie byla smazána' }
-  })
+		return { success: true, message: 'Kategorie byla smazána' }
+	}),
 )

@@ -8,10 +8,10 @@ import { Homepage } from '@/server/models'
 import { defineApiHandler } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async () => {
-    await connectToDatabase()
+	defineApiHandler(async () => {
+		await connectToDatabase()
 
-    const homepage = await Homepage.getOrCreate()
-    return homepage
-  })
+		const homepage = await Homepage.getOrCreate()
+		return homepage
+	}),
 )

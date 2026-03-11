@@ -9,19 +9,19 @@ Webová prezentace a CMS pro nákupní centrum OC Plaza Liberec.
 
 ## 🚀 Tech Stack
 
-| Kategorie | Technologie | Účel |
-|-----------|-------------|------|
-| **Framework** | [Nuxt 4](https://nuxt.com) | Full-stack SSR framework |
-| **Runtime** | Node.js 22 | JavaScript runtime |
-| **Databáze** | [MongoDB](https://mongodb.com) + [Mongoose](https://mongoosejs.com) | Document database s ODM |
-| **Styling** | [TailwindCSS](https://tailwindcss.com) | Utility-first CSS |
-| **Formuláře** | [FormKit](https://formkit.com) | Vue form framework |
-| **Lokalizace** | [@nuxtjs/i18n](https://i18n.nuxtjs.org) | Internacionalizace (cs/en) |
-| **Validace** | [Zod](https://zod.dev) | Schema validace |
-| **Auth** | JWT + bcrypt | Autentizace s httpOnly cookies |
-| **Testy** | [Vitest](https://vitest.dev) | Unit testy |
-| **Linting** | ESLint + Prettier | Code quality |
-| **Deploy** | Docker / [Coolify](https://coolify.io) | Kontejnerizace a hosting |
+| Kategorie      | Technologie                                                         | Účel                           |
+| -------------- | ------------------------------------------------------------------- | ------------------------------ |
+| **Framework**  | [Nuxt 4](https://nuxt.com)                                          | Full-stack SSR framework       |
+| **Runtime**    | Node.js 22                                                          | JavaScript runtime             |
+| **Databáze**   | [MongoDB](https://mongodb.com) + [Mongoose](https://mongoosejs.com) | Document database s ODM        |
+| **Styling**    | [TailwindCSS](https://tailwindcss.com)                              | Utility-first CSS              |
+| **Formuláře**  | [FormKit](https://formkit.com)                                      | Vue form framework             |
+| **Lokalizace** | [@nuxtjs/i18n](https://i18n.nuxtjs.org)                             | Internacionalizace (cs/en)     |
+| **Validace**   | [Zod](https://zod.dev)                                              | Schema validace                |
+| **Auth**       | JWT + bcrypt                                                        | Autentizace s httpOnly cookies |
+| **Testy**      | [Vitest](https://vitest.dev)                                        | Unit testy                     |
+| **Linting**    | ESLint + Prettier                                                   | Code quality                   |
+| **Deploy**     | Docker / [Coolify](https://coolify.io)                              | Kontejnerizace a hosting       |
 
 ## 📁 Struktura projektu
 
@@ -128,10 +128,10 @@ npm run format
 
 Všechny proměnné jsou definovány v `.env.example`. Nuxt používá prefix konvenci:
 
-| Prefix | Typ | Přístup |
-|--------|-----|---------|
-| `NUXT_` | Private | Pouze server |
-| `NUXT_PUBLIC_` | Public | Client + server |
+| Prefix         | Typ     | Přístup         |
+| -------------- | ------- | --------------- |
+| `NUXT_`        | Private | Pouze server    |
+| `NUXT_PUBLIC_` | Public  | Client + server |
 
 ### Povinné proměnné
 
@@ -160,9 +160,9 @@ Všechny API endpointy jsou definovány v `shared/api/endpoints.ts` - Single Sou
 
 ```typescript
 export const shopsEndpoints = {
-  list: { method: 'GET', path: '/api/shops' },
-  create: { method: 'POST', path: '/api/shops', auth: true },
-  // ...
+	list: { method: 'GET', path: '/api/shops' },
+	create: { method: 'POST', path: '/api/shops', auth: true },
+	// ...
 }
 ```
 
@@ -179,6 +179,7 @@ const shops = await $fetch('/api/shops')
 ### Vitest kontrola
 
 Test `tests/endpoints-registry.test.ts` ověřuje konzistenci:
+
 - Každý registrovaný endpoint má implementaci
 - Každá implementace je registrována
 
@@ -206,12 +207,7 @@ setLocale('en')
 FormKit je nakonfigurován s českými/anglickými překlady a Tailwind styly:
 
 ```vue
-<FormKit
-  type="text"
-  name="name"
-  :label="t('forms.name')"
-  validation="required|length:2,100"
-/>
+<FormKit type="text" name="name" :label="t('forms.name')" validation="required|length:2,100" />
 ```
 
 ## 🔒 Autentizace
@@ -243,28 +239,31 @@ docker run -p 3000:3000 \
 
 ## 📊 Implementované moduly
 
-| Modul | Endpointy | Stav |
-|-------|-----------|------|
-| Auth | 3 | ✅ |
-| Shops | 5 | ✅ |
-| Events | 7 | ✅ |
-| Health | 1 | ✅ |
+| Modul  | Endpointy | Stav |
+| ------ | --------- | ---- |
+| Auth   | 3         | ✅   |
+| Shops  | 5         | ✅   |
+| Events | 7         | ✅   |
+| Health | 1         | ✅   |
 
 ## 🧑‍💻 Vývojářské konvence
 
 ### Kód
+
 - TypeScript všude
 - Zod validace pro všechny vstupy
 - Centralizovaný error handling
 - Slug generování s českým unidecode
 
 ### Git
+
 - `feat:` Nová funkcionalita
 - `fix:` Oprava chyby
 - `docs:` Dokumentace
 - `refactor:` Refaktoring
 
 ### Branches
+
 - `main` - produkce
 - `develop` - vývoj
 - `feature/*` - nové funkce

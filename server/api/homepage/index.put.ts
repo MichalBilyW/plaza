@@ -10,22 +10,22 @@ import { requireEditor } from '@/server/utils/auth'
 import { defineApiHandler } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    requireEditor(event)
+	defineApiHandler(async (event) => {
+		requireEditor(event)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    // Validace vstupu
-    const body = await readBody(event)
-    const data = homepageUpdateSchema.parse(body)
+		// Validace vstupu
+		const body = await readBody(event)
+		const data = homepageUpdateSchema.parse(body)
 
-    // Získat nebo vytvořit záznam
-    const homepage = await Homepage.getOrCreate()
+		// Získat nebo vytvořit záznam
+		const homepage = await Homepage.getOrCreate()
 
-    // Aktualizovat
-    Object.assign(homepage, data)
-    await homepage.save()
+		// Aktualizovat
+		Object.assign(homepage, data)
+		await homepage.save()
 
-    return homepage
-  })
+		return homepage
+	}),
 )

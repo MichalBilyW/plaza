@@ -8,10 +8,10 @@ import { GeneralInfo } from '@/server/models'
 import { defineApiHandler } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async () => {
-    await connectToDatabase()
+	defineApiHandler(async () => {
+		await connectToDatabase()
 
-    const info = await GeneralInfo.getOrCreate()
-    return info
-  })
+		const info = await GeneralInfo.getOrCreate()
+		return info
+	}),
 )

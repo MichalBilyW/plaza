@@ -8,20 +8,20 @@ import { Floor } from '@/server/models'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    await connectToDatabase()
+	defineApiHandler(async (event) => {
+		await connectToDatabase()
 
-    const id = getRouterParam(event, 'id')
+		const id = getRouterParam(event, 'id')
 
-    const floor = await Floor.findById(id).lean()
+		const floor = await Floor.findById(id).lean()
 
-    if (!floor) {
-      throw createNotFoundError('Patro')
-    }
+		if (!floor) {
+			throw createNotFoundError('Patro')
+		}
 
-    return {
-      ...floor,
-      _id: floor._id.toString(),
-    }
-  })
+		return {
+			...floor,
+			_id: floor._id.toString(),
+		}
+	}),
 )

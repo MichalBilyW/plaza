@@ -1,37 +1,31 @@
 /**
- * Event Model - Akce/Novinky
+ * Event Model - Akce/Slevy
+ * Jednoduchý model pro akce vázané na obchody
  */
 
-import mongoose, { Schema, Document, Model, Types } from 'mongoose'
-import type { PublishStatus } from '@/shared/types'
+import type { Document, Model, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose'
 
 // ==========================================
 // INTERFACE
 // ==========================================
 
 export interface IEvent {
-  title: string
-  slug: string
-  content: string
-  excerpt?: string
-  coverImage?: string
-  gallery?: string[]
-  status: PublishStatus
-  publishedAt?: Date
-  scheduledAt?: Date
-  eventStartDate?: Date
-  eventEndDate?: Date
-  shopIds?: Types.ObjectId[]
-  isHighlighted: boolean
-  sortOrder: number
-  seoTitle?: string
-  seoDescription?: string
-  authorId: Types.ObjectId
+	/** Interní název akce (jen pro CMS, nezobrazuje se na webu) */
+	name: string
+	/** Čtvercový obrázek akce */
+	image: string
+	/** Vazba na obchod */
+	shopId: Types.ObjectId
+	/** Pořadí pro řazení */
+	sortOrder: number
+	/** Je akce aktivní */
+	isActive: boolean
 }
 
 export interface IEventDocument extends IEvent, Document {
-  createdAt: Date
-  updatedAt: Date
+	createdAt: Date
+	updatedAt: Date
 }
 
 // ==========================================
@@ -39,106 +33,57 @@ export interface IEventDocument extends IEvent, Document {
 // ==========================================
 
 const eventSchema = new Schema<IEventDocument>(
-  {
-    title: {
-      type: String,
-      required: [true, 'Název akce je povinný'],
-      trim: true,
-      maxlength: 200,
-    },
-    slug: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-      index: true,
-    },
-    content: {
-      type: String,
-      required: [true, 'Obsah je povinný'],
-    },
-    excerpt: {
-      type: String,
-      maxlength: 500,
-    },
-    coverImage: String,
-    gallery: [String],
-    status: {
-      type: String,
-      enum: ['draft', 'published', 'archived'],
-      default: 'draft',
-      index: true,
-    },
-    publishedAt: {
-      type: Date,
-      index: true,
-    },
-    scheduledAt: {
-      type: Date,
-    },
-    eventStartDate: {
-      type: Date,
-      index: true,
-    },
-    eventEndDate: {
-      type: Date,
-    },
-    shopIds: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Shop',
-      },
-    ],
-    isHighlighted: {
-      type: Boolean,
-      default: false,
-      index: true,
-    },
-    sortOrder: {
-      type: Number,
-      default: 0,
-    },
-    seoTitle: {
-      type: String,
-      maxlength: 60,
-    },
-    seoDescription: {
-      type: String,
-      maxlength: 160,
-    },
-    authorId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-  },
-  {
-    timestamps: true,
-    toJSON: {
-      transform: (_doc, ret) => {
-        ret._id = ret._id.toString()
-        if (ret.authorId) ret.authorId = ret.authorId.toString()
-        if (ret.shopIds) ret.shopIds = ret.shopIds.map((id: Types.ObjectId) => id.toString())
-        delete ret.__v
-        return ret
-      },
-    },
-  }
+	{
+		name: {
+			type: String,
+			required: [true, 'Název akce je povinný'],
+			trim: true,
+			maxlength: 200,
+		},
+		image: {
+			type: String,
+			required: [true, 'Obrázek akce je povinný'],
+		},
+		shopId: {
+			type: Schema.Types.ObjectId,
+			ref: 'Shop',
+			required: [true, 'Obchod je povinný'],
+			index: true,
+		},
+		sortOrder: {
+			type: Number,
+			default: 0,
+		},
+		isActive: {
+			type: Boolean,
+			default: true,
+			index: true,
+		},
+	},
+	{
+		timestamps: true,
+		toJSON: {
+			transform: (_doc: unknown, ret: Record<string, unknown>) => {
+				ret._id = String(ret._id)
+				if (ret.shopId) ret.shopId = String(ret.shopId)
+				delete ret.__v
+				return ret
+			},
+		},
+	},
 )
 
 // ==========================================
 // INDEXES
 // ==========================================
 
-eventSchema.index({ title: 'text', content: 'text' })
-eventSchema.index({ status: 1, publishedAt: -1 })
-eventSchema.index({ status: 1, eventStartDate: 1 })
-eventSchema.index({ isHighlighted: 1, status: 1, publishedAt: -1 })
+eventSchema.index({ name: 'text' })
+eventSchema.index({ isActive: 1, sortOrder: 1 })
+eventSchema.index({ shopId: 1, isActive: 1 })
 
 // ==========================================
 // MODEL
 // ==========================================
 
 export const Event: Model<IEventDocument> =
-  mongoose.models.Event || mongoose.model<IEventDocument>('Event', eventSchema)
+	mongoose.models.Event || mongoose.model<IEventDocument>('Event', eventSchema)

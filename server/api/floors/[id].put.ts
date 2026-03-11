@@ -11,43 +11,43 @@ import { generateUniqueSlug } from '@/server/utils/slug'
 import { defineApiHandler, createNotFoundError, createValidationError } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    requireEditor(event)
+	defineApiHandler(async (event) => {
+		requireEditor(event)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    const id = getRouterParam(event, 'id')
+		const id = getRouterParam(event, 'id')
 
-    // Najít patro
-    const floor = await Floor.findById(id)
-    if (!floor) {
-      throw createNotFoundError('Patro')
-    }
+		// Najít patro
+		const floor = await Floor.findById(id)
+		if (!floor) {
+			throw createNotFoundError('Patro')
+		}
 
-    // Validace vstupu
-    const body = await readBody(event)
-    const data = floorUpdateSchema.parse(body)
+		// Validace vstupu
+		const body = await readBody(event)
+		const data = floorUpdateSchema.parse(body)
 
-    // Pokud se mění název a není explicitně zadán slug, vygenerovat nový
-    if (data.name && data.name !== floor.name && !data.slug) {
-      data.slug = await generateUniqueSlug(data.name, async (s) => {
-        const existing = await Floor.findOne({ slug: s, _id: { $ne: id } })
-        return !!existing
-      })
-    }
+		// Pokud se mění název a není explicitně zadán slug, vygenerovat nový
+		if (data.name && data.name !== floor.name && !data.slug) {
+			data.slug = await generateUniqueSlug(data.name, async (s) => {
+				const existing = await Floor.findOne({ slug: s, _id: { $ne: id } })
+				return !!existing
+			})
+		}
 
-    // Pokud je explicitně zadán slug, zkontrolovat unikátnost
-    if (data.slug && data.slug !== floor.slug) {
-      const existing = await Floor.findOne({ slug: data.slug, _id: { $ne: id } })
-      if (existing) {
-        throw createValidationError('Slug již existuje')
-      }
-    }
+		// Pokud je explicitně zadán slug, zkontrolovat unikátnost
+		if (data.slug && data.slug !== floor.slug) {
+			const existing = await Floor.findOne({ slug: data.slug, _id: { $ne: id } })
+			if (existing) {
+				throw createValidationError('Slug již existuje')
+			}
+		}
 
-    // Aktualizovat
-    Object.assign(floor, data)
-    await floor.save()
+		// Aktualizovat
+		Object.assign(floor, data)
+		await floor.save()
 
-    return floor.toJSON()
-  })
+		return floor.toJSON()
+	}),
 )

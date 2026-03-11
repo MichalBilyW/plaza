@@ -11,30 +11,30 @@ import { generateUniqueSlug } from '@/server/utils/slug'
 import { defineApiHandler } from '@/server/utils/errors'
 
 export default defineEventHandler(
-  defineApiHandler(async (event) => {
-    // Vyžadovat editor nebo admin roli
-    requireEditor(event)
+	defineApiHandler(async (event) => {
+		// Vyžadovat editor nebo admin roli
+		requireEditor(event)
 
-    await connectToDatabase()
+		await connectToDatabase()
 
-    // Validace vstupu
-    const body = await readBody(event)
-    const data = floorCreateSchema.parse(body)
+		// Validace vstupu
+		const body = await readBody(event)
+		const data = floorCreateSchema.parse(body)
 
-    // Generovat slug pokud není zadán
-    const slug =
-      data.slug ||
-      (await generateUniqueSlug(data.name, async (s) => {
-        const existing = await Floor.findOne({ slug: s })
-        return !!existing
-      }))
+		// Generovat slug pokud není zadán
+		const slug =
+			data.slug ||
+			(await generateUniqueSlug(data.name, async (s) => {
+				const existing = await Floor.findOne({ slug: s })
+				return !!existing
+			}))
 
-    // Vytvořit patro
-    const floor = await Floor.create({
-      ...data,
-      slug,
-    })
+		// Vytvořit patro
+		const floor = await Floor.create({
+			...data,
+			slug,
+		})
 
-    return floor.toJSON()
-  })
+		return floor.toJSON()
+	}),
 )
