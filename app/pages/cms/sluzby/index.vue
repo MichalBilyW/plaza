@@ -5,13 +5,15 @@
 		>
 			<div>
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
-					{{ t('cms.news.title') }}
+					{{ t('cms.services.title') }}
 				</h1>
-				<p class="text-gray-500 mt-1 text-sm sm:text-base">{{ t('cms.news.subtitle') }}</p>
+				<p class="text-gray-500 mt-1 text-sm sm:text-base">
+					{{ t('cms.services.subtitle') }}
+				</p>
 			</div>
 			<NuxtLink
-				to="/cms/novinky/nova"
-				class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-cms-news-600 text-white rounded-lg hover:bg-cms-news-700 transition-colors text-sm sm:text-base"
+				to="/cms/sluzby/nova"
+				class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-cms-services-600 text-white rounded-lg hover:bg-cms-services-700 transition-colors text-sm sm:text-base"
 			>
 				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -21,7 +23,7 @@
 						d="M12 4v16m8-8H4"
 					/>
 				</svg>
-				{{ t('cms.news.addNews') }}
+				{{ t('cms.services.addService') }}
 			</NuxtLink>
 		</div>
 
@@ -31,17 +33,17 @@
 				<input
 					v-model="search"
 					type="text"
-					:placeholder="t('cms.news.searchPlaceholder')"
-					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-news-500 focus:border-transparent"
+					:placeholder="t('cms.services.searchPlaceholder')"
+					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-services-500 focus:border-transparent"
 				/>
 			</div>
 			<select
 				v-model="activeFilter"
-				class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-news-500 focus:border-transparent"
+				class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-services-500 focus:border-transparent"
 			>
-				<option value="">{{ t('cms.news.allStatus') }}</option>
-				<option value="true">{{ t('cms.news.activeOnly') }}</option>
-				<option value="false">{{ t('cms.news.inactiveOnly') }}</option>
+				<option value="">{{ t('cms.services.allStatus') }}</option>
+				<option value="true">{{ t('cms.services.activeOnly') }}</option>
+				<option value="false">{{ t('cms.services.inactiveOnly') }}</option>
 			</select>
 		</div>
 
@@ -56,7 +58,7 @@
 		</div>
 
 		<!-- Empty state -->
-		<div v-else-if="!news.length" class="bg-white rounded-xl shadow-sm p-8 text-center">
+		<div v-else-if="!services.length" class="bg-white rounded-xl shadow-sm p-8 text-center">
 			<svg
 				class="w-12 h-12 mx-auto text-gray-400 mb-4"
 				fill="none"
@@ -67,13 +69,13 @@
 					stroke-linecap="round"
 					stroke-linejoin="round"
 					stroke-width="2"
-					d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+					d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
 				/>
 			</svg>
-			<p class="text-gray-500">{{ t('cms.news.noNews') }}</p>
+			<p class="text-gray-500">{{ t('cms.services.noServices') }}</p>
 		</div>
 
-		<!-- News Grid -->
+		<!-- Services Grid -->
 		<draggable
 			v-else
 			v-model="sortableItems"
@@ -93,13 +95,13 @@
 							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
 						</svg>
 					</div>
-					<!-- Image -->
-				<div class="aspect-square relative overflow-hidden bg-gray-100">
-					<img
-						v-if="item.image"
-						:src="item.image"
-						:alt="item.name"
-						class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+					<!-- Icon -->
+					<div class="aspect-square relative overflow-hidden bg-gray-100 p-6">
+						<img
+						v-if="item.icon"
+						:src="item.icon"
+						:alt="item.shortDescription"
+						class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
 					/>
 					<div
 						v-else
@@ -115,7 +117,7 @@
 								stroke-linecap="round"
 								stroke-linejoin="round"
 								stroke-width="1"
-								d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+								d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
 							/>
 						</svg>
 					</div>
@@ -130,16 +132,16 @@
 
 				<!-- Content -->
 				<div class="p-4">
-					<div class="flex items-center justify-between gap-2">
-						<h3 class="font-medium text-gray-900 truncate">{{ item.name }}</h3>
+					<div class="flex items-start justify-between gap-2">
+						<p class="font-medium text-gray-900 truncate">{{ item.shortDescription }}</p>
 						<span class="inline-flex items-center justify-center text-xs min-w-6 w-6 h-6 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium">{{ item.sortOrder }}</span>
 					</div>
 
 					<!-- Actions -->
 					<div class="mt-3 flex items-center justify-between">
 						<NuxtLink
-							:to="`/cms/novinky/${item._id}`"
-							class="text-cms-news-600 hover:text-cms-news-700 text-sm font-medium"
+							:to="`/cms/sluzby/${item._id}`"
+							class="text-cms-services-600 hover:text-cms-services-700 text-sm font-medium"
 						>
 							{{ t('common.edit') }}
 						</NuxtLink>
@@ -176,10 +178,10 @@
 			>
 				<div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
 					<h3 class="text-lg font-semibold text-gray-900 mb-2">
-						{{ t('cms.news.deleteConfirmTitle') }}
+						{{ t('cms.services.deleteConfirmTitle') }}
 					</h3>
 					<p class="text-gray-500 mb-6">
-						{{ t('cms.news.deleteConfirmMessage', { name: deleteModal.item?.name }) }}
+						{{ t('cms.services.deleteConfirmMessage') }}
 					</p>
 					<div class="flex gap-3 justify-end">
 						<button
@@ -189,7 +191,7 @@
 							{{ t('common.cancel') }}
 						</button>
 						<button
-							@click="deleteNews"
+							@click="deleteService"
 							:disabled="deleteModal.loading"
 							class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
 						>
@@ -204,7 +206,7 @@
 
 <script setup lang="ts">
 import draggable from 'vuedraggable'
-import type { News } from '~~/shared/types'
+import type { Service } from '~~/shared/types'
 
 definePageMeta({
 	layout: 'cms',
@@ -212,7 +214,7 @@ definePageMeta({
 })
 
 usePlazaSeo({
-	title: 'Novinky a akce centra',
+	title: 'Služby',
 	noIndex: true,
 })
 
@@ -234,29 +236,29 @@ watch(search, (newValue) => {
 	}, 300)
 })
 
-// Fetch news
+// Fetch services
 const {
-	data: newsData,
+	data: servicesData,
 	pending,
 	error,
 	refresh,
-} = await useFetch<{ data: News[] }>('/api/news', {
+} = await useFetch<{ data: Service[] }>('/api/services', {
 	query: computed(() => ({
 		limit: 100,
 		search: debouncedSearch.value || undefined,
 		isActive: activeFilter.value === '' ? undefined : activeFilter.value === 'true',
 	})),
 })
-const news = computed(() => newsData.value?.data || [])
+const services = computed(() => servicesData.value?.data || [])
 
 // Sortable items for drag & drop
-const sortableItems = ref<News[]>([])
+const sortableItems = ref<Service[]>([])
 
-// Update sortableItems when news change
+// Update sortableItems when services change
 watch(
-	news,
-	(newNews) => {
-		sortableItems.value = [...newNews].sort((a, b) => a.sortOrder - b.sortOrder)
+	services,
+	(newServices) => {
+		sortableItems.value = [...newServices].sort((a, b) => a.sortOrder - b.sortOrder)
 	},
 	{ immediate: true },
 )
@@ -265,7 +267,7 @@ watch(
 const onDragEnd = async () => {
 	const ids = sortableItems.value.map((item) => item._id)
 	try {
-		await secureFetch('/api/news/reorder', {
+		await secureFetch('/api/services/reorder', {
 			method: 'PUT',
 			body: { ids },
 		})
@@ -276,7 +278,7 @@ const onDragEnd = async () => {
 	} catch {
 		flash.error(t('common.error'))
 		// Revert to original order on error
-		sortableItems.value = [...news.value].sort((a, b) => a.sortOrder - b.sortOrder)
+		sortableItems.value = [...services.value].sort((a, b) => a.sortOrder - b.sortOrder)
 	}
 }
 
@@ -284,27 +286,27 @@ const onDragEnd = async () => {
 const deleteModal = reactive({
 	show: false,
 	loading: false,
-	item: null as News | null,
+	item: null as Service | null,
 })
 
-const confirmDelete = (item: News) => {
+const confirmDelete = (item: Service) => {
 	deleteModal.item = item
 	deleteModal.show = true
 }
 
-const deleteNews = async () => {
+const deleteService = async () => {
 	if (!deleteModal.item) return
 
 	deleteModal.loading = true
 	try {
-		await secureFetch(`/api/news/${deleteModal.item._id}`, {
+		await secureFetch(`/api/services/${deleteModal.item._id}`, {
 			method: 'DELETE',
 		})
-		flash.success(t('cms.news.deleteSuccess'))
+		flash.success(t('cms.services.deleteSuccess'))
 		deleteModal.show = false
 		await refresh()
 	} catch {
-		flash.error(t('cms.news.deleteError'))
+		flash.error(t('cms.services.deleteError'))
 	} finally {
 		deleteModal.loading = false
 	}

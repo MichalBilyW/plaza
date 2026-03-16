@@ -271,24 +271,28 @@ export type NewsFilterQueryInput = z.input<typeof newsFilterQuerySchema>
 // ==========================================
 
 export const serviceCreateSchema = z.object({
-	name: z.string().min(2).max(100),
-	slug: optionalSlugSchema,
-	description: z.string().min(10).max(2000),
-	shortDescription: z.string().max(300).optional(),
-	icon: z.string().optional(),
-	image: z.string().optional(),
-	location: z.string().max(200).optional(),
-	floorId: optionalObjectIdSchema,
-	phone: phoneSchema,
-	email: optionalEmailSchema,
+	icon: z.string().min(1, 'Ikona je povinná'),
+	shortDescription: z.string().min(1, 'Popisek je povinný').max(120, 'Popisek může mít max. 120 znaků'),
+	description: z.string().max(2000).optional(),
 	isActive: z.boolean().default(true),
 	sortOrder: z.number().int().default(0),
 })
 
 export const serviceUpdateSchema = serviceCreateSchema.partial()
 
+export const serviceFilterQuerySchema = paginationQuerySchema.extend({
+	search: z.string().max(100).optional(),
+	isActive: z.preprocess((val) => {
+		if (val === '' || val === undefined || val === null) return undefined
+		if (val === 'true' || val === true) return true
+		if (val === 'false' || val === false) return false
+		return undefined
+	}, z.boolean().optional()),
+})
+
 export type ServiceCreateInput = z.infer<typeof serviceCreateSchema>
 export type ServiceUpdateInput = z.infer<typeof serviceUpdateSchema>
+export type ServiceFilterQueryInput = z.input<typeof serviceFilterQuerySchema>
 
 // ==========================================
 // FLOOR SCHÉMATA

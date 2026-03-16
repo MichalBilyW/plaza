@@ -85,16 +85,26 @@
 		</div>
 
 		<!-- Events Grid -->
-		<div
+		<draggable
 			v-else
+			v-model="sortableItems"
+			item-key="_id"
+			handle=".drag-handle"
+			:animation="200"
 			class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+			@end="onDragEnd"
 		>
-			<div
-				v-for="event in sortedEvents"
-				:key="event._id"
-				class="bg-white rounded-xl shadow-sm overflow-hidden group"
-			>
-				<!-- Image -->
+			<template #item="{ element: event }">
+				<div class="bg-white rounded-xl shadow-sm overflow-hidden group relative">
+					<!-- Drag handle -->
+					<div
+						class="drag-handle absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing p-1.5 bg-white/80 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+					>
+						<svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+						</svg>
+					</div>
+					<!-- Image -->
 				<div class="aspect-square relative overflow-hidden bg-gray-100">
 					<img
 						v-if="event.image"
@@ -133,14 +143,14 @@
 				<div class="p-4">
 					<div class="flex items-center justify-between gap-2">
 						<h3 class="font-medium text-gray-900 truncate">{{ event.name }}</h3>
-						<span class="text-xs text-gray-400 shrink-0">#{{ event.sortOrder }}</span>
+						<span class="inline-flex items-center justify-center text-xs min-w-6 w-6 h-6 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium">{{ event.sortOrder }}</span>
 					</div>
 					<p class="text-sm text-gray-500 flex items-center gap-3 mt-1">
 						<img
 							v-if="event.shop?.logo"
 							:src="event.shop.logo"
 							:alt="event.shop.name"
-							class="w-12 h-12 rounded object-contain"
+							class="w-8 h-8 rounded object-contain"
 						/>
 						<span class="truncate">{{
 							event.shop?.name || t('cms.events.noShop')
@@ -177,7 +187,8 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</template>
+	</draggable>
 
 		<!-- Delete confirmation modal -->
 		<Teleport to="body">
@@ -216,6 +227,7 @@
 </template>
 
 <script setup lang="ts">
+import draggable from 'vuedraggable'
 import type { Event, Shop } from '~~/shared/types'
 
 definePageMeta({
@@ -263,10 +275,36 @@ const {
 })
 const events = computed(() => eventsData.value?.data || [])
 
-// Sorted events
-const sortedEvents = computed(() => {
-	return [...events.value].sort((a, b) => a.sortOrder - b.sortOrder)
-})
+// Sortable items for drag & drop
+const sortableItems = ref<Event[]>([])
+
+// Update sortableItems when events change
+watch(
+	events,
+	(newEvents) => {
+		sortableItems.value = [...newEvents].sort((a, b) => a.sortOrder - b.sortOrder)
+	},
+	{ immediate: true },
+)
+
+// Handle drag end - save new order
+const onDragEnd = async () => {
+	const ids = sortableItems.value.map((item) => item._id)
+	try {
+		await secureFetch('/api/events/reorder', {
+			method: 'PUT',
+			body: { ids },
+		})
+		// Update local sortOrder values after successful save
+		sortableItems.value.forEach((item, index) => {
+			item.sortOrder = index
+		})
+	} catch {
+		flash.error(t('common.error'))
+		// Revert to original order on error
+		sortableItems.value = [...events.value].sort((a, b) => a.sortOrder - b.sortOrder)
+	}
+}
 
 // Fetch shops for filter
 const { data: shopsData } = await useFetch<{ data: Shop[] }>('/api/shops', {

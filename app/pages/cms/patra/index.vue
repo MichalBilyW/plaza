@@ -60,48 +60,39 @@
 			<table class="w-full min-w-[600px]">
 				<thead class="bg-gray-50 border-b">
 					<tr>
-						<CmsSortableHeader
-							field="level"
-							:sort-icon="getSortIcon('level')"
-							class="w-20"
-							@sort="toggleSort"
-							>{{ t('cms.floors.level') }}</CmsSortableHeader
-						>
-						<CmsSortableHeader
-							field="name"
-							:sort-icon="getSortIcon('name')"
-							@sort="toggleSort"
-							>{{ t('cms.floors.name') }}</CmsSortableHeader
-						>
-						<CmsSortableHeader
-							field="slug"
-							:sort-icon="getSortIcon('slug')"
-							@sort="toggleSort"
-							>{{ t('cms.floors.slug') }}</CmsSortableHeader
-						>
-						<CmsSortableHeader
-							field="isActive"
-							:sort-icon="getSortIcon('isActive')"
-							class="w-24"
-							@sort="toggleSort"
-							>{{ t('cms.floors.status') }}</CmsSortableHeader
-						>
-						<th
-							class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24"
-						>
-							{{ t('common.actions') }}
-						</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12"></th>
+						<th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-12">#</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">{{ t('cms.floors.level') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('cms.floors.name') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('cms.floors.slug') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">{{ t('cms.floors.status') }}</th>
+						<th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24">{{ t('common.actions') }}</th>
 					</tr>
 				</thead>
-				<tbody class="divide-y divide-gray-200">
-					<tr v-for="floor in sortedFloors" :key="floor._id" class="hover:bg-gray-50">
-						<td class="px-4 py-3">
-							<span
-								class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-800 font-medium"
-							>
-								{{ floor.level }}
-							</span>
-						</td>
+				<draggable
+					v-model="sortableItems"
+					tag="tbody"
+					item-key="_id"
+					handle=".drag-handle"
+					:animation="200"
+					class="divide-y divide-gray-200"
+					@end="onDragEnd"
+				>
+					<template #item="{ element: floor }">
+						<tr class="hover:bg-gray-50">
+							<td class="px-4 py-3">
+								<div class="drag-handle cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded inline-flex">
+									<svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+									</svg>
+								</div>
+							</td>
+							<td class="px-4 py-3 text-center text-sm text-gray-500">
+								{{ floor.sortOrder + 1 }}
+							</td>
+							<td class="px-4 py-3">
+								<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-800 font-medium">{{ floor.level }}</span>
+							</td>
 						<td class="px-4 py-3">
 							<NuxtLink
 								:to="`/cms/patra/${floor._id}`"
@@ -172,60 +163,46 @@
 							</div>
 						</td>
 					</tr>
-				</tbody>
-			</table>
-		</div>
+				</template>
+			</draggable>
+		</table>
+	</div>
 
 		<!-- Mobile/Tablet: Cards -->
-		<div v-if="floors.length" class="lg:hidden space-y-3">
-			<NuxtLink
-				v-for="floor in sortedFloors"
-				:key="floor._id"
-				:to="`/cms/patra/${floor._id}`"
-				class="block bg-white rounded-xl shadow-sm p-3 active:bg-gray-50 transition-colors"
-			>
-				<div class="flex items-center gap-3">
-					<span
-						class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-800 font-medium flex-shrink-0"
-					>
-						{{ floor.level }}
-					</span>
-					<div class="flex-1 min-w-0">
-						<div class="flex items-center justify-between gap-2">
-							<h3 class="font-medium text-gray-900 truncate">{{ floor.name }}</h3>
-							<span
-								:class="
-									floor.isActive
-										? 'bg-green-100 text-green-800'
-										: 'bg-gray-100 text-gray-800'
-								"
-								class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0"
-							>
-								{{
-									floor.isActive
-										? t('cms.floors.active')
-										: t('cms.floors.inactive')
-								}}
-							</span>
-						</div>
-						<p class="text-sm text-gray-500 truncate mt-0.5">{{ floor.slug }}</p>
+		<draggable
+			v-if="floors.length"
+			v-model="sortableItems"
+			item-key="_id"
+			handle=".drag-handle-mobile"
+			:animation="200"
+			class="lg:hidden space-y-3"
+			@end="onDragEnd"
+		>
+			<template #item="{ element: floor }">
+				<div class="bg-white rounded-xl shadow-sm p-3 flex items-center gap-3">
+					<div class="drag-handle-mobile cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded flex-shrink-0">
+						<svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+						</svg>
 					</div>
-					<svg
-						class="w-5 h-5 text-gray-400 flex-shrink-0"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 5l7 7-7 7"
-						/>
-					</svg>
+					<NuxtLink :to="`/cms/patra/${floor._id}`" class="flex-1 min-w-0 flex items-center gap-3">
+						<span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-800 font-medium flex-shrink-0">{{ floor.level }}</span>
+						<div class="flex-1 min-w-0">
+							<div class="flex items-center justify-between gap-2">
+								<h3 class="font-medium text-gray-900 truncate">{{ floor.name }}</h3>
+								<span :class="floor.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'" class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0">
+									{{ floor.isActive ? t('cms.floors.active') : t('cms.floors.inactive') }}
+								</span>
+							</div>
+							<p class="text-sm text-gray-500 truncate mt-0.5">{{ floor.slug }}</p>
+						</div>
+						<svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+						</svg>
+					</NuxtLink>
 				</div>
-			</NuxtLink>
-		</div>
+			</template>
+		</draggable>
 
 		<!-- Delete confirmation modal -->
 		<div
@@ -260,6 +237,7 @@
 </template>
 
 <script setup lang="ts">
+import draggable from 'vuedraggable'
 import type { Floor, PaginatedResponse } from '@/shared/types'
 
 definePageMeta({
@@ -287,9 +265,36 @@ const {
 })
 const floors = computed(() => floorsData.value?.data || [])
 
-// Sorting
-const { toggleSort, getSortIcon, sortedItems } = useTableSort(floors)
-const sortedFloors = sortedItems
+// Sortable items for drag & drop
+const sortableItems = ref<Floor[]>([])
+
+// Update sortableItems when floors change
+watch(
+	floors,
+	(newFloors) => {
+		sortableItems.value = [...newFloors].sort((a, b) => a.sortOrder - b.sortOrder)
+	},
+	{ immediate: true },
+)
+
+// Handle drag end - save new order
+const onDragEnd = async () => {
+	const ids = sortableItems.value.map((item) => item._id)
+	try {
+		await secureFetch('/api/floors/reorder', {
+			method: 'PUT',
+			body: { ids },
+		})
+		// Update local sortOrder values after successful save
+		sortableItems.value.forEach((item, index) => {
+			item.sortOrder = index
+		})
+	} catch {
+		flash.error(t('common.error'))
+		// Revert to original order on error
+		sortableItems.value = [...floors.value].sort((a, b) => a.sortOrder - b.sortOrder)
+	}
+}
 
 // Delete modal
 const deleteModal = reactive({

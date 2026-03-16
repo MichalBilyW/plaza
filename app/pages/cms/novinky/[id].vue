@@ -95,23 +95,6 @@
 					</h2>
 
 					<div class="flex flex-wrap items-center justify-between gap-6">
-						<!-- Pořadí -->
-						<div>
-							<label
-								for="sortOrder"
-								class="block text-sm font-medium text-gray-700 mb-1"
-							>
-								{{ t('cms.news.sortOrder') }}
-							</label>
-							<input
-								id="sortOrder"
-								v-model.number="form.sortOrder"
-								type="number"
-								min="0"
-								class="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-news-500 focus:border-transparent"
-							/>
-						</div>
-
 						<!-- Aktivní -->
 						<div class="flex items-end pb-1">
 							<label class="inline-flex items-center gap-3 cursor-pointer">
@@ -175,7 +158,6 @@ const newsId = route.params.id as string
 const form = reactive({
 	name: '',
 	image: '',
-	sortOrder: 0,
 	isActive: true,
 })
 
@@ -190,7 +172,6 @@ watch(
 		if (n) {
 			form.name = n.name || ''
 			form.image = n.image || ''
-			form.sortOrder = n.sortOrder ?? 0
 			form.isActive = n.isActive ?? true
 		}
 	},
@@ -223,7 +204,6 @@ const handleSubmit = async () => {
 			body: {
 				name: form.name.trim(),
 				image: form.image,
-				sortOrder: form.sortOrder,
 				isActive: form.isActive,
 			},
 		})

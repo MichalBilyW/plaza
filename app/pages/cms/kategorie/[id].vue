@@ -108,19 +108,6 @@
 						</p>
 					</div>
 
-					<!-- Pořadí -->
-					<div>
-						<label for="sortOrder" class="block text-sm font-medium text-gray-700 mb-1">
-							{{ t('cms.categories.sortOrder') }}
-						</label>
-						<input
-							id="sortOrder"
-							v-model.number="form.sortOrder"
-							type="number"
-							min="0"
-							class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-categories-500 focus:border-transparent"
-						/>
-					</div>
 
 					<!-- Aktivní -->
 					<div>
@@ -261,7 +248,6 @@ const form = reactive({
 	name: '',
 	slug: '',
 	description: '',
-	sortOrder: 0,
 	isActive: true,
 })
 
@@ -273,7 +259,6 @@ watch(
 			form.name = newCategory.name || ''
 			form.slug = newCategory.slug || ''
 			form.description = newCategory.description || ''
-			form.sortOrder = newCategory.sortOrder || 0
 			form.isActive = newCategory.isActive ?? true
 		}
 	},
@@ -298,7 +283,6 @@ const handleSubmit = async () => {
 			name: form.name.trim(),
 			slug: form.slug.trim() || undefined,
 			description: form.description.trim() || undefined,
-			sortOrder: form.sortOrder,
 			isActive: form.isActive,
 		}
 

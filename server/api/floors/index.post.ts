@@ -29,10 +29,15 @@ export default defineEventHandler(
 				return !!existing
 			}))
 
+		// Auto-assign sortOrder as max + 1
+		const maxSortOrder = await Floor.findOne().sort({ sortOrder: -1 }).select('sortOrder')
+		const nextSortOrder = (maxSortOrder?.sortOrder ?? -1) + 1
+
 		// Vytvořit patro
 		const floor = await Floor.create({
 			...data,
 			slug,
+			sortOrder: nextSortOrder,
 		})
 
 		return floor.toJSON()

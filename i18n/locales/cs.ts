@@ -3,7 +3,6 @@
  */
 
 export default {
-	// Obecné
 	common: {
 		loading: 'Načítání...',
 		save: 'Uložit',
@@ -32,7 +31,6 @@ export default {
 		altLogo: 'Logo OC Plaza Liberec',
 	},
 
-	// Navigace
 	nav: {
 		home: 'Domů',
 		shops: 'Obchody',
@@ -43,7 +41,6 @@ export default {
 		openingHours: 'Otevírací doba',
 	},
 
-	// Homepage
 	home: {
 		hero: {
 			title: 'Vítejte v OC Plaza Liberec',
@@ -68,7 +65,6 @@ export default {
 		},
 	},
 
-	// Obchody
 	shops: {
 		title: 'Obchody a služby',
 		description: 'Objevte všechny obchody a služby v OC Plaza Liberec',
@@ -82,7 +78,6 @@ export default {
 		allCategories: 'Všechny kategorie',
 	},
 
-	// Události
 	events: {
 		title: 'Akce a novinky',
 		description: 'Přehled nadcházejících akcí v OC Plaza Liberec',
@@ -93,13 +88,11 @@ export default {
 		draft: 'Koncept',
 	},
 
-	// Služby
 	services: {
 		title: 'Služby',
 		description: 'Služby pro návštěvníky OC Plaza Liberec',
 	},
 
-	// Kontakt
 	contact: {
 		title: 'Kontakt',
 		address: 'Adresa',
@@ -108,14 +101,12 @@ export default {
 		openingHours: 'Otevírací doba',
 	},
 
-	// Brand
 	brand: {
 		name: 'OC Plaza',
 		city: 'Liberec',
 		fullName: 'OC Plaza Liberec',
 	},
 
-	// Footer
 	footer: {
 		description: 'Vaše oblíbené nákupní centrum v srdci Liberce.',
 		openingHours: 'Otevírací doba',
@@ -131,7 +122,6 @@ export default {
 		copyright: '© {year} OC Plaza Liberec. Všechna práva vyhrazena.',
 	},
 
-	// CMS
 	cms: {
 		title: 'OC Plaza Liberec',
 		login: {
@@ -157,8 +147,10 @@ export default {
 			addShop: 'Přidat nový obchod',
 			addEvent: 'Přidat novou akci',
 			addService: 'Přidat novou službu',
-			upcomingEvents: 'Nadcházející akce ({count})',
-			noUpcomingEvents: 'Žádné nadcházející akce',
+			latestEvents: 'Poslední akce ({count})',
+			noEvents: 'Žádné akce',
+			latestNews: 'Poslední akce centra ({count})',
+			noNews: 'Žádné akce centra',
 		},
 		sidebar: {
 			dashboard: 'Dashboard',
@@ -189,7 +181,6 @@ export default {
 			saved: 'Obchod byl úspěšně uložen',
 			deleteConfirmTitle: 'Smazat obchod?',
 			deleteConfirmMessage: 'Opravdu chcete smazat obchod "{name}"? Tato akce je nevratná.',
-			// Formulář
 			basicInfo: 'Základní informace',
 			name: 'Název',
 			namePlaceholder: 'Název obchodu',
@@ -249,7 +240,6 @@ export default {
 			status: 'Stav',
 			updatedAt: 'Aktualizováno',
 			createdAt: 'Vytvořeno',
-			// Speciální otevírací doba
 			specialOpeningHours: 'Speciální otevírací doba',
 			specialOpeningHoursHint: 'Výjimečné provozní hodiny (svátky, akce, apod.)',
 			addSpecialHours: 'Přidat speciální dobu',
@@ -361,7 +351,6 @@ export default {
 			allStatus: 'Všechny stavy',
 			activeOnly: 'Pouze aktivní',
 			inactiveOnly: 'Pouze neaktivní',
-			// Formulář
 			basicInfo: 'Základní informace',
 			name: 'Název',
 			namePlaceholder: 'Interní název akce',
@@ -376,7 +365,7 @@ export default {
 			status: 'Stav',
 			active: 'Aktivní',
 			inactive: 'Neaktivní',
-			// Akce
+			noShop: 'Bez obchodu',
 			deleteConfirmTitle: 'Smazat akci?',
 			deleteConfirmMessage: 'Opravdu chcete smazat akci "{name}"? Tato akce je nevratná.',
 			createSuccess: 'Akce byla úspěšně vytvořena',
@@ -396,7 +385,6 @@ export default {
 			allStatus: 'Všechny stavy',
 			activeOnly: 'Pouze aktivní',
 			inactiveOnly: 'Pouze neaktivní',
-			// Formulář
 			basicInfo: 'Základní informace',
 			name: 'Název',
 			namePlaceholder: 'Interní název novinky',
@@ -409,13 +397,45 @@ export default {
 			status: 'Stav',
 			active: 'Aktivní',
 			inactive: 'Neaktivní',
-			// Akce
 			deleteConfirmTitle: 'Smazat novinku?',
 			deleteConfirmMessage: 'Opravdu chcete smazat novinku "{name}"? Tato akce je nevratná.',
 			createSuccess: 'Novinka byla úspěšně vytvořena',
 			updateSuccess: 'Novinka byla úspěšně uložena',
 			deleteSuccess: 'Novinka byla smazána',
 			deleteError: 'Nepodařilo se smazat novinku',
+		},
+		services: {
+			title: 'Služby',
+			subtitle: 'Správa služeb pro návštěvníky centra',
+			addService: 'Přidat službu',
+			newService: 'Nová služba',
+			editService: 'Upravit službu',
+			noServices: 'Žádné služby nenalezeny',
+			notFound: 'Služba nebyla nalezena',
+			searchPlaceholder: 'Hledat službu...',
+			allStatus: 'Všechny stavy',
+			activeOnly: 'Pouze aktivní',
+			inactiveOnly: 'Pouze neaktivní',
+			basicInfo: 'Základní informace',
+			icon: 'Ikona služby',
+			iconHint: 'SVG nebo PNG ikona, doporučeno čtvercové rozměry',
+			iconFormats: 'Povolené formáty: SVG, PNG',
+			iconInvalidFormat: 'Neplatný formát. Povoleny jsou pouze SVG a PNG.',
+			shortDescription: 'Popisek',
+			shortDescriptionPlaceholder: 'Krátký popisek služby (max. 120 znaků)',
+			characters: 'znaků',
+			description: 'Popis',
+			descriptionPlaceholder: 'Podrobný popis služby...',
+			descriptionHint: 'Nepovinné - podrobný popis služby',
+			settings: 'Nastavení',
+			sortOrder: 'Pořadí',
+			isActive: 'Služba je aktivní',
+			deleteConfirmTitle: 'Smazat službu?',
+			deleteConfirmMessage: 'Opravdu chcete smazat tuto službu? Tato akce je nevratná.',
+			createSuccess: 'Služba byla úspěšně vytvořena',
+			updateSuccess: 'Služba byla úspěšně uložena',
+			deleteSuccess: 'Služba byla smazána',
+			deleteError: 'Nepodařilo se smazat službu',
 		},
 		actions: {
 			logout: 'Odhlásit se',
@@ -548,7 +568,6 @@ export default {
 		},
 	},
 
-	// Formuláře
 	forms: {
 		required: 'Toto pole je povinné',
 		invalidEmail: 'Neplatná e-mailová adresa',
@@ -558,7 +577,6 @@ export default {
 		invalidPhone: 'Neplatné telefonní číslo',
 	},
 
-	// Chybové stránky
 	errors: {
 		notFound: {
 			title: 'Stránka nenalezena',
@@ -580,7 +598,6 @@ export default {
 		},
 	},
 
-	// SEO
 	seo: {
 		home: {
 			title: 'OC Plaza Liberec',

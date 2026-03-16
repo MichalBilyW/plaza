@@ -24,8 +24,15 @@ export default defineEventHandler(
 			throw createValidationError('Obchod neexistuje')
 		}
 
+		// Auto-assign sortOrder as max + 1
+		const maxSortOrder = await Event.findOne().sort({ sortOrder: -1 }).select('sortOrder')
+		const nextSortOrder = (maxSortOrder?.sortOrder ?? -1) + 1
+
 		// Vytvoření akce
-		const eventDoc = await Event.create(data)
+		const eventDoc = await Event.create({
+			...data,
+			sortOrder: nextSortOrder,
+		})
 
 		return eventDoc.toJSON()
 	}),

@@ -29,10 +29,15 @@ export default defineEventHandler(
 				return !!existing
 			}))
 
+		// Auto-assign sortOrder as max + 1
+		const maxSortOrder = await Category.findOne().sort({ sortOrder: -1 }).select('sortOrder')
+		const nextSortOrder = (maxSortOrder?.sortOrder ?? -1) + 1
+
 		// Vytvořit kategorii
 		const category = await Category.create({
 			...data,
 			slug,
+			sortOrder: nextSortOrder,
 		})
 
 		return category.toJSON()

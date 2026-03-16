@@ -60,44 +60,32 @@
 			<table class="w-full min-w-[600px]">
 				<thead class="bg-gray-50 border-b">
 					<tr>
-						<CmsSortableHeader
-							field="sortOrder"
-							:sort-icon="getSortIcon('sortOrder')"
-							class="w-20"
-							@sort="toggleSort"
-							>{{ t('cms.categories.order') }}</CmsSortableHeader
-						>
-						<CmsSortableHeader
-							field="name"
-							:sort-icon="getSortIcon('name')"
-							@sort="toggleSort"
-							>{{ t('cms.categories.name') }}</CmsSortableHeader
-						>
-						<th
-							class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-						>
-							{{ t('cms.categories.shopCount') }}
-						</th>
-						<CmsSortableHeader
-							field="isActive"
-							:sort-icon="getSortIcon('isActive')"
-							class="w-24"
-							@sort="toggleSort"
-							>{{ t('cms.categories.status') }}</CmsSortableHeader
-						>
-						<th
-							class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24"
-						>
-							{{ t('common.actions') }}
-						</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12"></th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">{{ t('cms.categories.order') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('cms.categories.name') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('cms.categories.shopCount') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">{{ t('cms.categories.status') }}</th>
+						<th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24">{{ t('common.actions') }}</th>
 					</tr>
 				</thead>
-				<tbody class="divide-y divide-gray-200">
-					<tr
-						v-for="category in sortedCategories"
-						:key="category._id"
-						class="hover:bg-gray-50"
-					>
+				<draggable
+					v-model="sortableItems"
+					tag="tbody"
+					item-key="_id"
+					handle=".drag-handle"
+					:animation="200"
+					class="divide-y divide-gray-200"
+					@end="onDragEnd"
+				>
+					<template #item="{ element: category }">
+						<tr class="hover:bg-gray-50">
+							<td class="px-4 py-3">
+								<div class="drag-handle cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded inline-flex">
+									<svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+									</svg>
+								</div>
+							</td>
 						<td class="px-4 py-3">
 							<span
 								class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium"
@@ -193,65 +181,59 @@
 										/>
 									</svg>
 								</button>
-							</div>
-						</td>
-					</tr>
-				</tbody>
+								</div>
+							</td>
+						</tr>
+					</template>
+				</draggable>
 			</table>
 		</div>
 
 		<!-- Mobile/Tablet: Cards -->
-		<div v-if="categories.length" class="lg:hidden space-y-3">
-			<NuxtLink
-				v-for="category in sortedCategories"
-				:key="category._id"
-				:to="`/cms/kategorie/${category._id}`"
-				class="block bg-white rounded-xl shadow-sm p-3 active:bg-gray-50 transition-colors"
-			>
-				<div class="flex items-center gap-3">
-					<span
-						class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium flex-shrink-0"
-					>
-						{{ category.sortOrder }}
-					</span>
-					<div class="flex-1 min-w-0">
-						<div class="flex items-center justify-between gap-2">
-							<h3 class="font-medium text-gray-900 truncate">{{ category.name }}</h3>
-							<span
-								:class="
-									category.isActive
-										? 'bg-green-100 text-green-800'
-										: 'bg-gray-100 text-gray-800'
-								"
-								class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0"
-							>
-								{{
-									category.isActive
-										? t('cms.categories.active')
-										: t('cms.categories.inactive')
-								}}
-							</span>
-						</div>
-						<p class="text-sm text-gray-500 truncate mt-0.5">
-							{{ category.shopCount || 0 }} {{ t('cms.categories.shops') }}
-						</p>
+		<draggable
+			v-if="categories.length"
+			v-model="sortableItems"
+			item-key="_id"
+			handle=".drag-handle-mobile"
+			:animation="200"
+			class="lg:hidden space-y-3"
+			@end="onDragEnd"
+		>
+			<template #item="{ element: category }">
+				<div class="bg-white rounded-xl shadow-sm p-3 flex items-center gap-3">
+					<div class="drag-handle-mobile cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded flex-shrink-0">
+						<svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+						</svg>
 					</div>
-					<svg
-						class="w-5 h-5 text-gray-400 flex-shrink-0"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
+					<NuxtLink
+						:to="`/cms/kategorie/${category._id}`"
+						class="flex-1 min-w-0 flex items-center gap-3"
 					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 5l7 7-7 7"
-						/>
-					</svg>
+						<span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium flex-shrink-0">
+							{{ category.sortOrder }}
+						</span>
+						<div class="flex-1 min-w-0">
+							<div class="flex items-center justify-between gap-2">
+								<h3 class="font-medium text-gray-900 truncate">{{ category.name }}</h3>
+								<span
+									:class="category.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
+									class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0"
+								>
+									{{ category.isActive ? t('cms.categories.active') : t('cms.categories.inactive') }}
+								</span>
+							</div>
+							<p class="text-sm text-gray-500 truncate mt-0.5">
+								{{ category.shopCount || 0 }} {{ t('cms.categories.shops') }}
+							</p>
+						</div>
+						<svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+						</svg>
+					</NuxtLink>
 				</div>
-			</NuxtLink>
-		</div>
+			</template>
+		</draggable>
 
 		<!-- Delete confirmation modal -->
 		<div
@@ -290,6 +272,7 @@
 </template>
 
 <script setup lang="ts">
+import draggable from 'vuedraggable'
 import type { Category, PaginatedResponse } from '@/shared/types'
 
 definePageMeta({
@@ -317,9 +300,36 @@ const {
 })
 const categories = computed(() => categoriesData.value?.data || [])
 
-// Sorting
-const { toggleSort, getSortIcon, sortedItems } = useTableSort(categories)
-const sortedCategories = sortedItems
+// Sortable items for drag & drop
+const sortableItems = ref<Category[]>([])
+
+// Update sortableItems when categories change
+watch(
+	categories,
+	(newCategories) => {
+		sortableItems.value = [...newCategories].sort((a, b) => a.sortOrder - b.sortOrder)
+	},
+	{ immediate: true },
+)
+
+// Handle drag end - save new order
+const onDragEnd = async () => {
+	const ids = sortableItems.value.map((item) => item._id)
+	try {
+		await secureFetch('/api/categories/reorder', {
+			method: 'PUT',
+			body: { ids },
+		})
+		// Update local sortOrder values after successful save
+		sortableItems.value.forEach((item, index) => {
+			item.sortOrder = index
+		})
+	} catch {
+		flash.error(t('common.error'))
+		// Revert to original order on error
+		sortableItems.value = [...categories.value].sort((a, b) => a.sortOrder - b.sortOrder)
+	}
+}
 
 // Delete modal
 const deleteModal = reactive({

@@ -101,20 +101,6 @@
 					{{ t('cms.events.settings') }}
 				</h2>
 
-				<!-- Pořadí -->
-				<div>
-					<label for="sortOrder" class="block text-sm font-medium text-gray-700 mb-1">
-						{{ t('cms.events.sortOrder') }}
-					</label>
-					<input
-						id="sortOrder"
-						v-model.number="form.sortOrder"
-						type="number"
-						min="0"
-						class="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-events-500 focus:border-transparent"
-					/>
-				</div>
-
 				<!-- Aktivní -->
 				<div class="flex items-end mt-6 pb-1">
 					<label class="inline-flex items-center gap-3 cursor-pointer">
@@ -174,7 +160,6 @@ const form = reactive({
 	name: '',
 	image: '',
 	shopId: '',
-	sortOrder: 0,
 	isActive: true,
 })
 
@@ -215,7 +200,6 @@ const handleSubmit = async () => {
 				name: form.name.trim(),
 				image: form.image,
 				shopId: form.shopId,
-				sortOrder: form.sortOrder,
 				isActive: form.isActive,
 			},
 		})

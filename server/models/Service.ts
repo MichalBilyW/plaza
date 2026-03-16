@@ -2,7 +2,7 @@
  * Service Model - Služby pro návštěvníky
  */
 
-import type { Document, Model, Types } from 'mongoose';
+import type { Document, Model } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 
 // ==========================================
@@ -10,17 +10,15 @@ import mongoose, { Schema } from 'mongoose'
 // ==========================================
 
 export interface IService {
-	name: string
-	slug: string
-	description: string
-	shortDescription?: string
-	icon?: string
-	image?: string
-	location?: string
-	floorId?: Types.ObjectId
-	phone?: string
-	email?: string
+	/** Ikona služby (SVG nebo PNG) */
+	icon: string
+	/** Popisek služby (max 120 znaků) */
+	shortDescription: string
+	/** Popis služby (nepovinný) */
+	description?: string
+	/** Je služba aktivní */
 	isActive: boolean
+	/** Pořadí pro řazení */
 	sortOrder: number
 }
 
@@ -35,47 +33,24 @@ export interface IServiceDocument extends IService, Document {
 
 const serviceSchema = new Schema<IServiceDocument>(
 	{
-		name: {
+		icon: {
 			type: String,
-			required: [true, 'Název služby je povinný'],
-			trim: true,
-			maxlength: 100,
-		},
-		slug: {
-			type: String,
-			required: true,
-			unique: true,
-			lowercase: true,
-			trim: true,
-			index: true,
-		},
-		description: {
-			type: String,
-			required: [true, 'Popis je povinný'],
-			maxlength: 2000,
+			required: [true, 'Ikona je povinná'],
 		},
 		shortDescription: {
 			type: String,
-			maxlength: 300,
+			required: [true, 'Popisek je povinný'],
+			trim: true,
+			maxlength: 120,
 		},
-		icon: String,
-		image: String,
-		location: {
+		description: {
 			type: String,
-			maxlength: 200,
-		},
-		floorId: {
-			type: Schema.Types.ObjectId,
-			ref: 'Floor',
-		},
-		phone: String,
-		email: {
-			type: String,
-			lowercase: true,
+			maxlength: 2000,
 		},
 		isActive: {
 			type: Boolean,
 			default: true,
+			index: true,
 		},
 		sortOrder: {
 			type: Number,
@@ -85,9 +60,8 @@ const serviceSchema = new Schema<IServiceDocument>(
 	{
 		timestamps: true,
 		toJSON: {
-			transform: (_doc, ret) => {
-				ret._id = ret._id.toString()
-				if (ret.floorId) ret.floorId = ret.floorId.toString()
+			transform: (_doc: unknown, ret: Record<string, unknown>) => {
+				ret._id = String(ret._id)
 				delete ret.__v
 				return ret
 			},
@@ -100,7 +74,7 @@ const serviceSchema = new Schema<IServiceDocument>(
 // ==========================================
 
 serviceSchema.index({ isActive: 1, sortOrder: 1 })
-serviceSchema.index({ name: 'text', description: 'text' })
+serviceSchema.index({ shortDescription: 'text' })
 
 // ==========================================
 // MODEL

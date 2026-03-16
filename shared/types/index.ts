@@ -156,24 +156,15 @@ export interface News extends BaseEntity {
 // SERVICE (SLUŽBA)
 // ==========================================
 export interface Service extends BaseEntity {
-	name: string
-	slug: string
-	description: string
-	shortDescription?: string
-	icon?: string
-	image?: string
-
-	// Lokace
-	location?: string
-	floorId?: string
-	floor?: Floor
-
-	// Kontakt
-	phone?: string
-	email?: string
-
-	// Metadata
+	/** Ikona služby (SVG nebo PNG) */
+	icon: string
+	/** Popisek služby (max 120 znaků) */
+	shortDescription: string
+	/** Popis služby (nepovinný) */
+	description?: string
+	/** Je služba aktivní */
 	isActive: boolean
+	/** Pořadí pro řazení */
 	sortOrder: number
 }
 
