@@ -25,7 +25,12 @@ export default defineEventHandler(
 		const body = await readBody(e)
 		const data = newsUpdateSchema.parse(body)
 
-		Object.assign(newsDoc, data)
+		// Aktualizovat jen pole, která byla v requestu (ne Zod defaults)
+		for (const key of Object.keys(data)) {
+			if (key in body) {
+				;(newsDoc as Record<string, unknown>)[key] = data[key as keyof typeof data]
+			}
+		}
 		await newsDoc.save()
 
 		return newsDoc.toJSON()

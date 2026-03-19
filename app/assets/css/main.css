@@ -1,0 +1,343 @@
+* {
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+}
+
+.html, body {
+	@apply m-0 p-0 font-sans text-plaza-dark bg-white;
+}
+
+.container {
+	@apply !max-w-[1500px] mx-auto;
+}
+
+/**
+ * Globální styly pro OC Plaza Liberec
+ */
+
+/*
+ * Fix pro League Spartan - font má větší descent než ascent
+ * Text vypadá opticky výš než má být
+ * Řešení: posunout text dolů pomocí transform nebo padding
+ */
+
+/* Obecný fix pro všechny elementy s League Spartan */
+.font-heading {
+	/* Posunutí textu dolů o 0.1em pro optickou korekci */
+	transform: translateY(0.08em);
+}
+
+/* SVG ikony vedle League Spartan textu posunout zpět nahoru */
+.font-heading svg,
+.font-heading .flex > svg {
+	transform: translateY(-0.1em);
+}
+
+/* Puntíky a jiné dekorativní elementy */
+.font-heading .flex > span:first-child:not(:last-child) {
+	transform: translateY(-0.1em);
+}
+
+/* Buttony s League Spartan - speciální padding fix */
+.font-heading.inline-flex {
+	/* Reset transform pro buttony - místo toho použijeme padding */
+	transform: none;
+	/* Text je opticky nahoře, posuneme celý button obsah dolů */
+	padding-top: 0.65rem !important;
+	padding-bottom: 0.35rem !important;
+}
+
+/* ============================================
+   Loading & Transition animace
+   ============================================ */
+
+/* Skeleton shimmer efekt */
+.skeleton-shimmer {
+	background: linear-gradient(
+		90deg,
+		rgba(255, 255, 255, 0.1) 0%,
+		rgba(255, 255, 255, 0.2) 50%,
+		rgba(255, 255, 255, 0.1) 100%
+	);
+	background-size: 200% 100%;
+	animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
+
+/* Fade stagger pro TransitionGroup - jednotlivé položky */
+.fade-stagger-enter-active {
+	transition:
+		opacity 0.4s ease,
+		transform 0.4s ease;
+}
+
+.fade-stagger-leave-active {
+	transition: opacity 0.2s ease;
+}
+
+.fade-stagger-enter-from {
+	opacity: 0;
+	transform: translateY(10px);
+}
+
+.fade-stagger-leave-to {
+	opacity: 0;
+}
+
+/* Staggered delay pro jednotlivé položky */
+.fade-stagger-enter-active:nth-child(1) {
+	transition-delay: 0ms;
+}
+.fade-stagger-enter-active:nth-child(2) {
+	transition-delay: 50ms;
+}
+.fade-stagger-enter-active:nth-child(3) {
+	transition-delay: 100ms;
+}
+.fade-stagger-enter-active:nth-child(4) {
+	transition-delay: 150ms;
+}
+.fade-stagger-enter-active:nth-child(5) {
+	transition-delay: 200ms;
+}
+.fade-stagger-enter-active:nth-child(6) {
+	transition-delay: 250ms;
+}
+.fade-stagger-enter-active:nth-child(7) {
+	transition-delay: 300ms;
+}
+.fade-stagger-enter-active:nth-child(8) {
+	transition-delay: 350ms;
+}
+
+/* ============================================
+   Prose - respektování inline stylů obrázků z WYSIWYG
+   ============================================ */
+
+/* Prose img - inline-block jako default pro podporu více obrázků vedle sebe */
+.prose img {
+	display: inline-block !important;
+	vertical-align: top;
+	max-width: 100%;
+	margin: 0.25rem;
+}
+
+/* Obrázky s explicitním max-width - použít hodnotu z inline stylu */
+.prose img[style*="max-width: 25%"] {
+	max-width: 25% !important;
+}
+
+.prose img[style*="max-width: 50%"] {
+	max-width: 50% !important;
+}
+
+.prose img[style*="max-width: 75%"] {
+	max-width: 75% !important;
+}
+
+/* Float obrázky (zpětná kompatibilita) */
+.prose img[style*="float: left"] {
+	float: left !important;
+	margin-right: 1rem !important;
+	margin-bottom: 0.5rem !important;
+}
+
+.prose img[style*="float: right"] {
+	float: right !important;
+	margin-left: 1rem !important;
+	margin-bottom: 0.5rem !important;
+}
+
+/* Centered obrázky */
+.prose img[style*="margin-left: auto"][style*="margin-right: auto"] {
+	display: block !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+/* Clearfix pro float obrázky */
+.prose::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+/* Odkazy - červená barva */
+.prose a {
+	color: #E20B1B !important;
+	text-decoration: underline;
+}
+
+.prose a:hover {
+	color: #b30816 !important;
+}
+
+/* Odstavce */
+.prose p {
+	margin-top: 0.75em;
+	margin-bottom: 0.75em;
+}
+
+.prose p:first-child {
+	margin-top: 0;
+}
+
+.prose p:last-child {
+	margin-bottom: 0;
+}
+
+/* Prázdné odstavce - zachovat výšku */
+.prose p:empty {
+	min-height: 1.5em;
+}
+
+/* Prázdné odstavce s <br> - TipTap generuje <p><br></p> */
+.prose p:has(br:only-child) {
+	min-height: 1.5em;
+}
+
+/* Nadpis H2 */
+.prose h2 {
+	font-family: 'League Spartan', sans-serif;
+	font-style: normal;
+	font-weight: 600;
+	font-size: 40px;
+	line-height: 43px;
+	text-transform: uppercase;
+	margin-top: 1.5em;
+	margin-bottom: 0.75em;
+	color: #131313;
+}
+@media screen and (max-width: 640px) {
+	.prose h2 {
+		font-size: 32px;
+		line-height: 35px;
+	}
+}
+@media screen and (max-width: 480px) {
+	.prose h2 {
+		font-size: 24px;
+		line-height: 28px;
+	}
+}
+
+.prose h2:first-child {
+	margin-top: 0;
+}
+
+/* Blockquote / Citace */
+.prose blockquote {
+	border-left: 4px solid #E20B1B;
+	padding-left: 1rem;
+	margin: 1rem 0;
+	font-style: italic;
+	color: #6b7280;
+	background-color: #f9fafb;
+	padding: 1rem 1rem 1rem 1.5rem;
+	border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* Kurzíva */
+.prose em,
+.prose i {
+	font-style: italic;
+}
+
+/* Tučné */
+.prose strong,
+.prose b {
+	font-weight: 600;
+}
+
+/* Podtržené */
+.prose u {
+	text-decoration: underline;
+}
+
+/* Přeškrtnuté */
+.prose s,
+.prose del {
+	text-decoration: line-through;
+}
+
+/* Seznamy - obecné */
+.prose ul,
+.prose ol {
+	padding-left: 1.5em;
+	margin: 0.75em 0;
+}
+
+/* Odrážkový seznam */
+.prose ul {
+	list-style-type: disc;
+}
+
+.prose ul li::marker {
+	color: #E20B1B;
+}
+
+/* Číselný seznam */
+.prose ol {
+	list-style-type: none;
+	counter-reset: ordered-list;
+	padding-left: 1.5em;
+}
+
+.prose ol li {
+	position: relative;
+	counter-increment: ordered-list;
+}
+
+.prose ol li::before {
+	content: counter(ordered-list);
+	position: absolute;
+	left: -2em;
+	top: 0.35em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.4em;
+	height: 1.4em;
+	background-color: #E20B1B;
+	color: white;
+	font-size: 0.75em;
+	font-weight: 600;
+	border-radius: 9999px;
+}
+
+/* Položky seznamu */
+.prose li {
+	margin: 0.25em 0;
+}
+
+/* Vertical align pro inline elementy včetně textu */
+.prose *[style*="vertical-align: middle"] {
+	vertical-align: middle !important;
+}
+
+.prose *[style*="vertical-align: bottom"] {
+	vertical-align: bottom !important;
+}
+
+.prose *[style*="vertical-align: top"] {
+	vertical-align: top !important;
+}

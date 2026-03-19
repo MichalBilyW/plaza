@@ -15,6 +15,8 @@ export interface INews {
 	name: string
 	/** Čtvercový obrázek */
 	image: string
+	/** Obsah novinky (HTML) - zobrazuje se v modalu */
+	content?: string
 	/** Pořadí pro řazení */
 	sortOrder: number
 	/** Je novinka aktivní */
@@ -41,6 +43,10 @@ const newsSchema = new Schema<INewsDocument>(
 		image: {
 			type: String,
 			required: [true, 'Obrázek novinky je povinný'],
+		},
+		content: {
+			type: String,
+			default: '',
 		},
 		sortOrder: {
 			type: Number,

@@ -46,7 +46,6 @@ export interface IShop {
 	description?: string
 	shortDescription?: string
 	logo?: string
-	coverImage?: string
 	gallery?: string[]
 	phone?: string
 	email?: string
@@ -162,7 +161,6 @@ const shopSchema = new Schema<IShopDocument>(
 			maxlength: 300,
 		},
 		logo: String,
-		coverImage: String,
 		gallery: [String],
 		phone: String,
 		email: {

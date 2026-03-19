@@ -44,8 +44,12 @@ export default defineEventHandler(
 			}
 		}
 
-		// Aktualizovat
-		Object.assign(category, data)
+		// Aktualizovat jen pole, která byla v requestu (ne Zod defaults)
+		for (const key of Object.keys(data)) {
+			if (key in body) {
+				;(category as Record<string, unknown>)[key] = data[key as keyof typeof data]
+			}
+		}
 		await category.save()
 
 		return category.toJSON()

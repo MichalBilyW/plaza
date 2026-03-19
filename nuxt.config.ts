@@ -32,7 +32,25 @@ export default defineNuxtConfig({
 	},
 
 	// Modules
-	modules: ['@nuxtjs/tailwindcss', '@formkit/nuxt', '@nuxtjs/i18n', '@nuxt/eslint'],
+	modules: ['@nuxtjs/tailwindcss', '@formkit/nuxt', '@nuxtjs/i18n', '@nuxt/eslint', '@nuxt/fonts'],
+
+	// Global CSS
+	css: ['~/assets/css/main.css'],
+
+	// Fonts configuration
+	fonts: {
+		families: [
+			{
+				name: 'League Spartan',
+				weights: [400, 700],
+			},
+			{ name: 'Alata', weights: [400] },
+		],
+		// Přepsat metriky fontu pro lepší vertikální zarovnání
+		experimental: {
+			processCSSVariables: true,
+		},
+	},
 
 	// FormKit configuration
 	formkit: {

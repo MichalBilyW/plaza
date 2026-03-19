@@ -45,6 +45,36 @@ export const authEndpoints = {
 		description: 'Získání profilu přihlášeného uživatele',
 		auth: true,
 	},
+	changePassword: {
+		method: 'POST',
+		path: '/api/auth/change-password',
+		description: 'Změna hesla',
+		auth: true,
+	},
+	refresh: {
+		method: 'POST',
+		path: '/api/auth/refresh',
+		description: 'Obnovení session tokenu',
+		auth: true,
+	},
+	sessionsList: {
+		method: 'GET',
+		path: '/api/auth/sessions',
+		description: 'Seznam aktivních sessions',
+		auth: true,
+	},
+	sessionsDelete: {
+		method: 'DELETE',
+		path: '/api/auth/sessions',
+		description: 'Ukončení všech sessions',
+		auth: true,
+	},
+	sessionDelete: {
+		method: 'DELETE',
+		path: '/api/auth/sessions/:id',
+		description: 'Ukončení konkrétní session',
+		auth: true,
+	},
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
@@ -87,53 +117,106 @@ export const shopsEndpoints = {
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
-// EVENTS/NEWS (AKCE/NOVINKY) ENDPOINTS
+// EVENTS (AKCE) ENDPOINTS
 // ==========================================
 export const eventsEndpoints = {
 	list: {
 		method: 'GET',
 		path: '/api/events',
-		description: 'Seznam akcí/novinek s filtrováním',
+		description: 'Seznam akcí s filtrováním',
 		auth: false,
 	},
 	detail: {
 		method: 'GET',
 		path: '/api/events/:id',
-		description: 'Detail akce/novinky',
+		description: 'Detail akce',
 		auth: false,
 	},
 	create: {
 		method: 'POST',
 		path: '/api/events',
-		description: 'Vytvoření akce/novinky (jako draft)',
+		description: 'Vytvoření akce',
 		auth: true,
 		roles: ['admin', 'editor'],
 	},
 	update: {
 		method: 'PUT',
 		path: '/api/events/:id',
-		description: 'Úprava akce/novinky',
+		description: 'Úprava akce',
 		auth: true,
 		roles: ['admin', 'editor'],
 	},
 	delete: {
 		method: 'DELETE',
 		path: '/api/events/:id',
-		description: 'Smazání akce/novinky',
+		description: 'Smazání akce',
 		auth: true,
 		roles: ['admin'],
+	},
+	reorder: {
+		method: 'PUT',
+		path: '/api/events/reorder',
+		description: 'Změna pořadí akcí',
+		auth: true,
+		roles: ['admin', 'editor'],
 	},
 	publish: {
 		method: 'POST',
 		path: '/api/events/:id/publish',
-		description: 'Publikování akce/novinky',
+		description: 'Publikování akce',
 		auth: true,
 		roles: ['admin', 'editor'],
 	},
 	unpublish: {
 		method: 'POST',
 		path: '/api/events/:id/unpublish',
-		description: 'Odpublikování akce/novinky',
+		description: 'Zrušení publikování akce',
+		auth: true,
+		roles: ['admin', 'editor'],
+	},
+} as const satisfies Record<string, EndpointDefinition>
+
+// ==========================================
+// NEWS (NOVINKY) ENDPOINTS
+// ==========================================
+export const newsEndpoints = {
+	list: {
+		method: 'GET',
+		path: '/api/news',
+		description: 'Seznam novinek s filtrováním',
+		auth: false,
+	},
+	detail: {
+		method: 'GET',
+		path: '/api/news/:id',
+		description: 'Detail novinky',
+		auth: false,
+	},
+	create: {
+		method: 'POST',
+		path: '/api/news',
+		description: 'Vytvoření novinky',
+		auth: true,
+		roles: ['admin', 'editor'],
+	},
+	update: {
+		method: 'PUT',
+		path: '/api/news/:id',
+		description: 'Úprava novinky',
+		auth: true,
+		roles: ['admin', 'editor'],
+	},
+	delete: {
+		method: 'DELETE',
+		path: '/api/news/:id',
+		description: 'Smazání novinky',
+		auth: true,
+		roles: ['admin'],
+	},
+	reorder: {
+		method: 'PUT',
+		path: '/api/news/reorder',
+		description: 'Změna pořadí novinek',
 		auth: true,
 		roles: ['admin', 'editor'],
 	},
@@ -176,6 +259,13 @@ export const servicesEndpoints = {
 		auth: true,
 		roles: ['admin'],
 	},
+	reorder: {
+		method: 'PUT',
+		path: '/api/services/reorder',
+		description: 'Změna pořadí služeb',
+		auth: true,
+		roles: ['admin', 'editor'],
+	},
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
@@ -215,6 +305,13 @@ export const categoriesEndpoints = {
 		auth: true,
 		roles: ['admin'],
 	},
+	reorder: {
+		method: 'PUT',
+		path: '/api/categories/reorder',
+		description: 'Změna pořadí kategorií',
+		auth: true,
+		roles: ['admin', 'editor'],
+	},
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
@@ -251,6 +348,13 @@ export const floorsEndpoints = {
 		method: 'DELETE',
 		path: '/api/floors/:id',
 		description: 'Smazání patra',
+		auth: true,
+		roles: ['admin'],
+	},
+	reorder: {
+		method: 'PUT',
+		path: '/api/floors/reorder',
+		description: 'Změna pořadí pater',
 		auth: true,
 		roles: ['admin'],
 	},
@@ -298,100 +402,53 @@ export const usersEndpoints = {
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
-// EXPORTS (EXPORTY DAT) ENDPOINTS
+// GENERAL INFO (OBECNÉ INFORMACE) ENDPOINTS
 // ==========================================
-export const exportsEndpoints = {
-	shopsList: {
+export const generalInfoEndpoints = {
+	get: {
 		method: 'GET',
-		path: '/api/exports/shops',
-		description: 'Export seznamu obchodů (PDF/JSON)',
-		auth: true,
-		roles: ['admin', 'editor'],
-	},
-	floorMap: {
-		method: 'GET',
-		path: '/api/exports/floor/:id',
-		description: 'Export mapy patra',
-		auth: true,
-		roles: ['admin', 'editor'],
-	},
-} as const satisfies Record<string, EndpointDefinition>
-
-// ==========================================
-// PAGES (OBSAHOVÉ STRÁNKY) ENDPOINTS
-// ==========================================
-export const pagesEndpoints = {
-	list: {
-		method: 'GET',
-		path: '/api/pages',
-		description: 'Seznam obsahových stránek',
+		path: '/api/general-info',
+		description: 'Získání obecných informací (otevírací doby apod.)',
 		auth: false,
-	},
-	detail: {
-		method: 'GET',
-		path: '/api/pages/:slug',
-		description: 'Detail stránky podle slugu',
-		auth: false,
-	},
-	create: {
-		method: 'POST',
-		path: '/api/pages',
-		description: 'Vytvoření stránky',
-		auth: true,
-		roles: ['admin'],
 	},
 	update: {
 		method: 'PUT',
-		path: '/api/pages/:id',
-		description: 'Úprava stránky',
-		auth: true,
-		roles: ['admin', 'editor'],
-	},
-	delete: {
-		method: 'DELETE',
-		path: '/api/pages/:id',
-		description: 'Smazání stránky',
+		path: '/api/general-info',
+		description: 'Úprava obecných informací',
 		auth: true,
 		roles: ['admin'],
 	},
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
-// BANNERS (REKLAMNÍ BANNERY) ENDPOINTS
+// HOMEPAGE (HLAVNÍ STRÁNKA) ENDPOINTS
 // ==========================================
-export const bannersEndpoints = {
-	list: {
+export const homepageEndpoints = {
+	get: {
 		method: 'GET',
-		path: '/api/banners',
-		description: 'Seznam bannerů',
+		path: '/api/homepage',
+		description: 'Získání obsahu hlavní stránky',
 		auth: false,
-	},
-	active: {
-		method: 'GET',
-		path: '/api/banners/active',
-		description: 'Aktivní bannery pro zobrazení',
-		auth: false,
-	},
-	create: {
-		method: 'POST',
-		path: '/api/banners',
-		description: 'Vytvoření banneru',
-		auth: true,
-		roles: ['admin', 'editor'],
 	},
 	update: {
 		method: 'PUT',
-		path: '/api/banners/:id',
-		description: 'Úprava banneru',
+		path: '/api/homepage',
+		description: 'Úprava obsahu hlavní stránky',
 		auth: true,
 		roles: ['admin', 'editor'],
 	},
-	delete: {
-		method: 'DELETE',
-		path: '/api/banners/:id',
-		description: 'Smazání banneru',
+} as const satisfies Record<string, EndpointDefinition>
+
+// ==========================================
+// UPLOAD (NAHRÁVÁNÍ SOUBORŮ) ENDPOINTS
+// ==========================================
+export const uploadEndpoints = {
+	upload: {
+		method: 'POST',
+		path: '/api/upload',
+		description: 'Nahrání obrázku/souboru',
 		auth: true,
-		roles: ['admin'],
+		roles: ['admin', 'editor'],
 	},
 } as const satisfies Record<string, EndpointDefinition>
 
@@ -405,12 +462,6 @@ export const mapEndpoints = {
 		description: 'Seznam jednotek mapy s obsazeností',
 		auth: false,
 	},
-	unitsByFloor: {
-		method: 'GET',
-		path: '/api/map/units?level=:level',
-		description: 'Jednotky pro konkrétní patro',
-		auth: false,
-	},
 } as const satisfies Record<string, EndpointDefinition>
 
 // ==========================================
@@ -421,6 +472,13 @@ export const endpoints = {
 	shops: shopsEndpoints,
 	categories: categoriesEndpoints,
 	events: eventsEndpoints,
+	news: newsEndpoints,
+	services: servicesEndpoints,
+	floors: floorsEndpoints,
+	users: usersEndpoints,
+	generalInfo: generalInfoEndpoints,
+	homepage: homepageEndpoints,
+	upload: uploadEndpoints,
 	map: mapEndpoints,
 	health: {
 		check: {

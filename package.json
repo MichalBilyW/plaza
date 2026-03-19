@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"build": "nuxt build",
-		"dev": "nuxt dev",
+		"dev": "nuxt dev --host",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"postinstall": "nuxt prepare",
@@ -19,6 +19,7 @@
 		"@formkit/icons": "^1.7.2",
 		"@formkit/nuxt": "^1.7.2",
 		"@formkit/themes": "^1.7.2",
+		"@nuxt/fonts": "^0.14.0",
 		"@nuxtjs/i18n": "^10.2.1",
 		"@tiptap/extension-image": "^3.20.0",
 		"@tiptap/extension-link": "^3.20.0",

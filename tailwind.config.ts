@@ -36,31 +36,14 @@ export default {
 		},
 		extend: {
 			colors: {
-				primary: {
-					50: '#f0f9ff',
-					100: '#e0f2fe',
-					200: '#bae6fd',
-					300: '#7dd3fc',
-					400: '#38bdf8',
-					500: '#0ea5e9',
-					600: '#0284c7',
-					700: '#0369a1',
-					800: '#075985',
-					900: '#0c4a6e',
-					950: '#082f49',
-				},
+				// Veřejná část webu - brand colors
 				plaza: {
-					50: '#eff6ff',
-					100: '#dbeafe',
-					200: '#bfdbfe',
-					300: '#93c5fd',
-					400: '#60a5fa',
-					500: '#3b82f6',
-					600: '#2563eb',
-					700: '#1d4ed8',
-					800: '#1e40af',
-					900: '#1e3a8a',
-					950: '#172554',
+					DEFAULT: '#E20B1B', // primary red
+					light: '#D9D9D9', // light gray
+					'light-33': 'rgba(217, 217, 217, 0.33)', // 33% opacity
+					dark: '#131313', // dark backgrounds
+					gray: '#767676', // text gray
+					success: '#35E217', // green
 				},
 				// CMS sekce - pevné barvy pro konzistentní UI
 				'cms-shops': {
@@ -125,7 +108,8 @@ export default {
 				},
 			},
 			fontFamily: {
-				sans: ['Inter', 'system-ui', 'sans-serif'],
+				sans: ['Alata', 'system-ui', 'sans-serif'],
+				heading: ['League Spartan', 'system-ui', 'sans-serif']
 			},
 		},
 	},

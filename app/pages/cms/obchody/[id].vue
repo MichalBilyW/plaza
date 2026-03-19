@@ -345,12 +345,11 @@
 						preview-class="w-24 h-24"
 					/>
 
-					<!-- Cover Image -->
-					<CmsImageUpload
-						v-model="form.coverImage"
-						:label="t('cms.shops.coverImage')"
-						:hint="t('cms.shops.coverImageHint')"
-						preview-class="w-full h-32"
+					<!-- Galerie -->
+					<CmsGalleryUpload
+						v-model="form.gallery"
+						:label="t('cms.shops.gallery')"
+						:hint="t('cms.shops.galleryHint')"
 					/>
 				</div>
 			</div>
@@ -818,7 +817,7 @@ const form = reactive({
 	description: '',
 	shortDescription: '',
 	logo: '',
-	coverImage: '',
+	gallery: [] as string[],
 	phone: '',
 	email: '',
 	website: '',
@@ -866,7 +865,7 @@ watch(
 			form.description = newShop.description || ''
 			form.shortDescription = newShop.shortDescription || ''
 			form.logo = newShop.logo || ''
-			form.coverImage = newShop.coverImage || ''
+			form.gallery = newShop.gallery || []
 			form.phone = newShop.phone || ''
 			form.email = newShop.email || ''
 			form.website = newShop.website || ''
@@ -1023,13 +1022,13 @@ const handleSubmit = async () => {
 			description: form.description.trim() || undefined,
 			shortDescription: form.shortDescription.trim() || undefined,
 			logo: form.logo.trim() || '',
-			coverImage: form.coverImage.trim() || '',
+			gallery: form.gallery,
 			phone: form.phone.trim() || undefined,
 			email: form.email.trim() || undefined,
 			website: form.website.trim() || undefined,
-			floorId: form.floorId || undefined,
-			categoryId: form.categoryId || undefined,
-			unitCode: form.unitCode.trim() || undefined,
+			floorId: form.floorId || null,
+			categoryId: form.categoryId || null,
+			unitCode: form.unitCode.trim() || null,
 			isActive: form.isActive,
 			publishDate: form.publishDate ? new Date(form.publishDate).toISOString() : null,
 			seoTitle: form.seoTitle.trim() || undefined,

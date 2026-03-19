@@ -16,10 +16,10 @@ import { z } from 'zod'
 /** MongoDB ObjectId validátor */
 export const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Neplatné ID')
 
-/** Volitelný ObjectId - prázdný string = nezadáno */
+/** Volitelný ObjectId - prázdný string nebo null = nezadáno (nullable) */
 export const optionalObjectIdSchema = z.preprocess(
-	(val) => (val === '' ? undefined : val),
-	objectIdSchema.optional(),
+	(val) => (val === '' ? null : val),
+	objectIdSchema.nullable().optional(),
 )
 
 /** Slug validátor - pro povinný slug */
@@ -160,7 +160,6 @@ export const shopCreateSchema = z.object({
 	description: z.string().max(5000).optional(),
 	shortDescription: z.string().max(300).optional(),
 	logo: z.string().optional(),
-	coverImage: z.string().optional(),
 	gallery: z.array(z.string()).optional(),
 	phone: phoneSchema,
 	email: optionalEmailSchema,
@@ -174,7 +173,10 @@ export const shopCreateSchema = z.object({
 		.optional(),
 	floorId: optionalObjectIdSchema,
 	categoryId: optionalObjectIdSchema,
-	unitCode: z.string().max(20).optional(),
+	unitCode: z.preprocess(
+		(val) => (val === '' ? null : val),
+		z.string().max(20).nullable().optional(),
+	),
 	mapPosition: z
 		.object({
 			x: z.number(),
@@ -246,6 +248,7 @@ export type EventFilterQueryInput = z.input<typeof eventFilterQuerySchema>
 export const newsCreateSchema = z.object({
 	name: z.string().min(2, 'Název musí mít alespoň 2 znaky').max(200),
 	image: z.string().min(1, 'Obrázek je povinný'),
+	content: z.string().max(50000).optional(),
 	sortOrder: z.number().int().default(0),
 	isActive: z.boolean().default(true),
 })

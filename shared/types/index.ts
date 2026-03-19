@@ -79,7 +79,6 @@ export interface Shop extends BaseEntity {
 	description?: string
 	shortDescription?: string
 	logo?: string
-	coverImage?: string
 	gallery?: string[]
 
 	// Kontakty
@@ -146,6 +145,8 @@ export interface News extends BaseEntity {
 	name: string
 	/** Čtvercový obrázek */
 	image: string
+	/** Obsah novinky (HTML) - zobrazuje se v modalu */
+	content?: string
 	/** Pořadí pro řazení */
 	sortOrder: number
 	/** Je novinka aktivní */

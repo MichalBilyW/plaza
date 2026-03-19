@@ -42,7 +42,7 @@
 		</div>
 
 		<!-- Form -->
-		<form v-else-if="floor" @submit.prevent="handleSubmit" class="max-w-2xl space-y-6">
+		<form v-else-if="floor" @submit.prevent="handleSubmit" class="max-w-4xl space-y-6">
 			<div class="bg-white rounded-xl shadow-sm p-6">
 				<h2
 					class="text-lg font-semibold mb-6 text-indigo-700 border-b border-indigo-100 pb-2"

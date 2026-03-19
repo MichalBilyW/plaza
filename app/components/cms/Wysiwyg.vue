@@ -10,6 +10,7 @@
 			<div
 				v-if="editor"
 				class="sticky top-0 z-10 flex flex-wrap gap-1 p-2 bg-gray-50 border-b border-gray-300"
+				@mousedown.prevent
 			>
 				<!-- Text formatting -->
 				<button
@@ -97,33 +98,9 @@
 						'bg-gray-200 text-plaza-600': editor.isActive('heading', { level: 2 }),
 					}"
 					@click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-					title="Nadpis 2"
+					title="Nadpis"
 				>
 					H2
-				</button>
-
-				<button
-					type="button"
-					class="p-2 rounded hover:bg-gray-200 transition-colors text-sm font-semibold"
-					:class="{
-						'bg-gray-200 text-plaza-600': editor.isActive('heading', { level: 3 }),
-					}"
-					@click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-					title="Nadpis 3"
-				>
-					H3
-				</button>
-
-				<button
-					type="button"
-					class="p-2 rounded hover:bg-gray-200 transition-colors text-sm font-semibold"
-					:class="{
-						'bg-gray-200 text-plaza-600': editor.isActive('heading', { level: 4 }),
-					}"
-					@click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
-					title="Nadpis 4"
-				>
-					H4
 				</button>
 
 				<div class="w-px bg-gray-300 mx-1"></div>
@@ -178,7 +155,7 @@
 					:class="{
 						'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'left' }),
 					}"
-					@click="editor.chain().focus().setTextAlign('left').run()"
+					@click="handleAlignLeft"
 					title="Zarovnat vlevo"
 				>
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,7 +174,7 @@
 					:class="{
 						'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'center' }),
 					}"
-					@click="editor.chain().focus().setTextAlign('center').run()"
+					@click="handleAlignCenter"
 					title="Zarovnat na střed"
 				>
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +193,7 @@
 					:class="{
 						'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'right' }),
 					}"
-					@click="editor.chain().focus().setTextAlign('right').run()"
+					@click="handleAlignRight"
 					title="Zarovnat vpravo"
 				>
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -358,20 +335,9 @@
 					<button
 						type="button"
 						class="p-2 rounded hover:bg-gray-200 transition-colors text-xs"
-						:class="{ 'bg-gray-200 text-plaza-600': !getImageFloat() }"
-						@click="setImageFloat(null)"
-						title="Obrázek na celou šířku"
-					>
-						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<rect x="3" y="6" width="18" height="12" rx="2" stroke-width="2" />
-						</svg>
-					</button>
-					<button
-						type="button"
-						class="p-2 rounded hover:bg-gray-200 transition-colors text-xs"
-						:class="{ 'bg-gray-200 text-plaza-600': getImageFloat() === 'left' }"
+						:class="{ 'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'left' }) }"
 						@click="setImageFloat('left')"
-						title="Obrázek vlevo, text vpravo"
+						title="Obrázek vlevo"
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<rect x="3" y="4" width="8" height="8" rx="1" stroke-width="2" />
@@ -385,9 +351,25 @@
 					<button
 						type="button"
 						class="p-2 rounded hover:bg-gray-200 transition-colors text-xs"
-						:class="{ 'bg-gray-200 text-plaza-600': getImageFloat() === 'right' }"
+						:class="{ 'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'center' }) }"
+						@click="setImageFloat('center')"
+						title="Obrázek na střed"
+					>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<rect x="6" y="4" width="12" height="8" rx="1" stroke-width="2" />
+							<path
+								stroke-linecap="round"
+								stroke-width="2"
+								d="M3 16h18M3 20h18"
+							/>
+						</svg>
+					</button>
+					<button
+						type="button"
+						class="p-2 rounded hover:bg-gray-200 transition-colors text-xs"
+						:class="{ 'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'right' }) }"
 						@click="setImageFloat('right')"
-						title="Obrázek vpravo, text vlevo"
+						title="Obrázek vpravo"
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<rect x="13" y="4" width="8" height="8" rx="1" stroke-width="2" />
@@ -396,6 +378,83 @@
 								stroke-width="2"
 								d="M3 6h7M3 10h7M3 16h18M3 20h18"
 							/>
+						</svg>
+					</button>
+
+					<div class="w-px bg-gray-300 mx-1"></div>
+
+					<!-- Image size options -->
+					<button
+						type="button"
+						class="px-2 py-1 rounded hover:bg-gray-200 transition-colors text-xs font-medium"
+						:class="{ 'bg-gray-200 text-plaza-600': getImageSize() === '25' }"
+						@click="setImageSize('25')"
+						title="Malý obrázek (25%)"
+					>
+						25%
+					</button>
+					<button
+						type="button"
+						class="px-2 py-1 rounded hover:bg-gray-200 transition-colors text-xs font-medium"
+						:class="{ 'bg-gray-200 text-plaza-600': getImageSize() === '50' }"
+						@click="setImageSize('50')"
+						title="Střední obrázek (50%)"
+					>
+						50%
+					</button>
+					<button
+						type="button"
+						class="px-2 py-1 rounded hover:bg-gray-200 transition-colors text-xs font-medium"
+						:class="{ 'bg-gray-200 text-plaza-600': getImageSize() === '75' }"
+						@click="setImageSize('75')"
+						title="Větší obrázek (75%)"
+					>
+						75%
+					</button>
+					<button
+						type="button"
+						class="px-2 py-1 rounded hover:bg-gray-200 transition-colors text-xs font-medium"
+						:class="{ 'bg-gray-200 text-plaza-600': getImageSize() === '100' || !getImageSize() }"
+						@click="setImageSize('100')"
+						title="Plná šířka (100%)"
+					>
+						100%
+					</button>
+
+					<div class="w-px bg-gray-300 mx-1"></div>
+
+					<!-- Image vertical align options -->
+					<button
+						type="button"
+						class="p-2 rounded hover:bg-gray-200 transition-colors"
+						:class="{ 'bg-gray-200 text-plaza-600': getImageVerticalAlign() === 'top' }"
+						@click="setImageVerticalAlign('top')"
+						title="Zarovnat nahoru"
+					>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h14M12 7v14M8 11l4-4 4 4" />
+						</svg>
+					</button>
+					<button
+						type="button"
+						class="p-2 rounded hover:bg-gray-200 transition-colors"
+						:class="{ 'bg-gray-200 text-plaza-600': getImageVerticalAlign() === 'middle' }"
+						@click="setImageVerticalAlign('middle')"
+						title="Zarovnat na střed"
+					>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16M12 8v8" />
+						</svg>
+					</button>
+					<button
+						type="button"
+						class="p-2 rounded hover:bg-gray-200 transition-colors"
+						:class="{ 'bg-gray-200 text-plaza-600': getImageVerticalAlign() === 'bottom' }"
+						@click="setImageVerticalAlign('bottom')"
+						title="Zarovnat dolů"
+					>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 21h14M12 17V3M8 13l4 4 4-4" />
 						</svg>
 					</button>
 				</template>
@@ -805,7 +864,7 @@ const editor = useEditor({
 	extensions: [
 		...editorExtensions,
 		CustomImage.configure({
-			inline: false,
+			inline: true,
 			allowBase64: false,
 			HTMLAttributes: {
 				class: 'max-w-full h-auto rounded-lg',
@@ -815,6 +874,8 @@ const editor = useEditor({
 	editorProps: {
 		handlePaste,
 		handleDrop,
+		// Disable auto-scroll to selection (prevents jumping when editing near large images)
+		handleScrollToSelection: () => false,
 	},
 	onUpdate: ({ editor }) => {
 		emit('update:modelValue', editor.getHTML())
@@ -830,6 +891,22 @@ watch(
 		}
 	},
 )
+
+// Align handlers - work for both text and images (inline images inherit text-align)
+const handleAlignLeft = () => {
+	if (!editor.value) return
+	editor.value.chain().focus().setTextAlign('left').run()
+}
+
+const handleAlignCenter = () => {
+	if (!editor.value) return
+	editor.value.chain().focus().setTextAlign('center').run()
+}
+
+const handleAlignRight = () => {
+	if (!editor.value) return
+	editor.value.chain().focus().setTextAlign('right').run()
+}
 
 // Set link
 const setLink = () => {
@@ -856,28 +933,67 @@ const insertTable = () => {
 	editor.value?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
 }
 
-// Get current image float
-const getImageFloat = (): string | null => {
+// Get current image size
+const getImageSize = (): string | null => {
 	if (!editor.value?.isActive('image')) return null
 	const attrs = editor.value.getAttributes('image')
-	if (attrs.style?.includes('float: left')) return 'left'
-	if (attrs.style?.includes('float: right')) return 'right'
-	return null
+	const style = attrs.style || ''
+	const match = style.match(/max-width:\s*(\d+)%/)
+	return match ? match[1] : null
 }
 
-// Set image float
-const setImageFloat = (float: 'left' | 'right' | null) => {
-	if (!editor.value) return
+// Get current image vertical align
+const getImageVerticalAlign = (): 'top' | 'middle' | 'bottom' => {
+	if (!editor.value?.isActive('image')) return 'top'
+	const attrs = editor.value.getAttributes('image')
+	const style = attrs.style || ''
+	if (style.includes('vertical-align: middle')) return 'middle'
+	if (style.includes('vertical-align: bottom')) return 'bottom'
+	return 'top'
+}
 
-	let style = ''
+// Build image style string
+const buildImageStyle = (size: string, verticalAlign: 'top' | 'middle' | 'bottom'): string => {
+	const parts: string[] = ['display: inline-block', `vertical-align: ${verticalAlign}`]
 
-	if (float === 'left') {
-		style = 'float: left; margin-right: 1rem; margin-bottom: 0.5rem; max-width: 50%;'
-	} else if (float === 'right') {
-		style = 'float: right; margin-left: 1rem; margin-bottom: 0.5rem; max-width: 50%;'
+	// Size
+	if (size !== '100') {
+		parts.push(`max-width: ${size}%`)
 	}
 
-	editor.value.chain().focus().updateAttributes('image', { style }).run()
+	// Margin for spacing between inline images
+	parts.push('margin: 0.25rem')
+
+	return parts.join('; ') + ';'
+}
+
+// Set image position (left/center/right)
+const setImageFloat = (position: 'left' | 'right' | 'center' | null) => {
+	if (!editor.value) return
+	// Set text-align on parent paragraph to align all images in it
+	if (position === 'left') {
+		editor.value.chain().focus().setTextAlign('left').run()
+	} else if (position === 'right') {
+		editor.value.chain().focus().setTextAlign('right').run()
+	} else if (position === 'center') {
+		editor.value.chain().focus().setTextAlign('center').run()
+	}
+}
+
+// Set image size
+const setImageSize = (size: string) => {
+	if (!editor.value) return
+	const currentVerticalAlign = getImageVerticalAlign()
+	const style = buildImageStyle(size, currentVerticalAlign)
+	editor.value.chain().focus().updateAttributes('image', { style: style || null }).run()
+}
+
+// Set image vertical align
+const setImageVerticalAlign = (align: 'top' | 'middle' | 'bottom') => {
+	if (!editor.value) return
+	const currentSize = getImageSize() || '100'
+	const style = buildImageStyle(currentSize, align)
+	editor.value.chain().focus().updateAttributes('image', { style: style || null }).run()
 }
 
 // Cleanup
@@ -927,8 +1043,36 @@ onBeforeUnmount(() => {
 	list-style-type: disc;
 }
 
+.cms-wysiwyg .ProseMirror ul li::marker {
+	color: #E20B1B;
+}
+
 .cms-wysiwyg .ProseMirror ol {
-	list-style-type: decimal;
+	list-style-type: none;
+	counter-reset: ordered-list;
+	padding-left: 2.5em;
+}
+
+.cms-wysiwyg .ProseMirror ol li {
+	position: relative;
+	counter-increment: ordered-list;
+}
+
+.cms-wysiwyg .ProseMirror ol li::before {
+	content: counter(ordered-list);
+	position: absolute;
+	left: -2em;
+	top: 0.15em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.4em;
+	height: 1.4em;
+	background-color: #E20B1B;
+	color: white;
+	font-size: 0.75em;
+	font-weight: 600;
+	border-radius: 9999px;
 }
 
 .cms-wysiwyg .ProseMirror blockquote {
@@ -958,7 +1102,8 @@ onBeforeUnmount(() => {
 	max-width: 100%;
 	height: auto;
 	border-radius: 0.5rem;
-	margin: 0.5em 0;
+	display: inline-block;
+	vertical-align: top;
 }
 
 .cms-wysiwyg .ProseMirror img.ProseMirror-selectednode {
@@ -966,15 +1111,9 @@ onBeforeUnmount(() => {
 	outline-offset: 2px;
 }
 
-/* Floating images */
-.cms-wysiwyg .ProseMirror img[style*='float: left'] {
-	margin-right: 1rem;
-	margin-bottom: 0.5rem;
-}
-
-.cms-wysiwyg .ProseMirror img[style*='float: right'] {
-	margin-left: 1rem;
-	margin-bottom: 0.5rem;
+/* Inline images with explicit style */
+.cms-wysiwyg .ProseMirror img[style*='inline-block'] {
+	display: inline-block !important;
 }
 
 /* Tables */

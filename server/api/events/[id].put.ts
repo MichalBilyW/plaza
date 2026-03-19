@@ -33,7 +33,12 @@ export default defineEventHandler(
 			}
 		}
 
-		Object.assign(eventDoc, data)
+		// Aktualizovat jen pole, která byla v requestu (ne Zod defaults)
+		for (const key of Object.keys(data)) {
+			if (key in body) {
+				;(eventDoc as Record<string, unknown>)[key] = data[key as keyof typeof data]
+			}
+		}
 		await eventDoc.save()
 
 		return eventDoc.toJSON()

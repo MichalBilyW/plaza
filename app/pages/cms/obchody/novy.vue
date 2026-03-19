@@ -309,12 +309,11 @@
 						preview-class="w-24 h-24"
 					/>
 
-					<!-- Cover Image -->
-					<CmsImageUpload
-						v-model="form.coverImage"
-						:label="t('cms.shops.coverImage')"
-						:hint="t('cms.shops.coverImageHint')"
-						preview-class="w-full h-32"
+					<!-- Galerie -->
+					<CmsGalleryUpload
+						v-model="form.gallery"
+						:label="t('cms.shops.gallery')"
+						:hint="t('cms.shops.galleryHint')"
 					/>
 				</div>
 			</div>
@@ -710,7 +709,7 @@ const form = reactive({
 	description: '',
 	shortDescription: '',
 	logo: '',
-	coverImage: '',
+	gallery: [] as string[],
 	phone: '',
 	email: '',
 	website: '',
@@ -844,7 +843,7 @@ const handleSubmit = async () => {
 		if (form.description) data.description = form.description.trim()
 		if (form.shortDescription) data.shortDescription = form.shortDescription.trim()
 		if (form.logo) data.logo = form.logo.trim()
-		if (form.coverImage) data.coverImage = form.coverImage.trim()
+		if (form.gallery.length) data.gallery = form.gallery
 		if (form.phone) data.phone = form.phone.trim()
 		if (form.email) data.email = form.email.trim()
 		if (form.website) data.website = form.website.trim()

@@ -4,7 +4,7 @@
 			<!-- Header -->
 			<div class="mb-8">
 				<h1 class="text-3xl font-bold mb-2">{{ t('shops.title') }}</h1>
-				<p class="text-gray-600">
+				<p class="text-plaza-gray">
 					{{ t('shops.description') }}
 				</p>
 			</div>
@@ -17,14 +17,14 @@
 						v-model="search"
 						type="text"
 						:placeholder="t('shops.search')"
-						class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-plaza-500"
+						class="w-full px-4 py-2 border border-plaza-light rounded-lg focus:ring-2 focus:ring-plaza focus:border-plaza"
 					/>
 				</div>
 				<!-- Category filter -->
 				<div v-if="categories.length > 0" class="w-full md:w-56">
 					<select
 						v-model="selectedCategory"
-						class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-plaza-500"
+						class="w-full px-4 py-2 border border-plaza-light rounded-lg focus:ring-2 focus:ring-plaza focus:border-plaza"
 					>
 						<option value="">{{ t('shops.allCategories') }}</option>
 						<option
@@ -41,16 +41,16 @@
 			<!-- Loading state -->
 			<div v-if="pending" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
 				<div v-for="i in 8" :key="i" class="bg-white rounded-xl p-6 animate-pulse">
-					<div class="w-16 h-16 bg-gray-200 rounded-lg mb-4"></div>
-					<div class="h-5 bg-gray-200 rounded w-2/3 mb-2"></div>
-					<div class="h-4 bg-gray-200 rounded w-1/2"></div>
+					<div class="w-16 h-16 bg-plaza-light rounded-lg mb-4"></div>
+					<div class="h-5 bg-plaza-light rounded w-2/3 mb-2"></div>
+					<div class="h-4 bg-plaza-light rounded w-1/2"></div>
 				</div>
 			</div>
 
 			<!-- Empty state -->
 			<div v-else-if="shops.length === 0" class="text-center py-16">
 				<svg
-					class="w-16 h-16 text-gray-300 mx-auto mb-4"
+					class="w-16 h-16 text-plaza-light mx-auto mb-4"
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
@@ -62,8 +62,8 @@
 						d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
 					/>
 				</svg>
-				<h3 class="text-lg font-medium text-gray-900 mb-1">{{ t('shops.noShops') }}</h3>
-				<p class="text-gray-500">{{ t('shops.noShopsHint') }}</p>
+				<h3 class="text-lg font-medium text-black mb-1">{{ t('shops.noShops') }}</h3>
+				<p class="text-plaza-gray">{{ t('shops.noShopsHint') }}</p>
 			</div>
 
 			<!-- Shops grid -->
@@ -75,7 +75,7 @@
 					class="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow group"
 				>
 					<div
-						class="w-16 h-16 bg-gray-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden"
+						class="w-16 h-16 bg-plaza-light rounded-lg mb-4 flex items-center justify-center overflow-hidden"
 					>
 						<img
 							v-if="shop.logo"
@@ -83,17 +83,17 @@
 							:alt="shop.name"
 							class="w-full h-full object-contain"
 						/>
-						<span v-else class="text-2xl font-bold text-gray-400">
+						<span v-else class="text-2xl font-bold text-plaza-gray">
 							{{ shop.name.charAt(0) }}
 						</span>
 					</div>
-					<h3 class="font-semibold group-hover:text-plaza-600 transition-colors">
+					<h3 class="font-semibold group-hover:text-plaza transition-colors">
 						{{ shop.name }}
 					</h3>
-					<p v-if="shop.floor" class="text-xs text-gray-400 mt-1">
+					<p v-if="shop.floor" class="text-xs text-plaza-gray mt-1">
 						{{ shop.floor.name }}
 					</p>
-					<p v-if="shop.category" class="text-xs text-purple-500 mt-1">
+					<p v-if="shop.category" class="text-xs text-plaza mt-1">
 						{{ shop.category.name }}
 					</p>
 				</NuxtLink>
@@ -108,8 +108,8 @@
 					class="w-10 h-10 rounded-lg font-medium transition-colors"
 					:class="
 						page === p
-							? 'bg-plaza-600 text-white'
-							: 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+							? 'bg-plaza text-white'
+							: 'bg-plaza-light text-black hover:bg-plaza-light/80'
 					"
 				>
 					{{ p }}

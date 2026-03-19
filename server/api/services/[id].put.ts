@@ -25,7 +25,12 @@ export default defineEventHandler(
 		const body = await readBody(e)
 		const data = serviceUpdateSchema.parse(body)
 
-		Object.assign(serviceDoc, data)
+		// Aktualizovat jen pole, která byla v requestu (ne Zod defaults)
+		for (const key of Object.keys(data)) {
+			if (key in body) {
+				;(serviceDoc as Record<string, unknown>)[key] = data[key as keyof typeof data]
+			}
+		}
 		await serviceDoc.save()
 
 		return serviceDoc.toJSON()

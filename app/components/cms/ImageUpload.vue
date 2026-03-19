@@ -145,6 +145,8 @@ interface Props {
 	hint?: string
 	disabled?: boolean
 	previewClass?: string
+	/** Požadovaný poměr stran, např. "1:1" pro čtverec */
+	aspectRatio?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -153,6 +155,7 @@ const props = withDefaults(defineProps<Props>(), {
 	hint: '',
 	disabled: false,
 	previewClass: 'w-full h-32 max-h-48',
+	aspectRatio: '',
 })
 
 const emit = defineEmits<{
@@ -202,6 +205,37 @@ async function handleFileSelect(e: Event) {
 	target.value = ''
 }
 
+/** Validates image dimensions against required aspect ratio */
+function validateAspectRatio(file: File): Promise<boolean> {
+	return new Promise((resolve) => {
+		if (!props.aspectRatio) {
+			resolve(true)
+			return
+		}
+
+		const [ratioW, ratioH] = props.aspectRatio.split(':').map(Number)
+		if (!ratioW || !ratioH) {
+			resolve(true)
+			return
+		}
+
+		const img = new Image()
+		img.onload = () => {
+			const expectedRatio = ratioW / ratioH
+			const actualRatio = img.width / img.height
+			// Tolerance 1% pro drobné odchylky
+			const isValid = Math.abs(actualRatio - expectedRatio) < 0.01
+			URL.revokeObjectURL(img.src)
+			resolve(isValid)
+		}
+		img.onerror = () => {
+			URL.revokeObjectURL(img.src)
+			resolve(false)
+		}
+		img.src = URL.createObjectURL(file)
+	})
+}
+
 async function uploadFile(file: File) {
 	error.value = ''
 
@@ -217,6 +251,15 @@ async function uploadFile(file: File) {
 	if (file.size > maxSize) {
 		error.value = t('cms.upload.fileTooLarge')
 		return
+	}
+
+	// Validate aspect ratio if specified
+	if (props.aspectRatio) {
+		const isValidRatio = await validateAspectRatio(file)
+		if (!isValidRatio) {
+			error.value = t('cms.upload.invalidAspectRatio', { ratio: props.aspectRatio })
+			return
+		}
 	}
 
 	uploading.value = true

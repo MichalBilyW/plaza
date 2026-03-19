@@ -89,7 +89,7 @@
 				<button
 					type="submit"
 					:disabled="saving"
-					class="px-6 py-2 bg-plaza-600 text-white rounded-lg hover:bg-plaza-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+					class="px-6 py-2 bg-cms-shops-600 text-white rounded-lg hover:bg-cms-shops-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
 				>
 					<svg
 						v-if="saving"

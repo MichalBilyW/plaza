@@ -44,7 +44,7 @@
 		<form
 			v-if="category && !fetchError"
 			@submit.prevent="handleSubmit"
-			class="max-w-2xl space-y-6"
+			class="max-w-4xl space-y-6"
 		>
 			<div class="bg-white rounded-xl shadow-sm p-6">
 				<h2

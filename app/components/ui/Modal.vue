@@ -1,0 +1,133 @@
+<template>
+	<Teleport to="body">
+		<Transition name="modal">
+			<div
+				v-if="modelValue"
+				class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-8"
+				@click.self="close"
+			>
+				<!-- Overlay -->
+				<div class="absolute inset-0 bg-black/50 backdrop-blur" aria-hidden="true"></div>
+
+				<!-- Modal content -->
+				<div
+					class="modal-scrollbar relative bg-white !rounded-[5px_20px_5px_5px] overflow-x-hidden shadow-xl w-full max-w-[1024px] max-h-[90vh] overflow-y-auto"
+					role="dialog"
+					aria-modal="true"
+				>
+					<!-- Close button -->
+					<button
+						type="button"
+						class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors"
+						:aria-label="$t('common.close')"
+						@click="close"
+					>
+						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M6 18L18 6M6 6l12 12"
+							/>
+						</svg>
+					</button>
+
+					<!-- Content slot -->
+					 <div class="max-w-4xl mx-auto">
+						 <slot />
+					 </div>
+				</div>
+			</div>
+		</Transition>
+	</Teleport>
+</template>
+
+<script setup lang="ts">
+const props = defineProps<{
+	modelValue: boolean
+}>()
+
+const emit = defineEmits<{
+	'update:modelValue': [value: boolean]
+}>()
+
+const close = () => {
+	emit('update:modelValue', false)
+}
+
+// Close on Escape key
+const handleKeydown = (e: KeyboardEvent) => {
+	if (e.key === 'Escape' && props.modelValue) {
+		close()
+	}
+}
+
+// Lock body scroll when modal is open
+watch(
+	() => props.modelValue,
+	(isOpen) => {
+		if (isOpen) {
+			document.body.style.overflow = 'hidden'
+			document.addEventListener('keydown', handleKeydown)
+		} else {
+			document.body.style.overflow = ''
+			document.removeEventListener('keydown', handleKeydown)
+		}
+	},
+)
+
+onUnmounted(() => {
+	document.body.style.overflow = ''
+	document.removeEventListener('keydown', handleKeydown)
+})
+</script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+	transition: opacity 0.2s ease;
+}
+
+.modal-enter-active > div:last-child,
+.modal-leave-active > div:last-child {
+	transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+	opacity: 0;
+}
+
+.modal-enter-from > div:last-child,
+.modal-leave-to > div:last-child {
+	transform: scale(0.95);
+	opacity: 0;
+}
+
+/* Scrollbar - Chrome, Safari, Opera */
+.modal-scrollbar::-webkit-scrollbar {
+	width: 10px;
+	scrollbar-width: thin !important;
+	scrollbar-color: #E20B1B transparent !important;
+}
+.modal-scrollbar::-webkit-scrollbar-track {
+	background: transparent;
+	margin-block: 20px 5px;
+	scrollbar-width: thin !important;
+	scrollbar-color: #E20B1B transparent !important;
+}
+.modal-scrollbar::-webkit-scrollbar-thumb {
+	border-radius: 5px;
+	scrollbar-width: thin !important;
+	scrollbar-color: #E20B1B transparent !important;
+}
+.modal-scrollbar::-webkit-scrollbar-thumb:hover {
+	scrollbar-width: thin !important;
+	scrollbar-color: #E20B1B transparent !important;
+}
+
+/* Scrollbar - Firefox */
+.modal-scrollbar {
+	scrollbar-width: thin !important;
+	scrollbar-color: #E20B1B transparent !important;
+}
+</style>

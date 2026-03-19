@@ -28,7 +28,7 @@
 			<p class="text-sm text-red-600">{{ generalError }}</p>
 		</div>
 
-		<form @submit.prevent="handleSubmit" class="max-w-2xl space-y-6">
+		<form @submit.prevent="handleSubmit" class="max-w-4xl space-y-6">
 			<div class="bg-white rounded-xl shadow-sm p-6">
 				<h2
 					class="text-lg font-semibold mb-6 text-cms-events-700 border-b border-cms-events-100 pb-2"

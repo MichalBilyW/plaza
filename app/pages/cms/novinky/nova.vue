@@ -26,7 +26,7 @@
 			<p class="text-sm text-red-600">{{ generalError }}</p>
 		</div>
 
-		<form @submit.prevent="handleSubmit" class="max-w-2xl space-y-6">
+		<form @submit.prevent="handleSubmit" class="max-w-4xl space-y-6">
 			<div class="bg-white rounded-xl shadow-sm p-6">
 				<h2
 					class="text-lg font-semibold mb-6 text-cms-news-700 border-b border-cms-news-100 pb-2"
@@ -66,6 +66,15 @@
 						<p v-if="errors.image" class="mt-1 text-sm text-red-600">
 							{{ errors.image }}
 						</p>
+					</div>
+
+					<!-- Obsah -->
+					<div>
+						<CmsWysiwyg
+							v-model="form.content"
+							:label="t('cms.news.content')"
+						/>
+						<p class="mt-1 text-xs text-gray-500">{{ t('cms.news.contentHint') }}</p>
 					</div>
 				</div>
 			</div>
@@ -134,6 +143,7 @@ const { errors, generalError, clearErrors, handleApiError, scrollToFirstError } 
 const form = reactive({
 	name: '',
 	image: '',
+	content: '',
 	isActive: true,
 })
 
@@ -163,6 +173,7 @@ const handleSubmit = async () => {
 			body: {
 				name: form.name.trim(),
 				image: form.image,
+				content: form.content,
 				isActive: form.isActive,
 			},
 		})
