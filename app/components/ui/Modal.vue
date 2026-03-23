@@ -18,7 +18,7 @@
 					<!-- Close button -->
 					<button
 						type="button"
-						class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors"
+						class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center text-plaza-dark hover:text-gray-700 transition-colors"
 						:aria-label="$t('common.close')"
 						@click="close"
 					>

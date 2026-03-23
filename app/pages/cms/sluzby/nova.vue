@@ -3,7 +3,7 @@
 		<div class="mb-8">
 			<NuxtLink
 				to="/cms/sluzby"
-				class="inline-flex items-center gap-1 text-gray-500 hover:text-gray-700 mb-4"
+				class="inline-flex items-center gap-1 text-plaza-dark hover:text-gray-700 mb-4"
 			>
 				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -67,7 +67,7 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-services-500 focus:border-transparent"
 							:placeholder="t('cms.services.shortDescriptionPlaceholder')"
 						/>
-						<p class="mt-1 text-xs text-gray-500">
+						<p class="mt-1 text-xs text-plaza-dark">
 							{{ form.shortDescription.length }}/120 {{ t('cms.services.characters') }}
 						</p>
 						<p v-if="errors.shortDescription" class="mt-1 text-sm text-red-600">

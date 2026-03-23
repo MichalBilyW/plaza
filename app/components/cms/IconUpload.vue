@@ -94,7 +94,7 @@
 							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 						/>
 					</svg>
-					<span class="text-sm text-gray-500">{{ t('cms.upload.uploading') }}</span>
+					<span class="text-sm text-plaza-dark">{{ t('cms.upload.uploading') }}</span>
 				</div>
 				<template v-else>
 					<svg
@@ -134,7 +134,7 @@
 		<p v-if="error" class="text-sm text-red-600">{{ error }}</p>
 
 		<!-- Hint -->
-		<p v-if="hint && !error" class="text-xs text-gray-500">{{ hint }}</p>
+		<p v-if="hint && !error" class="text-xs text-plaza-dark">{{ hint }}</p>
 	</div>
 </template>
 

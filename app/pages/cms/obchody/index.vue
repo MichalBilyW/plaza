@@ -7,7 +7,7 @@
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 					{{ t('cms.shops.title') }}
 				</h1>
-				<p class="text-gray-500 mt-1 text-sm sm:text-base">{{ t('cms.shops.subtitle') }}</p>
+				<p class="text-plaza-dark mt-1 text-sm sm:text-base">{{ t('cms.shops.subtitle') }}</p>
 			</div>
 			<NuxtLink
 				to="/cms/obchody/novy"
@@ -80,7 +80,7 @@
 		</div>
 
 		<!-- Loading/Error states -->
-		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500">
+		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark">
 			{{ t('common.loading') }}
 		</div>
 
@@ -90,7 +90,7 @@
 
 		<div
 			v-else-if="!shops?.length"
-			class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500"
+			class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark"
 		>
 			{{ t('cms.shops.noShops') }}
 		</div>
@@ -124,7 +124,7 @@
 							{{ t('cms.shops.units') }}
 						</CmsSortableHeader>
 						<th
-							class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider"
 						>
 							{{ t('cms.shops.contact') }}
 						</th>
@@ -145,7 +145,7 @@
 							{{ t('cms.shops.updatedAt') }}
 						</CmsSortableHeader>
 						<th
-							class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24"
+							class="px-4 py-3 text-right text-xs font-medium text-plaza-dark uppercase tracking-wider w-24"
 						>
 							{{ t('common.actions') }}
 						</th>
@@ -179,11 +179,11 @@
 								</div>
 							</div>
 						</td>
-						<td class="px-4 py-3 text-gray-500 text-sm">
+						<td class="px-4 py-3 text-plaza-dark text-sm">
 							{{ shop.floor?.name || '–' }}
 						</td>
 						<td class="px-4 py-3 text-sm">
-							<span v-if="shop.unitCode" class="text-gray-500">{{
+							<span v-if="shop.unitCode" class="text-plaza-dark">{{
 								shop.unitCode
 							}}</span>
 							<span
@@ -206,7 +206,7 @@
 								</svg>
 							</span>
 						</td>
-						<td class="px-4 py-3 text-gray-500 text-sm">
+						<td class="px-4 py-3 text-plaza-dark text-sm">
 							<div v-if="shop.phone || shop.email" class="min-w-0">
 								<p v-if="shop.phone" class="truncate">{{ shop.phone }}</p>
 								<p v-if="shop.email" class="text-xs truncate">{{ shop.email }}</p>
@@ -227,7 +227,7 @@
 								}}
 							</span>
 						</td>
-						<td class="px-4 py-3 text-gray-500 text-sm">
+						<td class="px-4 py-3 text-plaza-dark text-sm">
 							{{ formatDate(shop.updatedAt) }}
 						</td>
 						<td class="px-4 py-3 text-right">
@@ -336,7 +336,7 @@
 								}}
 							</span>
 						</div>
-						<div class="flex items-center gap-2 text-sm text-gray-500 mt-0.5">
+						<div class="flex items-center gap-2 text-sm text-plaza-dark mt-0.5">
 							<span v-if="shop.floor?.name">{{ shop.floor.name }}</span>
 							<span v-if="shop.floor?.name && shop.unitCode" class="text-gray-300"
 								>·</span

@@ -7,7 +7,7 @@
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 					{{ t('cms.floors.title') }}
 				</h1>
-				<p class="text-gray-500 mt-1 text-sm sm:text-base">
+				<p class="text-plaza-dark mt-1 text-sm sm:text-base">
 					{{ t('cms.floors.subtitle') }}
 				</p>
 			</div>
@@ -28,7 +28,7 @@
 		</div>
 
 		<!-- Loading state -->
-		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500">
+		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark">
 			{{ t('common.loading') }}
 		</div>
 
@@ -52,7 +52,7 @@
 					d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
 				/>
 			</svg>
-			<p class="text-gray-500">{{ t('cms.floors.noFloors') }}</p>
+			<p class="text-plaza-dark">{{ t('cms.floors.noFloors') }}</p>
 		</div>
 
 		<!-- Desktop: Table -->
@@ -60,13 +60,13 @@
 			<table class="w-full min-w-[600px]">
 				<thead class="bg-gray-50 border-b">
 					<tr>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12"></th>
-						<th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-12">#</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">{{ t('cms.floors.level') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('cms.floors.name') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('cms.floors.slug') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">{{ t('cms.floors.status') }}</th>
-						<th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24">{{ t('common.actions') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-12"></th>
+						<th class="px-4 py-3 text-center text-xs font-medium text-plaza-dark uppercase tracking-wider w-12">#</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-20">{{ t('cms.floors.level') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider">{{ t('cms.floors.name') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider">{{ t('cms.floors.slug') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-24">{{ t('cms.floors.status') }}</th>
+						<th class="px-4 py-3 text-right text-xs font-medium text-plaza-dark uppercase tracking-wider w-24">{{ t('common.actions') }}</th>
 					</tr>
 				</thead>
 				<draggable
@@ -87,7 +87,7 @@
 									</svg>
 								</div>
 							</td>
-							<td class="px-4 py-3 text-center text-sm text-gray-500">
+							<td class="px-4 py-3 text-center text-sm text-plaza-dark">
 								{{ floor.sortOrder + 1 }}
 							</td>
 							<td class="px-4 py-3">
@@ -101,7 +101,7 @@
 								{{ floor.name }}
 							</NuxtLink>
 						</td>
-						<td class="px-4 py-3 text-sm text-gray-500">
+						<td class="px-4 py-3 text-sm text-plaza-dark">
 							{{ floor.slug }}
 						</td>
 						<td class="px-4 py-3">
@@ -194,7 +194,7 @@
 									{{ floor.isActive ? t('cms.floors.active') : t('cms.floors.inactive') }}
 								</span>
 							</div>
-							<p class="text-sm text-gray-500 truncate mt-0.5">{{ floor.slug }}</p>
+							<p class="text-sm text-plaza-dark truncate mt-0.5">{{ floor.slug }}</p>
 						</div>
 						<svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -213,7 +213,7 @@
 				<h3 class="text-lg font-semibold text-gray-900 mb-2">
 					{{ t('cms.floors.deleteConfirmTitle') }}
 				</h3>
-				<p class="text-gray-500 mb-6">
+				<p class="text-plaza-dark mb-6">
 					{{ t('cms.floors.deleteConfirmMessage', { name: deleteModal.floor?.name }) }}
 				</p>
 				<div class="flex gap-3 justify-end">

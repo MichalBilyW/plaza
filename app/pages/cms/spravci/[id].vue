@@ -3,7 +3,7 @@
 		<div class="mb-8">
 			<NuxtLink
 				to="/cms/spravci"
-				class="inline-flex items-center gap-1 text-gray-500 hover:text-gray-700 mb-4"
+				class="inline-flex items-center gap-1 text-plaza-dark hover:text-gray-700 mb-4"
 			>
 				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -19,7 +19,7 @@
 		</div>
 
 		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
-			<p class="text-gray-500">{{ $t('common.loading') }}</p>
+			<p class="text-plaza-dark">{{ $t('common.loading') }}</p>
 		</div>
 
 		<div v-else-if="error" class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
@@ -73,7 +73,7 @@
 						class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
 						:placeholder="$t('cms.users.newPasswordPlaceholder')"
 					/>
-					<p class="mt-1 text-sm text-gray-500">{{ $t('cms.users.newPasswordHint') }}</p>
+					<p class="mt-1 text-sm text-plaza-dark">{{ $t('cms.users.newPasswordHint') }}</p>
 					<p v-if="errors.password" class="mt-1 text-sm text-red-600">
 						{{ errors.password }}
 					</p>
@@ -92,7 +92,7 @@
 						<option value="editor">{{ $t('cms.roles.editor') }}</option>
 						<option value="admin">{{ $t('cms.roles.admin') }}</option>
 					</select>
-					<p class="mt-1 text-sm text-gray-500">{{ $t('cms.users.roleHint') }}</p>
+					<p class="mt-1 text-sm text-plaza-dark">{{ $t('cms.users.roleHint') }}</p>
 				</div>
 
 				<!-- Aktivní -->
@@ -109,7 +109,7 @@
 				</div>
 
 				<!-- Metadata -->
-				<div class="pt-4 border-t text-sm text-gray-500">
+				<div class="pt-4 border-t text-sm text-plaza-dark">
 					<p v-if="userData?.createdAt">
 						{{ $t('cms.users.createdAt') }}: {{ formatDate(userData.createdAt) }}
 					</p>

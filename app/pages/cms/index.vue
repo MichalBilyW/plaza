@@ -2,7 +2,7 @@
 	<div class="p-8">
 		<div class="mb-8">
 			<h1 class="text-2xl font-bold text-gray-900">{{ $t('cms.dashboard.title') }}</h1>
-			<p class="text-gray-500 mt-1">{{ $t('cms.dashboard.subtitle') }}</p>
+			<p class="text-plaza-dark mt-1">{{ $t('cms.dashboard.subtitle') }}</p>
 		</div>
 
 		<!-- Stats -->
@@ -28,7 +28,7 @@
 					</div>
 					<div>
 						<p class="text-2xl font-bold text-cms-shops-700">{{ stats?.shops || 0 }}</p>
-						<p class="text-gray-500 text-sm">{{ $t('cms.dashboard.stats.shops') }}</p>
+						<p class="text-plaza-dark text-sm">{{ $t('cms.dashboard.stats.shops') }}</p>
 					</div>
 				</div>
 			</div>
@@ -56,7 +56,7 @@
 						<p class="text-2xl font-bold text-cms-events-700">
 							{{ stats?.events || 0 }}
 						</p>
-						<p class="text-gray-500 text-sm">{{ $t('cms.dashboard.stats.events') }}</p>
+						<p class="text-plaza-dark text-sm">{{ $t('cms.dashboard.stats.events') }}</p>
 					</div>
 				</div>
 			</div>
@@ -84,7 +84,7 @@
 						<p class="text-2xl font-bold text-cms-services-700">
 							{{ stats?.services || 0 }}
 						</p>
-						<p class="text-gray-500 text-sm">
+						<p class="text-plaza-dark text-sm">
 							{{ $t('cms.dashboard.stats.services') }}
 						</p>
 					</div>
@@ -98,7 +98,7 @@
 				<h2 class="text-cms-news-500 text-lg font-semibold mb-4">
 					{{ $t('cms.dashboard.latestNews', { count: latestNews.length }) }}
 				</h2>
-				<div v-if="latestNews?.length === 0" class="text-gray-500 text-center py-8">
+				<div v-if="latestNews?.length === 0" class="text-plaza-dark text-center py-8">
 					{{ $t('cms.dashboard.noNews') }}
 				</div>
 				<div v-else class="space-y-3">
@@ -132,7 +132,7 @@
 								'px-2 py-1 text-xs rounded-full',
 								newsItem.isActive
 									? 'bg-green-100 text-green-700'
-									: 'bg-gray-100 text-gray-500',
+									: 'bg-gray-100 text-plaza-dark',
 							]"
 						>
 							{{
@@ -153,7 +153,7 @@
 				<h2 class="text-cms-events-500 text-lg font-semibold mb-4">
 					{{ $t('cms.dashboard.latestEvents', { count: latestEvents.length }) }}
 				</h2>
-				<div v-if="latestEvents?.length === 0" class="text-gray-500 text-center py-8">
+				<div v-if="latestEvents?.length === 0" class="text-plaza-dark text-center py-8">
 					{{ $t('cms.dashboard.noEvents') }}
 				</div>
 				<div v-else class="space-y-3">
@@ -181,7 +181,7 @@
 						</div>
 						<div class="flex-1 min-w-0">
 							<p class="font-medium truncate">{{ event.name }}</p>
-							<p class="text-sm text-gray-500 truncate">
+							<p class="text-sm text-plaza-dark truncate">
 								{{ event.shop?.name || $t('events.noShop') }}
 							</p>
 						</div>
@@ -190,7 +190,7 @@
 								'px-2 py-1 text-xs rounded-full',
 								event.isActive
 									? 'bg-green-100 text-green-700'
-									: 'bg-gray-100 text-gray-500',
+									: 'bg-gray-100 text-plaza-dark',
 							]"
 						>
 							{{

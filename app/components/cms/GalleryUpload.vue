@@ -6,7 +6,7 @@
 		</label>
 
 		<!-- Hint -->
-		<p v-if="hint" class="text-xs text-gray-500">{{ hint }}</p>
+		<p v-if="hint" class="text-xs text-plaza-dark">{{ hint }}</p>
 
 		<!-- Gallery grid -->
 		<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -99,7 +99,7 @@
 							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 						/>
 					</svg>
-					<span class="text-xs text-gray-500">{{ uploadProgress }}</span>
+					<span class="text-xs text-plaza-dark">{{ uploadProgress }}</span>
 				</div>
 				<div v-else class="text-center p-2">
 					<svg
@@ -115,7 +115,7 @@
 							d="M12 4v16m8-8H4"
 						/>
 					</svg>
-					<p class="mt-1 text-xs text-gray-500">{{ t('cms.gallery.addImages') }}</p>
+					<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.gallery.addImages') }}</p>
 				</div>
 			</div>
 		</div>
@@ -135,7 +135,7 @@
 		<p v-if="error" class="text-sm text-red-600">{{ error }}</p>
 
 		<!-- Count and drag hint -->
-		<div class="flex justify-between text-xs text-gray-500">
+		<div class="flex justify-between text-xs text-plaza-dark">
 			<span>{{ modelValue.length }}/{{ max }} {{ t('cms.gallery.images') }}</span>
 			<span v-if="modelValue.length > 1">{{ t('cms.gallery.dragToReorder') }}</span>
 		</div>

@@ -2,26 +2,26 @@
 	<div class="p-4 sm:p-6 lg:p-8">
 		<div class="mb-6 sm:mb-8">
 			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ t('cms.map.title') }}</h1>
-			<p class="text-gray-500 mt-1 text-sm sm:text-base">{{ t('cms.map.subtitle') }}</p>
+			<p class="text-plaza-dark mt-1 text-sm sm:text-base">{{ t('cms.map.subtitle') }}</p>
 		</div>
 
 		<!-- Statistiky -->
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 			<div class="bg-white rounded-xl shadow-sm p-4">
 				<div class="text-2xl font-bold text-indigo-600">{{ stats.totalUnits }}</div>
-				<div class="text-sm text-gray-500">{{ t('cms.map.totalUnits') }}</div>
+				<div class="text-sm text-plaza-dark">{{ t('cms.map.totalUnits') }}</div>
 			</div>
 			<div class="bg-white rounded-xl shadow-sm p-4">
 				<div class="text-2xl font-bold text-green-600">{{ stats.occupiedUnits }}</div>
-				<div class="text-sm text-gray-500">{{ t('cms.map.occupiedUnits') }}</div>
+				<div class="text-sm text-plaza-dark">{{ t('cms.map.occupiedUnits') }}</div>
 			</div>
 			<div class="bg-white rounded-xl shadow-sm p-4">
 				<div class="text-2xl font-bold text-orange-600">{{ stats.emptyUnits }}</div>
-				<div class="text-sm text-gray-500">{{ t('cms.map.emptyUnits') }}</div>
+				<div class="text-sm text-plaza-dark">{{ t('cms.map.emptyUnits') }}</div>
 			</div>
 			<div class="bg-white rounded-xl shadow-sm p-4">
 				<div class="text-2xl font-bold text-gray-600">{{ stats.occupancyRate }}%</div>
-				<div class="text-sm text-gray-500">{{ t('cms.map.occupancyRate') }}</div>
+				<div class="text-sm text-plaza-dark">{{ t('cms.map.occupancyRate') }}</div>
 			</div>
 		</div>
 
@@ -68,7 +68,7 @@
 
 			<!-- Loading -->
 			<div v-if="pending" class="flex justify-center py-12">
-				<span class="text-gray-500">{{ t('common.loading') }}</span>
+				<span class="text-plaza-dark">{{ t('common.loading') }}</span>
 			</div>
 
 			<!-- Error -->
@@ -209,7 +209,7 @@
 									v-else
 									class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center"
 								>
-									<span class="text-gray-500 text-lg font-bold">{{
+									<span class="text-plaza-dark text-lg font-bold">{{
 										selectedUnit.shop.name.charAt(0)
 									}}</span>
 								</div>
@@ -265,7 +265,7 @@
 								v-if="availableShops.length === 0"
 								class="p-4 bg-gray-50 rounded-lg text-center"
 							>
-								<p class="text-gray-500 text-sm">
+								<p class="text-plaza-dark text-sm">
 									{{ t('cms.map.noShopsToAssign') }}
 								</p>
 								<NuxtLink

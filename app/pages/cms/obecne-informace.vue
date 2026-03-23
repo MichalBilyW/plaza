@@ -30,7 +30,7 @@
 						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 					/>
 				</svg>
-				<p class="text-gray-500">{{ t('common.loading') }}</p>
+				<p class="text-plaza-dark">{{ t('common.loading') }}</p>
 			</div>
 		</div>
 
@@ -63,7 +63,7 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
 							:placeholder="t('cms.generalInfo.titlePlaceholder')"
 						/>
-						<p class="mt-1 text-xs text-gray-500">{{ form.title?.length || 0 }}/200</p>
+						<p class="mt-1 text-xs text-plaza-dark">{{ form.title?.length || 0 }}/200</p>
 					</div>
 
 					<!-- Krátký text -->
@@ -79,7 +79,7 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
 							:placeholder="t('cms.generalInfo.shortTextPlaceholder')"
 						></textarea>
-						<p class="mt-1 text-xs text-gray-500">
+						<p class="mt-1 text-xs text-plaza-dark">
 							{{ form.shortText?.length || 0 }}/500
 						</p>
 					</div>
@@ -204,7 +204,7 @@
 
 				<div
 					v-if="form.specialOpeningHours.length === 0"
-					class="text-center py-6 text-gray-500"
+					class="text-center py-6 text-plaza-dark"
 				>
 					{{ t('cms.shops.noSpecialHours') }}
 				</div>
@@ -249,7 +249,7 @@
 						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
 							<!-- Jednotlivý den -->
 							<div v-if="entry.type === 'single'">
-								<label class="block text-xs text-gray-500 mb-1">{{
+								<label class="block text-xs text-plaza-dark mb-1">{{
 									t('cms.shops.date')
 								}}</label>
 								<input
@@ -262,7 +262,7 @@
 							<!-- Období od-do -->
 							<template v-else>
 								<div>
-									<label class="block text-xs text-gray-500 mb-1">{{
+									<label class="block text-xs text-plaza-dark mb-1">{{
 										t('cms.shops.dateFrom')
 									}}</label>
 									<input
@@ -272,7 +272,7 @@
 									/>
 								</div>
 								<div>
-									<label class="block text-xs text-gray-500 mb-1">{{
+									<label class="block text-xs text-plaza-dark mb-1">{{
 										t('cms.shops.dateTo')
 									}}</label>
 									<input
@@ -301,7 +301,7 @@
 							<template v-if="!entry.closed">
 								<div class="flex items-end gap-2">
 									<div>
-										<label class="block text-xs text-gray-500 mb-1">{{
+										<label class="block text-xs text-plaza-dark mb-1">{{
 											t('cms.shops.openTime')
 										}}</label>
 										<input
@@ -312,7 +312,7 @@
 									</div>
 									<span class="pb-1.5 text-gray-400">–</span>
 									<div>
-										<label class="block text-xs text-gray-500 mb-1">{{
+										<label class="block text-xs text-plaza-dark mb-1">{{
 											t('cms.shops.closeTime')
 										}}</label>
 										<input
@@ -327,7 +327,7 @@
 
 						<!-- Poznámka -->
 						<div class="mt-3">
-							<label class="block text-xs text-gray-500 mb-1">{{
+							<label class="block text-xs text-plaza-dark mb-1">{{
 								t('cms.shops.specialNote')
 							}}</label>
 							<input

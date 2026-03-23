@@ -14,7 +14,7 @@
 
 			<!-- Hero skeleton -->
 			<div
-				v-if="pending || !heroImage"
+				v-if="pending"
 				class="w-full h-[240px] md:h-[400px] skeleton-shimmer"
 			></div>
 
@@ -41,5 +41,5 @@ const props = defineProps<{
 	pending: boolean
 }>()
 
-const heroImage = computed(() => props.homepage?.heroImage || null)
+const heroImage = computed(() => props.homepage?.heroImage || '/images/homepage/default-hero.jpg')
 </script>

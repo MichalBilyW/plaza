@@ -7,7 +7,7 @@
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 					{{ t('cms.news.title') }}
 				</h1>
-				<p class="text-gray-500 mt-1 text-sm sm:text-base">{{ t('cms.news.subtitle') }}</p>
+				<p class="text-plaza-dark mt-1 text-sm sm:text-base">{{ t('cms.news.subtitle') }}</p>
 			</div>
 			<NuxtLink
 				to="/cms/novinky/nova"
@@ -46,7 +46,7 @@
 		</div>
 
 		<!-- Loading state -->
-		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500">
+		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark">
 			{{ t('common.loading') }}
 		</div>
 
@@ -70,7 +70,7 @@
 					d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
 				/>
 			</svg>
-			<p class="text-gray-500">{{ t('cms.news.noNews') }}</p>
+			<p class="text-plaza-dark">{{ t('cms.news.noNews') }}</p>
 		</div>
 
 		<!-- News Grid -->
@@ -89,7 +89,7 @@
 					<div
 						class="drag-handle absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing p-1.5 bg-white/80 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
 					>
-						<svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+						<svg class="w-4 h-4 text-plaza-dark" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
 						</svg>
 					</div>
@@ -178,7 +178,7 @@
 					<h3 class="text-lg font-semibold text-gray-900 mb-2">
 						{{ t('cms.news.deleteConfirmTitle') }}
 					</h3>
-					<p class="text-gray-500 mb-6">
+					<p class="text-plaza-dark mb-6">
 						{{ t('cms.news.deleteConfirmMessage', { name: deleteModal.item?.name }) }}
 					</p>
 					<div class="flex gap-3 justify-end">

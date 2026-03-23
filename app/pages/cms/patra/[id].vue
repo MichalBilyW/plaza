@@ -3,7 +3,7 @@
 		<div class="mb-8">
 			<NuxtLink
 				to="/cms/patra"
-				class="inline-flex items-center gap-1 text-gray-500 hover:text-gray-700 mb-4"
+				class="inline-flex items-center gap-1 text-plaza-dark hover:text-gray-700 mb-4"
 			>
 				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -21,7 +21,7 @@
 		</div>
 
 		<!-- Loading state -->
-		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500">
+		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark">
 			{{ t('common.loading') }}
 		</div>
 
@@ -92,7 +92,7 @@
 						<p v-if="hasError('slug')" class="mt-1 text-sm text-red-600">
 							{{ getError('slug') }}
 						</p>
-						<p v-else class="mt-1 text-xs text-gray-500">
+						<p v-else class="mt-1 text-xs text-plaza-dark">
 							{{ t('cms.floors.slugHint') }}
 						</p>
 					</div>
@@ -117,7 +117,7 @@
 						<p v-if="hasError('level')" class="mt-1 text-sm text-red-600">
 							{{ getError('level') }}
 						</p>
-						<p v-else class="mt-1 text-xs text-gray-500">
+						<p v-else class="mt-1 text-xs text-plaza-dark">
 							{{ t('cms.floors.levelHint') }}
 						</p>
 					</div>

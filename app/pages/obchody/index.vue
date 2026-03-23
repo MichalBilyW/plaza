@@ -100,7 +100,7 @@
 			</div>
 
 			<!-- Pagination -->
-			<div v-if="totalPages > 1" class="mt-8 flex justify-center gap-2">
+			<!-- <div v-if="totalPages > 1" class="mt-8 flex justify-center gap-2">
 				<button
 					v-for="p in totalPages"
 					:key="p"
@@ -114,7 +114,7 @@
 				>
 					{{ p }}
 				</button>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </template>

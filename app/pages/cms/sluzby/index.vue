@@ -7,7 +7,7 @@
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 					{{ t('cms.services.title') }}
 				</h1>
-				<p class="text-gray-500 mt-1 text-sm sm:text-base">
+				<p class="text-plaza-dark mt-1 text-sm sm:text-base">
 					{{ t('cms.services.subtitle') }}
 				</p>
 			</div>
@@ -48,7 +48,7 @@
 		</div>
 
 		<!-- Loading state -->
-		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500">
+		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark">
 			{{ t('common.loading') }}
 		</div>
 
@@ -72,7 +72,7 @@
 					d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
 				/>
 			</svg>
-			<p class="text-gray-500">{{ t('cms.services.noServices') }}</p>
+			<p class="text-plaza-dark">{{ t('cms.services.noServices') }}</p>
 		</div>
 
 		<!-- Services Grid -->
@@ -91,7 +91,7 @@
 					<div
 						class="drag-handle absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing p-1.5 bg-white/80 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
 					>
-						<svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+						<svg class="w-4 h-4 text-plaza-dark" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
 						</svg>
 					</div>
@@ -180,7 +180,7 @@
 					<h3 class="text-lg font-semibold text-gray-900 mb-2">
 						{{ t('cms.services.deleteConfirmTitle') }}
 					</h3>
-					<p class="text-gray-500 mb-6">
+					<p class="text-plaza-dark mb-6">
 						{{ t('cms.services.deleteConfirmMessage') }}
 					</p>
 					<div class="flex gap-3 justify-end">

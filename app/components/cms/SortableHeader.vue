@@ -17,7 +17,7 @@ const handleClick = () => {
 <template>
 	<th
 		:class="[
-			'px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none hover:bg-gray-100 transition-colors',
+			'px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider cursor-pointer select-none hover:bg-gray-100 transition-colors',
 			props.class,
 		]"
 		@click="handleClick"

@@ -3,7 +3,7 @@
 		<div class="mb-8">
 			<NuxtLink
 				to="/cms/obchody"
-				class="inline-flex items-center gap-1 text-gray-500 hover:text-gray-700 mb-4"
+				class="inline-flex items-center gap-1 text-plaza-dark hover:text-gray-700 mb-4"
 			>
 				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -68,7 +68,7 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
 							:placeholder="t('cms.shops.slugPlaceholder')"
 						/>
-						<p class="mt-1 text-xs text-gray-500">{{ t('cms.shops.slugHint') }}</p>
+						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.shops.slugHint') }}</p>
 					</div>
 
 					<!-- Krátký popis -->
@@ -87,7 +87,7 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
 							:placeholder="t('cms.shops.shortDescriptionPlaceholder')"
 						/>
-						<p class="mt-1 text-xs text-gray-500">
+						<p class="mt-1 text-xs text-plaza-dark">
 							{{ form.shortDescription?.length || 0 }}/300
 						</p>
 					</div>
@@ -189,7 +189,7 @@
 								}}{{ unit.isOccupied ? ` (${unit.shopName})` : '' }}
 							</option>
 						</select>
-						<p class="mt-1 text-xs text-gray-500">{{ t('cms.shops.unitHint') }}</p>
+						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.shops.unitHint') }}</p>
 					</div>
 				</div>
 			</div>
@@ -253,7 +253,7 @@
 					</h3>
 					<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 						<div>
-							<label for="facebook" class="block text-xs text-gray-500 mb-1"
+							<label for="facebook" class="block text-xs text-plaza-dark mb-1"
 								>Facebook</label
 							>
 							<input
@@ -265,7 +265,7 @@
 							/>
 						</div>
 						<div>
-							<label for="instagram" class="block text-xs text-gray-500 mb-1"
+							<label for="instagram" class="block text-xs text-plaza-dark mb-1"
 								>Instagram</label
 							>
 							<input
@@ -277,7 +277,7 @@
 							/>
 						</div>
 						<div>
-							<label for="twitter" class="block text-xs text-gray-500 mb-1"
+							<label for="twitter" class="block text-xs text-plaza-dark mb-1"
 								>Twitter / X</label
 							>
 							<input
@@ -381,7 +381,7 @@
 
 				<div
 					v-if="form.specialOpeningHours.length === 0"
-					class="text-center py-6 text-gray-500"
+					class="text-center py-6 text-plaza-dark"
 				>
 					{{ t('cms.shops.noSpecialHours') }}
 				</div>
@@ -427,7 +427,7 @@
 						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
 							<!-- Jednotlivý den -->
 							<div v-if="entry.type === 'single'">
-								<label class="block text-xs text-gray-500 mb-1">{{
+								<label class="block text-xs text-plaza-dark mb-1">{{
 									t('cms.shops.date')
 								}}</label>
 								<input
@@ -440,7 +440,7 @@
 							<!-- Období od-do -->
 							<template v-else>
 								<div>
-									<label class="block text-xs text-gray-500 mb-1">{{
+									<label class="block text-xs text-plaza-dark mb-1">{{
 										t('cms.shops.dateFrom')
 									}}</label>
 									<input
@@ -450,7 +450,7 @@
 									/>
 								</div>
 								<div>
-									<label class="block text-xs text-gray-500 mb-1">{{
+									<label class="block text-xs text-plaza-dark mb-1">{{
 										t('cms.shops.dateTo')
 									}}</label>
 									<input
@@ -479,7 +479,7 @@
 							<template v-if="!entry.closed">
 								<div class="flex items-end gap-2">
 									<div>
-										<label class="block text-xs text-gray-500 mb-1">{{
+										<label class="block text-xs text-plaza-dark mb-1">{{
 											t('cms.shops.openTime')
 										}}</label>
 										<input
@@ -490,7 +490,7 @@
 									</div>
 									<span class="pb-1.5 text-gray-400">–</span>
 									<div>
-										<label class="block text-xs text-gray-500 mb-1">{{
+										<label class="block text-xs text-plaza-dark mb-1">{{
 											t('cms.shops.closeTime')
 										}}</label>
 										<input
@@ -505,7 +505,7 @@
 
 						<!-- Poznámka -->
 						<div class="mt-3">
-							<label class="block text-xs text-gray-500 mb-1">{{
+							<label class="block text-xs text-plaza-dark mb-1">{{
 								t('cms.shops.specialNote')
 							}}</label>
 							<input
@@ -541,7 +541,7 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
 							:placeholder="t('cms.shops.seoTitlePlaceholder')"
 						/>
-						<p class="mt-1 text-xs text-gray-500">
+						<p class="mt-1 text-xs text-plaza-dark">
 							{{ form.seoTitle?.length || 0 }}/60
 						</p>
 					</div>
@@ -561,7 +561,7 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
 							:placeholder="t('cms.shops.seoDescriptionPlaceholder')"
 						></textarea>
-						<p class="mt-1 text-xs text-gray-500">
+						<p class="mt-1 text-xs text-plaza-dark">
 							{{ form.seoDescription?.length || 0 }}/160
 						</p>
 					</div>
@@ -614,7 +614,7 @@
 								{{ t('cms.shops.publishDateEmpty') }}
 							</span>
 						</div>
-						<p class="mt-1 text-xs text-gray-500">
+						<p class="mt-1 text-xs text-plaza-dark">
 							{{ t('cms.shops.publishDateHint') }}
 						</p>
 						<button

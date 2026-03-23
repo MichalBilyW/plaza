@@ -486,7 +486,7 @@
 						class="absolute left-0 top-full mt-1 z-50 bg-white border border-gray-300 rounded-lg shadow-lg p-2 min-w-[200px]"
 					>
 						<div
-							class="text-xs font-semibold text-gray-500 px-2 py-1 border-b border-gray-200 mb-1"
+							class="text-xs font-semibold text-plaza-dark px-2 py-1 border-b border-gray-200 mb-1"
 						>
 							Úpravy tabulky
 						</div>
@@ -621,7 +621,7 @@
 			/>
 		</div>
 
-		<p v-if="hint" class="mt-1 text-xs text-gray-500">{{ hint }}</p>
+		<p v-if="hint" class="mt-1 text-xs text-plaza-dark">{{ hint }}</p>
 	</div>
 </template>
 

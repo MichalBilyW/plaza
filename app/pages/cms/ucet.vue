@@ -3,7 +3,7 @@
 		<div class="mb-8">
 			<NuxtLink
 				to="/cms"
-				class="inline-flex items-center gap-1 text-gray-500 hover:text-gray-700 mb-4"
+				class="inline-flex items-center gap-1 text-plaza-dark hover:text-gray-700 mb-4"
 			>
 				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -16,7 +16,7 @@
 				{{ $t('common.back') }}
 			</NuxtLink>
 			<h1 class="text-2xl font-bold text-gray-900">{{ $t('cms.account.title') }}</h1>
-			<p class="text-gray-500 mt-1">{{ $t('cms.account.subtitle') }}</p>
+			<p class="text-plaza-dark mt-1">{{ $t('cms.account.subtitle') }}</p>
 		</div>
 
 		<div class="grid gap-6 max-w-2xl">
@@ -25,15 +25,15 @@
 				<h2 class="text-lg font-semibold mb-4">{{ $t('cms.account.info') }}</h2>
 				<div class="space-y-3">
 					<div class="flex justify-between py-2 border-b">
-						<span class="text-gray-500">{{ $t('cms.users.name') }}</span>
+						<span class="text-plaza-dark">{{ $t('cms.users.name') }}</span>
 						<span class="font-medium">{{ user?.name }}</span>
 					</div>
 					<div class="flex justify-between py-2 border-b">
-						<span class="text-gray-500">{{ $t('cms.users.email') }}</span>
+						<span class="text-plaza-dark">{{ $t('cms.users.email') }}</span>
 						<span class="font-medium">{{ user?.email }}</span>
 					</div>
 					<div class="flex justify-between py-2">
-						<span class="text-gray-500">{{ $t('cms.users.role') }}</span>
+						<span class="text-plaza-dark">{{ $t('cms.users.role') }}</span>
 						<span
 							:class="[
 								'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
@@ -93,7 +93,7 @@
 							minlength="8"
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
 						/>
-						<p class="mt-1 text-sm text-gray-500">{{ $t('cms.users.passwordHint') }}</p>
+						<p class="mt-1 text-sm text-plaza-dark">{{ $t('cms.users.passwordHint') }}</p>
 						<p v-if="errors.newPassword" class="mt-1 text-sm text-red-600">
 							{{ errors.newPassword }}
 						</p>

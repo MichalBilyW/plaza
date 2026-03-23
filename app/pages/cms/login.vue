@@ -4,7 +4,7 @@
 			<div class="bg-white rounded-xl shadow-2xl p-8">
 				<div class="text-center mb-8">
 					<h1 class="text-2xl font-bold text-gray-900">{{ t('cms.title') }}</h1>
-					<p class="text-gray-500 mt-1">{{ t('cms.login.subtitle') }}</p>
+					<p class="text-plaza-dark mt-1">{{ t('cms.login.subtitle') }}</p>
 				</div>
 
 				<form @submit.prevent="handleLogin" class="space-y-6">
@@ -75,7 +75,7 @@
 				</form>
 
 				<div class="mt-6 text-center">
-					<NuxtLink to="/" class="text-sm text-gray-500 hover:text-gray-700">
+					<NuxtLink to="/" class="text-sm text-plaza-dark hover:text-gray-700">
 						{{ t('common.backToSite') }}
 					</NuxtLink>
 				</div>

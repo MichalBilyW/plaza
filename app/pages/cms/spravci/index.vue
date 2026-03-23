@@ -7,7 +7,7 @@
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 					{{ $t('cms.users.title') }}
 				</h1>
-				<p class="text-gray-500 mt-1 text-sm sm:text-base">
+				<p class="text-plaza-dark mt-1 text-sm sm:text-base">
 					{{ $t('cms.users.subtitle') }}
 				</p>
 			</div>
@@ -28,7 +28,7 @@
 		</div>
 
 		<!-- Loading/Error states -->
-		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500">
+		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark">
 			{{ $t('common.loading') }}
 		</div>
 
@@ -38,7 +38,7 @@
 
 		<div
 			v-else-if="!users?.length"
-			class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500"
+			class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark"
 		>
 			{{ $t('cms.users.noUsers') }}
 		</div>
@@ -87,7 +87,7 @@
 							{{ $t('cms.users.lastLogin') }}
 						</CmsSortableHeader>
 						<th
-							class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24"
+							class="px-4 py-3 text-right text-xs font-medium text-plaza-dark uppercase tracking-wider w-24"
 						>
 							{{ $t('cms.users.actions') }}
 						</th>
@@ -110,7 +110,7 @@
 								</NuxtLink>
 							</div>
 						</td>
-						<td class="px-4 py-3 text-gray-500 truncate max-w-[200px]">
+						<td class="px-4 py-3 text-plaza-dark truncate max-w-[200px]">
 							{{ user.email }}
 						</td>
 						<td class="px-4 py-3">
@@ -145,7 +145,7 @@
 								}}
 							</span>
 						</td>
-						<td class="px-4 py-3 text-gray-500 text-sm">
+						<td class="px-4 py-3 text-plaza-dark text-sm">
 							{{ user.lastLoginAt ? formatDate(user.lastLoginAt) : '–' }}
 						</td>
 						<td class="px-4 py-3 text-right">
@@ -248,7 +248,7 @@
 								</span>
 							</div>
 						</div>
-						<p class="text-sm text-gray-500 truncate mt-0.5">{{ user.email }}</p>
+						<p class="text-sm text-plaza-dark truncate mt-0.5">{{ user.email }}</p>
 						<div class="flex items-center justify-between mt-2">
 							<p v-if="user.lastLoginAt" class="text-xs text-gray-400">
 								{{ formatDate(user.lastLoginAt) }}

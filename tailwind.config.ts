@@ -1,5 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+	future: {
+		// Hover efekty pouze na zařízeních, která podporují hover (ne touch)
+		hoverOnlyWhenSupported: true,
+	},
 	safelist: [
 		// CMS section colors - ensure they're not purged
 		{

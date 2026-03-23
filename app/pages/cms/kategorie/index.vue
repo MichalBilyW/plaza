@@ -7,7 +7,7 @@
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 					{{ t('cms.categories.title') }}
 				</h1>
-				<p class="text-gray-500 mt-1 text-sm sm:text-base">
+				<p class="text-plaza-dark mt-1 text-sm sm:text-base">
 					{{ t('cms.categories.subtitle') }}
 				</p>
 			</div>
@@ -28,7 +28,7 @@
 		</div>
 
 		<!-- Loading state -->
-		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-500">
+		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-8 text-center text-plaza-dark">
 			{{ t('common.loading') }}
 		</div>
 
@@ -52,7 +52,7 @@
 					d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
 				/>
 			</svg>
-			<p class="text-gray-500">{{ t('cms.categories.noCategories') }}</p>
+			<p class="text-plaza-dark">{{ t('cms.categories.noCategories') }}</p>
 		</div>
 
 		<!-- Desktop: Table -->
@@ -60,12 +60,12 @@
 			<table class="w-full min-w-[600px]">
 				<thead class="bg-gray-50 border-b">
 					<tr>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12"></th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">{{ t('cms.categories.order') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('cms.categories.name') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ t('cms.categories.shopCount') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">{{ t('cms.categories.status') }}</th>
-						<th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24">{{ t('common.actions') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-12"></th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-20">{{ t('cms.categories.order') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider">{{ t('cms.categories.name') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider">{{ t('cms.categories.shopCount') }}</th>
+						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-24">{{ t('cms.categories.status') }}</th>
+						<th class="px-4 py-3 text-right text-xs font-medium text-plaza-dark uppercase tracking-wider w-24">{{ t('common.actions') }}</th>
 					</tr>
 				</thead>
 				<draggable
@@ -100,9 +100,9 @@
 							>
 								{{ category.name }}
 							</NuxtLink>
-							<p class="text-xs text-gray-500">{{ category.slug }}</p>
+							<p class="text-xs text-plaza-dark">{{ category.slug }}</p>
 						</td>
-						<td class="px-4 py-3 text-gray-500">
+						<td class="px-4 py-3 text-plaza-dark">
 							<span class="inline-flex items-center gap-1">
 								<svg
 									class="w-4 h-4"
@@ -223,7 +223,7 @@
 									{{ category.isActive ? t('cms.categories.active') : t('cms.categories.inactive') }}
 								</span>
 							</div>
-							<p class="text-sm text-gray-500 truncate mt-0.5">
+							<p class="text-sm text-plaza-dark truncate mt-0.5">
 								{{ category.shopCount || 0 }} {{ t('cms.categories.shops') }}
 							</p>
 						</div>
@@ -244,7 +244,7 @@
 				<h3 class="text-lg font-semibold text-gray-900 mb-2">
 					{{ t('cms.categories.deleteConfirmTitle') }}
 				</h3>
-				<p class="text-gray-500 mb-6">
+				<p class="text-plaza-dark mb-6">
 					{{
 						t('cms.categories.deleteConfirmMessage', {
 							name: deleteModal.category?.name,
