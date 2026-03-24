@@ -1,5 +1,5 @@
 <template>
-	<div class="min-h-screen mx-2 xs:mx-4">
+	<div class="min-h-screen">
 		<!-- Header -->
 		<LayoutTheHeader
 			:opening-hours="generalInfo?.openingHours"

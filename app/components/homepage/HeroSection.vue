@@ -1,15 +1,13 @@
 <template>
 	<div>
 		<!-- hero bg -->
-		<div class="z-0 absolute top-0 left-0 w-full h-[240px] md:h-[400px] bg-plaza-dark"></div>
+		<div class="z-0 absolute top-0 left-0 w-full h-[450px] bg-plaza-dark"></div>
 
 		<!-- Hero section -->
-		<section
-			class="z-10 container relative transparent rounded-[0px_20px_5px_5px] overflow-hidden"
-		>
+		<section class="z-10 container relative transparent rounded-[0px_0px_5px_5px] overflow-hidden">
 			<!-- Border overlay -->
 			<div
-				class="absolute top-0 left-0 w-[calc(100%-16px)] h-[calc(240px-16px)] md:w-[calc(100%-32px)] md:h-[calc(400px-32px)] bg-transparent m-2 md:m-4 border md:border-2 border-white rounded-[5px_20px_5px_5px] z-10 pointer-events-none"
+				class="absolute top-0 left-0 w-[calc(100%-16px)] h-[calc(240px-16px)] md:w-[calc(100%-32px)] md:h-[calc(400px-32px)] bg-transparent m-2 md:m-4 border md:border-2 border-white/70 rounded-[5px_20px_5px_5px] z-10 pointer-events-none"
 			></div>
 
 			<!-- Hero skeleton -->

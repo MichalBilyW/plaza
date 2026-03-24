@@ -11,11 +11,11 @@
 			:news-pending="newsPending"
 		/>
 
-		<!-- Featured shops -->
-		<LazyHomepageFeaturedShops :shops="shops" :pending="shopsPending" />
-
 		<!-- Upcoming events -->
 		<LazyHomepageUpcomingEvents :events="events" :pending="eventsPending" />
+
+		<!-- Featured shops -->
+		<LazyHomepageFeaturedShops :shops="shops" :pending="shopsPending" />
 	</div>
 </template>
 
@@ -39,7 +39,7 @@ const { data: shopsData, pending: shopsPending } = useFetch<{
 	pagination: { total: number }
 }>('/api/shops', {
 	key: 'homepage-shops',
-	query: { limit: 8, isActive: true },
+	query: { limit: 100, isActive: true },
 })
 const shops = computed(() => shopsData.value?.data || [])
 const shopsCount = computed(() => shopsData.value?.pagination?.total || 0)
@@ -63,7 +63,7 @@ const news = computed(() => newsData.value?.data || [])
 
 const { data: eventsData, pending: eventsPending } = useFetch<{ data: Event[] }>('/api/events', {
 	key: 'homepage-events',
-	query: { limit: 3, published: true, upcoming: true },
+	query: { limit: 100, published: true, upcoming: true },
 })
 const events = computed(() => eventsData.value?.data || [])
 </script>

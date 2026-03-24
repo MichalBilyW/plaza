@@ -338,7 +338,7 @@
 				<div class="flex items-center gap-3">
 					<NuxtLink
 						to="/cms/ucet"
-						class="w-8 h-8 rounded-full bg-plaza-600 flex items-center justify-center text-sm font-medium hover:bg-plaza-500 transition-colors"
+						class="w-8 h-8 rounded-full bg-plaza flex items-center justify-center text-sm font-medium hover:bg-plaza transition-colors"
 						@click="sidebarOpen = false"
 					>
 						{{ user?.name?.charAt(0)?.toUpperCase() || '?' }}

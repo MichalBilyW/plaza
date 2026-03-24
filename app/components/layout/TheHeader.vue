@@ -1,11 +1,11 @@
 <template>
 	<!-- Header Desktop -->
 	<header
-		class="hidden bg-plaza-dark lg:block fixed top-0 pt-5 left-1/2 -translate-x-1/2 z-50 w-full px-4 transition-transform duration-300"
+		class="hidden bg-plaza-dark lg:block fixed top-0 pt-5 left-1/2 -translate-x-1/2 z-50 w-full transition-transform duration-300"
 		:class="{ '-translate-y-[calc(100%+30px)]': !isHeaderVisible }"
 	>
 		<nav
-			class="container bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-[0px_20px_5px_5px] h-[71px] flex items-center justify-between px-6"
+			class="container bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)] 2xl:rounded-[5px_20px_0px_0px] h-[71px] flex items-center justify-between px-6"
 		>
 			<!-- Logo -->
 			<a href="/" class="flex-shrink-0" @click.prevent="handleLogoClick">
@@ -20,7 +20,7 @@
 			<div class="flex items-center gap-8">
 				<NuxtLink
 					to="/"
-					class="font-heading font-semibold text-base leading-[30px] text-plaza hover:text-plaza/80 transition-colors"
+					class="font-heading font-bold text-[17px] leading-[30px] text-plaza hover:text-plaza/80 transition-colors"
 					:class="{
 						'text-plaza': route.path === '/',
 						'text-black': route.path !== '/',
@@ -30,7 +30,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/obchody"
-					class="font-heading font-semibold text-base leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/obchody'),
 						'text-black': !route.path.startsWith('/obchody'),
@@ -40,7 +40,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/akce"
-					class="font-heading font-semibold text-base leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/akce'),
 						'text-black': !route.path.startsWith('/akce'),
@@ -50,7 +50,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/o-nas"
-					class="font-heading font-semibold text-base leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/o-nas',
 						'text-black': route.path !== '/o-nas',
@@ -61,7 +61,7 @@
 				<!-- CTA Button -->
 				<NuxtLink
 					to="/mapa"
-					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_10px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
+					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 				>
 					{{ t('nav.mapCenter') }}
 				</NuxtLink>
@@ -124,7 +124,7 @@
 
 	<!-- Header Mobile -->
 	<header
-		class="lg:hidden bg-plaza-dark fixed top-0 left-0 right-0 z-50 bg-white h-[60px] flex items-center justify-between pl-4 xs:pl-8 pr-2 xs:pr-6 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-[0px_0px_5px_5px] transition-transform duration-300"
+		class="lg:hidden bg-plaza-dark fixed top-0 left-0 right-0 z-50 bg-white h-[60px] flex items-center justify-between pl-4 xs:pl-8 pr-2 xs:pr-6 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] transition-transform duration-300"
 		:class="{ '-translate-y-full': !isHeaderVisible && !isMobileMenuOpen }"
 	>
 		<!-- Logo -->
@@ -177,7 +177,7 @@
 			<nav class="flex-1 flex flex-col items-center justify-start pt-12 gap-4">
 				<NuxtLink
 					to="/"
-					class="font-heading font-semibold text-base leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/',
 						'text-black': route.path !== '/',
@@ -188,7 +188,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/obchody"
-					class="font-heading font-semibold text-base leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/obchody'),
 						'text-black': !route.path.startsWith('/obchody'),
@@ -199,7 +199,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/akce"
-					class="font-heading font-semibold text-base leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/akce'),
 						'text-black': !route.path.startsWith('/akce'),
@@ -210,7 +210,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/o-nas"
-					class="font-heading font-semibold text-base leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/o-nas',
 						'text-black': route.path !== '/o-nas',
@@ -223,7 +223,7 @@
 				<!-- CTA Button -->
 				<NuxtLink
 					to="/mapa"
-					class="mt-4 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_10px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
+					class="mt-4 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 					@click="closeMobileMenu"
 				>
 					{{ t('nav.mapCenter') }}

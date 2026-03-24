@@ -75,10 +75,14 @@ export default {
 			newsAlt: 'Novinka',
 			prevNews: 'Předchozí novinka',
 			nextNews: 'Další novinka',
+			showMore: 'Zobrazit více',
 		},
 		sections: {
-			shops: 'Naše obchody',
-			events: 'Nadcházející akce',
+			shops: 'OBCHODY A\u00a0SLUŽBY',
+			shopsList: 'Seznam obchodů',
+			events: 'AKCE A\u00a0SLEVY',
+			eventsPerex: 'Exkluzivní nabídky značek, které si\u00a0zamilujete',
+			eventsList: 'Akce a slevy',
 		},
 	},
 
@@ -86,6 +90,7 @@ export default {
 		title: 'Obchody a služby',
 		description: 'Objevte všechny obchody a služby v OC Plaza Liberec',
 		search: 'Hledat obchod...',
+		shopName: 'Název obchodu',
 		noShops: 'Žádné obchody nenalezeny',
 		noShopsHint: 'Zkuste upravit filtry nebo vyhledávání',
 		floor: 'Patro',
@@ -93,6 +98,8 @@ export default {
 		contact: 'Kontakt',
 		website: 'Webové stránky',
 		allCategories: 'Všechny kategorie',
+		showMap: 'Zobrazit mapu',
+		loadMore: 'Načíst další',
 	},
 
 	events: {

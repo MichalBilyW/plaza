@@ -134,7 +134,7 @@
 					<button
 						type="submit"
 						:disabled="submitting"
-						class="px-6 py-2 bg-plaza-600 text-white rounded-lg hover:bg-plaza-700 transition-colors disabled:opacity-50"
+						class="px-6 py-2 bg-plaza text-white rounded-lg hover:bg-plaza transition-colors disabled:opacity-50"
 					>
 						{{ submitting ? $t('common.loading') : $t('common.save') }}
 					</button>

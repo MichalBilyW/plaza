@@ -128,16 +128,18 @@ export default defineNuxtConfig({
 		typeCheck: false, // Disable for faster builds, use npm run typecheck
 	},
 
-	// Route rules for caching
+	// Route rules for caching (SWR only in production)
 	routeRules: {
 		// Public pages - SSR with caching (no prerender to avoid DB connection issues)
 		'/': { ssr: true },
-		'/obchody': { swr: 3600 },
-		'/obchody/**': { swr: 3600 },
-		'/akce': { swr: 1800 },
-		'/akce/**': { swr: 1800 },
-		'/sluzby': { swr: 3600 },
-		'/mapa': { swr: 3600 },
+		...(process.env.NODE_ENV === 'production' ? {
+			'/obchody': { swr: 3600 },
+			'/obchody/**': { swr: 3600 },
+			'/akce': { swr: 1800 },
+			'/akce/**': { swr: 1800 },
+			'/sluzby': { swr: 3600 },
+			'/mapa': { swr: 3600 },
+		} : {}),
 
 		// CMS routes - no cache, auth required
 		'/cms/**': { ssr: true },

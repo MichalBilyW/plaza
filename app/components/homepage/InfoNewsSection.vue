@@ -1,76 +1,80 @@
 <template>
-	<section ref="sectionRef" class="relative py-12 lg:py-16 -mt-[110px]">
+	<section ref="sectionRef" class="relative pb-20 -mt-[50px]">
 		<div class="absolute inset-0"></div>
 
-		<div class="relative z-10 w-full max-w-[840px] mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="flex max-md:flex-col-reverse items-center justify-center md:flex-row mx-auto max-w-[679px] lg:w-auto">
+		<div class="relative z-10 w-full max-w-[840px] mx-auto px-4 sm:px-8 lg:px-12">
+			<div class="flex max-md:flex-col-reverse items-center justify-center mx-auto max-w-[679px] lg:w-auto">
 				<!-- Left side - Info cards -->
-				<div class="z-20 relative md:-mr-2 mt-8 md:-mt-12 flex md:flex-col md:text-right max-md:items-stretch max-md:justify-center md:items-end gap-y-3 gap-x-1.5 md:gap-1.5 max-md:flex-wrap md:shrink-0">
+				<div class="z-20 relative flex flex-col md:text-right md:items-center gap-1.5 md:-mr-2 mt-8 md:-mt-12 max-md:mb-4 shrink-0">
 					<!-- Počet obchodů -->
-					<NuxtLink to="/" class="relative group max-md:flex max-md:flex-col max-md:text-center max-md:justify-center bg-white rounded-lg shadow-lg px-6 md:px-10 py-2 md:py-3.5 text-right h-auto max-w-[200px] xs:max-w-full w-full xs:w-[250px] md:w-[295px]">
-						<span class="text-plaza text-2xl lg:text-2xl font-bold">{{
+					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[295px]">
+						<span class="text-plaza text-xl md:text-2xl lg:text-2xl font-bold">{{
 							animatedShopsCount
 						}}</span>
-						<span class="text-plaza-dark text-lg lg:text-xl ml-1">{{
+						<span class="text-plaza-dark md:text-lg lg:text-xl ml-1">{{
 							t('home.infoSection.shops')
 						}}</span>
-						<svg class="opacity-30 absolute right-3 md:top-6 max-md:top-1/2 max-md:transform max-md:-translate-y-1/2 inline-block ml-1 w-5 h-5 opacity-100 md:opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</NuxtLink>
 
 					<!-- Restaurace a kavárny -->
-					<NuxtLink class="relative group max-md:flex max-md:flex-col max-md:text-center max-md:justify-center bg-white rounded-lg shadow-lg px-6 md:px-10 py-2 md:py-3.5 text-right h-auto max-w-[200px] xs:max-w-full w-full xs:w-[250px] md:w-[295px]">
-						<span class="text-plaza text-2xl lg:text-2xl font-bold">{{
+					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[295px]">
+						<span class="text-plaza text-xl md:text-2xl lg:text-2xl font-bold">{{
 							animatedRestaurantsCount
 						}}</span>
-						<span class="text-plaza-dark text-lg lg:text-xl ml-1">{{
+						<span class="text-plaza-dark md:text-lg lg:text-xl ml-1">{{
 							t('home.infoSection.restaurants')
 						}}</span>
-						<svg class="opacity-30 absolute right-3 md:top-6 max-md:top-1/2 max-md:transform max-md:-translate-y-1/2 inline-block ml-1 w-5 h-5 opacity-100 md:opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</NuxtLink>
 
 					<!-- Parkovací místa -->
-					<NuxtLink class="relative group max-md:flex max-md:flex-col max-md:text-center max-md:justify-center bg-white rounded-lg shadow-lg px-6 md:px-10 py-2 md:py-3.5 text-right h-auto max-w-[200px] xs:max-w-full w-full xs:w-[250px] md:w-[295px]">
-						<span class="text-plaza text-2xl lg:text-2xl font-bold">{{
+					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[295px]">
+						<span class="text-plaza text-xl md:text-2xl lg:text-2xl font-bold">{{
 							animatedParkingCount
 						}}</span>
-						<span class="text-plaza-dark text-lg lg:text-xl ml-1">{{
+						<span class="text-plaza-dark md:text-lg lg:text-xl ml-1">{{
 							t('home.infoSection.parkingSpots')
 						}}</span>
-						<svg class="opacity-30 absolute right-3 md:top-6 max-md:top-1/2 max-md:transform max-md:-translate-y-1/2 inline-block ml-1 w-5 h-5 opacity-100 md:opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</NuxtLink>
 
-					<!-- Otevírací doba -->
-					<NuxtLink
-						to="/o-nas#oteviraci-doba"
-						class="relative group max-md:flex max-md:flex-col max-md:text-center max-md:justify-center bg-white rounded-lg shadow-lg px-6 md:px-10 py-2 md:py-3.5 text-right h-auto max-w-[200px] xs:max-w-full w-full xs:w-[250px] md:w-[295px] text-plaza-dark text-lg lg:text-xl hover:bg-gray-50 transition-colors"
-					>
-						{{ t('home.infoSection.openingHours') }}
-						<svg class="opacity-30 absolute right-3 md:top-5 max-md:top-1/2 max-md:transform max-md:-translate-y-1/2 inline-block ml-1 w-5 h-5 opacity-100 md:opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</NuxtLink>
+					<div class="flex justify-end w-full text-right">
+						<div class="flex flex-col gap-3 md:gap-1.5">
+							<!-- Otevírací doba -->
+							<NuxtLink
+								to="/o-nas#oteviraci-doba"
+								class="relative group max-md:justify-center bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[250px] md:w-[295px] text-plaza-dark md:text-lg lg:text-xl hover:bg-gray-50 transition-colors"
+							>
+								{{ t('home.infoSection.openingHours') }}
+								<svg class="absolute right-3 top-5 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</NuxtLink>
 
-					<!-- Mapa centra button -->
-					<NuxtLink
-						to="/mapa"
-						class="relative group max-md:flex max-md:flex-col max-md:text-center max-md:justify-center bg-plaza hover:bg-plaza/90 text-white rounded-lg shadow-lg px-6 md:px-10 py-2 md:py-3.5 text-right h-auto max-md:mt-4 w-full max-w-[330px] xs:max-w-[410px] md:w-[295px] text-lg lg:text-xl font-semibold transition-colors"
-					>
-						{{ t('home.infoSection.mapCenter') }}
-						<svg class="opacity-30 absolute right-3 md:top-5 max-md:top-1/2 max-md:transform max-md:-translate-y-1/2 inline-block ml-1 w-5 h-5 opacity-100 md:opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						</svg>
-					</NuxtLink>
+							<!-- Mapa centra button -->
+							<NuxtLink
+								to="/mapa"
+								class="relative group max-md:justify-center bg-plaza max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[250px] md:w-[295px] text-white md:text-lg lg:text-xl hover:bg-gray-50 transition-colors"
+							>
+								{{ t('home.infoSection.mapCenter') }}
+								<svg class="absolute right-3 top-5 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</NuxtLink>
+						</div>
+					</div>
 				</div>
 
 				<!-- Right side - News slider -->
@@ -108,10 +112,9 @@
 						<!-- Hover badge -->
 						<div
 							v-if="currentNews?.content"
-							class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+							class="absolute bottom-6 max-md:opacity-90 max-md:right-6 md:-right-full group-hover:right-6 md:opacity-0 group-hover:opacity-90 transition-all ease-in-out"
 						>
-							<span class="bg-white text-plaza-dark px-4 py-2 rounded-lg font-semibold shadow-lg">
-								Zobrazit více
+							<span class="bg-plaza-dark text-white px-4 py-2 rounded-[5px_20px_5px_5px] w-full font-semibold shadow-lg" v-html="t('home.infoSection.showMore')">
 							</span>
 						</div>
 					</div>
@@ -168,11 +171,11 @@
 				<!-- <img
 					:src="selectedNews.image"
 					:alt="selectedNews.name"
-					class="w-full h-auto object-contain rounded-[5px_20px_5px_5px] mb-6 px-4 sm:px-6 lg:px-8"
+					class="w-full h-auto object-contain rounded-[5px_20px_5px_5px] mb-6 px-4 sm:px-8 lg:px28"
 				/> -->
 
 				<!-- Content -->
-				<div class="px-6 py-10 md:py-16">
+				<div class="px-8 py-10 m2:py-16">
 					<div
 						class="prose prose-sm max-w-none text-plaza-dark text-sm leading-relaxed"
 						v-html="selectedNews.content"

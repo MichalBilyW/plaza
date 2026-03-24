@@ -13,7 +13,7 @@
 			</div>
 			<NuxtLink
 				to="/cms/spravci/novy"
-				class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-plaza-600 text-white rounded-lg hover:bg-plaza-700 transition-colors text-sm sm:text-base"
+				class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-plaza text-white rounded-lg hover:bg-plaza transition-colors text-sm sm:text-base"
 			>
 				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -98,7 +98,7 @@
 						<td class="px-4 py-3">
 							<div class="flex items-center gap-3">
 								<div
-									class="w-8 h-8 rounded-full bg-plaza-600 flex items-center justify-center text-white text-sm font-medium flex-shrink-0"
+									class="w-8 h-8 rounded-full bg-plaza flex items-center justify-center text-white text-sm font-medium flex-shrink-0"
 								>
 									{{ user.name?.charAt(0)?.toUpperCase() || '?' }}
 								</div>
@@ -205,7 +205,7 @@
 			>
 				<div class="flex items-center gap-3">
 					<div
-						class="w-10 h-10 rounded-full bg-plaza-600 flex items-center justify-center text-white font-medium flex-shrink-0"
+						class="w-10 h-10 rounded-full bg-plaza flex items-center justify-center text-white font-medium flex-shrink-0"
 					>
 						{{ user.name?.charAt(0)?.toUpperCase() || '?' }}
 					</div>
