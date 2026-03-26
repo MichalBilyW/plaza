@@ -197,7 +197,7 @@
 			class="lg:hidden fixed inset-0 z-40 bg-white pt-[50px] flex flex-col"
 		>
 			<!-- Navigation links -->
-			<nav :aria-label="t('common.menu')" class="flex-1 flex flex-col items-center justify-start pt-12 gap-4">
+			<nav :aria-label="t('common.menu')" class="flex-1 flex flex-col items-center justify-center gap-4">
 				<NuxtLink
 					to="/"
 					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"

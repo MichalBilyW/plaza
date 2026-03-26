@@ -21,21 +21,25 @@
 			/>
 
 			<!-- Shop Events Section (Akce a slevy) -->
-			<HomepageUpcomingEvents
-				v-if="shopEvents.length > 0 || eventsPending"
-				:events="shopEvents"
-				:pending="eventsPending"
-			/>
+			<div class="my-20">
+				<HomepageUpcomingEvents
+					v-if="shopEvents.length > 0 || eventsPending"
+					:events="shopEvents"
+					:pending="eventsPending"
+				/>
+			</div>
 
 			<!-- Related Shops Section -->
-			<ShopRelatedShops
-				v-if="shop?.category && categories.length > 0"
-				:shops="relatedShops"
-				:categories="categories"
-				:category-id="selectedCategoryId"
-				:pending="relatedPending"
-				@category-change="onCategoryChange"
-			/>
+			<div class="my-20">
+				<ShopRelatedShops
+					v-if="shop?.category && categories.length > 0"
+					:shops="relatedShops"
+					:categories="categories"
+					:category-id="selectedCategoryId"
+					:pending="relatedPending"
+					@category-change="onCategoryChange"
+				/>
+			</div>
 		</template>
 	</div>
 </template>

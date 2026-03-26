@@ -1,13 +1,13 @@
 <template>
 	<div>
 		<!-- hero bg -->
-		<div class="z-0 absolute top-0 left-0 w-full h-[450px] bg-plaza-dark"></div>
+		<div class="z-0 absolute top-0 left-0 w-full h-[350px] lg:h-[550px] bg-gradient-to-b from-[#131313] to-[#1A1A1A]"></div>
 
 		<!-- Hero section -->
-		<section class="z-10 container relative" aria-label="Hero obchodu">
-			<div class="flex flex-col lg:flex-row lg:items-start gap-0">
+		<section class="z-10 relative" aria-label="Hero obchodu">
+			<div class="flex flex-col md:flex-row items-center justify-center pt-6 md:pt-12 px-6">
 				<!-- Info Card (left on desktop, bottom on mobile) -->
-				<div class="order-2 lg:order-1 lg:w-[380px] lg:shrink-0 lg:-mr-8 lg:z-20 lg:mt-20">
+				<div class="order-2 md:order-1 w-full max-w-[290px] md:max-w-[380px] max-md:mt-3 z-20">
 					<div class="bg-white rounded-[5px_20px_5px_5px] shadow-lg p-6 lg:p-8">
 						<!-- Logo -->
 						<div class="flex justify-center mb-4">
@@ -16,7 +16,7 @@
 									v-if="shop.logo"
 									:src="shop.logo"
 									:alt="shop.name"
-									class="max-h-full max-w-[200px] object-contain"
+									class="max-h-full max-w-[150px] object-contain"
 								/>
 								<span v-else class="text-4xl font-bold text-plaza-dark font-heading">
 									{{ shop.name }}
@@ -31,18 +31,18 @@
 								class="text-[16px]"
 								aria-hidden="true"
 							>●</span>
-							<span class="text-sm" :class="isOpen ? 'text-plaza-success' : 'text-plaza-gray'">
+							<span>
 								{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}
 							</span>
 						</div>
 
 						<!-- Opening hours table -->
-						<div v-if="shop.openingHours?.length" class="mb-6">
+						<div v-if="shop.openingHours?.length" class="mb-2">
 							<div
 								v-for="entry in shop.openingHours"
 								:key="entry.day"
-								class="flex justify-between py-1.5 border-b border-gray-100 last:border-0"
-								:class="{ 'font-bold': isToday(entry.day) }"
+								class="flex justify-between py-1 border-b border-gray-100 last:border-0"
+								:class="{ 'font-black': isToday(entry.day), 'opacity-70 text-sm': !isToday(entry.day) }"
 							>
 								<span class="text-plaza-dark">{{ getDayName(entry.day) }}</span>
 								<span class="text-plaza-dark">
@@ -57,10 +57,10 @@
 						</div>
 
 						<!-- Separator -->
-						<div class="border-t border-gray-200 my-4"></div>
+						<div class="border-t border-gray-200 my-3 max-w-[290px] mx-auto"></div>
 
 						<!-- Contact info -->
-						<div class="space-y-2 text-sm">
+						<div class="space-y-1 text-sm">
 							<div v-if="shop.website" class="flex justify-between">
 								<span class="text-plaza-gray">web</span>
 								<a
@@ -95,8 +95,8 @@
 				</div>
 
 				<!-- Gallery (right on desktop, top on mobile) -->
-				<div class="order-1 lg:order-2 lg:flex-1 lg:min-w-0">
-					<div class="relative rounded-[0px_0px_5px_5px] lg:rounded-[5px_20px_5px_5px] overflow-hidden">
+				<div class="w-full max-md:max-h-[350px] md:w-[500px] lg:w-[650px] aspect-[29/24] md:aspect-auto md:h-[400px] lg:h-[600px] order-1 md:order-2 shadow-lg md:-ml-10">
+					<div class="relative h-full rounded-[5px_20px_5px_5px] overflow-hidden">
 						<!-- Border overlay -->
 						<div
 							class="absolute top-0 left-0 w-[calc(100%-16px)] h-[calc(100%-16px)] md:w-[calc(100%-32px)] md:h-[calc(100%-32px)] bg-transparent m-2 md:m-4 border md:border-2 border-white/70 rounded-[5px_20px_5px_5px] z-10 pointer-events-none"
@@ -106,17 +106,19 @@
 						<!-- Single image or gallery skeleton -->
 						<div
 							v-if="pending"
-							class="w-full h-[280px] md:h-[400px] skeleton-shimmer"
+							class="w-full h-full skeleton-shimmer"
 						></div>
 
 						<!-- Gallery Swiper -->
-						<div v-else-if="galleryImages.length > 1" class="relative shop-gallery-slider">
+						<div v-else-if="galleryImages.length > 1" class="relative h-full shop-gallery-slider">
 							<Swiper
+								:modules="[Autoplay]"
 								:slides-per-view="1"
 								:space-between="0"
 								:loop="true"
 								:grab-cursor="true"
-								class="w-full h-[280px] md:h-[400px]"
+								:autoplay="{ delay: 3000, disableOnInteraction: false }"
+								class="w-full h-full"
 								@swiper="onSwiperInit"
 							>
 								<SwiperSlide v-for="(image, index) in galleryImages" :key="index">
@@ -146,13 +148,13 @@
 							v-else-if="galleryImages.length === 1"
 							:src="galleryImages[0]"
 							:alt="shop.name"
-							class="w-full h-[280px] md:h-[400px] object-cover"
+							class="w-full h-full object-cover"
 						/>
 
 						<!-- Placeholder -->
 						<div
 							v-else
-							class="w-full h-[280px] md:h-[400px] bg-plaza-light flex items-center justify-center"
+							class="w-full h-full bg-plaza-light flex items-center justify-center"
 						>
 							<svg
 								class="w-16 h-16 text-plaza-gray"
@@ -177,117 +179,118 @@
 </template>
 
 <script setup lang="ts">
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import type { Swiper as SwiperType } from 'swiper'
-import type { Shop, DayOfWeek } from '@/shared/types'
-import 'swiper/css'
+	import { Swiper, SwiperSlide } from 'swiper/vue'
+	import { Autoplay } from 'swiper/modules'
+	import type { Swiper as SwiperType } from 'swiper'
+	import type { Shop, DayOfWeek } from '@/shared/types'
+	import 'swiper/css'
 
-const { t } = useI18n()
+	const { t } = useI18n()
 
-const props = defineProps<{
-	shop: Shop
-	pending?: boolean
-}>()
+	const props = defineProps<{
+		shop: Shop
+		pending?: boolean
+	}>()
 
-// === Gallery ===
-const galleryImages = computed(() => {
-	const images: string[] = []
-	if (props.shop.gallery?.length) {
-		images.push(...props.shop.gallery)
+	// === Gallery ===
+	const galleryImages = computed(() => {
+		const images: string[] = []
+		if (props.shop.gallery?.length) {
+			images.push(...props.shop.gallery)
+		}
+		return images
+	})
+
+	// === Swiper ===
+	const swiperInstance = ref<SwiperType | null>(null)
+
+	const onSwiperInit = (swiper: SwiperType) => {
+		swiperInstance.value = swiper
 	}
-	return images
-})
 
-// === Swiper ===
-const swiperInstance = ref<SwiperType | null>(null)
-
-const onSwiperInit = (swiper: SwiperType) => {
-	swiperInstance.value = swiper
-}
-
-const slideNext = () => {
-	swiperInstance.value?.slideNext()
-}
-
-// === Opening hours logic ===
-const dayMapping: DayOfWeek[] = [
-	'sunday',
-	'monday',
-	'tuesday',
-	'wednesday',
-	'thursday',
-	'friday',
-	'saturday',
-]
-
-const dayNames: Record<DayOfWeek, string> = {
-	monday: 'Pondělí',
-	tuesday: 'Úterý',
-	wednesday: 'Středa',
-	thursday: 'Čtvrtek',
-	friday: 'Pátek',
-	saturday: 'Sobota',
-	sunday: 'Neděle',
-}
-
-const getDayName = (day: DayOfWeek): string => dayNames[day]
-
-const isToday = (day: DayOfWeek): boolean => {
-	const todayIndex = new Date().getDay()
-	return dayMapping[todayIndex] === day
-}
-
-const formatTime = (time: string): string => {
-	// Converts "09:00" to "9.00"
-	const parts = time.split(':')
-	const hours = parts[0] || '0'
-	const minutes = parts[1] || '00'
-	return `${parseInt(hours, 10)}.${minutes}`
-}
-
-// === Open status ===
-const todayOpeningHours = computed(() => {
-	const todayIndex = new Date().getDay()
-	const today = dayMapping[todayIndex] as DayOfWeek
-
-	const hours = props.shop.openingHours?.find((h) => h.day === today)
-	if (!hours) return null
-
-	return {
-		open: hours.open,
-		close: hours.close,
-		closed: hours.closed ?? false,
+	const slideNext = () => {
+		swiperInstance.value?.slideNext()
 	}
-})
 
-const isOpen = computed(() => {
-	if (!todayOpeningHours.value || todayOpeningHours.value.closed) return false
+	// === Opening hours logic ===
+	const dayMapping: DayOfWeek[] = [
+		'sunday',
+		'monday',
+		'tuesday',
+		'wednesday',
+		'thursday',
+		'friday',
+		'saturday',
+	]
 
-	const now = new Date()
-	const currentMinutes = now.getHours() * 60 + now.getMinutes()
+	const dayNames: Record<DayOfWeek, string> = {
+		monday: 'Pondělí',
+		tuesday: 'Úterý',
+		wednesday: 'Středa',
+		thursday: 'Čtvrtek',
+		friday: 'Pátek',
+		saturday: 'Sobota',
+		sunday: 'Neděle',
+	}
 
-	const openParts = todayOpeningHours.value.open.split(':').map(Number)
-	const closeParts = todayOpeningHours.value.close.split(':').map(Number)
+	const getDayName = (day: DayOfWeek): string => dayNames[day]
 
-	const openH = openParts[0] ?? 0
-	const openM = openParts[1] ?? 0
-	const closeH = closeParts[0] ?? 0
-	const closeM = closeParts[1] ?? 0
+	const isToday = (day: DayOfWeek): boolean => {
+		const todayIndex = new Date().getDay()
+		return dayMapping[todayIndex] === day
+	}
 
-	const openMinutes = openH * 60 + openM
-	const closeMinutes = closeH * 60 + closeM
+	const formatTime = (time: string): string => {
+		// Converts "09:00" to "9.00"
+		const parts = time.split(':')
+		const hours = parts[0] || '0'
+		const minutes = parts[1] || '00'
+		return `${parseInt(hours, 10)}.${minutes}`
+	}
 
-	return currentMinutes >= openMinutes && currentMinutes < closeMinutes
-})
+	// === Open status ===
+	const todayOpeningHours = computed(() => {
+		const todayIndex = new Date().getDay()
+		const today = dayMapping[todayIndex] as DayOfWeek
 
-// === URL helpers ===
-const normalizeUrl = (url: string): string => {
-	if (!url) return ''
-	if (url.startsWith('http://') || url.startsWith('https://')) return url
-	return `https://${url}`
-}
+		const hours = props.shop.openingHours?.find((h) => h.day === today)
+		if (!hours) return null
 
-const stripProtocol = (url: string): string => {
-	return url.replace(/^https?:\/\//, '').replace(/\/$/, '')
-}
+		return {
+			open: hours.open,
+			close: hours.close,
+			closed: hours.closed ?? false,
+		}
+	})
+
+	const isOpen = computed(() => {
+		if (!todayOpeningHours.value || todayOpeningHours.value.closed) return false
+
+		const now = new Date()
+		const currentMinutes = now.getHours() * 60 + now.getMinutes()
+
+		const openParts = todayOpeningHours.value.open.split(':').map(Number)
+		const closeParts = todayOpeningHours.value.close.split(':').map(Number)
+
+		const openH = openParts[0] ?? 0
+		const openM = openParts[1] ?? 0
+		const closeH = closeParts[0] ?? 0
+		const closeM = closeParts[1] ?? 0
+
+		const openMinutes = openH * 60 + openM
+		const closeMinutes = closeH * 60 + closeM
+
+		return currentMinutes >= openMinutes && currentMinutes < closeMinutes
+	})
+
+	// === URL helpers ===
+	const normalizeUrl = (url: string): string => {
+		if (!url) return ''
+		if (url.startsWith('http://') || url.startsWith('https://')) return url
+		return `https://${url}`
+	}
+
+	const stripProtocol = (url: string): string => {
+		return url.replace(/^https?:\/\//, '').replace(/\/$/, '')
+	}
 </script>

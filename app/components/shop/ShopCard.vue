@@ -2,7 +2,7 @@
 	<!-- Upcoming shop - not clickable -->
 	<div
 		v-if="isUpcoming"
-		class="relative group rounded-[5px_20px_5px_5px] bg-white
+		class="upcoming-card relative group rounded-[5px_20px_5px_5px] bg-white
 			max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4
 			w-full aspect-square min-[380px]:w-[173px] min-[380px]:h-[173px] min-[380px]:aspect-auto md:w-auto md:h-auto md:aspect-auto
 			md:overflow-hidden"
@@ -13,13 +13,13 @@
 	>
 		<!-- Opening date badge (mobile only) -->
 		<span
-			class="md:hidden absolute top-2 left-2 z-10 rounded-[5px_10px_5px_5px] bg-plaza px-2 py-0.5 text-[10px] font-semibold text-white shadow"
+			class="upcoming-badge md:hidden absolute top-2 left-2 z-10 rounded-[5px_10px_5px_5px] bg-plaza px-2 py-0.5 text-[10px] font-semibold text-white shadow"
 		>
 			Otevíráme: {{ new Date(shop.publishDate!).toLocaleDateString('cs-CZ') }}
 		</span>
 
 		<!-- MOBILE: kompaktní karta -->
-		<div class="md:hidden flex items-center justify-center text-center flex-1 w-3/4">
+		<div class="md:hidden flex items-center justify-center text-center flex-1 w-3/4 opacity-80">
 			<img
 				v-if="shop.logo"
 				:src="shop.logo"
@@ -32,9 +32,9 @@
 			</span>
 		</div>
 		<!-- Divider -->
-		<div class="md:hidden w-full max-w-[100px] h-0.5 bg-plaza-light my-2"></div>
+		<div class="md:hidden w-full max-w-[100px] h-0.5 bg-plaza-light my-2 opacity-80"></div>
 		<!-- Kategorie + Patro -->
-		<div class="md:hidden flex items-center justify-between w-full gap-2">
+		<div class="md:hidden flex items-center justify-between w-full gap-2 opacity-80">
 			<span class="text-xs text-plaza/90" v-if="shop.category?.name">
 				{{ shop.category.name.length > 9 ? shop.category.name.slice(0, 9) + '…' : shop.category.name }}
 			</span>
@@ -43,7 +43,7 @@
 
 		<!-- DESKTOP: galerie + logo overlay + název + kategorie -->
 		<!-- Gallery photo -->
-		<div class="max-md:hidden relative h-[200px] w-full overflow-hidden bg-plaza-dark/90">
+		<div class="max-md:hidden relative h-[200px] w-full overflow-hidden bg-plaza-dark/90 opacity-80">
 			<img
 				v-if="shop.gallery?.[0]"
 				:src="shop.gallery[0]"
@@ -56,16 +56,16 @@
 			>
 				{{ shop.name.charAt(0) }}
 			</span>
-			<!-- Opening date badge desktop -->
-			<span
-				class="absolute top-3 left-3 z-10 rounded-[5px_10px_5px_5px] bg-plaza px-3 py-1 text-xs font-semibold text-white shadow"
-			>
-				Otevíráme: {{ new Date(shop.publishDate!).toLocaleDateString('cs-CZ') }}
-			</span>
 		</div>
+		<!-- Opening date badge desktop -->
+		<span
+			class="upcoming-badge max-md:hidden absolute top-3 left-3 z-10 rounded-[5px_10px_5px_5px] bg-plaza px-3 py-1 text-xs font-semibold text-white shadow"
+		>
+			Otevíráme: {{ new Date(shop.publishDate!).toLocaleDateString('cs-CZ') }}
+		</span>
 
 		<!-- Desktop logo overlay + text -->
-		<div class="max-md:hidden flex flex-col items-center px-4 pb-5">
+		<div class="max-md:hidden flex flex-col items-center px-4 pb-5 opacity-80">
 			<!-- Logo box -->
 			<div
 				class="-mt-[42px] relative z-10 flex h-[85px] w-[120px] items-center justify-center rounded-sm bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"

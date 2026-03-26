@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- hero bg -->
-		<div class="z-0 absolute top-0 left-0 w-full h-[450px] bg-plaza-dark"></div>
+		<div class="z-0 absolute top-0 left-0 w-full h-[450px] bg-gradient-to-b from-[#131313] to-[#1A1A1A]"></div>
 
 		<!-- Hero section -->
 		<section class="z-10 container relative transparent rounded-[0px_0px_5px_5px] overflow-hidden" aria-label="Hero">

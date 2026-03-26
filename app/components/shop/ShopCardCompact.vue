@@ -2,17 +2,17 @@
 	<!-- Upcoming shop - not clickable -->
 	<div
 		v-if="isUpcoming"
-		class="relative flex flex-col justify-center items-center bg-white border border-gray-200 w-[173px] h-[173px] rounded-[5px_20px_5px_5px] p-5"
+		class="upcoming-card relative flex flex-col justify-center items-center bg-white border border-gray-200 w-[173px] h-[173px] rounded-[5px_20px_5px_5px] p-5"
 	>
 		<!-- Opening date badge -->
 		<span
-			class="absolute top-2 left-2 z-10 rounded-[5px_10px_5px_5px] bg-plaza px-2 py-0.5 text-[10px] font-semibold text-white shadow"
+			class="upcoming-badge absolute top-2 left-2 z-10 rounded-[5px_10px_5px_5px] bg-plaza px-2 py-0.5 text-[10px] font-semibold text-white shadow"
 		>
 			Otevíráme: {{ new Date(shop.publishDate!).toLocaleDateString('cs-CZ') }}
 		</span>
 
 		<!-- Logo -->
-		<div class="flex items-center justify-center text-center h-full w-[70px]">
+		<div class="flex items-center justify-center text-center h-full w-[70px] opacity-80">
 			<img
 				v-if="shop.logo"
 				:src="shop.logo"

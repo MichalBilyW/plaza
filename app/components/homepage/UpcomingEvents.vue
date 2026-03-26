@@ -1,5 +1,5 @@
 <template>
-	<section class="py-20 bg-plaza-dark" :aria-label="t('home.sections.events')">
+	<section class="py-20 bg-gradient-to-b from-[#131313] to-[#1A1A1A]" :aria-label="t('home.sections.events')">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<!-- Desktop: side-by-side layout / Mobile: stacked -->
 			<div class="flex flex-col lg:flex-row lg:items-start lg:gap-10">

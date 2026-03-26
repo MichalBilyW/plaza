@@ -1,5 +1,5 @@
 <template>
-	<section class="py-20 bg-white" :aria-label="t('shopDetail.relatedShops')">
+	<section class="bg-white" :aria-label="t('shopDetail.relatedShops')">
 		<div class="max-w-7xl sm:px-8 md:mx-auto">
 			<!-- Heading + View Toggle -->
 			<div class="flex items-center justify-between gap-4 mb-8 sm:mb-12 px-4 md:px-0">
@@ -24,6 +24,7 @@
 									v-for="cat in categories"
 									:key="cat._id"
 									:value="cat._id"
+									class="text-base font-normal text-plaza"
 								>
 									{{ cat.name }}
 								</option>
@@ -281,12 +282,19 @@ const canSlideNext = computed(() => {
 
 .category-select option {
 	font-family: system-ui, -apple-system, sans-serif;
-	font-size: 16px !important;
+	font-size: 1rem !important;
 	font-weight: 400 !important;
 	text-transform: none !important;
+	letter-spacing: normal !important;
 	color: #333;
 	background: white;
 	padding: 12px 16px;
+}
+
+@supports (-webkit-appearance: none) {
+	.category-select option {
+		font-size: 1rem !important;
+	}
 }
 
 .category-select option:checked {
