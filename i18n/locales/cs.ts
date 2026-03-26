@@ -211,6 +211,16 @@ export default {
 		facebook: 'Facebook',
 		instagram: 'Instagram',
 		copyright: '© {year} OC Plaza Liberec. Všechna práva vyhrazena.',
+		nav: {
+			shops: 'Obchody a služby',
+			events: 'Akce a slevy',
+			about: 'O nás',
+			map: 'Mapa centra',
+			contacts: 'Kontakty',
+			cookies: 'Cookies',
+			visitorRules: 'Návštěvnický řád',
+			parkingRules: 'Provozní řád parkoviště',
+		},
 	},
 
 	cms: {
