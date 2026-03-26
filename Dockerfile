@@ -68,8 +68,8 @@ COPY --from=builder --chown=nuxtjs:nodejs /app/.output ./.output
 COPY --from=builder --chown=nuxtjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nuxtjs:nodejs /app/package.json ./package.json
 
-# Create uploads directory with correct permissions
-RUN mkdir -p /app/public/uploads && chown -R nuxtjs:nodejs /app/public
+# Create uploads directory with correct permissions (Nitro serves from .output/public)
+RUN mkdir -p /app/.output/public/uploads && chown -R nuxtjs:nodejs /app/.output/public/uploads
 
 # Switch to non-root user
 USER nuxtjs
