@@ -94,6 +94,11 @@ export default {
 			eventsPrev: 'Předchozí akce',
 			eventsNext: 'Další akce',
 		},
+		shops: {
+			showGrid: 'Mřížka',
+			showSlider: 'Slider',
+			filterShops: 'Filtrovat obchody',
+		},
 	},
 
 	shops: {

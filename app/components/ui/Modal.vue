@@ -12,7 +12,7 @@
 				<!-- Modal content -->
 				<div
 					ref="modalRef"
-					class="modal-scrollbar relative bg-white !rounded-[5px_20px_5px_5px] overflow-x-hidden shadow-xl w-full max-w-[1024px] max-h-[90vh] overflow-y-auto"
+					class="modal-scrollbar relative bg-white !rounded-[5px] overflow-x-hidden shadow-xl w-full max-w-[1024px] max-h-[90vh] overflow-y-auto"
 					role="dialog"
 					aria-modal="true"
 					:aria-label="$t('common.more')"
@@ -36,7 +36,7 @@
 					</button>
 
 					<!-- Content slot -->
-					 <div class="max-w-4xl mx-auto">
+					 <div class="container-small">
 						 <slot />
 					 </div>
 				</div>

@@ -64,6 +64,10 @@ textarea:focus-visible {
 	@apply !max-w-[1330px] mx-auto;
 }
 
+.container-small {
+	@apply !max-w-5xl mx-auto;
+}
+
 /**
  * Globální styly pro OC Plaza Liberec
  */

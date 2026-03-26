@@ -11,7 +11,7 @@
 
 		<!-- Filter bar -->
 		<div
-			class="relative z-10 mx-auto -mt-9 max-w-5xl px-4"
+			class="relative z-10 container-small -mt-9 px-4"
 		>
 			<div
 				class="flex flex-col gap-3 rounded-[5px_20px_5px_5px] bg-white px-5 py-4 drop-shadow-md md:flex-row md:justify-between"
@@ -31,7 +31,7 @@
 							<option
 								v-for="category in categories"
 								:key="category._id"
-								:value="category._id"
+								:value="category.slug"
 							>
 								{{ category.name }}
 							</option>
@@ -93,13 +93,13 @@
 		</div>
 
 		<!-- Content area -->
-		<div class="mx-auto max-w-5xl px-4 py-8">
+		<div class="container-small px-4 py-8">
 			<!-- Loading skeleton (initial load only) -->
 			<div
 				v-if="initialLoading"
-				class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+				class="flex flex-col items-center gap-3 xs:flex-row xs:flex-wrap xs:justify-center md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3"
 			>
-				<div v-for="i in 9" :key="i" class="animate-pulse overflow-hidden rounded-[5px_20px_5px_5px]">
+				<div v-for="i in 9" :key="i" class="animate-pulse overflow-hidden rounded-[5px_20px_5px_5px] w-full aspect-square xs:w-[180px] xs:h-[180px] xs:aspect-auto md:w-auto md:h-auto">
 					<div class="h-[200px] bg-plaza-light"></div>
 					<div class="flex flex-col items-center py-4">
 						<div class="-mt-[42px] mb-3 h-[85px] w-[120px] rounded-sm bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"></div>
@@ -134,84 +134,16 @@
 			<!-- Shops grid -->
 			<div
 				v-else
-				class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+				class="flex flex-col items-center gap-3 min-[375px]:flex-row min-[375px]:flex-wrap min-[375px]:justify-center md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3"
 			>
-				<component
-					:is="isUpcoming(shop) ? 'div' : 'NuxtLink'"
-					v-for="shop in allShops"
-					:key="shop._id"
-					v-bind="isUpcoming(shop) ? {} : { to: `/obchody/${shop.slug}` }"
-					class="group overflow-hidden rounded-[5px_20px_5px_5px] bg-white transition-shadow"
-					:class="{ 'hover:shadow-lg cursor-pointer': !isUpcoming(shop) }"
-				>
-					<!-- Gallery photo -->
-					<div class="relative h-[200px] w-full overflow-hidden bg-plaza-dark/90">
-						<img
-							v-if="shop.gallery?.[0]"
-							:src="shop.gallery[0]"
-							:alt="shop.name"
-							class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-						/>
-						<span
-							v-else
-							class="flex h-full w-full text-center p-4 items-center justify-center text-4xl font-bold text-white/90"
-						>
-							{{ shop.name.charAt(0) }}
-						</span>
-						<!-- Opening date badge -->
-						<span
-							v-if="shop.publishDate && new Date(shop.publishDate) > new Date()"
-							class="absolute top-3 left-3 z-10 rounded-[5px_10px_5px_5px] bg-plaza px-3 py-1 text-xs font-semibold text-white shadow"
-						>
-							Otevíráme: {{ new Date(shop.publishDate).toLocaleDateString('cs-CZ') }}
-						</span>
-					</div>
-
-					<!-- Logo overlay + text -->
-					<div class="flex flex-col items-center px-4 pb-5">
-						<!-- Logo box -->
-						<div
-							class="-mt-[42px] relative z-10 flex h-[85px] w-[120px] items-center justify-center rounded-sm bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
-						>
-							<img
-								v-if="shop.logo"
-								:src="shop.logo"
-								:alt="shop.name"
-								class="max-h-[60px] max-w-[70px] object-contain"
-							/>
-							<span
-								v-else
-								class="text-2xl font-bold text-plaza-gray"
-							>
-								{{ shop.name.charAt(0) }}
-							</span>
-						</div>
-
-						<!-- Name -->
-						<h3
-							class="mt-3 text-center font-heading text-[22px] font-semibold leading-tight text-plaza-gray md:text-[26px]"
-						>
-							{{ shop.name }}
-						</h3>
-
-						<!-- Category & Floor -->
-						<p
-							v-if="shop.category || shop.floor"
-							class="mt-1 text-center font-sans text-[15px] text-plaza-gray"
-						>
-							<span v-if="shop.category" class="text-plaza">{{ shop.category.name }}</span>
-							<span v-if="shop.category && shop.floor"> · </span>
-							<span v-if="shop.floor">{{ shop.floor.name }}</span>
-						</p>
-					</div>
-				</component>
+				<ShopCard v-for="shop in allShops" :key="shop._id" :shop="shop" />
 			</div>
 
 			<!-- Load more button -->
 			<div v-if="!initialLoading && allShops.length > 0 && !allLoaded" class="mt-8 flex justify-center">
 				<button
 					:disabled="loadingMore"
-					class="inline-flex items-center gap-2 rounded-[5px_20px_5px_5px] bg-plaza px-8 py-3 font-heading text-lg font-semibold text-white transition-colors hover:bg-red-700 disabled:opacity-60"
+					class="inline-flex items-center justify-center px-6 py-2 rounded-[5px_20px_5px_5px] border-2 border-plaza-dark text-plaza-dark font-sans font-semibold text-base tracking-[0.05em] transition-colors hover:bg-plaza hover:text-white hover:border-transparent"
 					@click="loadMore"
 				>
 					<svg
@@ -256,9 +188,8 @@ interface ShopsResponse {
 }
 
 const { t } = useI18n()
-
-const isUpcoming = (shop: Shop) =>
-	!!shop.publishDate && new Date(shop.publishDate) > new Date()
+const route = useRoute()
+const router = useRouter()
 
 usePlazaSeo({
 	title: t('seo.shops.title'),
@@ -267,9 +198,9 @@ usePlazaSeo({
 
 const ITEMS_PER_PAGE = 9
 
-// State
-const search = ref('')
-const selectedCategory = ref('')
+// State — inicializace z URL query parametrů
+const search = ref((route.query.search as string) || '')
+const selectedCategory = ref((route.query.kategorie as string) || '') // uchovává slug kategorie
 const currentPage = ref(1)
 const allShops = ref<Shop[]>([])
 const totalShops = ref(0)
@@ -278,14 +209,30 @@ const initialLoading = ref(true)
 
 const allLoaded = computed(() => allShops.value.length >= totalShops.value)
 
+// Synchronizace filtrů do URL
+const syncToUrl = () => {
+	router.replace({
+		query: {
+			...(selectedCategory.value ? { kategorie: selectedCategory.value } : {}),
+			...(search.value ? { search: search.value } : {}),
+		},
+	})
+}
+
 // Debounced search
-const debouncedSearch = ref('')
+const debouncedSearch = ref(search.value)
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null
 watch(search, (newValue) => {
 	if (debounceTimeout) clearTimeout(debounceTimeout)
 	debounceTimeout = setTimeout(() => {
 		debouncedSearch.value = newValue
+		syncToUrl()
 	}, 300)
+})
+
+// Sync kategorie okamžitě do URL
+watch(selectedCategory, () => {
+	syncToUrl()
 })
 
 // Load categories (only with at least 1 shop)
@@ -294,13 +241,19 @@ const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/cate
 })
 const categories = computed(() => categoriesData.value?.data || [])
 
+// Překlad slug → _id pro API
+const selectedCategoryId = computed(() => {
+	if (!selectedCategory.value) return undefined
+	return categories.value.find((c) => c.slug === selectedCategory.value)?._id || undefined
+})
+
 // Build query for current filters
 const buildQuery = (page: number) => ({
 	page,
 	limit: ITEMS_PER_PAGE,
 	isActive: true,
 	search: debouncedSearch.value || undefined,
-	categoryId: selectedCategory.value || undefined,
+	categoryId: selectedCategoryId.value || undefined,
 })
 
 // Initial fetch

@@ -7,7 +7,7 @@
 				<!-- Left side - Info cards -->
 				<div class="z-20 relative flex flex-col md:text-right md:items-center gap-1.5 md:-mr-2 mt-8 md:-mt-12 max-md:mb-4 shrink-0">
 					<!-- Počet obchodů -->
-					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]">
+					<NuxtLink to="/obchody" class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]">
 						<span class="text-plaza text-xl md:text-2xl lg:text-3xl font-bold">{{
 							animatedShopsCount
 						}}</span>
@@ -21,7 +21,7 @@
 					</NuxtLink>
 
 					<!-- Restaurace a kavárny -->
-					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]">
+					<NuxtLink to="/obchody?kategorie=jidlo-a-obcerstveni" class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]">
 						<span class="text-plaza text-xl md:text-2xl lg:text-3xl font-bold">{{
 							animatedRestaurantsCount
 						}}</span>
