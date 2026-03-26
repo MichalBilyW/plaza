@@ -91,67 +91,30 @@
 					<div
 						class="drag-handle absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing p-1.5 bg-white/80 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
 					>
-						<svg class="w-4 h-4 text-plaza-dark" fill="currentColor" viewBox="0 0 24 24">
-							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+						<svg
+							class="w-4 h-4 text-plaza-dark"
+							fill="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
+							/>
 						</svg>
 					</div>
 					<!-- Icon -->
 					<div class="aspect-square relative overflow-hidden bg-gray-100 p-6">
 						<img
-						v-if="item.icon"
-						:src="item.icon"
-						:alt="item.shortDescription"
-						class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-					/>
-					<div
-						v-else
-						class="w-full h-full flex items-center justify-center text-gray-400"
-					>
-						<svg
-							class="w-16 h-16"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="1"
-								d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-							/>
-						</svg>
-					</div>
-					<!-- Status badge -->
-					<div class="absolute top-2 right-2">
-						<span
-							:class="item.isActive ? 'bg-green-500' : 'bg-gray-400'"
-							class="inline-flex w-8 h-8 rounded-full"
-						></span>
-					</div>
-				</div>
-
-				<!-- Content -->
-				<div class="p-4">
-					<div class="flex items-start justify-between gap-2">
-						<p class="font-medium text-gray-900 truncate">{{ item.shortDescription }}</p>
-						<span class="inline-flex items-center justify-center text-xs min-w-6 w-6 h-6 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium">{{ item.sortOrder }}</span>
-					</div>
-
-					<!-- Actions -->
-					<div class="mt-3 flex items-center justify-between">
-						<NuxtLink
-							:to="`/cms/sluzby/${item._id}`"
-							class="text-cms-services-600 hover:text-cms-services-700 text-sm font-medium"
-						>
-							{{ t('common.edit') }}
-						</NuxtLink>
-						<button
-							@click="confirmDelete(item)"
-							class="text-red-500 hover:text-red-700 p-1"
-							:title="t('common.delete')"
+							v-if="item.icon"
+							:src="item.icon"
+							:alt="item.shortDescription"
+							class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+						/>
+						<div
+							v-else
+							class="w-full h-full flex items-center justify-center text-gray-400"
 						>
 							<svg
-								class="w-4 h-4"
+								class="w-16 h-16"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
@@ -159,13 +122,61 @@
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									stroke-width="2"
-									d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+									stroke-width="1"
+									d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
 								/>
 							</svg>
-						</button>
+						</div>
+						<!-- Status badge -->
+						<div class="absolute top-2 right-2">
+							<span
+								:class="item.isActive ? 'bg-green-500' : 'bg-gray-400'"
+								class="inline-flex w-8 h-8 rounded-full"
+							></span>
+						</div>
 					</div>
-				</div>
+
+					<!-- Content -->
+					<div class="p-4">
+						<div class="flex items-start justify-between gap-2">
+							<p class="font-medium text-gray-900 truncate">
+								{{ item.shortDescription }}
+							</p>
+							<span
+								class="inline-flex items-center justify-center text-xs min-w-6 w-6 h-6 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium"
+								>{{ item.sortOrder }}</span
+							>
+						</div>
+
+						<!-- Actions -->
+						<div class="mt-3 flex items-center justify-between">
+							<NuxtLink
+								:to="`/cms/sluzby/${item._id}`"
+								class="text-cms-services-600 hover:text-cms-services-700 text-sm font-medium"
+							>
+								{{ t('common.edit') }}
+							</NuxtLink>
+							<button
+								@click="confirmDelete(item)"
+								class="text-red-500 hover:text-red-700 p-1"
+								:title="t('common.delete')"
+							>
+								<svg
+									class="w-4 h-4"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+									/>
+								</svg>
+							</button>
+						</div>
+					</div>
 				</div>
 			</template>
 		</draggable>

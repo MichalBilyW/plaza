@@ -2,7 +2,7 @@
  * Homepage Model - Nastavení hlavní stránky (singleton)
  */
 
-import type { Document, Model } from 'mongoose';
+import type { Document, Model } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 
 // ==========================================

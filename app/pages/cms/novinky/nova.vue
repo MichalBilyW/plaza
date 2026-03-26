@@ -70,10 +70,7 @@
 
 					<!-- Obsah -->
 					<div>
-						<CmsWysiwyg
-							v-model="form.content"
-							:label="t('cms.news.content')"
-						/>
+						<CmsWysiwyg v-model="form.content" :label="t('cms.news.content')" />
 						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.news.contentHint') }}</p>
 					</div>
 				</div>

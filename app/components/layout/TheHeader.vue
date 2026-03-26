@@ -104,7 +104,9 @@
 							aria-hidden="true"
 							>●</span
 						>
-						<span class="sr-only">{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}:</span>
+						<span class="sr-only"
+							>{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}:</span
+						>
 						<span>{{ openingHoursText }}</span>
 						<span v-if="specialNote" class="relative group" @click.stop>
 							<span
@@ -182,7 +184,14 @@
 					d="M4 6h16M4 12h16M4 18h16"
 				/>
 			</svg>
-			<svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+			<svg
+				v-else
+				class="w-6 h-6"
+				fill="none"
+				stroke="currentColor"
+				viewBox="0 0 24 24"
+				aria-hidden="true"
+			>
 				<path
 					stroke-linecap="round"
 					stroke-linejoin="round"
@@ -201,7 +210,10 @@
 			class="lg:hidden fixed inset-0 z-40 bg-white pt-[50px] flex flex-col"
 		>
 			<!-- Navigation links -->
-			<nav :aria-label="t('common.menu')" class="flex-1 flex flex-col items-center justify-center gap-4">
+			<nav
+				:aria-label="t('common.menu')"
+				class="flex-1 flex flex-col items-center justify-center gap-4"
+			>
 				<NuxtLink
 					to="/"
 					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
@@ -294,7 +306,9 @@
 							aria-hidden="true"
 							>●</span
 						>
-						<span class="sr-only">{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}:</span>
+						<span class="sr-only"
+							>{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}:</span
+						>
 						<span>{{ openingHoursText }}</span>
 						<span v-if="specialNote" class="relative group" @click.stop>
 							<span

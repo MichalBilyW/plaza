@@ -6,7 +6,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
-import type { H3Event} from 'h3';
+import type { H3Event } from 'h3'
 import { getCookie, setCookie, deleteCookie, getHeader, getRequestIP } from 'h3'
 import type { AuthUser, UserRole } from '@/shared/types'
 import { createUnauthorizedError, createForbiddenError } from './errors'

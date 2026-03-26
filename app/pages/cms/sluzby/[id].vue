@@ -22,9 +22,7 @@
 
 		<!-- Loading -->
 		<div v-if="pending" class="flex justify-center py-12">
-			<div
-				class="animate-spin rounded-full h-8 w-8 border-b-2 border-cms-services-600"
-			></div>
+			<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cms-services-600"></div>
 		</div>
 
 		<!-- Not found -->

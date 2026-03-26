@@ -2,7 +2,9 @@
 	<section class="py-20 bg-white" :aria-label="t('home.sections.shops')">
 		<div class="max-w-7xl sm:px-8 md:mx-auto">
 			<!-- Heading + View Toggle -->
-			<div class="flex items-center justify-between gap-4 mb-8 sm:mb-16 lg:mb-20 px-4 md:px-0">
+			<div
+				class="flex items-center justify-between gap-4 mb-8 sm:mb-16 lg:mb-20 px-4 md:px-0"
+			>
 				<div class="flex-1"></div>
 				<h2 class="font-heading text-3xl md:text-4xl font-bold text-center">
 					{{ t('home.sections.shops') }}
@@ -11,18 +13,50 @@
 					<button
 						type="button"
 						class="flex items-center gap-1.5 text-sm text-plaza-gray hover:text-plaza transition-colors"
-						:aria-label="viewMode === 'slider' ? t('home.shops.showGrid') : t('home.shops.showSlider')"
+						:aria-label="
+							viewMode === 'slider'
+								? t('home.shops.showGrid')
+								: t('home.shops.showSlider')
+						"
 						@click="toggleViewMode"
 					>
 						<!-- Grid icon -->
-						<svg v-if="viewMode === 'slider'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+						<svg
+							v-if="viewMode === 'slider'"
+							class="w-5 h-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+							/>
 						</svg>
 						<!-- Slider icon -->
-						<svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+						<svg
+							v-else
+							class="w-5 h-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16M4 18h16"
+							/>
 						</svg>
-						<span class="hidden sm:inline">{{ viewMode === 'slider' ? t('home.shops.showGrid') : t('home.shops.showSlider') }}</span>
+						<span class="hidden sm:inline">{{
+							viewMode === 'slider'
+								? t('home.shops.showGrid')
+								: t('home.shops.showSlider')
+						}}</span>
 					</button>
 				</div>
 			</div>
@@ -44,45 +78,71 @@
 
 			<!-- Swiper slider / Grid (always visible, even with few items) -->
 			<Transition v-else name="view-fade" mode="out-in">
-				<div v-if="viewMode === 'slider'" key="slider" class="relative max-w-[calc(100%-50px)] mx-auto featured-shops-slider">
-				<!-- Navigation arrows -->
-				<button
-					ref="prevBtnRef"
-					class="featured-shops-btn-prev z-30 absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors"
-					:aria-label="t('home.infoSection.prevNews')"
+				<div
+					v-if="viewMode === 'slider'"
+					key="slider"
+					class="relative max-w-[calc(100%-50px)] mx-auto featured-shops-slider"
 				>
-					<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-					</svg>
-				</button>
-				<button
-					ref="nextBtnRef"
-					class="featured-shops-btn-next z-30 absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors"
-					:aria-label="t('home.infoSection.nextNews')"
-				>
-					<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-					</svg>
-				</button>
+					<!-- Navigation arrows -->
+					<button
+						ref="prevBtnRef"
+						class="featured-shops-btn-prev z-30 absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors"
+						:aria-label="t('home.infoSection.prevNews')"
+					>
+						<svg
+							class="w-4 h-4 text-gray-500"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M15 19l-7-7 7-7"
+							/>
+						</svg>
+					</button>
+					<button
+						ref="nextBtnRef"
+						class="featured-shops-btn-next z-30 absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors"
+						:aria-label="t('home.infoSection.nextNews')"
+					>
+						<svg
+							class="w-4 h-4 text-gray-500"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
+							/>
+						</svg>
+					</button>
 
-				<Swiper
-					:modules="[SwiperNavigation]"
-					:slides-per-view="'auto'"
-					:space-between="20"
-					:grab-cursor="true"
-					:navigation="{
-						prevEl: prevBtnRef,
-						nextEl: nextBtnRef,
-					}"
-					class="!overflow-hidden"
-					@swiper="onSwiperInit"
-					@slide-change="onSlideChange"
-					@resize="onSwiperResize"
-				>
-					<SwiperSlide v-for="shop in shops" :key="shop._id" class="!w-[173px]">
-						<ShopCardCompact :shop="shop" />
-					</SwiperSlide>
-				</Swiper>
+					<Swiper
+						:modules="[SwiperNavigation]"
+						:slides-per-view="'auto'"
+						:space-between="20"
+						:grab-cursor="true"
+						:navigation="{
+							prevEl: prevBtnRef,
+							nextEl: nextBtnRef,
+						}"
+						class="!overflow-hidden"
+						@swiper="onSwiperInit"
+						@slide-change="onSlideChange"
+						@resize="onSwiperResize"
+					>
+						<SwiperSlide v-for="shop in shops" :key="shop._id" class="!w-[173px]">
+							<ShopCardCompact :shop="shop" />
+						</SwiperSlide>
+					</Swiper>
 				</div>
 
 				<!-- Grid view -->
@@ -91,7 +151,7 @@
 					key="grid"
 					class="flex items-center gap-3 flex-wrap justify-center md:grid md:grid-cols-2 lg:grid-cols-3 px-4 md:px-0"
 				>
-				<ShopCard v-for="shop in visibleShops" :key="shop._id" :shop="shop" />
+					<ShopCard v-for="shop in visibleShops" :key="shop._id" :shop="shop" />
 				</div>
 			</Transition>
 
@@ -112,7 +172,11 @@
 					to="/obchody"
 					class="inline-flex items-center justify-center px-6 py-2 text-center bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 				>
-					{{ viewMode === 'grid' ? t('home.shops.filterShops') : t('home.sections.shopsList') }}
+					{{
+						viewMode === 'grid'
+							? t('home.shops.filterShops')
+							: t('home.sections.shopsList')
+					}}
 				</NuxtLink>
 			</div>
 		</div>
@@ -183,7 +247,9 @@ const onSwiperResize = (swiper: SwiperType) => {
 /* View mode transition */
 .view-fade-enter-active,
 .view-fade-leave-active {
-	transition: opacity 0.2s ease, transform 0.2s ease;
+	transition:
+		opacity 0.2s ease,
+		transform 0.2s ease;
 }
 
 .view-fade-enter-from {

@@ -24,13 +24,20 @@ export default defineNuxtConfig({
 		public: {
 			siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
 			siteName: 'OC Plaza Liberec',
-			siteDescription: 'Obchodní centrum Plaza Liberec - nakupování, zábava a služby na jednom místě',
+			siteDescription:
+				'Obchodní centrum Plaza Liberec - nakupování, zábava a služby na jednom místě',
 			defaultLocale: process.env.NUXT_PUBLIC_DEFAULT_LOCALE || 'cs',
 		},
 	},
 
 	// Modules
-	modules: ['@nuxtjs/tailwindcss', '@formkit/nuxt', '@nuxtjs/i18n', '@nuxt/eslint', '@nuxt/fonts'],
+	modules: [
+		'@nuxtjs/tailwindcss',
+		'@formkit/nuxt',
+		'@nuxtjs/i18n',
+		'@nuxt/eslint',
+		'@nuxt/fonts',
+	],
 
 	// Global CSS
 	css: ['~/assets/css/main.css'],
@@ -91,10 +98,7 @@ export default defineNuxtConfig({
 			},
 		},
 		optimizeDeps: {
-			include: [
-				'swiper/vue',
-				'swiper/modules',
-			],
+			include: ['swiper/vue', 'swiper/modules'],
 		},
 	},
 

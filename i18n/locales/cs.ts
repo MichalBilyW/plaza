@@ -459,7 +459,8 @@ export default {
 			image: 'Obrázek akce',
 			imageHint: 'Doporučeno 400x400px',
 			content: 'Obsah akce',
-			contentHint: 'Obsah akce, který se zobrazí v modalu po kliknutí. Pokud nevyplníte tak kliknutí na akci nebude aktivní.',
+			contentHint:
+				'Obsah akce, který se zobrazí v modalu po kliknutí. Pokud nevyplníte tak kliknutí na akci nebude aktivní.',
 			shop: 'Obchod',
 			selectShop: 'Vyberte obchod',
 			settings: 'Nastavení',
@@ -495,7 +496,8 @@ export default {
 			image: 'Obrázek novinky',
 			imageHint: 'Doporučeno 400x400px',
 			content: 'Obsah',
-			contentHint: 'Obsah novinky, který se zobrazí v modalu po kliknutí. Pokud nevyplníte tak odkaz na novince nebude aktivní.',
+			contentHint:
+				'Obsah novinky, který se zobrazí v modalu po kliknutí. Pokud nevyplníte tak odkaz na novince nebude aktivní.',
 			settings: 'Nastavení',
 			sortOrder: 'Pořadí',
 			isActive: 'Novinka je aktivní',

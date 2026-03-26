@@ -1,7 +1,10 @@
 <template>
 	<div class="min-h-screen">
 		<!-- Dark header -->
-		<div v-if="generalInfo?.title || generalInfo?.shortText" class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-20 pb-[300px] text-center text-white font-heading !translate-y-0 font-black">
+		<div
+			v-if="generalInfo?.title || generalInfo?.shortText"
+			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-20 pb-[300px] text-center text-white font-heading !translate-y-0 font-black"
+		>
 			<h1 v-if="generalInfo?.title" class="text-3xl md:text-4xl uppercase">
 				{{ generalInfo.title }}
 			</h1>
@@ -11,7 +14,10 @@
 		</div>
 
 		<!-- Galerie -->
-		<section v-if="!pending && generalInfo?.gallery?.length" class="container-small -mt-[250px] px-4">
+		<section
+			v-if="!pending && generalInfo?.gallery?.length"
+			class="container-small -mt-[250px] px-4"
+		>
 			<div class="relative rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg">
 				<!-- Border overlay -->
 				<div
@@ -56,8 +62,19 @@
 					:aria-label="t('aboutPage.nextImage')"
 					@click="slideNext"
 				>
-					<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+					<svg
+						class="w-4 h-4 text-white"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						aria-hidden="true"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M9 5l7 7-7 7"
+						/>
 					</svg>
 				</button>
 			</div>
@@ -75,7 +92,6 @@
 			</div>
 
 			<div v-else class="space-y-12">
-
 				<!-- Text / Ostatní informace -->
 				<section v-if="generalInfo?.text" class="prose prose-lg max-w-none">
 					<div v-html="generalInfo.text"></div>
@@ -83,12 +99,17 @@
 
 				<!-- Otevírací doba -->
 				<section id="oteviraci-doba" class="max-w-2xl mx-auto scroll-mt-32">
-					<h2 class="font-heading font-black text-2xl md:text-3xl text-plaza-dark mb-8 text-center">
+					<h2
+						class="font-heading font-black text-2xl md:text-3xl text-plaza-dark mb-8 text-center"
+					>
 						{{ t('aboutPage.openingHours') }}
 					</h2>
 
 					<!-- Běžná otevírací doba -->
-					<div v-if="generalInfo?.openingHours?.length" class="bg-white rounded-[5px_20px_5px_5px] shadow-lg p-6 mb-6">
+					<div
+						v-if="generalInfo?.openingHours?.length"
+						class="bg-white rounded-[5px_20px_5px_5px] shadow-lg p-6 mb-6"
+					>
 						<div class="space-y-3">
 							<div
 								v-for="entry in generalInfo.openingHours"
@@ -109,7 +130,10 @@
 					</div>
 
 					<!-- Speciální otevírací doba -->
-					<div v-if="activeSpecialHours.length" class="bg-plaza-light/30 rounded-[5px_20px_5px_5px] p-6">
+					<div
+						v-if="activeSpecialHours.length"
+						class="bg-plaza-light/30 rounded-[5px_20px_5px_5px] p-6"
+					>
 						<h3 class="font-heading font-black text-lg text-plaza-dark mb-4">
 							{{ t('aboutPage.specialOpeningHours') }}
 						</h3>
@@ -119,7 +143,9 @@
 								:key="index"
 								class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 last:border-0"
 							>
-								<div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+								<div
+									class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3"
+								>
 									<span class="font-medium text-plaza-dark">
 										{{ formatSpecialDate(entry) }}
 									</span>
@@ -176,9 +202,14 @@
 				</section>
 
 				<!-- Služby centra -->
-				<section v-if="services.length" class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] px-4 py-12 md:px-8 lg:px-16">
+				<section
+					v-if="services.length"
+					class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] px-4 py-12 md:px-8 lg:px-16"
+				>
 					<div class="max-w-5xl mx-auto">
-						<h2 class="text-plaza font-heading font-black text-2xl md:text-3xl mb-8 text-center uppercase">
+						<h2
+							class="text-plaza font-heading font-black text-2xl md:text-3xl mb-8 text-center uppercase"
+						>
 							{{ t('aboutPage.services') }}
 						</h2>
 						<div class="flex flex-wrap justify-center items-center gap-8">
@@ -187,7 +218,9 @@
 								:key="service._id"
 								class="flex flex-col items-center text-center group bg-white rounded-[5px_20px_5px_5px] p-4 w-full max-w-xs hover:bg-white/90 transition-colors"
 							>
-								<div class="w-16 h-16 md:w-20 md:h-20 mb-3 flex items-center justify-center">
+								<div
+									class="w-16 h-16 md:w-20 md:h-20 mb-3 flex items-center justify-center"
+								>
 									<img
 										:src="service.icon"
 										:alt="service.shortDescription"
@@ -205,18 +238,35 @@
 
 				<!-- Kudy k nám -->
 				<section class="max-w-5xl mx-auto">
-					<h2 class="font-heading text-2xl md:text-3xl text-plaza-dark mb-8 text-center uppercase">
-						<span class="font-black">{{ t('aboutPage.howToFindUsFirst') }}</span> {{ t('aboutPage.howToFindUsRest') }}
+					<h2
+						class="font-heading text-2xl md:text-3xl text-plaza-dark mb-8 text-center uppercase"
+					>
+						<span class="font-black">{{ t('aboutPage.howToFindUsFirst') }}</span>
+						{{ t('aboutPage.howToFindUsRest') }}
 					</h2>
 
 					<div class="flex flex-col md:flex-row items-center gap-6 md:gap-0">
 						<!-- Doprava info -->
-						<div class="bg-white rounded-[5px_20px_5px_5px] shadow-lg p-6 md:p-8 h-full md:w-[360px] md:z-10 md:-mr-12 flex flex-col justify-center">
+						<div
+							class="bg-white rounded-[5px_20px_5px_5px] shadow-lg p-6 md:p-8 h-full md:w-[360px] md:z-10 md:-mr-12 flex flex-col justify-center"
+						>
 							<!-- Autobus -->
 							<div class="flex items-start gap-4 mb-6">
-								<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center">
-									<svg class="w-10 h-10 text-plaza-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M8 17h.01M16 17h.01M4 6h16M4 6a2 2 0 012-2h12a2 2 0 012 2M4 6v11a2 2 0 002 2h1m10 0h1a2 2 0 002-2V6M7 19v2m10-2v2M8 10h.01M16 10h.01M12 10h.01M8 13h8" />
+								<div
+									class="w-12 h-12 flex-shrink-0 flex items-center justify-center"
+								>
+									<svg
+										class="w-10 h-10 text-plaza-dark"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M8 17h.01M16 17h.01M4 6h16M4 6a2 2 0 012-2h12a2 2 0 012 2M4 6v11a2 2 0 002 2h1m10 0h1a2 2 0 002-2V6M7 19v2m10-2v2M8 10h.01M16 10h.01M12 10h.01M8 13h8"
+										/>
 									</svg>
 								</div>
 								<div>
@@ -236,19 +286,28 @@
 
 							<!-- Auto -->
 							<div class="flex items-start gap-4">
-								<div class="w-12 h-12 flex-shrink-0 flex items-center justify-center">
-									<svg class="w-10 h-10 text-plaza-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-										<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+								<div
+									class="w-12 h-12 flex-shrink-0 flex items-center justify-center"
+								>
+									<svg
+										class="w-10 h-10 text-plaza-dark"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
+										/>
 									</svg>
 								</div>
 								<div>
 									<p class="text-plaza-dark font-medium mb-1">
 										{{ t('aboutPage.byCarInfo') }}
 									</p>
-									<a
-										href="#"
-										class="text-plaza hover:underline font-medium"
-									>
+									<a href="#" class="text-plaza hover:underline font-medium">
 										{{ t('aboutPage.parkingPrices') }}
 									</a>
 								</div>
@@ -256,7 +315,9 @@
 						</div>
 
 						<!-- Mapa -->
-						<div class="relative w-full md:flex-1 rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg h-[350px] md:h-auto md:min-h-[400px]">
+						<div
+							class="relative w-full md:flex-1 rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg h-[350px] md:h-auto md:min-h-[400px]"
+						>
 							<iframe
 								src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1261.6715738952503!2d15.0605088!3d50.7692122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1scs!2scz"
 								class="absolute inset-0 w-full h-full border-0"
@@ -274,8 +335,18 @@
 								class="absolute bottom-4 right-4 md:bottom-6 md:right-16 inline-flex items-center gap-2 bg-plaza text-white font-heading font-bold px-5 py-3 rounded-[5px_15px_5px_5px] shadow-lg hover:bg-plaza-dark transition-colors"
 							>
 								{{ t('aboutPage.openInMaps') }}
-								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+								<svg
+									class="w-4 h-4"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+									/>
 								</svg>
 							</a>
 						</div>

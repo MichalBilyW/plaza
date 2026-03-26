@@ -2,7 +2,7 @@
  * Shop Model - Obchody/Nájemci
  */
 
-import type { Document, Model, Types } from 'mongoose';
+import type { Document, Model, Types } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 import type { DayOfWeek } from '@/shared/types'
 

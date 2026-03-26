@@ -1,18 +1,25 @@
 <template>
 	<UiModal v-model="isModalOpen" @update:model-value="handleClose">
 		<div class="p-6 md:p-8">
-			<h2 class="font-heading font-black text-2xl md:text-3xl text-plaza-dark mb-8 text-center">
+			<h2
+				class="font-heading font-black text-2xl md:text-3xl text-plaza-dark mb-8 text-center"
+			>
 				{{ t('aboutPage.openingHours') }}
 			</h2>
 
 			<!-- Loading state -->
 			<div v-if="pending" class="flex justify-center py-8">
-				<div class="w-8 h-8 border-4 border-plaza border-t-transparent rounded-full animate-spin"></div>
+				<div
+					class="w-8 h-8 border-4 border-plaza border-t-transparent rounded-full animate-spin"
+				></div>
 			</div>
 
 			<template v-else-if="generalInfo">
 				<!-- Běžná otevírací doba -->
-				<div v-if="generalInfo.openingHours?.length" class="bg-white rounded-lg border border-gray-100 p-6 mb-6">
+				<div
+					v-if="generalInfo.openingHours?.length"
+					class="bg-white rounded-lg border border-gray-100 p-6 mb-6"
+				>
 					<div class="space-y-3">
 						<div
 							v-for="entry in generalInfo.openingHours"
@@ -72,7 +79,11 @@ const { t } = useI18n()
 const { isModalOpen, closeModal } = useOpeningHoursModal()
 
 // Fetch general info when modal opens
-const { data: generalInfo, pending, refresh } = useFetch<GeneralInfo>('/api/general-info', {
+const {
+	data: generalInfo,
+	pending,
+	refresh,
+} = useFetch<GeneralInfo>('/api/general-info', {
 	key: 'opening-hours-modal',
 	immediate: false,
 })

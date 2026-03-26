@@ -63,7 +63,9 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
 							:placeholder="t('cms.generalInfo.titlePlaceholder')"
 						/>
-						<p class="mt-1 text-xs text-plaza-dark">{{ form.title?.length || 0 }}/200</p>
+						<p class="mt-1 text-xs text-plaza-dark">
+							{{ form.title?.length || 0 }}/200
+						</p>
 					</div>
 
 					<!-- Krátký text -->

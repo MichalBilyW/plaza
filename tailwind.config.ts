@@ -11,13 +11,16 @@ export default {
 			variants: ['hover', 'focus'],
 		},
 		{
-			pattern: /text-cms-(shops|events|news|services)-(50|100|200|300|400|500|600|700|800|900)/,
+			pattern:
+				/text-cms-(shops|events|news|services)-(50|100|200|300|400|500|600|700|800|900)/,
 		},
 		{
-			pattern: /border-cms-(shops|events|news|services)-(50|100|200|300|400|500|600|700|800|900)/,
+			pattern:
+				/border-cms-(shops|events|news|services)-(50|100|200|300|400|500|600|700|800|900)/,
 		},
 		{
-			pattern: /ring-cms-(shops|events|news|services)-(50|100|200|300|400|500|600|700|800|900)/,
+			pattern:
+				/ring-cms-(shops|events|news|services)-(50|100|200|300|400|500|600|700|800|900)/,
 			variants: ['focus'],
 		},
 	],
@@ -113,7 +116,7 @@ export default {
 			},
 			fontFamily: {
 				sans: ['Alata', 'system-ui', 'sans-serif'],
-				heading: ['League Spartan', 'system-ui', 'sans-serif']
+				heading: ['League Spartan', 'system-ui', 'sans-serif'],
 			},
 		},
 	},

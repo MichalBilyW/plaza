@@ -86,11 +86,10 @@
 
 						<!-- Obsah -->
 						<div>
-							<CmsWysiwyg
-								v-model="form.content"
-								:label="t('cms.news.content')"
-							/>
-							<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.news.contentHint') }}</p>
+							<CmsWysiwyg v-model="form.content" :label="t('cms.news.content')" />
+							<p class="mt-1 text-xs text-plaza-dark">
+								{{ t('cms.news.contentHint') }}
+							</p>
 						</div>
 					</div>
 				</div>

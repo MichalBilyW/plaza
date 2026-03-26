@@ -93,7 +93,9 @@
 							minlength="8"
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
 						/>
-						<p class="mt-1 text-sm text-plaza-dark">{{ $t('cms.users.passwordHint') }}</p>
+						<p class="mt-1 text-sm text-plaza-dark">
+							{{ $t('cms.users.passwordHint') }}
+						</p>
 						<p v-if="errors.newPassword" class="mt-1 text-sm text-red-600">
 							{{ errors.newPassword }}
 						</p>

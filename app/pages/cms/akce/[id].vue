@@ -64,7 +64,9 @@
 								class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-events-500 focus:border-transparent"
 								:placeholder="t('cms.events.namePlaceholder')"
 							/>
-							<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.events.nameHint') }}</p>
+							<p class="mt-1 text-xs text-plaza-dark">
+								{{ t('cms.events.nameHint') }}
+							</p>
 							<p v-if="errors.name" class="mt-1 text-sm text-red-600">
 								{{ errors.name }}
 							</p>
@@ -114,7 +116,9 @@
 								{{ t('cms.events.content') }}
 							</label>
 							<CmsWysiwyg v-model="form.content" />
-							<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.events.contentHint') }}</p>
+							<p class="mt-1 text-xs text-plaza-dark">
+								{{ t('cms.events.contentHint') }}
+							</p>
 						</div>
 					</div>
 				</div>

@@ -1,6 +1,8 @@
 <template>
 	<div>
-		<h1 class="absolute -top-[9999px] -left-[9999px] opacity-0 visibility-hidden">{{ t('home.hero.title') }}</h1>
+		<h1 class="absolute -top-[9999px] -left-[9999px] opacity-0 visibility-hidden">
+			{{ t('home.hero.title') }}
+		</h1>
 		<!-- Hero section -->
 		<HomepageHeroSection :homepage="homepage" :pending="homepagePending" />
 

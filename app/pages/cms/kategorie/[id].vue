@@ -84,7 +84,9 @@
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-categories-500 focus:border-transparent"
 							:placeholder="t('cms.categories.slugPlaceholder')"
 						/>
-						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.categories.slugHint') }}</p>
+						<p class="mt-1 text-xs text-plaza-dark">
+							{{ t('cms.categories.slugHint') }}
+						</p>
 					</div>
 
 					<!-- Popis -->
@@ -107,7 +109,6 @@
 							{{ form.description?.length || 0 }}/500
 						</p>
 					</div>
-
 
 					<!-- Aktivní -->
 					<div>

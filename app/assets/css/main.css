@@ -3,7 +3,8 @@
 	scroll-behavior: smooth;
 }
 
-.html, body {
+.html,
+body {
 	@apply m-0 p-0 font-sans text-plaza-dark bg-white;
 }
 
@@ -33,7 +34,7 @@
    WCAG: Focus visible styles
    ============================================ */
 *:focus-visible {
-	outline: 2px solid #E20B1B;
+	outline: 2px solid #e20b1b;
 	outline-offset: 2px;
 }
 
@@ -41,7 +42,7 @@
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-	outline: 2px solid #E20B1B;
+	outline: 2px solid #e20b1b;
 	outline-offset: 0;
 }
 
@@ -199,33 +200,33 @@ textarea:focus-visible {
 }
 
 /* Obrázky s explicitním max-width - použít hodnotu z inline stylu */
-.prose img[style*="max-width: 25%"] {
+.prose img[style*='max-width: 25%'] {
 	max-width: 25% !important;
 }
 
-.prose img[style*="max-width: 50%"] {
+.prose img[style*='max-width: 50%'] {
 	max-width: 50% !important;
 }
 
-.prose img[style*="max-width: 75%"] {
+.prose img[style*='max-width: 75%'] {
 	max-width: 75% !important;
 }
 
 /* Float obrázky (zpětná kompatibilita) */
-.prose img[style*="float: left"] {
+.prose img[style*='float: left'] {
 	float: left !important;
 	margin-right: 1rem !important;
 	margin-bottom: 0.5rem !important;
 }
 
-.prose img[style*="float: right"] {
+.prose img[style*='float: right'] {
 	float: right !important;
 	margin-left: 1rem !important;
 	margin-bottom: 0.5rem !important;
 }
 
 /* Centered obrázky */
-.prose img[style*="margin-left: auto"][style*="margin-right: auto"] {
+.prose img[style*='margin-left: auto'][style*='margin-right: auto'] {
 	display: block !important;
 	margin-left: auto !important;
 	margin-right: auto !important;
@@ -233,14 +234,14 @@ textarea:focus-visible {
 
 /* Clearfix pro float obrázky */
 .prose::after {
-	content: "";
+	content: '';
 	display: table;
 	clear: both;
 }
 
 /* Odkazy - červená barva */
 .prose a {
-	color: #E20B1B !important;
+	color: #e20b1b !important;
 	text-decoration: underline;
 }
 
@@ -298,7 +299,7 @@ textarea:focus-visible {
 
 /* Blockquote / Citace */
 .prose blockquote {
-	border-left: 4px solid #E20B1B;
+	border-left: 4px solid #e20b1b;
 	padding-left: 1rem;
 	margin: 1rem 0;
 	font-style: italic;
@@ -344,7 +345,7 @@ textarea:focus-visible {
 }
 
 .prose ul li::marker {
-	color: #E20B1B;
+	color: #e20b1b;
 }
 
 /* Číselný seznam */
@@ -369,7 +370,7 @@ textarea:focus-visible {
 	justify-content: center;
 	width: 1.4em;
 	height: 1.4em;
-	background-color: #E20B1B;
+	background-color: #e20b1b;
 	color: white;
 	font-size: 0.75em;
 	font-weight: 600;
@@ -382,14 +383,14 @@ textarea:focus-visible {
 }
 
 /* Vertical align pro inline elementy včetně textu */
-.prose *[style*="vertical-align: middle"] {
+.prose *[style*='vertical-align: middle'] {
 	vertical-align: middle !important;
 }
 
-.prose *[style*="vertical-align: bottom"] {
+.prose *[style*='vertical-align: bottom'] {
 	vertical-align: bottom !important;
 }
 
-.prose *[style*="vertical-align: top"] {
+.prose *[style*='vertical-align: top'] {
 	vertical-align: top !important;
 }

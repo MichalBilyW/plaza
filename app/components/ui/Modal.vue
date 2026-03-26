@@ -7,7 +7,11 @@
 				@keydown="handleKeydown"
 			>
 				<!-- Overlay -->
-				<div class="absolute inset-0 bg-black/50 backdrop-blur" aria-hidden="true" @click="close"></div>
+				<div
+					class="absolute inset-0 bg-black/50 backdrop-blur"
+					aria-hidden="true"
+					@click="close"
+				></div>
 
 				<!-- Modal content -->
 				<div
@@ -26,7 +30,14 @@
 						:aria-label="$t('common.close')"
 						@click="close"
 					>
-						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true">
+						<svg
+							class="w-6 h-6"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							aria-hidden="true"
+						>
 							<path
 								stroke-linecap="round"
 								stroke-linejoin="round"
@@ -36,9 +47,9 @@
 					</button>
 
 					<!-- Content slot -->
-					 <div class="container-small">
-						 <slot />
-					 </div>
+					<div class="container-small">
+						<slot></slot>
+					</div>
 				</div>
 			</div>
 		</Transition>
@@ -72,7 +83,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 	// Focus trap
 	if (e.key === 'Tab' && modalRef.value) {
 		const focusable = modalRef.value.querySelectorAll<HTMLElement>(
-			'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+			'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
 		)
 		const first = focusable[0]
 		const last = focusable[focusable.length - 1]
@@ -124,7 +135,9 @@ onUnmounted(() => {
 
 .modal-enter-active > div:last-child,
 .modal-leave-active > div:last-child {
-	transition: transform 0.2s ease, opacity 0.2s ease;
+	transition:
+		transform 0.2s ease,
+		opacity 0.2s ease;
 }
 
 .modal-enter-from,
@@ -142,27 +155,27 @@ onUnmounted(() => {
 .modal-scrollbar::-webkit-scrollbar {
 	width: 10px;
 	scrollbar-width: thin !important;
-	scrollbar-color: #E20B1B transparent !important;
+	scrollbar-color: #e20b1b transparent !important;
 }
 .modal-scrollbar::-webkit-scrollbar-track {
 	background: transparent;
 	margin-block: 20px 5px;
 	scrollbar-width: thin !important;
-	scrollbar-color: #E20B1B transparent !important;
+	scrollbar-color: #e20b1b transparent !important;
 }
 .modal-scrollbar::-webkit-scrollbar-thumb {
 	border-radius: 5px;
 	scrollbar-width: thin !important;
-	scrollbar-color: #E20B1B transparent !important;
+	scrollbar-color: #e20b1b transparent !important;
 }
 .modal-scrollbar::-webkit-scrollbar-thumb:hover {
 	scrollbar-width: thin !important;
-	scrollbar-color: #E20B1B transparent !important;
+	scrollbar-color: #e20b1b transparent !important;
 }
 
 /* Scrollbar - Firefox */
 .modal-scrollbar {
 	scrollbar-width: thin !important;
-	scrollbar-color: #E20B1B transparent !important;
+	scrollbar-color: #e20b1b transparent !important;
 }
 </style>

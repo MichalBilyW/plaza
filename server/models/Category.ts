@@ -2,7 +2,7 @@
  * Category Model - Kategorie obchodů
  */
 
-import type { Document, Model } from 'mongoose';
+import type { Document, Model } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 
 // ==========================================

@@ -3,7 +3,7 @@
  * In-memory rate limiter pro ochranu proti brute-force útokům
  */
 
-import type { H3Event} from 'h3';
+import type { H3Event } from 'h3'
 import { getRequestIP } from 'h3'
 
 interface RateLimitEntry {

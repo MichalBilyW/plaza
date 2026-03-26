@@ -4,7 +4,7 @@
  * Všechny API endpointy vrací chyby v tomto formátu.
  */
 
-import type { H3Event} from 'h3';
+import type { H3Event } from 'h3'
 import { createError as h3CreateError } from 'h3'
 import { ZodError } from 'zod'
 import type { ApiErrorResponse } from '@/shared/types'

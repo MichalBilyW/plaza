@@ -14,11 +14,7 @@
 
 		<template v-else>
 			<!-- Hero Section -->
-			<ShopHeroShopSection
-				v-if="shop"
-				:shop="shop"
-				:pending="shopPending"
-			/>
+			<ShopHeroShopSection v-if="shop" :shop="shop" :pending="shopPending" />
 
 			<!-- Shop Events Section (Akce a slevy) -->
 			<div class="my-20">
@@ -74,19 +70,19 @@ const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/cate
 const categories = computed(() => categoriesData.value?.data ?? [])
 
 // === Fetch shop events ===
-const {
-	data: eventsData,
-	pending: eventsPending,
-} = await useFetch<{ data: Event[] }>('/api/events', {
-	key: `shop-events-${route.params.slug}`,
-	query: {
-		shopId: shop.value?._id,
-		isActive: true,
-		limit: 10,
+const { data: eventsData, pending: eventsPending } = await useFetch<{ data: Event[] }>(
+	'/api/events',
+	{
+		key: `shop-events-${route.params.slug}`,
+		query: {
+			shopId: shop.value?._id,
+			isActive: true,
+			limit: 10,
+		},
+		watch: [() => shop.value?._id],
+		immediate: !!shop.value?._id,
 	},
-	watch: [() => shop.value?._id],
-	immediate: !!shop.value?._id,
-})
+)
 
 const shopEvents = computed(() => eventsData.value?.data ?? [])
 
@@ -94,30 +90,34 @@ const shopEvents = computed(() => eventsData.value?.data ?? [])
 const selectedCategoryId = ref(shop.value?.categoryId ?? '')
 
 // Watch for shop changes to update selected category
-watch(() => shop.value?.categoryId, (newCategoryId) => {
-	if (newCategoryId) {
-		selectedCategoryId.value = newCategoryId
-	}
-}, { immediate: true })
+watch(
+	() => shop.value?.categoryId,
+	(newCategoryId) => {
+		if (newCategoryId) {
+			selectedCategoryId.value = newCategoryId
+		}
+	},
+	{ immediate: true },
+)
 
 const onCategoryChange = (categoryId: string) => {
 	selectedCategoryId.value = categoryId
 }
 
 // === Fetch related shops (selected category) ===
-const {
-	data: relatedData,
-	pending: relatedPending,
-} = await useFetch<{ data: Shop[] }>('/api/shops', {
-	key: `related-shops-${route.params.slug}`,
-	query: computed(() => ({
-		categoryId: selectedCategoryId.value,
-		isActive: true,
-		limit: 20,
-	})),
-	watch: [selectedCategoryId],
-	immediate: !!selectedCategoryId.value,
-})
+const { data: relatedData, pending: relatedPending } = await useFetch<{ data: Shop[] }>(
+	'/api/shops',
+	{
+		key: `related-shops-${route.params.slug}`,
+		query: computed(() => ({
+			categoryId: selectedCategoryId.value,
+			isActive: true,
+			limit: 20,
+		})),
+		watch: [selectedCategoryId],
+		immediate: !!selectedCategoryId.value,
+	},
+)
 
 // Filter out current shop from related shops
 const relatedShops = computed(() => {

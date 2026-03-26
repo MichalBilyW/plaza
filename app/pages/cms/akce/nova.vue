@@ -97,7 +97,9 @@
 							{{ t('cms.events.content') }}
 						</label>
 						<CmsWysiwyg v-model="form.content" />
-						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.events.contentHint') }}</p>
+						<p class="mt-1 text-xs text-plaza-dark">
+							{{ t('cms.events.contentHint') }}
+						</p>
 					</div>
 				</div>
 			</div>

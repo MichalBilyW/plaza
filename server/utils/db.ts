@@ -9,7 +9,6 @@ import mongoose from 'mongoose'
 
 // Globální cache pro development (HMR)
 declare global {
-	 
 	var mongooseCache: {
 		conn: typeof mongoose | null
 		promise: Promise<typeof mongoose> | null

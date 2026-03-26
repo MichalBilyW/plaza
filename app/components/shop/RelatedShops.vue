@@ -5,14 +5,19 @@
 			<div class="flex items-center justify-between gap-4 mb-8 sm:mb-12 px-4 md:px-0">
 				<div class="flex-1"></div>
 				<div class="text-center">
-					<h2 class="font-heading text-2xl md:text-3xl font-bold text-plaza-dark uppercase">
+					<h2
+						class="font-heading text-2xl md:text-3xl font-bold text-plaza-dark uppercase"
+					>
 						{{ t('shopDetail.relatedShopsTitle') }}
 					</h2>
 					<p class="font-heading text-xl md:text-2xl font-semibold uppercase mt-1">
 						{{ t('shopDetail.inCategory') }}
 						<span class="relative inline-flex items-center">
 							<!-- Hidden text to measure width -->
-							<span class="invisible whitespace-nowrap font-heading text-xl md:text-2xl font-semibold uppercase" aria-hidden="true">
+							<span
+								class="invisible whitespace-nowrap font-heading text-xl md:text-2xl font-semibold uppercase"
+								aria-hidden="true"
+							>
 								{{ selectedCategoryName }}
 							</span>
 							<select
@@ -36,7 +41,12 @@
 								viewBox="0 0 24 24"
 								aria-hidden="true"
 							>
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7"
+								/>
 							</svg>
 						</span>
 					</p>
@@ -45,18 +55,50 @@
 					<button
 						type="button"
 						class="flex items-center gap-1.5 text-sm text-plaza-gray hover:text-plaza transition-colors"
-						:aria-label="viewMode === 'slider' ? t('home.shops.showGrid') : t('home.shops.showSlider')"
+						:aria-label="
+							viewMode === 'slider'
+								? t('home.shops.showGrid')
+								: t('home.shops.showSlider')
+						"
 						@click="toggleViewMode"
 					>
 						<!-- Grid icon -->
-						<svg v-if="viewMode === 'slider'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+						<svg
+							v-if="viewMode === 'slider'"
+							class="w-5 h-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+							/>
 						</svg>
 						<!-- Slider icon -->
-						<svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+						<svg
+							v-else
+							class="w-5 h-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16M4 18h16"
+							/>
 						</svg>
-						<span class="hidden sm:inline">{{ viewMode === 'slider' ? t('home.shops.showGrid') : t('home.shops.showSlider') }}</span>
+						<span class="hidden sm:inline">{{
+							viewMode === 'slider'
+								? t('home.shops.showGrid')
+								: t('home.shops.showSlider')
+						}}</span>
 					</button>
 				</div>
 			</div>
@@ -79,7 +121,11 @@
 			<!-- Swiper slider / Grid -->
 			<Transition v-else name="view-fade" mode="out-in">
 				<!-- Slider view -->
-				<div v-if="viewMode === 'slider'" key="slider" class="relative max-w-[calc(100%-50px)] mx-auto related-shops-slider">
+				<div
+					v-if="viewMode === 'slider'"
+					key="slider"
+					class="relative max-w-[calc(100%-50px)] mx-auto related-shops-slider"
+				>
 					<!-- Navigation arrows -->
 					<button
 						v-show="!isLocked"
@@ -89,8 +135,19 @@
 						:disabled="!canSlidePrev"
 						@click="slidePrev"
 					>
-						<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+						<svg
+							class="w-4 h-4 text-gray-500"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M15 19l-7-7 7-7"
+							/>
 						</svg>
 					</button>
 					<button
@@ -101,8 +158,19 @@
 						:disabled="!canSlideNext"
 						@click="slideNext"
 					>
-						<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+						<svg
+							class="w-4 h-4 text-gray-500"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
+							/>
 						</svg>
 					</button>
 
@@ -149,7 +217,11 @@
 					to="/obchody"
 					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 				>
-					{{ viewMode === 'grid' ? t('home.shops.filterShops') : t('home.sections.shopsList') }}
+					{{
+						viewMode === 'grid'
+							? t('home.shops.filterShops')
+							: t('home.sections.shopsList')
+					}}
 				</NuxtLink>
 			</div>
 		</div>
@@ -181,13 +253,16 @@ const emit = defineEmits<{
 const selectedCategoryId = ref(props.categoryId)
 
 const selectedCategoryName = computed(() => {
-	const cat = props.categories.find(c => c._id === selectedCategoryId.value)
+	const cat = props.categories.find((c) => c._id === selectedCategoryId.value)
 	return cat?.name ?? ''
 })
 
-watch(() => props.categoryId, (newId) => {
-	selectedCategoryId.value = newId
-})
+watch(
+	() => props.categoryId,
+	(newId) => {
+		selectedCategoryId.value = newId
+	},
+)
 
 const onCategoryChange = () => {
 	emit('category-change', selectedCategoryId.value)
@@ -248,7 +323,9 @@ const canSlideNext = computed(() => {
 /* View mode transition */
 .view-fade-enter-active,
 .view-fade-leave-active {
-	transition: opacity 0.2s ease, transform 0.2s ease;
+	transition:
+		opacity 0.2s ease,
+		transform 0.2s ease;
 }
 
 .view-fade-enter-from {
@@ -281,7 +358,10 @@ const canSlideNext = computed(() => {
 }
 
 .category-select option {
-	font-family: system-ui, -apple-system, sans-serif;
+	font-family:
+		system-ui,
+		-apple-system,
+		sans-serif;
 	font-size: 1rem !important;
 	font-weight: 400 !important;
 	text-transform: none !important;
@@ -298,7 +378,7 @@ const canSlideNext = computed(() => {
 }
 
 .category-select option:checked {
-	background: #E20B1B;
+	background: #e20b1b;
 	color: white;
 	color: white;
 }

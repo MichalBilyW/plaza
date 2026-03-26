@@ -19,7 +19,9 @@
 				<div class="flex flex-col md:flex-row gap-3 w-full md:w-3/4">
 					<!-- Category select -->
 					<div class="relative w-full md:w-1/2 flex-shrink-0">
-						<label for="category-filter" class="sr-only">{{ t('common.filterCategory') }}</label>
+						<label for="category-filter" class="sr-only">{{
+							t('common.filterCategory')
+						}}</label>
 						<select
 							id="category-filter"
 							v-model="selectedCategory"
@@ -55,7 +57,9 @@
 
 					<!-- Search input -->
 					<div class="relative flex-1 w-full md:w-1/2">
-						<label for="shop-search" class="sr-only">{{ t('common.searchShop') }}</label>
+						<label for="shop-search" class="sr-only">{{
+							t('common.searchShop')
+						}}</label>
 						<svg
 							class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-plaza-dark"
 							width="18"
@@ -97,10 +101,16 @@
 				v-if="initialLoading"
 				class="flex flex-col items-center gap-3 xs:flex-row xs:flex-wrap xs:justify-center md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3"
 			>
-				<div v-for="i in 9" :key="i" class="animate-pulse overflow-hidden rounded-[5px_20px_5px_5px] w-full aspect-square xs:w-[173px] xs:h-[173px] xs:aspect-auto md:w-auto md:h-auto">
+				<div
+					v-for="i in 9"
+					:key="i"
+					class="animate-pulse overflow-hidden rounded-[5px_20px_5px_5px] w-full aspect-square xs:w-[173px] xs:h-[173px] xs:aspect-auto md:w-auto md:h-auto"
+				>
 					<div class="h-[200px] bg-plaza-light"></div>
 					<div class="flex flex-col items-center py-4">
-						<div class="-mt-[42px] mb-3 h-[85px] w-[120px] rounded-sm bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"></div>
+						<div
+							class="-mt-[42px] mb-3 h-[85px] w-[120px] rounded-sm bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
+						></div>
 						<div class="mb-2 h-6 w-32 rounded bg-plaza-light"></div>
 						<div class="h-4 w-24 rounded bg-plaza-light"></div>
 					</div>
@@ -138,7 +148,10 @@
 			</div>
 
 			<!-- Load more button -->
-			<div v-if="!initialLoading && allShops.length > 0 && !allLoaded" class="mt-8 flex justify-center">
+			<div
+				v-if="!initialLoading && allShops.length > 0 && !allLoaded"
+				class="mt-8 flex justify-center"
+			>
 				<button
 					:disabled="loadingMore"
 					class="inline-flex items-center justify-center px-6 py-2 rounded-[5px_20px_5px_5px] border-2 border-plaza-dark text-plaza-dark font-sans font-semibold text-base tracking-[0.05em] transition-colors hover:bg-plaza hover:text-white hover:border-transparent"

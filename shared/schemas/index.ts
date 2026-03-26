@@ -276,7 +276,10 @@ export type NewsFilterQueryInput = z.input<typeof newsFilterQuerySchema>
 
 export const serviceCreateSchema = z.object({
 	icon: z.string().min(1, 'Ikona je povinná'),
-	shortDescription: z.string().min(1, 'Popisek je povinný').max(120, 'Popisek může mít max. 120 znaků'),
+	shortDescription: z
+		.string()
+		.min(1, 'Popisek je povinný')
+		.max(120, 'Popisek může mít max. 120 znaků'),
 	description: z.string().max(2000).optional(),
 	isActive: z.boolean().default(true),
 	sortOrder: z.number().int().default(0),

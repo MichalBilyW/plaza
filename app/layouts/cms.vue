@@ -377,7 +377,7 @@
 
 		<!-- Main content -->
 		<main class="flex-1 bg-gray-100 min-h-screen overflow-auto pt-14 lg:pt-0">
-			<slot ></slot>
+			<slot></slot>
 		</main>
 	</div>
 </template>
@@ -388,9 +388,7 @@ const sidebarOpen = ref(false)
 
 // Prevent indexing of CMS pages
 useHead({
-	meta: [
-		{ name: 'robots', content: 'noindex, nofollow' },
-	],
+	meta: [{ name: 'robots', content: 'noindex, nofollow' }],
 })
 
 // Zavřít sidebar při změně route

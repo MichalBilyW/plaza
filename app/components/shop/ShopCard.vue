@@ -2,10 +2,7 @@
 	<!-- Upcoming shop - not clickable -->
 	<div
 		v-if="isUpcoming"
-		class="upcoming-card relative group rounded-[5px_20px_5px_5px] bg-white
-			max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4
-			w-full aspect-square min-[380px]:w-[173px] min-[380px]:h-[173px] min-[380px]:aspect-auto md:w-auto md:h-auto md:aspect-auto
-			md:overflow-hidden"
+		class="upcoming-card relative group rounded-[5px_20px_5px_5px] bg-white max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4 w-full aspect-square min-[380px]:w-[173px] min-[380px]:h-[173px] min-[380px]:aspect-auto md:w-auto md:h-auto md:aspect-auto md:overflow-hidden"
 		:class="[
 			{ 'max-sm:max-h-[240px] max-sm:overflow-hidden': !compact },
 			{ 'max-h-[240px] overflow-hidden': compact },
@@ -36,14 +33,22 @@
 		<!-- Kategorie + Patro -->
 		<div class="md:hidden flex items-center justify-between w-full gap-2 opacity-80">
 			<span class="text-xs text-plaza/90" v-if="shop.category?.name">
-				{{ shop.category.name.length > 9 ? shop.category.name.slice(0, 9) + '…' : shop.category.name }}
+				{{
+					shop.category.name.length > 9
+						? shop.category.name.slice(0, 9) + '…'
+						: shop.category.name
+				}}
 			</span>
-			<span class="text-xs text-plaza-gray opacity-90" v-if="shop.floor?.name">{{ shop.floor.name }}</span>
+			<span class="text-xs text-plaza-gray opacity-90" v-if="shop.floor?.name">{{
+				shop.floor.name
+			}}</span>
 		</div>
 
 		<!-- DESKTOP: galerie + logo overlay + název + kategorie -->
 		<!-- Gallery photo -->
-		<div class="max-md:hidden relative h-[200px] w-full overflow-hidden bg-plaza-dark/90 opacity-80">
+		<div
+			class="max-md:hidden relative h-[200px] w-full overflow-hidden bg-plaza-dark/90 opacity-80"
+		>
 			<img
 				v-if="shop.gallery?.[0]"
 				:src="shop.gallery[0]"
@@ -104,10 +109,7 @@
 	<NuxtLink
 		v-else
 		:to="`/obchody/${shop.slug}`"
-		class="relative group rounded-[5px_20px_5px_5px] bg-white transition-shadow hover:shadow-lg cursor-pointer
-			max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4
-			w-full aspect-square min-[380px]:w-[173px] min-[380px]:h-[173px] min-[380px]:aspect-auto md:w-auto md:h-auto md:aspect-auto
-			md:overflow-hidden"
+		class="relative group rounded-[5px_20px_5px_5px] bg-white transition-shadow hover:shadow-lg cursor-pointer max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4 w-full aspect-square min-[380px]:w-[173px] min-[380px]:h-[173px] min-[380px]:aspect-auto md:w-auto md:h-auto md:aspect-auto md:overflow-hidden"
 		:class="[
 			{ 'max-sm:max-h-[240px] max-sm:overflow-hidden': !compact },
 			{ 'max-h-[240px] overflow-hidden': compact },
@@ -131,9 +133,15 @@
 		<!-- Kategorie + Patro -->
 		<div class="md:hidden flex items-center justify-between w-full gap-2">
 			<span class="text-xs text-plaza/90" v-if="shop.category?.name">
-				{{ shop.category.name.length > 10 ? shop.category.name.slice(0, 10) + '…' : shop.category.name }}
+				{{
+					shop.category.name.length > 10
+						? shop.category.name.slice(0, 10) + '…'
+						: shop.category.name
+				}}
 			</span>
-			<span class="text-xs text-plaza-gray opacity-90" v-if="shop.floor?.name">{{ shop.floor.name }}</span>
+			<span class="text-xs text-plaza-gray opacity-90" v-if="shop.floor?.name">{{
+				shop.floor.name
+			}}</span>
 		</div>
 
 		<!-- DESKTOP: galerie + logo overlay + název + kategorie -->

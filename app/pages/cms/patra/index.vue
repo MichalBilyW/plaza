@@ -60,13 +60,39 @@
 			<table class="w-full min-w-[600px]">
 				<thead class="bg-gray-50 border-b">
 					<tr>
-						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-12"></th>
-						<th class="px-4 py-3 text-center text-xs font-medium text-plaza-dark uppercase tracking-wider w-12">#</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-20">{{ t('cms.floors.level') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider">{{ t('cms.floors.name') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider">{{ t('cms.floors.slug') }}</th>
-						<th class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-24">{{ t('cms.floors.status') }}</th>
-						<th class="px-4 py-3 text-right text-xs font-medium text-plaza-dark uppercase tracking-wider w-24">{{ t('common.actions') }}</th>
+						<th
+							class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-12"
+						></th>
+						<th
+							class="px-4 py-3 text-center text-xs font-medium text-plaza-dark uppercase tracking-wider w-12"
+						>
+							#
+						</th>
+						<th
+							class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-20"
+						>
+							{{ t('cms.floors.level') }}
+						</th>
+						<th
+							class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider"
+						>
+							{{ t('cms.floors.name') }}
+						</th>
+						<th
+							class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider"
+						>
+							{{ t('cms.floors.slug') }}
+						</th>
+						<th
+							class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider w-24"
+						>
+							{{ t('cms.floors.status') }}
+						</th>
+						<th
+							class="px-4 py-3 text-right text-xs font-medium text-plaza-dark uppercase tracking-wider w-24"
+						>
+							{{ t('common.actions') }}
+						</th>
 					</tr>
 				</thead>
 				<draggable
@@ -81,9 +107,17 @@
 					<template #item="{ element: floor }">
 						<tr class="hover:bg-gray-50">
 							<td class="px-4 py-3">
-								<div class="drag-handle cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded inline-flex">
-									<svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-										<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+								<div
+									class="drag-handle cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded inline-flex"
+								>
+									<svg
+										class="w-5 h-5 text-gray-400"
+										fill="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
+										/>
 									</svg>
 								</div>
 							</td>
@@ -91,82 +125,85 @@
 								{{ floor.sortOrder + 1 }}
 							</td>
 							<td class="px-4 py-3">
-								<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-800 font-medium">{{ floor.level }}</span>
+								<span
+									class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-800 font-medium"
+									>{{ floor.level }}</span
+								>
 							</td>
-						<td class="px-4 py-3">
-							<NuxtLink
-								:to="`/cms/patra/${floor._id}`"
-								class="text-gray-900 hover:text-indigo-600 font-medium"
-							>
-								{{ floor.name }}
-							</NuxtLink>
-						</td>
-						<td class="px-4 py-3 text-sm text-plaza-dark">
-							{{ floor.slug }}
-						</td>
-						<td class="px-4 py-3">
-							<span
-								:class="
-									floor.isActive
-										? 'bg-green-100 text-green-800'
-										: 'bg-gray-100 text-gray-800'
-								"
-								class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full"
-							>
-								{{
-									floor.isActive
-										? t('cms.floors.active')
-										: t('cms.floors.inactive')
-								}}
-							</span>
-						</td>
-						<td class="px-4 py-3 text-right">
-							<div class="flex items-center justify-end gap-1">
+							<td class="px-4 py-3">
 								<NuxtLink
 									:to="`/cms/patra/${floor._id}`"
-									class="text-indigo-600 hover:text-indigo-700 p-1"
-									:title="t('common.edit')"
+									class="text-gray-900 hover:text-indigo-600 font-medium"
 								>
-									<svg
-										class="w-5 h-5"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-										/>
-									</svg>
+									{{ floor.name }}
 								</NuxtLink>
-								<button
-									@click="confirmDelete(floor)"
-									class="text-red-600 hover:text-red-700 p-1"
-									:title="t('common.delete')"
+							</td>
+							<td class="px-4 py-3 text-sm text-plaza-dark">
+								{{ floor.slug }}
+							</td>
+							<td class="px-4 py-3">
+								<span
+									:class="
+										floor.isActive
+											? 'bg-green-100 text-green-800'
+											: 'bg-gray-100 text-gray-800'
+									"
+									class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full"
 								>
-									<svg
-										class="w-5 h-5"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
+									{{
+										floor.isActive
+											? t('cms.floors.active')
+											: t('cms.floors.inactive')
+									}}
+								</span>
+							</td>
+							<td class="px-4 py-3 text-right">
+								<div class="flex items-center justify-end gap-1">
+									<NuxtLink
+										:to="`/cms/patra/${floor._id}`"
+										class="text-indigo-600 hover:text-indigo-700 p-1"
+										:title="t('common.edit')"
 									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-										/>
-									</svg>
-								</button>
-							</div>
-						</td>
-					</tr>
-				</template>
-			</draggable>
-		</table>
-	</div>
+										<svg
+											class="w-5 h-5"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+											/>
+										</svg>
+									</NuxtLink>
+									<button
+										@click="confirmDelete(floor)"
+										class="text-red-600 hover:text-red-700 p-1"
+										:title="t('common.delete')"
+									>
+										<svg
+											class="w-5 h-5"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+											/>
+										</svg>
+									</button>
+								</div>
+							</td>
+						</tr>
+					</template>
+				</draggable>
+			</table>
+		</div>
 
 		<!-- Mobile/Tablet: Cards -->
 		<draggable
@@ -180,24 +217,55 @@
 		>
 			<template #item="{ element: floor }">
 				<div class="bg-white rounded-xl shadow-sm p-3 flex items-center gap-3">
-					<div class="drag-handle-mobile cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded flex-shrink-0">
+					<div
+						class="drag-handle-mobile cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded flex-shrink-0"
+					>
 						<svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+							<path
+								d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
+							/>
 						</svg>
 					</div>
-					<NuxtLink :to="`/cms/patra/${floor._id}`" class="flex-1 min-w-0 flex items-center gap-3">
-						<span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-800 font-medium flex-shrink-0">{{ floor.level }}</span>
+					<NuxtLink
+						:to="`/cms/patra/${floor._id}`"
+						class="flex-1 min-w-0 flex items-center gap-3"
+					>
+						<span
+							class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-800 font-medium flex-shrink-0"
+							>{{ floor.level }}</span
+						>
 						<div class="flex-1 min-w-0">
 							<div class="flex items-center justify-between gap-2">
 								<h3 class="font-medium text-gray-900 truncate">{{ floor.name }}</h3>
-								<span :class="floor.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'" class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0">
-									{{ floor.isActive ? t('cms.floors.active') : t('cms.floors.inactive') }}
+								<span
+									:class="
+										floor.isActive
+											? 'bg-green-100 text-green-800'
+											: 'bg-gray-100 text-gray-800'
+									"
+									class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0"
+								>
+									{{
+										floor.isActive
+											? t('cms.floors.active')
+											: t('cms.floors.inactive')
+									}}
 								</span>
 							</div>
 							<p class="text-sm text-plaza-dark truncate mt-0.5">{{ floor.slug }}</p>
 						</div>
-						<svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+						<svg
+							class="w-5 h-5 text-gray-400 flex-shrink-0"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
+							/>
 						</svg>
 					</NuxtLink>
 				</div>

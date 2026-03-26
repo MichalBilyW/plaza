@@ -68,7 +68,8 @@
 							:placeholder="t('cms.services.shortDescriptionPlaceholder')"
 						/>
 						<p class="mt-1 text-xs text-plaza-dark">
-							{{ form.shortDescription.length }}/120 {{ t('cms.services.characters') }}
+							{{ form.shortDescription.length }}/120
+							{{ t('cms.services.characters') }}
 						</p>
 						<p v-if="errors.shortDescription" class="mt-1 text-sm text-red-600">
 							{{ errors.shortDescription }}

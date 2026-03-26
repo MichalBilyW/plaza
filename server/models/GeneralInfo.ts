@@ -2,7 +2,7 @@
  * GeneralInfo Model - Obecné informace o centru (singleton)
  */
 
-import type { Document, Model } from 'mongoose';
+import type { Document, Model } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 import type { DayOfWeek } from '@/shared/types'
 

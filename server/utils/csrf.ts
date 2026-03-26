@@ -3,7 +3,7 @@
  * Double Submit Cookie pattern
  */
 
-import type { H3Event} from 'h3';
+import type { H3Event } from 'h3'
 import { getCookie, setCookie, getHeader } from 'h3'
 import crypto from 'crypto'
 

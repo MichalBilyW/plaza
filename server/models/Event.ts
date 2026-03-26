@@ -3,7 +3,7 @@
  * Jednoduchý model pro akce vázané na obchody
  */
 
-import type { Document, Model, Types } from 'mongoose';
+import type { Document, Model, Types } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 
 // ==========================================

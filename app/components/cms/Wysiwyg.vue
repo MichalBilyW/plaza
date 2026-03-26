@@ -335,7 +335,9 @@
 					<button
 						type="button"
 						class="p-2 rounded hover:bg-gray-200 transition-colors text-xs"
-						:class="{ 'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'left' }) }"
+						:class="{
+							'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'left' }),
+						}"
 						@click="setImageFloat('left')"
 						title="Obrázek vlevo"
 					>
@@ -351,23 +353,23 @@
 					<button
 						type="button"
 						class="p-2 rounded hover:bg-gray-200 transition-colors text-xs"
-						:class="{ 'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'center' }) }"
+						:class="{
+							'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'center' }),
+						}"
 						@click="setImageFloat('center')"
 						title="Obrázek na střed"
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<rect x="6" y="4" width="12" height="8" rx="1" stroke-width="2" />
-							<path
-								stroke-linecap="round"
-								stroke-width="2"
-								d="M3 16h18M3 20h18"
-							/>
+							<path stroke-linecap="round" stroke-width="2" d="M3 16h18M3 20h18" />
 						</svg>
 					</button>
 					<button
 						type="button"
 						class="p-2 rounded hover:bg-gray-200 transition-colors text-xs"
-						:class="{ 'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'right' }) }"
+						:class="{
+							'bg-gray-200 text-plaza-600': editor.isActive({ textAlign: 'right' }),
+						}"
 						@click="setImageFloat('right')"
 						title="Obrázek vpravo"
 					>
@@ -414,7 +416,10 @@
 					<button
 						type="button"
 						class="px-2 py-1 rounded hover:bg-gray-200 transition-colors text-xs font-medium"
-						:class="{ 'bg-gray-200 text-plaza-600': getImageSize() === '100' || !getImageSize() }"
+						:class="{
+							'bg-gray-200 text-plaza-600':
+								getImageSize() === '100' || !getImageSize(),
+						}"
 						@click="setImageSize('100')"
 						title="Plná šířka (100%)"
 					>
@@ -432,29 +437,48 @@
 						title="Zarovnat nahoru"
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3h14M12 7v14M8 11l4-4 4 4" />
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M5 3h14M12 7v14M8 11l4-4 4 4"
+							/>
 						</svg>
 					</button>
 					<button
 						type="button"
 						class="p-2 rounded hover:bg-gray-200 transition-colors"
-						:class="{ 'bg-gray-200 text-plaza-600': getImageVerticalAlign() === 'middle' }"
+						:class="{
+							'bg-gray-200 text-plaza-600': getImageVerticalAlign() === 'middle',
+						}"
 						@click="setImageVerticalAlign('middle')"
 						title="Zarovnat na střed"
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16M12 8v8" />
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 12h16M12 8v8"
+							/>
 						</svg>
 					</button>
 					<button
 						type="button"
 						class="p-2 rounded hover:bg-gray-200 transition-colors"
-						:class="{ 'bg-gray-200 text-plaza-600': getImageVerticalAlign() === 'bottom' }"
+						:class="{
+							'bg-gray-200 text-plaza-600': getImageVerticalAlign() === 'bottom',
+						}"
 						@click="setImageVerticalAlign('bottom')"
 						title="Zarovnat dolů"
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 21h14M12 17V3M8 13l4 4 4-4" />
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M5 21h14M12 17V3M8 13l4 4 4-4"
+							/>
 						</svg>
 					</button>
 				</template>
@@ -985,7 +1009,11 @@ const setImageSize = (size: string) => {
 	if (!editor.value) return
 	const currentVerticalAlign = getImageVerticalAlign()
 	const style = buildImageStyle(size, currentVerticalAlign)
-	editor.value.chain().focus().updateAttributes('image', { style: style || null }).run()
+	editor.value
+		.chain()
+		.focus()
+		.updateAttributes('image', { style: style || null })
+		.run()
 }
 
 // Set image vertical align
@@ -993,7 +1021,11 @@ const setImageVerticalAlign = (align: 'top' | 'middle' | 'bottom') => {
 	if (!editor.value) return
 	const currentSize = getImageSize() || '100'
 	const style = buildImageStyle(currentSize, align)
-	editor.value.chain().focus().updateAttributes('image', { style: style || null }).run()
+	editor.value
+		.chain()
+		.focus()
+		.updateAttributes('image', { style: style || null })
+		.run()
 }
 
 // Cleanup
@@ -1044,7 +1076,7 @@ onBeforeUnmount(() => {
 }
 
 .cms-wysiwyg .ProseMirror ul li::marker {
-	color: #E20B1B;
+	color: #e20b1b;
 }
 
 .cms-wysiwyg .ProseMirror ol {
@@ -1068,7 +1100,7 @@ onBeforeUnmount(() => {
 	justify-content: center;
 	width: 1.4em;
 	height: 1.4em;
-	background-color: #E20B1B;
+	background-color: #e20b1b;
 	color: white;
 	font-size: 0.75em;
 	font-weight: 600;

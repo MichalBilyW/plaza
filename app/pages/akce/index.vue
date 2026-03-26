@@ -18,7 +18,9 @@
 			>
 				<!-- Search input -->
 				<div class="relative flex-1 w-full max-w-md">
-					<label for="event-search" class="sr-only">{{ t('eventsPage.searchEvent') }}</label>
+					<label for="event-search" class="sr-only">{{
+						t('eventsPage.searchEvent')
+					}}</label>
 					<svg
 						class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-plaza-dark"
 						width="18"
@@ -48,10 +50,7 @@
 		<div class="min-h-screen bg-gradient-to-b from-[#131313] to-[#1A1A1A] py-20">
 			<div class="container-small px-4">
 				<!-- Loading skeleton (initial load only) -->
-				<div
-					v-if="initialLoading"
-					class="flex flex-wrap justify-center gap-5"
-				>
+				<div v-if="initialLoading" class="flex flex-wrap justify-center gap-5">
 					<div
 						v-for="i in 6"
 						:key="i"
@@ -85,10 +84,7 @@
 				</div>
 
 				<!-- Events grid -->
-				<div
-					v-else
-					class="flex flex-wrap justify-center gap-5"
-				>
+				<div v-else class="flex flex-wrap justify-center gap-5">
 					<component
 						v-for="event in allEvents"
 						:key="event._id"
@@ -148,7 +144,10 @@
 				</div>
 
 				<!-- Load more button -->
-				<div v-if="!initialLoading && allEvents.length > 0 && !allLoaded" class="mt-8 flex justify-center">
+				<div
+					v-if="!initialLoading && allEvents.length > 0 && !allLoaded"
+					class="mt-8 flex justify-center"
+				>
 					<button
 						:disabled="loadingMore"
 						class="inline-flex items-center justify-center px-6 py-2 rounded-[5px_20px_5px_5px] border-2 border-white text-white font-sans font-semibold text-base tracking-[0.05em] transition-colors hover:bg-plaza hover:border-transparent"

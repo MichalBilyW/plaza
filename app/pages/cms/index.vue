@@ -56,7 +56,9 @@
 						<p class="text-2xl font-bold text-cms-events-700">
 							{{ stats?.events || 0 }}
 						</p>
-						<p class="text-plaza-dark text-sm">{{ $t('cms.dashboard.stats.events') }}</p>
+						<p class="text-plaza-dark text-sm">
+							{{ $t('cms.dashboard.stats.events') }}
+						</p>
 					</div>
 				</div>
 			</div>
@@ -136,7 +138,9 @@
 							]"
 						>
 							{{
-								newsItem.isActive ? $t('cms.events.active') : $t('cms.events.inactive')
+								newsItem.isActive
+									? $t('cms.events.active')
+									: $t('cms.events.inactive')
 							}}
 						</span>
 						<NuxtLink
@@ -305,7 +309,9 @@ const stats = ref({
 const [shopsData, eventsData, servicesData] = await Promise.all([
 	useFetch<{ pagination: { total: number } }>('/api/shops', { query: { limit: 1 } }),
 	useFetch<{ meta: { total: number } }>('/api/events', { query: { limit: 1 } }),
-	useFetch<{ data: unknown[]; meta?: { total: number } }>('/api/services', { query: { limit: 1 } }),
+	useFetch<{ data: unknown[]; meta?: { total: number } }>('/api/services', {
+		query: { limit: 1 },
+	}),
 ])
 
 stats.value = {

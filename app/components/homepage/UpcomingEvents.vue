@@ -1,11 +1,16 @@
 <template>
-	<section class="py-20 bg-gradient-to-b from-[#131313] to-[#1A1A1A]" :aria-label="t('home.sections.events')">
+	<section
+		class="py-20 bg-gradient-to-b from-[#131313] to-[#1A1A1A]"
+		:aria-label="t('home.sections.events')"
+	>
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<!-- Desktop: side-by-side layout / Mobile: stacked -->
 			<div class="flex flex-col lg:flex-row lg:items-start lg:gap-10">
 				<!-- Left side: heading + perex + arrows -->
 				<div class="lg:w-[220px] shrink-0 mb-8 lg:mb-0 lg:pt-4">
-					<h2 class="font-heading tracking-wide text-3xl lg:text-4xl font-bold text-white">
+					<h2
+						class="font-heading tracking-wide text-3xl lg:text-4xl font-bold text-white"
+					>
 						{{ t('home.sections.events') }}
 					</h2>
 					<p class="text-plaza-gray mt-3 text-sm leading-relaxed">
@@ -19,8 +24,18 @@
 							:aria-label="t('home.sections.eventsPrev')"
 							class="events-btn-prev w-10 h-10 rounded-full border-2 border-white/30 flex items-center justify-center hover:border-white/60 transition-colors"
 						>
-							<svg class="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+							<svg
+								class="w-4 h-4 text-white/70"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M15 19l-7-7 7-7"
+								/>
 							</svg>
 						</button>
 						<button
@@ -28,8 +43,18 @@
 							:aria-label="t('home.sections.eventsNext')"
 							class="events-btn-next w-10 h-10 rounded-full border-2 border-white/30 flex items-center justify-center hover:border-white/60 transition-colors"
 						>
-							<svg class="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+							<svg
+								class="w-4 h-4 text-white/70"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 5l7 7-7 7"
+								/>
 							</svg>
 						</button>
 					</div>
@@ -66,7 +91,11 @@
 							@slide-change="onSlideChange"
 							@resize="onSwiperResize"
 						>
-							<SwiperSlide v-for="event in events" :key="event._id" class="!w-[290px]">
+							<SwiperSlide
+								v-for="event in events"
+								:key="event._id"
+								class="!w-[290px]"
+							>
 								<component
 									:is="event.content ? 'button' : 'div'"
 									:type="event.content ? 'button' : undefined"
@@ -75,7 +104,9 @@
 									@click="event.content ? openEventModal(event) : undefined"
 								>
 									<!-- Event image -->
-									<div class="h-[290px] bg-plaza-light flex items-center justify-center">
+									<div
+										class="h-[290px] bg-plaza-light flex items-center justify-center"
+									>
 										<img
 											v-if="event.image"
 											:src="event.image"
@@ -88,9 +119,9 @@
 											class="w-12 h-12 text-plaza-gray"
 											fill="none"
 											stroke="currentColor"
-										viewBox="0 0 24 24"
-										aria-hidden="true"
-									>
+											viewBox="0 0 24 24"
+											aria-hidden="true"
+										>
 											<path
 												stroke-linecap="round"
 												stroke-linejoin="round"
@@ -116,7 +147,9 @@
 										v-else-if="event.shop?.name"
 										class="h-[50px] bg-white flex items-center justify-center px-4"
 									>
-										<span class="text-sm font-semibold text-plaza-dark truncate">
+										<span
+											class="text-sm font-semibold text-plaza-dark truncate"
+										>
 											{{ event.shop.name }}
 										</span>
 									</div>

@@ -23,7 +23,7 @@ const handleClick = () => {
 		@click="handleClick"
 	>
 		<div class="flex items-center gap-1">
-			<slot ></slot>
+			<slot></slot>
 			<span class="w-4 h-4 flex-shrink-0">
 				<svg
 					v-if="sortIcon === 'asc'"

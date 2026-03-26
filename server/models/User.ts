@@ -2,7 +2,7 @@
  * User Model - CMS uživatelé
  */
 
-import type { Document, Model } from 'mongoose';
+import type { Document, Model } from 'mongoose'
 import mongoose, { Schema } from 'mongoose'
 import type { UserRole } from '@/shared/types'
 

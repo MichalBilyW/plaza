@@ -100,78 +100,30 @@
 					<div
 						class="drag-handle absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing p-1.5 bg-white/80 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
 					>
-						<svg class="w-4 h-4 text-plaza-dark" fill="currentColor" viewBox="0 0 24 24">
-							<path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
-						</svg>
-					</div>
-					<!-- Image -->
-				<div class="aspect-square relative overflow-hidden bg-gray-100">
-					<img
-						v-if="event.image"
-						:src="event.image"
-						:alt="event.name"
-						class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-					/>
-					<div
-						v-else
-						class="w-full h-full flex items-center justify-center text-gray-400"
-					>
 						<svg
-							class="w-16 h-16"
-							fill="none"
-							stroke="currentColor"
+							class="w-4 h-4 text-plaza-dark"
+							fill="currentColor"
 							viewBox="0 0 24 24"
 						>
 							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="1"
-								d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+								d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM14 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
 							/>
 						</svg>
 					</div>
-					<!-- Status badge -->
-					<div class="absolute top-2 right-2">
-						<span
-							:class="event.isActive ? 'bg-green-500' : 'bg-gray-400'"
-							class="inline-flex w-8 h-8 rounded-full"
-						></span>
-					</div>
-				</div>
-
-				<!-- Content -->
-				<div class="p-4">
-					<div class="flex items-center justify-between gap-2">
-						<h3 class="font-medium text-gray-900 truncate">{{ event.name }}</h3>
-						<span class="inline-flex items-center justify-center text-xs min-w-6 w-6 h-6 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium">{{ event.sortOrder }}</span>
-					</div>
-					<p class="text-sm text-plaza-dark flex items-center gap-3 mt-1">
+					<!-- Image -->
+					<div class="aspect-square relative overflow-hidden bg-gray-100">
 						<img
-							v-if="event.shop?.logo"
-							:src="event.shop.logo"
-							:alt="event.shop.name"
-							class="w-8 h-8 rounded object-contain"
+							v-if="event.image"
+							:src="event.image"
+							:alt="event.name"
+							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
 						/>
-						<span class="truncate">{{
-							event.shop?.name || t('cms.events.noShop')
-						}}</span>
-					</p>
-
-					<!-- Actions -->
-					<div class="mt-3 flex items-center justify-between">
-						<NuxtLink
-							:to="`/cms/akce/${event._id}`"
-							class="text-cms-events-600 hover:text-cms-events-700 text-sm font-medium"
-						>
-							{{ t('common.edit') }}
-						</NuxtLink>
-						<button
-							@click="confirmDelete(event)"
-							class="text-red-500 hover:text-red-700 p-1"
-							:title="t('common.delete')"
+						<div
+							v-else
+							class="w-full h-full flex items-center justify-center text-gray-400"
 						>
 							<svg
-								class="w-4 h-4"
+								class="w-16 h-16"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
@@ -179,16 +131,73 @@
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									stroke-width="2"
-									d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+									stroke-width="1"
+									d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
 								/>
 							</svg>
-						</button>
+						</div>
+						<!-- Status badge -->
+						<div class="absolute top-2 right-2">
+							<span
+								:class="event.isActive ? 'bg-green-500' : 'bg-gray-400'"
+								class="inline-flex w-8 h-8 rounded-full"
+							></span>
+						</div>
+					</div>
+
+					<!-- Content -->
+					<div class="p-4">
+						<div class="flex items-center justify-between gap-2">
+							<h3 class="font-medium text-gray-900 truncate">{{ event.name }}</h3>
+							<span
+								class="inline-flex items-center justify-center text-xs min-w-6 w-6 h-6 rounded-full bg-cms-categories-100 text-cms-categories-800 font-medium"
+								>{{ event.sortOrder }}</span
+							>
+						</div>
+						<p class="text-sm text-plaza-dark flex items-center gap-3 mt-1">
+							<img
+								v-if="event.shop?.logo"
+								:src="event.shop.logo"
+								:alt="event.shop.name"
+								class="w-8 h-8 rounded object-contain"
+							/>
+							<span class="truncate">{{
+								event.shop?.name || t('cms.events.noShop')
+							}}</span>
+						</p>
+
+						<!-- Actions -->
+						<div class="mt-3 flex items-center justify-between">
+							<NuxtLink
+								:to="`/cms/akce/${event._id}`"
+								class="text-cms-events-600 hover:text-cms-events-700 text-sm font-medium"
+							>
+								{{ t('common.edit') }}
+							</NuxtLink>
+							<button
+								@click="confirmDelete(event)"
+								class="text-red-500 hover:text-red-700 p-1"
+								:title="t('common.delete')"
+							>
+								<svg
+									class="w-4 h-4"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+									/>
+								</svg>
+							</button>
+						</div>
 					</div>
 				</div>
-			</div>
-		</template>
-	</draggable>
+			</template>
+		</draggable>
 
 		<!-- Delete confirmation modal -->
 		<Teleport to="body">

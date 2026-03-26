@@ -10,10 +10,13 @@ export default withNuxt({
 		'vue/multi-word-component-names': 'off',
 		'vue/require-default-prop': 'off',
 		'vue/attributes-order': 'off',
-		'vue/html-self-closing': ['warn', {
-			html: { void: 'always', normal: 'never', component: 'always' },
-			svg: 'always',
-			math: 'always',
-		}],
+		'vue/html-self-closing': [
+			'warn',
+			{
+				html: { void: 'always', normal: 'never', component: 'always' },
+				svg: 'always',
+				math: 'always',
+			},
+		],
 	},
 })

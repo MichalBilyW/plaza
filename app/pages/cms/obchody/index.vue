@@ -7,7 +7,9 @@
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 					{{ t('cms.shops.title') }}
 				</h1>
-				<p class="text-plaza-dark mt-1 text-sm sm:text-base">{{ t('cms.shops.subtitle') }}</p>
+				<p class="text-plaza-dark mt-1 text-sm sm:text-base">
+					{{ t('cms.shops.subtitle') }}
+				</p>
 			</div>
 			<NuxtLink
 				to="/cms/obchody/novy"
@@ -270,7 +272,7 @@
 											d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
 										/>
 									</svg>
-									<span class="text-[10px]" v-html="t('common.edit')" ></span>
+									<span class="text-[10px]" v-html="t('common.edit')"></span>
 								</NuxtLink>
 								<button
 									@click="confirmDelete(shop)"
