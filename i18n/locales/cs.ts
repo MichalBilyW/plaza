@@ -54,6 +54,7 @@ export default {
 		contact: 'Kontakt',
 		openingHours: 'Otevírací doba',
 		openingHoursValue: 'Po 9:00 - 21:00',
+		showOpeningHours: 'Zobrazit otevírací dobu',
 	},
 
 	home: {
@@ -66,6 +67,7 @@ export default {
 				events: 'Aktuální akce',
 			},
 		},
+		heroImageAlt: 'Interiér obchodního centra Plaza Liberec',
 		quickInfo: {
 			openingHours: 'Otevírací doba',
 			openingHoursValue: 'Po–Ne: 9:00\u00a0–\u00a021:00',
@@ -137,6 +139,44 @@ export default {
 		past: 'Proběhlé',
 		published: 'Publikováno',
 		draft: 'Koncept',
+	},
+
+	eventsPage: {
+		title: 'Akce a slevy',
+		perex: 'Exkluzivní nabídky značek, které si\u00a0zamilujete',
+		searchEvent: 'Vyhledávání akce',
+		searchPlaceholder: 'Hledat akci nebo obchod...',
+		noEvents: 'Žádné akce nenalezeny',
+		noEventsHint: 'Zkuste upravit vyhledávání',
+		loadMore: 'Načíst další',
+	},
+
+	aboutPage: {
+		title: 'O nás',
+		galleryImage: 'Fotka z galerie',
+		nextImage: 'Další obrázek',
+		openingHours: 'Otevírací doba',
+		specialOpeningHours: 'Speciální otevírací doba',
+		closed: 'Zavřeno',
+		followUs: 'Sledujte nás',
+		services: 'Služby centra',
+		howToFindUsFirst: 'Kudy',
+		howToFindUsRest: 'k nám',
+		busStop: 'Autobusová zastávka Šaldovo náměstí',
+		busSchedule: 'Jízdní řád',
+		byCarInfo: 'Autem z ulice Palachova zajedete do podzemních garáží',
+		parkingPrices: 'Ceník parkovného',
+		mapTitle: 'Mapa OC Plaza Liberec',
+		openInMaps: 'Otevřít v Mapách',
+		days: {
+			monday: 'Pondělí',
+			tuesday: 'Úterý',
+			wednesday: 'Středa',
+			thursday: 'Čtvrtek',
+			friday: 'Pátek',
+			saturday: 'Sobota',
+			sunday: 'Neděle',
+		},
 	},
 
 	services: {
@@ -408,6 +448,8 @@ export default {
 			nameHint: 'Název se zobrazuje pouze v administraci, ne na webu',
 			image: 'Obrázek akce',
 			imageHint: 'Doporučeno 400x400px',
+			content: 'Obsah akce',
+			contentHint: 'Obsah akce, který se zobrazí v modalu po kliknutí. Pokud nevyplníte tak kliknutí na akci nebude aktivní.',
 			shop: 'Obchod',
 			selectShop: 'Vyberte obchod',
 			settings: 'Nastavení',
@@ -663,9 +705,24 @@ export default {
 			description: 'Kompletní přehled obchodů a služeb v nákupním centru OC Plaza Liberec.',
 		},
 		events: {
-			title: 'Akce a novinky',
+			title: 'Akce a slevy',
 			description:
-				'Přehled nadcházejících akcí, eventů a speciálních nabídek v OC Plaza Liberec.',
+				'Exkluzivní nabídky a slevy obchodů v OC Plaza Liberec. Objevte aktuální akce a ušetřete při nákupech.',
 		},
+		about: {
+			title: 'O nás',
+			description:
+				'Informace o nákupním centru OC Plaza Liberec. Otevírací doba, služby, parkování a jak se k nám dostanete.',
+		},
+		map: {
+			title: 'Mapa centra',
+			description:
+				'Interaktivní mapa nákupního centra OC Plaza Liberec. Najděte svůj oblíbený obchod nebo službu.',
+		},
+	},
+
+	mapPage: {
+		title: 'Mapa centra',
+		inProgress: 'Mapa se připravuje',
 	},
 }

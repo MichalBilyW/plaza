@@ -90,6 +90,15 @@
 							{{ errors.image }}
 						</p>
 					</div>
+
+					<!-- Obsah (WYSIWYG) -->
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-1">
+							{{ t('cms.events.content') }}
+						</label>
+						<CmsWysiwyg v-model="form.content" />
+						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.events.contentHint') }}</p>
+					</div>
 				</div>
 			</div>
 
@@ -159,6 +168,7 @@ const { errors, generalError, clearErrors, handleApiError, scrollToFirstError } 
 const form = reactive({
 	name: '',
 	image: '',
+	content: '',
 	shopId: '',
 	isActive: true,
 })
@@ -199,6 +209,7 @@ const handleSubmit = async () => {
 			body: {
 				name: form.name.trim(),
 				image: form.image,
+				content: form.content || undefined,
 				shopId: form.shopId,
 				isActive: form.isActive,
 			},

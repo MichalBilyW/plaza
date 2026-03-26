@@ -219,6 +219,7 @@ export type ShopFilterQueryInput = z.input<typeof shopFilterQuerySchema>
 export const eventCreateSchema = z.object({
 	name: z.string().min(2, 'Název musí mít alespoň 2 znaky').max(200),
 	image: z.string().min(1, 'Obrázek je povinný'),
+	content: z.string().max(50000).optional(),
 	shopId: objectIdSchema,
 	sortOrder: z.number().int().default(0),
 	isActive: z.boolean().default(true),

@@ -73,7 +73,12 @@
 			</div>
 
 			<!-- Opening hours -->
-			<div class="flex items-center gap-2">
+			<button
+				type="button"
+				class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+				:aria-label="t('nav.showOpeningHours')"
+				@click="openOpeningHoursModal"
+			>
 				<div class="font-sans text-base text-right text-black">
 					<div class="flex items-center justify-center gap-1.5 font-semibold">
 						<svg
@@ -101,9 +106,8 @@
 						>
 						<span class="sr-only">{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}:</span>
 						<span>{{ openingHoursText }}</span>
-						<div v-if="specialNote" class="relative group">
-							<button
-								type="button"
+						<span v-if="specialNote" class="relative group" @click.stop>
+							<span
 								class="inline-flex items-center justify-center"
 								:aria-label="t('common.specialHoursInfo')"
 								aria-describedby="desktop-special-note"
@@ -122,7 +126,7 @@
 										d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
 									/>
 								</svg>
-							</button>
+							</span>
 							<div
 								id="desktop-special-note"
 								role="tooltip"
@@ -133,10 +137,10 @@
 									class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-plaza-dark"
 								></div>
 							</div>
-						</div>
+						</span>
 					</div>
 				</div>
-			</div>
+			</button>
 		</nav>
 	</header>
 
@@ -260,7 +264,12 @@
 			<!-- Bottom section: Opening hours + Socials -->
 			<div class="flex flex-col items-center pb-8 gap-6">
 				<!-- Opening hours -->
-				<div class="font-sans text-base text-right text-black">
+				<button
+					type="button"
+					class="font-sans text-base text-right text-black cursor-pointer hover:opacity-80 transition-opacity"
+					:aria-label="t('nav.showOpeningHours')"
+					@click="openOpeningHoursModal"
+				>
 					<div class="flex items-center justify-center gap-1.5 font-semibold">
 						<svg
 							class="w-6 h-6 flex-shrink-0 text-black"
@@ -287,9 +296,8 @@
 						>
 						<span class="sr-only">{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}:</span>
 						<span>{{ openingHoursText }}</span>
-						<div v-if="specialNote" class="relative group">
-							<button
-								type="button"
+						<span v-if="specialNote" class="relative group" @click.stop>
+							<span
 								class="inline-flex items-center justify-center"
 								:aria-label="t('common.specialHoursInfo')"
 								aria-describedby="mobile-special-note"
@@ -308,7 +316,7 @@
 										d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
 									/>
 								</svg>
-							</button>
+							</span>
 							<div
 								id="mobile-special-note"
 								role="tooltip"
@@ -319,9 +327,9 @@
 									class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-plaza-dark"
 								></div>
 							</div>
-						</div>
+						</span>
 					</div>
-				</div>
+				</button>
 
 				<!-- Social icons -->
 				<div class="flex items-center gap-4">
@@ -364,6 +372,7 @@ const props = defineProps<{
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
+const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
 
 const isMobileMenuOpen = ref(false)
 const isHeaderVisible = ref(true)

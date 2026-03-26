@@ -67,9 +67,12 @@
 							@resize="onSwiperResize"
 						>
 							<SwiperSlide v-for="event in events" :key="event._id" class="!w-[290px]">
-								<NuxtLink
-									:to="event.shop?.slug ? `/obchody/${event.shop.slug}` : '#'"
-									class="group block w-[290px] rounded-[5px_20px_5px_5px] overflow-hidden"
+								<component
+									:is="event.content ? 'button' : 'div'"
+									:type="event.content ? 'button' : undefined"
+									class="group block w-[290px] rounded-[5px_20px_5px_5px] overflow-hidden text-left"
+									:class="{ 'cursor-pointer': event.content }"
+									@click="event.content ? openEventModal(event) : undefined"
 								>
 									<!-- Event image -->
 									<div class="h-[290px] bg-plaza-light flex items-center justify-center">
@@ -117,7 +120,7 @@
 											{{ event.shop.name }}
 										</span>
 									</div>
-								</NuxtLink>
+								</component>
 							</SwiperSlide>
 						</Swiper>
 					</div>
@@ -146,6 +149,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 
 const { t } = useI18n()
+const { openModal: openEventModal } = useEventModal()
 
 defineProps<{
 	events: Event[]

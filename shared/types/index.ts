@@ -128,6 +128,8 @@ export interface Event extends BaseEntity {
 	name: string
 	/** Čtvercový obrázek akce */
 	image: string
+	/** Obsah akce (WYSIWYG) */
+	content?: string
 	/** Vazba na obchod */
 	shopId: string
 	shop?: Shop

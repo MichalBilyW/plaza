@@ -51,16 +51,17 @@
 					<div class="flex justify-end w-full text-right">
 						<div class="flex flex-col gap-3 md:gap-1.5">
 							<!-- Otevírací doba -->
-							<NuxtLink
-								to="/o-nas#oteviraci-doba"
+							<button
+								type="button"
 								class="relative group max-md:justify-center font-heading bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[250px] md:w-[320px] text-plaza-dark md:text-xl lg:text-2xl hover:bg-gray-50 transition-colors"
+								@click="openOpeningHoursModal"
 							>
 								{{ t('home.infoSection.openingHours') }}
 								<svg class="absolute right-3 top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 									<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 									<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 								</svg>
-							</NuxtLink>
+							</button>
 
 							<!-- Mapa centra button -->
 							<NuxtLink
@@ -209,6 +210,8 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
+const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
+
 const PARKING_SPOTS = 500
 const AUTOPLAY_INTERVAL = 4000
 

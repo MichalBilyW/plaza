@@ -15,6 +15,8 @@ export interface IEvent {
 	name: string
 	/** Čtvercový obrázek akce */
 	image: string
+	/** Obsah akce (WYSIWYG) - volitelné */
+	content?: string
 	/** Vazba na obchod */
 	shopId: Types.ObjectId
 	/** Pořadí pro řazení */
@@ -43,6 +45,10 @@ const eventSchema = new Schema<IEventDocument>(
 		image: {
 			type: String,
 			required: [true, 'Obrázek akce je povinný'],
+		},
+		content: {
+			type: String,
+			maxlength: 50000,
 		},
 		shopId: {
 			type: Schema.Types.ObjectId,

@@ -1,18 +1,16 @@
 <template>
 	<div class="min-h-screen">
 		<!-- Dark header -->
-		<div class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-28 pb-20">
+		<div class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-20 pb-20">
 			<h1
-				class="text-center text-white font-heading font-semibold text-3xl md:text-4xl uppercase"
+				class="text-center text-white font-heading font-black text-3xl md:text-4xl uppercase"
 			>
 				{{ t('shops.title') }}
 			</h1>
 		</div>
 
 		<!-- Filter bar -->
-		<div
-			class="relative z-10 container-small -mt-9 px-4"
-		>
+		<div class="relative z-10 container-small -mt-9 px-4">
 			<div
 				class="flex flex-col gap-3 rounded-[5px_20px_5px_5px] bg-white px-5 py-4 drop-shadow-md md:flex-row md:justify-between"
 				role="search"

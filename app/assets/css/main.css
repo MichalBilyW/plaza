@@ -276,24 +276,19 @@ textarea:focus-visible {
 .prose h2 {
 	font-family: 'League Spartan', sans-serif;
 	font-style: normal;
-	font-weight: 600;
-	font-size: 40px;
-	line-height: 43px;
+	font-weight: 900;
+	font-size: 1.5rem;
+	line-height: 2rem;
 	text-transform: uppercase;
+	text-align: center;
 	margin-top: 1.5em;
-	margin-bottom: 0.75em;
+	margin-bottom: 2rem;
 	color: #131313;
 }
-@media screen and (max-width: 640px) {
+@media screen and (min-width: 768px) {
 	.prose h2 {
-		font-size: 32px;
-		line-height: 35px;
-	}
-}
-@media screen and (max-width: 480px) {
-	.prose h2 {
-		font-size: 24px;
-		line-height: 28px;
+		font-size: 1.875rem;
+		line-height: 2.25rem;
 	}
 }
 

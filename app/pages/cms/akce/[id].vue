@@ -107,6 +107,15 @@
 								{{ errors.image }}
 							</p>
 						</div>
+
+						<!-- Obsah (WYSIWYG) -->
+						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-1">
+								{{ t('cms.events.content') }}
+							</label>
+							<CmsWysiwyg v-model="form.content" />
+							<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.events.contentHint') }}</p>
+						</div>
 					</div>
 				</div>
 
@@ -182,6 +191,7 @@ const eventId = route.params.id as string
 const form = reactive({
 	name: '',
 	image: '',
+	content: '',
 	shopId: '',
 	isActive: true,
 })
@@ -204,6 +214,7 @@ watch(
 		if (e) {
 			form.name = e.name || ''
 			form.image = e.image || ''
+			form.content = e.content || ''
 			form.shopId = e.shopId || ''
 			form.isActive = e.isActive ?? true
 		}
@@ -240,6 +251,7 @@ const handleSubmit = async () => {
 			body: {
 				name: form.name.trim(),
 				image: form.image,
+				content: form.content || undefined,
 				shopId: form.shopId,
 				isActive: form.isActive,
 			},
