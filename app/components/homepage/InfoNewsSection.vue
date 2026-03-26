@@ -7,42 +7,42 @@
 				<!-- Left side - Info cards -->
 				<div class="z-20 relative flex flex-col md:text-right md:items-center gap-1.5 md:-mr-2 mt-8 md:-mt-12 max-md:mb-4 shrink-0">
 					<!-- Počet obchodů -->
-					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[295px]">
-						<span class="text-plaza text-xl md:text-2xl lg:text-2xl font-bold">{{
+					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]">
+						<span class="text-plaza text-xl md:text-2xl lg:text-3xl font-bold">{{
 							animatedShopsCount
 						}}</span>
-						<span class="text-plaza-dark md:text-lg lg:text-xl ml-1">{{
+						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
 							t('home.infoSection.shops')
 						}}</span>
-						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</NuxtLink>
 
 					<!-- Restaurace a kavárny -->
-					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[295px]">
-						<span class="text-plaza text-xl md:text-2xl lg:text-2xl font-bold">{{
+					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]">
+						<span class="text-plaza text-xl md:text-2xl lg:text-3xl font-bold">{{
 							animatedRestaurantsCount
 						}}</span>
-						<span class="text-plaza-dark md:text-lg lg:text-xl ml-1">{{
+						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
 							t('home.infoSection.restaurants')
 						}}</span>
-						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</NuxtLink>
 
 					<!-- Parkovací místa -->
-					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[295px]">
-						<span class="text-plaza text-xl md:text-2xl lg:text-2xl font-bold">{{
+					<NuxtLink to="/" class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]">
+						<span class="text-plaza text-xl md:text-2xl lg:text-3xl font-bold">{{
 							animatedParkingCount
 						}}</span>
-						<span class="text-plaza-dark md:text-lg lg:text-xl ml-1">{{
+						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
 							t('home.infoSection.parkingSpots')
 						}}</span>
-						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<svg class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 							<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
@@ -53,10 +53,10 @@
 							<!-- Otevírací doba -->
 							<NuxtLink
 								to="/o-nas#oteviraci-doba"
-								class="relative group max-md:justify-center bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[250px] md:w-[295px] text-plaza-dark md:text-lg lg:text-xl hover:bg-gray-50 transition-colors"
+								class="relative group max-md:justify-center font-heading bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[250px] md:w-[320px] text-plaza-dark md:text-xl lg:text-2xl hover:bg-gray-50 transition-colors"
 							>
 								{{ t('home.infoSection.openingHours') }}
-								<svg class="absolute right-3 top-5 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<svg class="absolute right-3 top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 									<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 									<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 								</svg>
@@ -65,10 +65,10 @@
 							<!-- Mapa centra button -->
 							<NuxtLink
 								to="/mapa"
-								class="relative group max-md:justify-center bg-plaza max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[250px] md:w-[295px] text-white md:text-lg lg:text-xl hover:bg-gray-50 transition-colors"
+								class="relative group max-md:justify-center font-heading bg-plaza max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[250px] md:w-[320px] text-white md:text-xl lg:text-2xl transition-all hover:brightness-110"
 							>
 								{{ t('home.infoSection.mapCenter') }}
-								<svg class="absolute right-3 top-5 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<svg class="absolute right-3 top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-70 transition-opacity ease-in-out" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 									<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 									<path d="M11 15L14 12L11 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 								</svg>
@@ -82,7 +82,15 @@
 					<div
 						class="group relative w-[290px] xs:w-[400px] h-[290px] xs:h-[400px] lg:w-[500px] lg:h-[500px] rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg touch-pan-y"
 						:class="{ 'cursor-pointer': currentNews?.content }"
+						role="region"
+						:aria-label="t('home.infoSection.newsAlt')"
+						aria-roledescription="carousel"
 						@click="handleSliderClick"
+						@keydown.enter="handleSliderClick"
+						@mouseenter="pauseAutoplay"
+						@mouseleave="resumeAutoplay"
+						@focusin="pauseAutoplay"
+						@focusout="resumeAutoplay"
 						@touchstart="handleTouchStart"
 						@touchmove="handleTouchMove"
 						@touchend="handleTouchEnd"
@@ -95,10 +103,11 @@
 							v-for="(item, index) in news"
 							:key="item._id"
 							:src="item.image"
-							:alt="t('home.infoSection.newsAlt')"
+							:alt="item.name || t('home.infoSection.newsAlt')"
 							loading="lazy"
 							class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out"
 							:class="index === currentNewsIndex ? 'opacity-100' : 'opacity-0'"
+							:aria-hidden="index !== currentNewsIndex"
 						/>
 
 						<!-- Fallback when no news -->
@@ -121,6 +130,7 @@
 
 					<!-- Navigation arrows -->
 					<div v-if="news.length > 1" class="flex justify-end transparent gap-2 mt-2 w-[290px] xs:w-[400px] lg:w-[500px]">
+						<span class="sr-only" aria-live="polite">{{ t('common.newSlide', { current: currentNewsIndex + 1, total: news.length }) }}</span>
 						<button
 							class="w-10 h-10 rounded-full border-2 flex items-center justify-center hover:bg-gray-100 transition-colors"
 							:aria-label="t('home.infoSection.prevNews')"
@@ -131,6 +141,7 @@
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
+								aria-hidden="true"
 							>
 								<path
 									stroke-linecap="round"
@@ -150,6 +161,7 @@
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
+								aria-hidden="true"
 							>
 								<path
 									stroke-linecap="round"
@@ -280,6 +292,17 @@ const resetAutoplay = () => {
 			currentNewsIndex.value = (currentNewsIndex.value + 1) % props.news.length
 		}
 	}, AUTOPLAY_INTERVAL)
+}
+
+const pauseAutoplay = () => {
+	if (autoplayInterval) {
+		clearInterval(autoplayInterval)
+		autoplayInterval = null
+	}
+}
+
+const resumeAutoplay = () => {
+	resetAutoplay()
 }
 
 const nextNews = () => {

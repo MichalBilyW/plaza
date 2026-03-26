@@ -1,5 +1,8 @@
 <template>
 	<div class="min-h-screen">
+		<!-- Skip navigation -->
+		<a href="#main-content" class="skip-link">{{ $t('common.skipToContent') }}</a>
+
 		<!-- Header -->
 		<LayoutTheHeader
 			:opening-hours="generalInfo?.openingHours"
@@ -7,7 +10,7 @@
 		/>
 
 		<!-- Main content -->
-		<main class="w-full pt-[60px] lg:pt-[90px]">
+		<main id="main-content" class="w-full pt-[60px] lg:pt-[90px]">
 			<slot></slot>
 		</main>
 

@@ -30,6 +30,14 @@ export default {
 		menu: 'Menu',
 		actions: 'Akce',
 		altLogo: 'Logo OC Plaza Liberec',
+		skipToContent: 'Přejít na obsah',
+		openStatus: 'Otevřeno',
+		closedStatus: 'Zavřeno',
+		shopCard: 'Karta obchodu {name}',
+		newSlide: 'Novinka {current} z {total}',
+		filterCategory: 'Filtr dle kategorie',
+		searchShop: 'Vyhledávání obchodu',
+		specialHoursInfo: 'Informace o speciální otevírací době',
 	},
 
 	nav: {
@@ -50,7 +58,7 @@ export default {
 
 	home: {
 		hero: {
-			title: 'Vítejte v OC Plaza Liberec',
+			title: 'Obchodní centrum Plaza Liberec',
 			subtitle:
 				'Vaše oblíbené nákupní centrum v srdci Liberce. Objevte přes 100 obchodů, restaurací a služeb pod jednou střechou.',
 			cta: {
@@ -83,6 +91,8 @@ export default {
 			events: 'AKCE A\u00a0SLEVY',
 			eventsPerex: 'Exkluzivní nabídky značek, které si\u00a0zamilujete',
 			eventsList: 'Akce a slevy',
+			eventsPrev: 'Předchozí akce',
+			eventsNext: 'Další akce',
 		},
 	},
 

@@ -5,6 +5,7 @@
 		:class="{ '-translate-y-[calc(100%+30px)]': !isHeaderVisible }"
 	>
 		<nav
+			:aria-label="t('nav.home')"
 			class="container bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)] 2xl:rounded-[5px_20px_0px_0px] h-[71px] flex items-center justify-between px-6"
 		>
 			<!-- Logo -->
@@ -20,48 +21,52 @@
 			<div class="flex items-center gap-8">
 				<NuxtLink
 					to="/"
-					class="font-heading font-bold text-[17px] leading-[30px] text-plaza hover:text-plaza/80 transition-colors"
+					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza/80 transition-colors"
 					:class="{
 						'text-plaza': route.path === '/',
 						'text-black': route.path !== '/',
 					}"
+					active-class="text-plaza"
 				>
 					{{ t('nav.homePage') }}
 				</NuxtLink>
 				<NuxtLink
 					to="/obchody"
-					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/obchody'),
 						'text-black': !route.path.startsWith('/obchody'),
 					}"
+					active-class="text-plaza"
 				>
 					{{ t('nav.shopsAndServices') }}
 				</NuxtLink>
 				<NuxtLink
 					to="/akce"
-					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/akce'),
 						'text-black': !route.path.startsWith('/akce'),
 					}"
+					active-class="text-plaza"
 				>
 					{{ t('nav.eventsAndSales') }}
 				</NuxtLink>
 				<NuxtLink
 					to="/o-nas"
-					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/o-nas',
 						'text-black': route.path !== '/o-nas',
 					}"
+					active-class="text-plaza"
 				>
 					{{ t('nav.about') }}
 				</NuxtLink>
 				<!-- CTA Button -->
 				<NuxtLink
 					to="/mapa"
-					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
+					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 				>
 					{{ t('nav.mapCenter') }}
 				</NuxtLink>
@@ -69,13 +74,14 @@
 
 			<!-- Opening hours -->
 			<div class="flex items-center gap-2">
-				<div class="font-heading text-base text-right text-black">
+				<div class="font-sans text-base text-right text-black">
 					<div class="flex items-center justify-center gap-1.5 font-semibold">
 						<svg
 							class="w-5 h-5 flex-shrink-0 text-black"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
+							aria-hidden="true"
 						>
 							<path
 								stroke-linecap="round"
@@ -84,31 +90,43 @@
 								d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 							/>
 						</svg>
-						<span class="font-black">{{ t('nav.openingHours') }}</span>
+						<span class="font-black font-heading">{{ t('nav.openingHours') }}</span>
 					</div>
 					<div class="flex items-center justify-end gap-1">
 						<span
 							:class="isOpen ? 'text-plaza-success' : 'text-plaza'"
 							class="text-[21px]"
+							aria-hidden="true"
 							>●</span
 						>
+						<span class="sr-only">{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}:</span>
 						<span>{{ openingHoursText }}</span>
 						<div v-if="specialNote" class="relative group">
-							<svg
-								class="w-4 h-4 text-plaza-gray cursor-help"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
+							<button
+								type="button"
+								class="inline-flex items-center justify-center"
+								:aria-label="t('common.specialHoursInfo')"
+								aria-describedby="desktop-special-note"
 							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
+								<svg
+									class="w-4 h-4 text-plaza-gray cursor-help"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+									aria-hidden="true"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+							</button>
 							<div
-								class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-plaza-dark text-white text-sm rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+								id="desktop-special-note"
+								role="tooltip"
+								class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-plaza-dark text-white text-sm rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50"
 							>
 								{{ specialNote }}
 								<div
@@ -126,6 +144,7 @@
 	<header
 		class="lg:hidden bg-plaza-dark fixed top-0 left-0 right-0 z-50 bg-white h-[60px] flex items-center justify-between pl-4 xs:pl-8 pr-2 xs:pr-6 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] transition-transform duration-300"
 		:class="{ '-translate-y-full': !isHeaderVisible && !isMobileMenuOpen }"
+		:aria-hidden="!isHeaderVisible && !isMobileMenuOpen"
 	>
 		<!-- Logo -->
 		<a href="/" class="flex-shrink-0" @click.prevent="handleLogoClick">
@@ -140,6 +159,8 @@
 		<button
 			class="p-2 rounded-lg hover:bg-plaza-light transition-colors"
 			:aria-label="isMobileMenuOpen ? t('common.close') : t('common.menu')"
+			:aria-expanded="isMobileMenuOpen"
+			aria-controls="mobile-menu"
 			@click="toggleMobileMenu"
 		>
 			<svg
@@ -148,6 +169,7 @@
 				fill="none"
 				stroke="currentColor"
 				viewBox="0 0 24 24"
+				aria-hidden="true"
 			>
 				<path
 					stroke-linecap="round"
@@ -156,7 +178,7 @@
 					d="M4 6h16M4 12h16M4 18h16"
 				/>
 			</svg>
-			<svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 				<path
 					stroke-linecap="round"
 					stroke-linejoin="round"
@@ -171,50 +193,55 @@
 	<Transition name="mobile-menu">
 		<div
 			v-if="isMobileMenuOpen"
+			id="mobile-menu"
 			class="lg:hidden fixed inset-0 z-40 bg-white pt-[50px] flex flex-col"
 		>
 			<!-- Navigation links -->
-			<nav class="flex-1 flex flex-col items-center justify-start pt-12 gap-4">
+			<nav :aria-label="t('common.menu')" class="flex-1 flex flex-col items-center justify-start pt-12 gap-4">
 				<NuxtLink
 					to="/"
-					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/',
 						'text-black': route.path !== '/',
 					}"
+					active-class="text-plaza"
 					@click="closeMobileMenu"
 				>
 					{{ t('nav.homePage') }}
 				</NuxtLink>
 				<NuxtLink
 					to="/obchody"
-					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/obchody'),
 						'text-black': !route.path.startsWith('/obchody'),
 					}"
+					active-class="text-plaza"
 					@click="closeMobileMenu"
 				>
 					{{ t('nav.shopsAndServices') }}
 				</NuxtLink>
 				<NuxtLink
 					to="/akce"
-					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/akce'),
 						'text-black': !route.path.startsWith('/akce'),
 					}"
+					active-class="text-plaza"
 					@click="closeMobileMenu"
 				>
 					{{ t('nav.eventsAndSales') }}
 				</NuxtLink>
 				<NuxtLink
 					to="/o-nas"
-					class="font-heading font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/o-nas',
 						'text-black': route.path !== '/o-nas',
 					}"
+					active-class="text-plaza"
 					@click="closeMobileMenu"
 				>
 					{{ t('nav.about') }}
@@ -223,7 +250,7 @@
 				<!-- CTA Button -->
 				<NuxtLink
 					to="/mapa"
-					class="mt-4 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
+					class="mt-4 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 					@click="closeMobileMenu"
 				>
 					{{ t('nav.mapCenter') }}
@@ -240,6 +267,7 @@
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
+							aria-hidden="true"
 						>
 							<path
 								stroke-linecap="round"
@@ -248,31 +276,43 @@
 								d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 							/>
 						</svg>
-						<span>{{ t('nav.openingHours') }}</span>
+						<span class="font-black font-heading">{{ t('nav.openingHours') }}</span>
 					</div>
 					<div class="flex items-center justify-end gap-1">
 						<span
 							:class="isOpen ? 'text-plaza-success' : 'text-plaza'"
 							class="text-[21px]"
+							aria-hidden="true"
 							>●</span
 						>
+						<span class="sr-only">{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}:</span>
 						<span>{{ openingHoursText }}</span>
 						<div v-if="specialNote" class="relative group">
-							<svg
-								class="w-4 h-4 text-plaza-gray cursor-help"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
+							<button
+								type="button"
+								class="inline-flex items-center justify-center"
+								:aria-label="t('common.specialHoursInfo')"
+								aria-describedby="mobile-special-note"
 							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
+								<svg
+									class="w-4 h-4 text-plaza-gray cursor-help"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+									aria-hidden="true"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+							</button>
 							<div
-								class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-plaza-dark text-white text-sm rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+								id="mobile-special-note"
+								role="tooltip"
+								class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-plaza-dark text-white text-sm rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50"
 							>
 								{{ specialNote }}
 								<div

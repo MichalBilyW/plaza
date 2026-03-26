@@ -1,5 +1,5 @@
 <template>
-	<section class="py-20 bg-plaza-dark">
+	<section class="py-20 bg-plaza-dark" :aria-label="t('home.sections.events')">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<!-- Desktop: side-by-side layout / Mobile: stacked -->
 			<div class="flex flex-col lg:flex-row lg:items-start lg:gap-10">
@@ -16,6 +16,7 @@
 					<div v-show="!isLocked" class="flex gap-2 mt-6">
 						<button
 							ref="prevBtnRef"
+							:aria-label="t('home.sections.eventsPrev')"
 							class="events-btn-prev w-10 h-10 rounded-full border-2 border-white/30 flex items-center justify-center hover:border-white/60 transition-colors"
 						>
 							<svg class="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,6 +25,7 @@
 						</button>
 						<button
 							ref="nextBtnRef"
+							:aria-label="t('home.sections.eventsNext')"
 							class="events-btn-next w-10 h-10 rounded-full border-2 border-white/30 flex items-center justify-center hover:border-white/60 transition-colors"
 						>
 							<svg class="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,8 +85,9 @@
 											class="w-12 h-12 text-plaza-gray"
 											fill="none"
 											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
+										viewBox="0 0 24 24"
+										aria-hidden="true"
+									>
 											<path
 												stroke-linecap="round"
 												stroke-linejoin="round"
@@ -125,7 +128,7 @@
 			<div class="flex justify-center mt-10">
 				<NuxtLink
 					to="/akce"
-					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
+					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 				>
 					{{ t('home.sections.eventsList') }}
 				</NuxtLink>

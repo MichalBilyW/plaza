@@ -37,7 +37,8 @@ export default defineEventHandler(
 		// Pokud isActive není specifikováno, vracíme všechny obchody
 
 		if (search) {
-			filter.$text = { $search: search }
+			const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+			filter.name = { $regex: escaped, $options: 'i' }
 		}
 
 		// Celkový počet

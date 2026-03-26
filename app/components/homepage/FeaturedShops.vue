@@ -1,5 +1,5 @@
 <template>
-	<section class="py-20 bg-white">
+	<section class="py-20 bg-white" :aria-label="t('home.sections.shops')">
 		<div class="max-w-7xl mx-2 md:mx-auto">
 			<!-- Heading -->
 			<h2 class="font-heading text-3xl md:text-4xl font-bold text-center mb-10">
@@ -29,7 +29,7 @@
 					class="featured-shops-btn-prev z-30 absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors"
 					:aria-label="t('home.infoSection.prevNews')"
 				>
-					<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 					</svg>
 				</button>
@@ -38,7 +38,7 @@
 					class="featured-shops-btn-next z-30 absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors"
 					:aria-label="t('home.infoSection.nextNews')"
 				>
-					<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 					</svg>
 				</button>
@@ -101,7 +101,7 @@
 			<div class="flex justify-center mt-10">
 				<NuxtLink
 					to="/obchody"
-					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
+					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 				>
 					{{ t('home.sections.shopsList') }}
 				</NuxtLink>
