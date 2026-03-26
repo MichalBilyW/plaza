@@ -90,6 +90,12 @@ export default defineNuxtConfig({
 				'@/shared': resolve(__dirname, 'shared'),
 			},
 		},
+		optimizeDeps: {
+			include: [
+				'swiper/vue',
+				'swiper/modules',
+			],
+		},
 	},
 
 	// Aliasy pro TypeScript a Vue komponenty
