@@ -117,6 +117,18 @@ export default {
 		loadMore: 'Načíst další',
 	},
 
+	shopDetail: {
+		notFound: 'Obchod nenalezen',
+		notFoundDescription: 'Hledaný obchod neexistuje nebo byl odstraněn.',
+		nextImage: 'Další obrázek',
+		relatedShops: 'Další obchody v kategorii',
+		relatedShopsTitle: 'DALŠÍ OBCHODY A\u00a0SLUŽBY',
+		inCategory: 'V KATEGORII',
+		noRelatedShops: 'V této kategorii nejsou žádné další obchody.',
+		prevShop: 'Předchozí obchod',
+		nextShop: 'Další obchod',
+	},
+
 	events: {
 		title: 'Akce a novinky',
 		description: 'Přehled nadcházejících akcí v OC Plaza Liberec',

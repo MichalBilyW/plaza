@@ -1,6 +1,6 @@
 /**
  * GET /api/shops/:id
- * Detail obchodu
+ * Detail obchodu (podporuje ID i slug)
  */
 
 import { connectToDatabase } from '@/server/utils/db'
@@ -11,12 +11,25 @@ export default defineEventHandler(
 	defineApiHandler(async (event) => {
 		await connectToDatabase()
 
-		const id = getRouterParam(event, 'id')
+		const idOrSlug = getRouterParam(event, 'id')
 
-		const shop = await Shop.findById(id)
-			.populate('floorId', 'name level')
-			.populate('categoryId', 'name slug icon color')
-			.lean()
+		let shop
+
+		// Pokud je to MongoDB ObjectId, hledáme podle _id
+		if (idOrSlug?.match(/^[0-9a-fA-F]{24}$/)) {
+			shop = await Shop.findById(idOrSlug)
+				.populate('floorId', 'name level')
+				.populate('categoryId', 'name slug icon color')
+				.lean()
+		}
+
+		// Pokud nenalezeno podle ID nebo není ObjectId, zkusíme slug
+		if (!shop) {
+			shop = await Shop.findOne({ slug: idOrSlug, isActive: true })
+				.populate('floorId', 'name level')
+				.populate('categoryId', 'name slug icon color')
+				.lean()
+		}
 
 		if (!shop) {
 			throw createNotFoundError('Obchod')
@@ -27,7 +40,17 @@ export default defineEventHandler(
 			...shop,
 			_id: shop._id.toString(),
 			floor: shop.floorId,
+			floorId: shop.floorId
+				? typeof shop.floorId === 'object'
+					? (shop.floorId as { _id: unknown })._id?.toString()
+					: shop.floorId?.toString()
+				: undefined,
 			category: shop.categoryId,
+			categoryId: shop.categoryId
+				? typeof shop.categoryId === 'object'
+					? (shop.categoryId as { _id: unknown })._id?.toString()
+					: shop.categoryId?.toString()
+				: undefined,
 		}
 	}),
 )

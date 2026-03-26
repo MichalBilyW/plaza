@@ -99,7 +99,7 @@
 				v-if="initialLoading"
 				class="flex flex-col items-center gap-3 xs:flex-row xs:flex-wrap xs:justify-center md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3"
 			>
-				<div v-for="i in 9" :key="i" class="animate-pulse overflow-hidden rounded-[5px_20px_5px_5px] w-full aspect-square xs:w-[180px] xs:h-[180px] xs:aspect-auto md:w-auto md:h-auto">
+				<div v-for="i in 9" :key="i" class="animate-pulse overflow-hidden rounded-[5px_20px_5px_5px] w-full aspect-square xs:w-[173px] xs:h-[173px] xs:aspect-auto md:w-auto md:h-auto">
 					<div class="h-[200px] bg-plaza-light"></div>
 					<div class="flex flex-col items-center py-4">
 						<div class="-mt-[42px] mb-3 h-[85px] w-[120px] rounded-sm bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"></div>
@@ -134,7 +134,7 @@
 			<!-- Shops grid -->
 			<div
 				v-else
-				class="flex flex-col items-center gap-3 min-[375px]:flex-row min-[375px]:flex-wrap min-[375px]:justify-center md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+				class="flex items-center gap-3 flex-wrap justify-center md:grid md:grid-cols-2 lg:grid-cols-3"
 			>
 				<ShopCard v-for="shop in allShops" :key="shop._id" :shop="shop" />
 			</div>

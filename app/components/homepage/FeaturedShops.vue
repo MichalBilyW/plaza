@@ -32,7 +32,7 @@
 				<div
 					v-for="i in 6"
 					:key="i"
-					class="shrink-0 w-[180px] md:w-[200px] bg-white border border-gray-200 rounded-xl p-6"
+					class="shrink-0 w-[173px] md:w-[200px] bg-white border border-gray-200 rounded-xl p-6"
 				>
 					<div class="h-[100px] skeleton-shimmer rounded-lg mb-4"></div>
 					<div class="flex justify-center gap-3">
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 
-			<!-- Swiper slider / Grid -->
+			<!-- Swiper slider / Grid (always visible, even with few items) -->
 			<Transition v-else name="view-fade" mode="out-in">
 				<div v-if="viewMode === 'slider'" key="slider" class="relative max-w-[calc(100%-50px)] mx-auto featured-shops-slider">
 				<!-- Navigation arrows -->
@@ -79,7 +79,7 @@
 					@slide-change="onSlideChange"
 					@resize="onSwiperResize"
 				>
-					<SwiperSlide v-for="shop in shops" :key="shop._id" class="!w-[180px]">
+					<SwiperSlide v-for="shop in shops" :key="shop._id" class="!w-[173px]">
 						<ShopCardCompact :shop="shop" />
 					</SwiperSlide>
 				</Swiper>
@@ -89,7 +89,7 @@
 				<div
 					v-else-if="viewMode === 'grid'"
 					key="grid"
-					class="flex flex-col items-center gap-3 min-[405px]:flex-row min-[405px]:flex-wrap min-[405px]:justify-center md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3 px-4 md:px-0"
+					class="flex items-center gap-3 flex-wrap justify-center md:grid md:grid-cols-2 lg:grid-cols-3 px-4 md:px-0"
 				>
 				<ShopCard v-for="shop in visibleShops" :key="shop._id" :shop="shop" />
 				</div>
