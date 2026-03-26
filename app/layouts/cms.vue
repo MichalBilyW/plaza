@@ -386,6 +386,13 @@
 const { user, isAdmin, logout } = useCmsAuth()
 const sidebarOpen = ref(false)
 
+// Prevent indexing of CMS pages
+useHead({
+	meta: [
+		{ name: 'robots', content: 'noindex, nofollow' },
+	],
+})
+
 // Zavřít sidebar při změně route
 const route = useRoute()
 watch(

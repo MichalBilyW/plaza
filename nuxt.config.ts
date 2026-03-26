@@ -6,7 +6,7 @@ const __dirname = dirname(__filename)
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	compatibilityDate: '2025-07-15',
+	compatibilityDate: '2026-03-26',
 	devtools: { enabled: true },
 
 	future: {
@@ -23,10 +23,8 @@ export default defineNuxtConfig({
 		// Public (exposed to client) - z ENV
 		public: {
 			siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-			siteName: process.env.NUXT_PUBLIC_SITE_NAME || 'OC Plaza Liberec',
-			siteDescription:
-				process.env.NUXT_PUBLIC_SITE_DESCRIPTION ||
-				'Obchodní centrum Plaza Liberec - nakupování, zábava a služby na jednom místě',
+			siteName: 'OC Plaza Liberec',
+			siteDescription: 'Obchodní centrum Plaza Liberec - nakupování, zábava a služby na jednom místě',
 			defaultLocale: process.env.NUXT_PUBLIC_DEFAULT_LOCALE || 'cs',
 		},
 	},
@@ -128,18 +126,16 @@ export default defineNuxtConfig({
 		typeCheck: false, // Disable for faster builds, use npm run typecheck
 	},
 
-	// Route rules for caching (SWR only in production)
+	// Route rules
 	routeRules: {
-		// Public pages - SSR with caching (no prerender to avoid DB connection issues)
+		// Public pages - SSR (no cache = changes from CMS visible immediately)
 		'/': { ssr: true },
-		...(process.env.NODE_ENV === 'production' ? {
-			'/obchody': { swr: 3600 },
-			'/obchody/**': { swr: 3600 },
-			'/akce': { swr: 1800 },
-			'/akce/**': { swr: 1800 },
-			'/sluzby': { swr: 3600 },
-			'/mapa': { swr: 3600 },
-		} : {}),
+		'/obchody': { ssr: true },
+		'/obchody/**': { ssr: true },
+		'/akce': { ssr: true },
+		'/akce/**': { ssr: true },
+		'/o-nas': { ssr: true },
+		'/mapa': { ssr: true },
 
 		// CMS routes - no cache, auth required
 		'/cms/**': { ssr: true },
