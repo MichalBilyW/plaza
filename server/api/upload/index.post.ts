@@ -73,9 +73,9 @@ export default defineEventHandler(
 		// Uložit soubor
 		await writeFile(filepath, file.data)
 
-		// Vrátit cestu k souboru (relativní URL)
+		// Vrátit cestu k souboru (API endpoint pro servírování)
 		return {
-			url: `/uploads/${filename}`,
+			url: `/api/uploads/${filename}`,
 			filename,
 			size: file.data.length,
 			type: file.type,
