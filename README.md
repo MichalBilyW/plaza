@@ -237,7 +237,123 @@ docker run -p 3000:3000 \
   oc-plaza
 ```
 
-## 📊 Implementované moduly
+## � Produkční deployment
+
+### Infrastruktura
+
+| Služba | Provider | Účel |
+| ------ | -------- | ---- |
+| **Server** | Hetzner Cloud | VPS s Coolify |
+| **Databáze** | MongoDB Atlas | Managed MongoDB |
+| **Deploy** | Coolify + Nixpacks | Auto-deploy z Git |
+
+### Přístupové údaje
+
+```bash
+# SSH na server
+ssh coolify-vps
+
+# Alias v ~/.ssh/config:
+# Host coolify-vps
+#     HostName 46.62.255.135
+#     User root
+```
+
+### Adresářová struktura na serveru
+
+```
+/data/
+├── plaza/
+│   ├── uploads/        ← CMS nahrané obrázky (persistent)
+│   ├── mongo-backup/   ← MongoDB zálohy
+│   └── backup.sh       ← Backup skript
+└── coolify/            ← Coolify konfigurace
+```
+
+### Coolify konfigurace
+
+- **Build Pack**: Nixpacks
+- **Node verze**: `NIXPACKS_NODE_VERSION=22`
+- **Environment Variables**:
+  - `NUXT_MONGO_URI` - MongoDB Atlas connection string
+  - `NUXT_JWT_SECRET` - JWT secret (min 32 znaků)
+  - `NUXT_PUBLIC_SITE_URL` - URL webu
+  - `NODE_ENV=production`
+
+### Persistent Storage (uploads)
+
+V Coolify → Configuration → Persistent Storage → Directories:
+
+| Source Path | Destination Path |
+| ----------- | ---------------- |
+| `/data/plaza/uploads` | `/app/.output/public/uploads` |
+
+Obrázky nahrané přes CMS přežijí redeploy.
+
+---
+
+## 💾 Zálohování (krok za krokem)
+
+### Co se zálohuje
+
+| Položka | Kde je uloženo | Jak zálohovat |
+| ------- | -------------- | ------------- |
+| **Kód** | GitHub | Automaticky (git push) |
+| **Databáze** | MongoDB Atlas | Backup skript → server |
+| **Uploads** | Server `/data/plaza/uploads` | Hetzner Cloud Backup |
+
+### Postup zálohování
+
+#### 1. Spusť backup skript na serveru
+
+```bash
+ssh coolify-vps "/data/plaza/backup.sh"
+```
+
+Výstup:
+```
+📦 Zálohuji MongoDB do /data/plaza/mongo-backup/2026-03-27_1100...
+✅ Hotovo!
+📁 Uploads: 1.2M
+📁 MongoDB: 156K
+
+Teď vytvoř Hetzner Cloud Backup v konzoli.
+```
+
+#### 2. Vytvoř Hetzner Cloud Backup
+
+1. Jdi na [console.hetzner.cloud](https://console.hetzner.cloud)
+2. Vyber server → **Backups**
+3. Klikni **Create Backup**
+4. Hotovo - záloha obsahuje uploads + MongoDB dump
+
+### Obnova ze zálohy
+
+#### A) Obnova celého serveru (disaster recovery)
+
+1. V Hetzner Console vyber zálohu → **Restore**
+2. Server se obnoví včetně všech dat
+3. Spusť **Redeploy** v Coolify (aby byl aktuální kód)
+
+#### B) Obnova pouze dat (rollback obsahu)
+
+```bash
+# 1. Obnov MongoDB
+ssh coolify-vps "mongorestore --uri='mongodb+srv://...' --gzip /data/plaza/mongo-backup/2026-03-27_1100/"
+
+# 2. Uploads už jsou na místě (persistent storage)
+```
+
+### Čištění starých záloh
+
+```bash
+# Smaž MongoDB zálohy starší než 30 dní
+ssh coolify-vps "find /data/plaza/mongo-backup -type d -mtime +30 -exec rm -rf {} +"
+```
+
+---
+
+## �📊 Implementované moduly
 
 | Modul  | Endpointy | Stav |
 | ------ | --------- | ---- |
