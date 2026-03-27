@@ -27,32 +27,36 @@ Webová prezentace a CMS pro nákupní centrum OC Plaza Liberec.
 
 ```
 plaza/
-├── app/                    # Nuxt app entry
-├── composables/            # Vue composables
-│   ├── useCmsAuth.ts       # CMS autentizace
-│   └── usePlazaSeo.ts      # SEO helper
-├── i18n/                   # Lokalizace
-│   └── locales/
-│       ├── cs.ts           # České překlady
-│       └── en.ts           # Anglické překlady
-├── layouts/                # Nuxt layouts
-│   ├── default.vue         # Veřejný web
-│   └── cms.vue             # CMS administrace
+├── app/                    # Nuxt 4 app složka
+│   ├── assets/css/         # Globální CSS
+│   ├── components/         # Vue komponenty
+│   │   ├── cms/            # CMS komponenty
+│   │   ├── homepage/       # Homepage komponenty
+│   │   ├── layout/         # Layout komponenty
+│   │   ├── shop/           # Shop komponenty
+│   │   └── ui/             # UI komponenty
+│   ├── composables/        # Vue composables
+│   ├── layouts/            # Nuxt layouts
+│   ├── middleware/         # Route middleware
+│   └── pages/              # Nuxt stránky
+│       ├── cms/            # CMS administrace
+│       └── obchody/        # Veřejné stránky obchodů
+├── i18n/locales/           # Lokalizace (cs)
 ├── lib/                    # Pomocné knihovny
 │   └── apiClient.ts        # Centralizovaný API klient
-├── middleware/             # Route middleware
-│   └── cms.ts              # CMS auth guard
-├── pages/                  # Nuxt stránky
-│   ├── cms/                # CMS sekce
-│   └── ...                 # Veřejné stránky
+├── public/                 # Statické soubory
+│   └── uploads/            # Nahrané obrázky (dev)
 ├── server/                 # Nitro server
-│   ├── api/                # API endpointy
+│   ├── api/                # API endpointy (58 celkem)
 │   ├── models/             # Mongoose modely
+│   ├── plugins/            # Server plugins
+│   ├── routes/             # Server routes
 │   └── utils/              # Server utilities
 ├── shared/                 # Sdílené mezi client/server
 │   ├── api/endpoints.ts    # Endpoints registry (SSOT)
 │   ├── schemas/            # Zod schémata
 │   └── types/              # TypeScript typy
+├── scripts/                # Utility skripty
 ├── tests/                  # Vitest testy
 ├── formkit.config.ts       # FormKit konfigurace
 ├── nuxt.config.ts          # Nuxt konfigurace
@@ -193,18 +197,16 @@ const { t } = useI18n()
 <p>{{ t('home.hero.title') }}</p>
 
 // Přepnutí jazyka
-const { setLocale } = useI18n()
-setLocale('en')
+const { t } = useI18n()
 ```
 
 ### Dostupné jazyky
 
 - `cs` - Čeština (výchozí)
-- `en` - English
 
 ## 📋 FormKit
 
-FormKit je nakonfigurován s českými/anglickými překlady a Tailwind styly:
+FormKit je nakonfigurován s českými překlady a Tailwind styly:
 
 ```vue
 <FormKit type="text" name="name" :label="t('forms.name')" validation="required|length:2,100" />
@@ -219,9 +221,10 @@ FormKit je nakonfigurován s českými/anglickými překlady a Tailwind styly:
 ### Vytvoření admin účtu
 
 ```bash
-# TODO: Přidat seed script
-npm run db:seed
+npx tsx scripts/seed-admin.ts
 ```
+
+Vytvoří admin účet `admin@ocplaza.cz` s heslem `Plaza2026!` (změnit po prvním přihlášení).
 
 ## 🐳 Docker
 
@@ -336,12 +339,23 @@ ssh coolify-vps "find /data/plaza/mongo-backup -type d -mtime +30 -exec rm -rf {
 
 ## 📊 Implementované moduly
 
-| Modul  | Endpointy | Stav |
-| ------ | --------- | ---- |
-| Auth   | 3         | ✅   |
-| Shops  | 5         | ✅   |
-| Events | 7         | ✅   |
-| Health | 1         | ✅   |
+| Modul        | Endpointy | Stav |
+| ------------ | --------- | ---- |
+| Auth         | 8         | ✅   |
+| Shops        | 5         | ✅   |
+| Categories   | 6         | ✅   |
+| Events       | 8         | ✅   |
+| News         | 6         | ✅   |
+| Services     | 6         | ✅   |
+| Floors       | 6         | ✅   |
+| Users        | 5         | ✅   |
+| Homepage     | 2         | ✅   |
+| General Info | 2         | ✅   |
+| Map          | 1         | ✅   |
+| Upload       | 2         | ✅   |
+| Health       | 1         | ✅   |
+
+**Celkem: 58 API endpointů**
 
 ## 🧑‍💻 Vývojářské konvence
 
