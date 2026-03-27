@@ -27,7 +27,7 @@ export default defineNuxtPlugin(() => {
 		if (window.silktideCookieBannerManager) {
 			window.silktideCookieBannerManager.updateCookieBannerConfig({
 				background: {
-					showBackground: true,
+					showBackground: false,
 				},
 				cookieIcon: {
 					position: 'bottomRight',
@@ -146,7 +146,7 @@ export default defineNuxtPlugin(() => {
 					},
 				},
 				position: {
-					banner: 'bottomCenter',
+					banner: 'bottomRight',
 				},
 				onAcceptAll: () => {
 					if (typeof dataLayer !== 'undefined') {
