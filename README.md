@@ -255,7 +255,7 @@ ssh coolify-vps
 
 # Alias v ~/.ssh/config:
 # Host coolify-vps
-#     HostName 46.62.255.135
+#     HostName <SERVER_IP>
 #     User root
 ```
 
@@ -292,68 +292,49 @@ Obrázky nahrané přes CMS přežijí redeploy.
 
 ---
 
-## 💾 Zálohování (krok za krokem)
+## 💾 Zálohování
 
-### Co se zálohuje
+### Co se zálohuje automaticky
 
-| Položka | Kde je uloženo | Jak zálohovat |
-| ------- | -------------- | ------------- |
-| **Kód** | GitHub | Automaticky (git push) |
-| **Databáze** | MongoDB Atlas | Backup skript → server |
-| **Uploads** | Server `/data/plaza/uploads` | Hetzner Cloud Backup |
+| Položka | Kde je uloženo | Jak se zálohuje |
+| ------- | -------------- | --------------- |
+| **Kód** | GitHub | Automaticky při git push |
+| **Uploads** | Server `/data/plaza/uploads` | Hetzner backup (každý den ~22:19 UTC) |
+| **Server** | Hetzner | Hetzner backup (7 rotujících záloh) |
 
-### Postup zálohování
+### MongoDB záloha (ruční)
 
-#### 1. Spusť backup skript na serveru
+Před velkými změnami v databázi spusť:
 
 ```bash
 ssh coolify-vps "/data/plaza/backup.sh"
 ```
 
-Výstup:
-```
-📦 Zálohuji MongoDB do /data/plaza/mongo-backup/2026-03-27_1100...
-✅ Hotovo!
-📁 Uploads: 1.2M
-📁 MongoDB: 156K
-
-Teď vytvoř Hetzner Cloud Backup v konzoli.
-```
-
-#### 2. Vytvoř Hetzner Cloud Backup
-
-1. Jdi na [console.hetzner.cloud](https://console.hetzner.cloud)
-2. Vyber server → **Backups**
-3. Klikni **Create Backup**
-4. Hotovo - záloha obsahuje uploads + MongoDB dump
+Tím se vytvoří dump MongoDB do `/data/plaza/mongo-backup/`, který bude součástí následujícího Hetzner backupu.
 
 ### Obnova ze zálohy
 
 #### A) Obnova celého serveru (disaster recovery)
 
 1. V Hetzner Console vyber zálohu → **Restore**
-2. Server se obnoví včetně všech dat
-3. Spusť **Redeploy** v Coolify (aby byl aktuální kód)
+2. Server se obnoví včetně uploads + MongoDB dump
+3. Spusť **Redeploy** v Coolify (stáhne aktuální kód z Gitu)
 
-#### B) Obnova pouze dat (rollback obsahu)
+#### B) Obnova pouze MongoDB (rollback obsahu)
 
 ```bash
-# 1. Obnov MongoDB
-ssh coolify-vps "mongorestore --uri='mongodb+srv://...' --gzip /data/plaza/mongo-backup/2026-03-27_1100/"
-
-# 2. Uploads už jsou na místě (persistent storage)
+ssh coolify-vps "mongorestore --uri='<MONGO_URI>' --gzip /data/plaza/mongo-backup/<DATUM>/"
 ```
 
-### Čištění starých záloh
+### Čištění starých MongoDB záloh
 
 ```bash
-# Smaž MongoDB zálohy starší než 30 dní
 ssh coolify-vps "find /data/plaza/mongo-backup -type d -mtime +30 -exec rm -rf {} +"
 ```
 
 ---
 
-## �📊 Implementované moduly
+## 📊 Implementované moduly
 
 | Modul  | Endpointy | Stav |
 | ------ | --------- | ---- |
