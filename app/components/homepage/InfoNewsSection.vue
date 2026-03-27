@@ -317,7 +317,7 @@
 				<div class="px-8 py-10 m2:py-16">
 					<div
 						class="prose prose-sm max-w-none text-plaza-dark text-sm leading-relaxed"
-						v-html="selectedNews.content"
+						v-html="sanitize(selectedNews.content)"
 					></div>
 				</div>
 			</div>
@@ -337,6 +337,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
+const { sanitize } = useSanitizeHtml()
 
 const PARKING_SPOTS = 500
 const AUTOPLAY_INTERVAL = 4000
@@ -475,19 +476,8 @@ onMounted(() => {
 	// Start autoplay
 	resetAutoplay()
 
-	// IntersectionObserver pro animaci čísel
-	const observer = new IntersectionObserver(
-		(entries) => {
-			const entry = entries[0]
-			if (entry && entry.isIntersecting) {
-				startCountAnimation()
-				observer.disconnect()
-			}
-		},
-		{ threshold: 0.3 },
-	)
-	observer.observe(sectionRef.value)
-	onUnmounted(() => observer.disconnect())
+	// Spustit animaci čísel ihned po načtení
+	startCountAnimation()
 })
 
 onUnmounted(() => {

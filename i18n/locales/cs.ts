@@ -737,4 +737,28 @@ export default {
 		title: 'Mapa centra',
 		inProgress: 'Mapa se připravuje',
 	},
+
+	errorPage: {
+		title: {
+			404: 'Stránka nenalezena',
+			500: 'Chyba serveru',
+			403: 'Přístup odepřen',
+			400: 'Neplatný požadavek',
+			401: 'Nepřihlášen',
+			502: 'Špatná brána',
+			503: 'Služba nedostupná',
+			default: 'Něco se pokazilo',
+		},
+		description: {
+			404: 'Omlouváme se, ale stránka kterou hledáte neexistuje nebo byla přesunuta.',
+			500: 'Omlouváme se, došlo k neočekávané chybě. Zkuste to prosím později.',
+			403: 'Nemáte oprávnění k zobrazení této stránky.',
+			400: 'Požadavek nelze zpracovat. Zkontrolujte prosím zadané údaje.',
+			401: 'Pro zobrazení této stránky se musíte přihlásit.',
+			502: 'Server je momentálně nedostupný. Zkuste to prosím později.',
+			503: 'Služba je dočasně nedostupná. Zkuste to prosím za chvíli.',
+			default: 'Došlo k neočekávané chybě.',
+		},
+		backToHome: 'Zpět na úvodní stránku',
+	},
 }

@@ -25,7 +25,7 @@ interface JwtPayload {
 	exp?: number
 }
 
-interface TokenPair {
+interface _TokenPair {
 	accessToken: string
 	refreshToken: string
 }
@@ -104,7 +104,8 @@ const REFRESH_TOKEN_COOKIE = 'refresh_token'
 const COOKIE_BASE_OPTIONS = {
 	httpOnly: true,
 	// NUXT_COOKIE_SECURE=false pro HTTP testování, jinak secure v produkci
-	secure: process.env.NUXT_COOKIE_SECURE === 'false' ? false : process.env.NODE_ENV === 'production',
+	secure:
+		process.env.NUXT_COOKIE_SECURE === 'false' ? false : process.env.NODE_ENV === 'production',
 	sameSite: 'lax' as const, // 'lax' místo 'strict' pro lepší kompatibilitu
 	path: '/',
 }

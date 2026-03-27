@@ -1,20 +1,7 @@
 <template>
 	<div class="p-4 sm:p-6 lg:p-8">
+		<CmsBreadcrumbs />
 		<div class="mb-8">
-			<NuxtLink
-				to="/cms/novinky"
-				class="inline-flex items-center gap-1 text-plaza-dark hover:text-gray-700 mb-4"
-			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M15 19l-7-7 7-7"
-					/>
-				</svg>
-				{{ t('common.back') }}
-			</NuxtLink>
 			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 				{{ t('cms.news.editNews') }}
 			</h1>

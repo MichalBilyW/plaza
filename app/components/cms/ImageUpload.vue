@@ -176,12 +176,12 @@ function openFilePicker() {
 	fileInput.value?.click()
 }
 
-function handleDragOver(e: DragEvent) {
+function handleDragOver(_e: DragEvent) {
 	if (props.disabled || uploading.value) return
 	isDragging.value = true
 }
 
-function handleDragLeave(e: DragEvent) {
+function handleDragLeave(_e: DragEvent) {
 	isDragging.value = false
 }
 

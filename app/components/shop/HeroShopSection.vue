@@ -318,6 +318,6 @@ const stripProtocol = (url: string): string => {
 	return url.replace(/^https?:\/\//, '').replace(/\/$/, '')
 }
 
-// DataLayer
-const { trackContactClick } = useDataLayer()
+// DataLayer - prepared for future use
+const { trackContactClick: _trackContactClick } = useDataLayer()
 </script>

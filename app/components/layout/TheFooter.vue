@@ -33,24 +33,28 @@
 						<NuxtLink
 							to="/obchody"
 							class="text-sm text-white/80 hover:text-white transition-colors"
+							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.shops') }}
 						</NuxtLink>
 						<NuxtLink
 							to="/akce"
 							class="text-sm text-white/80 hover:text-white transition-colors"
+							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.events') }}
 						</NuxtLink>
 						<NuxtLink
 							to="/o-nas"
 							class="text-sm text-white/80 hover:text-white transition-colors"
+							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.about') }}
 						</NuxtLink>
 						<NuxtLink
 							to="/mapa"
 							class="text-sm text-white/80 hover:text-white transition-colors"
+							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.map') }}
 						</NuxtLink>
@@ -60,24 +64,28 @@
 						<NuxtLink
 							to="/o-nas"
 							class="text-sm text-white/80 hover:text-white transition-colors"
+							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.contacts') }}
 						</NuxtLink>
 						<NuxtLink
-							to="/o-nas"
+							to="/cookies"
 							class="text-sm text-white/80 hover:text-white transition-colors"
+							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.cookies') }}
 						</NuxtLink>
 						<NuxtLink
 							to="/o-nas"
 							class="text-sm text-white/80 hover:text-white transition-colors"
+							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.visitorRules') }}
 						</NuxtLink>
 						<NuxtLink
 							to="/o-nas"
 							class="text-sm text-white/80 hover:text-white transition-colors"
+							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.parkingRules') }}
 						</NuxtLink>
@@ -115,6 +123,13 @@
 						</svg>
 					</a>
 				</div>
+			</div>
+
+			<!-- Copyright -->
+			<div class="mt-8 pt-6 border-t border-white/10 text-center text-sm text-white/50">
+				<p>
+					&copy; {{ new Date().getFullYear() }} OC Plaza Liberec. Všechna práva vyhrazena.
+				</p>
 			</div>
 		</div>
 	</footer>

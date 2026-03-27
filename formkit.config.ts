@@ -6,7 +6,8 @@
 import { cs, en } from '@formkit/i18n'
 import { defaultConfig } from '@formkit/vue'
 import { genesisIcons } from '@formkit/icons'
-import { createProPlugin, inputs } from '@formkit/pro'
+// Pro verzi - raději odkomentovat až bude licence
+// import { createProPlugin, inputs } from '@formkit/pro'
 
 // Pro verzi - pokud máte licenci, odkomentujte
 // const pro = createProPlugin('fk-xxx', inputs)

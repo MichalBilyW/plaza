@@ -146,7 +146,18 @@ describe('Endpoints Registry Consistency', () => {
 	it('should have all implemented endpoints registered in endpoints registry', () => {
 		const unregisteredEndpoints: string[] = []
 
+		// Interní/infrastrukturní endpointy, které nejsou součástí veřejného API
+		const excludedPatterns = [
+			/^__sitemap__\//, // Nuxt sitemap modul
+			/^uploads\/\[filename\]/, // Statické soubory
+		]
+
 		for (const file of serverRouteFiles) {
+			// Přeskočit interní endpointy
+			if (excludedPatterns.some((pattern) => pattern.test(file))) {
+				continue
+			}
+
 			const endpoint = filePathToEndpoint(file)
 
 			if (!endpoint) {

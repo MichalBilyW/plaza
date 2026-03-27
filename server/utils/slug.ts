@@ -68,7 +68,7 @@ export function generateSlug(text: string): string {
 export async function generateUniqueSlug(
 	text: string,
 	checkExists: (slug: string) => Promise<boolean>,
-	currentId?: string,
+	_currentId?: string,
 ): Promise<string> {
 	const baseSlug = generateSlug(text)
 	let slug = baseSlug

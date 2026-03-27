@@ -1,20 +1,7 @@
 <template>
 	<div class="p-4 sm:p-6 lg:p-8">
+		<CmsBreadcrumbs />
 		<div class="mb-8">
-			<NuxtLink
-				to="/cms/obchody"
-				class="inline-flex items-center gap-1 text-plaza-dark hover:text-gray-700 mb-4"
-			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M15 19l-7-7 7-7"
-					/>
-				</svg>
-				{{ t('common.back') }}
-			</NuxtLink>
 			<div class="flex items-center justify-between">
 				<h1 class="text-xl sm:text-2xl font-bold text-gray-900">
 					{{ t('cms.shops.editShop') }}
@@ -80,6 +67,7 @@
 							v-model="form.name"
 							type="text"
 							required
+							maxlength="200"
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
 							:placeholder="t('cms.shops.namePlaceholder')"
 						/>
@@ -97,6 +85,7 @@
 							id="slug"
 							v-model="form.slug"
 							type="text"
+							maxlength="100"
 							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
 							:placeholder="t('cms.shops.slugPlaceholder')"
 						/>
@@ -748,7 +737,7 @@
 
 <script setup lang="ts">
 import type { Shop, Floor, DayOfWeek, OpeningHoursEntry, Category } from '~~/shared/types'
-import { getUnitsForFloor, type MapUnit } from '~~/shared/map/units'
+import { getUnitsForFloor } from '~~/shared/map/units'
 
 definePageMeta({
 	layout: 'cms',
@@ -778,7 +767,7 @@ const {
 	data: shop,
 	pending,
 	error: fetchError,
-	refresh,
+	refresh: _refresh,
 } = await useFetch<Shop>(`/api/shops/${shopId}`)
 
 // Dynamic SEO title
@@ -936,8 +925,8 @@ const {
 	generalError,
 	clearErrors,
 	handleApiError,
-	hasError,
-	getError,
+	hasError: _hasError,
+	getError: _getError,
 	scrollToFirstError,
 } = useFormErrors()
 
@@ -954,7 +943,7 @@ const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/cate
 const categories = computed(() => categoriesData.value?.data || [])
 
 // Fetch map units with occupancy
-const { data: mapData, refresh: refreshMapData } = await useFetch<{
+const { data: mapData, refresh: _refreshMapData } = await useFetch<{
 	floors: Array<{
 		level: number
 		units: Array<{ id: string; shop: { _id: string; name: string } | null }>

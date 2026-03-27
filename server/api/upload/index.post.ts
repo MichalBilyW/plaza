@@ -12,7 +12,7 @@ import { defineApiHandler, createValidationError } from '@/server/utils/errors'
 
 // Povolené typy obrázků
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']
-const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
+const MAX_FILE_SIZE = 3 * 1024 * 1024 // 3 MB
 
 // Mapování MIME typů na přípony
 const MIME_TO_EXT: Record<string, string> = {

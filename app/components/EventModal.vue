@@ -27,7 +27,7 @@
 			<div
 				v-if="selectedEvent.content"
 				class="prose prose-sm max-w-none text-plaza-gray"
-				v-html="selectedEvent.content"
+				v-html="sanitizedContent"
 			></div>
 		</div>
 	</UiModal>
@@ -35,10 +35,14 @@
 
 <script setup lang="ts">
 const { isModalOpen, selectedEvent, closeModal } = useEventModal()
+const { sanitize } = useSanitizeHtml()
 
 const handleClose = (value: boolean) => {
 	if (!value) {
 		closeModal()
 	}
 }
+
+// Sanitizovaný obsah
+const sanitizedContent = computed(() => sanitize(selectedEvent.value?.content))
 </script>

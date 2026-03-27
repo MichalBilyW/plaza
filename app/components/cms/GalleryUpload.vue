@@ -229,14 +229,14 @@ function handleImageDrop(e: DragEvent, targetIndex: number) {
 }
 
 // Upload area drag handlers
-function handleUploadDragOver(e: DragEvent) {
+function handleUploadDragOver(_e: DragEvent) {
 	// Ignore if it's an image reorder drag
 	if (draggingIndex.value !== null) return
 	if (props.disabled || uploading.value) return
 	isDragging.value = true
 }
 
-function handleUploadDragLeave(e: DragEvent) {
+function handleUploadDragLeave(_e: DragEvent) {
 	isDragging.value = false
 }
 

@@ -13,7 +13,12 @@ function push(event: Record<string, unknown>) {
 }
 
 export function useDataLayer() {
-	function trackShopClick(shop: Pick<Shop, 'name' | 'slug'> & { category?: { name: string } | null; floor?: { name: string } | null }) {
+	function trackShopClick(
+		shop: Pick<Shop, 'name' | 'slug'> & {
+			category?: { name: string } | null
+			floor?: { name: string } | null
+		},
+	) {
 		push({
 			event: 'shop_click',
 			shop_name: shop.name,
@@ -23,7 +28,12 @@ export function useDataLayer() {
 		})
 	}
 
-	function trackShopView(shop: Pick<Shop, 'name' | 'slug'> & { category?: { name: string } | null; floor?: { name: string } | null }) {
+	function trackShopView(
+		shop: Pick<Shop, 'name' | 'slug'> & {
+			category?: { name: string } | null
+			floor?: { name: string } | null
+		},
+	) {
 		push({
 			event: 'shop_view',
 			shop_name: shop.name,

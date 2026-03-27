@@ -25,7 +25,10 @@ export function setCsrfCookie(event: H3Event): string {
 
 	setCookie(event, CSRF_COOKIE_NAME, token, {
 		httpOnly: false, // Musí být čitelný z JS pro header
-		secure: process.env.NUXT_COOKIE_SECURE === 'false' ? false : process.env.NODE_ENV === 'production',
+		secure:
+			process.env.NUXT_COOKIE_SECURE === 'false'
+				? false
+				: process.env.NODE_ENV === 'production',
 		sameSite: 'lax', // lax pro lepší kompatibilitu
 		maxAge: 60 * 60 * 24, // 24 hodin
 		path: '/',

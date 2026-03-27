@@ -7,8 +7,8 @@ import { connectToDatabase } from '@/server/utils/db'
 import { Shop } from '@/server/models'
 import { shopCreateSchema } from '@/shared/schemas'
 import { requireEditor } from '@/server/utils/auth'
-import { generateSlug, generateUniqueSlug } from '@/server/utils/slug'
-import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
+import { generateUniqueSlug } from '@/server/utils/slug'
+import { defineApiHandler } from '@/server/utils/errors'
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {

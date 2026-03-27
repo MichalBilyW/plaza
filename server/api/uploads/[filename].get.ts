@@ -12,9 +12,10 @@ import { serveStatic, createError, setHeader } from 'h3'
 const ALLOWED_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'])
 
 // Určit uploads adresář jednou při startu
-const uploadsDir = process.env.NODE_ENV === 'production'
-	? join(process.cwd(), '.output', 'public', 'uploads')
-	: join(process.cwd(), 'public', 'uploads')
+const uploadsDir =
+	process.env.NODE_ENV === 'production'
+		? join(process.cwd(), '.output', 'public', 'uploads')
+		: join(process.cwd(), 'public', 'uploads')
 
 export default defineEventHandler(async (event) => {
 	const filename = getRouterParam(event, 'filename')
@@ -53,7 +54,7 @@ export default defineEventHandler(async (event) => {
 	// Nitro serveStatic - optimalizovanější než manuální streaming
 	// Podporuje Range requests, ETag, Last-Modified automaticky
 	return serveStatic(event, {
-		getContents: () => import('fs').then(fs => fs.promises.readFile(filepath)),
+		getContents: () => import('fs').then((fs) => fs.promises.readFile(filepath)),
 		getMeta: () => {
 			const stats = statSync(filepath)
 			return {

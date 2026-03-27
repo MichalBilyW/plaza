@@ -151,7 +151,7 @@ export const apiClient = {
 		},
 
 		async logout(): Promise<void> {
-			return apiFetch<void>(endpoints.auth.logout, {}, {}, { withAuth: true })
+			await apiFetch(endpoints.auth.logout, {}, {}, { withAuth: true })
 		},
 
 		async me(): Promise<AuthUser> {
@@ -194,7 +194,7 @@ export const apiClient = {
 		},
 
 		async delete(id: string): Promise<void> {
-			return apiFetch<void>(endpoints.shops.delete, { id }, {}, { withAuth: true })
+			await apiFetch(endpoints.shops.delete, { id }, {}, { withAuth: true })
 		},
 	},
 
@@ -233,7 +233,7 @@ export const apiClient = {
 		},
 
 		async delete(id: string): Promise<void> {
-			return apiFetch<void>(endpoints.events.delete, { id }, {}, { withAuth: true })
+			await apiFetch(endpoints.events.delete, { id }, {}, { withAuth: true })
 		},
 
 		async publish(id: string): Promise<Event> {
@@ -277,7 +277,7 @@ export const apiClient = {
 		},
 
 		async delete(id: string): Promise<void> {
-			return apiFetch<void>(endpoints.services.delete, { id }, {}, { withAuth: true })
+			await apiFetch(endpoints.services.delete, { id }, {}, { withAuth: true })
 		},
 	},
 
@@ -313,7 +313,7 @@ export const apiClient = {
 		},
 
 		async delete(id: string): Promise<void> {
-			return apiFetch<void>(endpoints.floors.delete, { id }, {}, { withAuth: true })
+			await apiFetch(endpoints.floors.delete, { id }, {}, { withAuth: true })
 		},
 	},
 
@@ -354,7 +354,7 @@ export const apiClient = {
 		},
 
 		async delete(id: string): Promise<void> {
-			return apiFetch<void>(endpoints.users.delete, { id }, {}, { withAuth: true })
+			await apiFetch(endpoints.users.delete, { id }, {}, { withAuth: true })
 		},
 	},
 
@@ -390,7 +390,7 @@ export const apiClient = {
 		},
 
 		async delete(id: string): Promise<void> {
-			return apiFetch<void>(endpoints.pages.delete, { id }, {}, { withAuth: true })
+			await apiFetch(endpoints.pages.delete, { id }, {}, { withAuth: true })
 		},
 	},
 
@@ -427,7 +427,7 @@ export const apiClient = {
 		},
 
 		async delete(id: string): Promise<void> {
-			return apiFetch<void>(endpoints.banners.delete, { id }, {}, { withAuth: true })
+			await apiFetch(endpoints.banners.delete, { id }, {}, { withAuth: true })
 		},
 	},
 }

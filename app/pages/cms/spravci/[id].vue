@@ -1,20 +1,7 @@
 <template>
 	<div class="p-8">
+		<CmsBreadcrumbs />
 		<div class="mb-8">
-			<NuxtLink
-				to="/cms/spravci"
-				class="inline-flex items-center gap-1 text-plaza-dark hover:text-gray-700 mb-4"
-			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M15 19l-7-7 7-7"
-					/>
-				</svg>
-				{{ $t('common.back') }}
-			</NuxtLink>
 			<h1 class="text-2xl font-bold text-gray-900">{{ $t('cms.users.editUser') }}</h1>
 		</div>
 
@@ -203,7 +190,9 @@ const flash = useFlashMessages()
 
 const handleSubmit = async () => {
 	// Reset errors
-	Object.keys(errors).forEach((key) => delete errors[key])
+	for (const key of Object.keys(errors)) {
+		Reflect.deleteProperty(errors, key)
+	}
 	submitError.value = ''
 	submitting.value = true
 

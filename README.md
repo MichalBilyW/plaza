@@ -244,11 +244,11 @@ docker run -p 3000:3000 \
 
 ### Infrastruktura
 
-| Služba | Provider | Účel |
-| ------ | -------- | ---- |
-| **Server** | Hetzner Cloud | VPS s Coolify |
-| **Databáze** | MongoDB Atlas | Managed MongoDB |
-| **Deploy** | Coolify + Nixpacks | Auto-deploy z Git |
+| Služba       | Provider           | Účel              |
+| ------------ | ------------------ | ----------------- |
+| **Server**   | Hetzner Cloud      | VPS s Coolify     |
+| **Databáze** | MongoDB Atlas      | Managed MongoDB   |
+| **Deploy**   | Coolify + Nixpacks | Auto-deploy z Git |
 
 ### Přístupové údaje
 
@@ -278,17 +278,17 @@ ssh coolify-vps
 - **Build Pack**: Nixpacks
 - **Node verze**: `NIXPACKS_NODE_VERSION=22`
 - **Environment Variables**:
-  - `NUXT_MONGO_URI` - MongoDB Atlas connection string
-  - `NUXT_JWT_SECRET` - JWT secret (min 32 znaků)
-  - `NUXT_PUBLIC_SITE_URL` - URL webu
-  - `NODE_ENV=production`
+    - `NUXT_MONGO_URI` - MongoDB Atlas connection string
+    - `NUXT_JWT_SECRET` - JWT secret (min 32 znaků)
+    - `NUXT_PUBLIC_SITE_URL` - URL webu
+    - `NODE_ENV=production`
 
 ### Persistent Storage (uploads)
 
 V Coolify → Configuration → Persistent Storage → Directories:
 
-| Source Path | Destination Path |
-| ----------- | ---------------- |
+| Source Path           | Destination Path              |
+| --------------------- | ----------------------------- |
 | `/data/plaza/uploads` | `/app/.output/public/uploads` |
 
 Obrázky nahrané přes CMS přežijí redeploy.
@@ -299,11 +299,11 @@ Obrázky nahrané přes CMS přežijí redeploy.
 
 ### Co se zálohuje automaticky
 
-| Položka | Kde je uloženo | Jak se zálohuje |
-| ------- | -------------- | --------------- |
-| **Kód** | GitHub | Automaticky při git push |
+| Položka     | Kde je uloženo               | Jak se zálohuje                       |
+| ----------- | ---------------------------- | ------------------------------------- |
+| **Kód**     | GitHub                       | Automaticky při git push              |
 | **Uploads** | Server `/data/plaza/uploads` | Hetzner backup (každý den ~22:19 UTC) |
-| **Server** | Hetzner | Hetzner backup (7 rotujících záloh) |
+| **Server**  | Hetzner                      | Hetzner backup (7 rotujících záloh)   |
 
 ### MongoDB záloha (ruční)
 

@@ -153,7 +153,7 @@
 
 				<div class="space-y-3">
 					<div
-						v-for="(entry, index) in form.openingHours"
+						v-for="entry in form.openingHours"
 						:key="entry.day"
 						class="flex flex-wrap items-center gap-3 p-3 bg-gray-50 rounded-lg"
 					>
@@ -416,7 +416,7 @@ const form = reactive({
 
 const submitting = ref(false)
 const flash = useFlashMessages()
-const { errors, generalError, clearErrors, handleApiError } = useFormErrors()
+const { errors: _errors, generalError, clearErrors, handleApiError } = useFormErrors()
 
 // Fetch existing data
 const { data, pending } = await useFetch<GeneralInfo>('/api/general-info')

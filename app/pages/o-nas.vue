@@ -94,7 +94,7 @@
 			<div v-else class="space-y-12">
 				<!-- Text / Ostatní informace -->
 				<section v-if="generalInfo?.text" class="prose prose-lg max-w-none">
-					<div v-html="generalInfo.text"></div>
+					<div v-html="sanitize(generalInfo.text)"></div>
 				</section>
 
 				<!-- Otevírací doba -->
@@ -365,6 +365,7 @@ import type { GeneralInfo, Service, SpecialOpeningHours } from '@/shared/types'
 import 'swiper/css'
 
 const { t } = useI18n()
+const { sanitize } = useSanitizeHtml()
 
 usePlazaSeo({
 	title: t('seo.about.title'),

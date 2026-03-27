@@ -38,7 +38,27 @@ export default defineNuxtConfig({
 		'@nuxtjs/i18n',
 		'@nuxt/eslint',
 		'@nuxt/fonts',
+		'@nuxtjs/sitemap',
 	],
+
+	// Sitemap configuration
+	site: {
+		url: process.env.NUXT_PUBLIC_SITE_URL || 'https://ocplazaliberec.cz',
+	},
+
+	sitemap: {
+		// Dynamické URL z API
+		sources: ['/api/__sitemap__/urls'],
+		// Vyloučit CMS stránky
+		exclude: ['/cms/**', '/cms'],
+		// Statické stránky s prioritou
+		defaults: {
+			changefreq: 'weekly',
+			priority: 0.5,
+		},
+		// Automatická cache - 1 den (sitemap se obnoví při každém požadavku po vypršení)
+		cacheMaxAgeSeconds: 86400,
+	},
 
 	// Global CSS
 	css: ['~/assets/css/main.css'],
@@ -124,6 +144,7 @@ export default defineNuxtConfig({
 						'Obchodní centrum Plaza Liberec - nakupování, zábava a služby na jednom místě',
 				},
 				{ name: 'format-detection', content: 'telephone=no' },
+				{ name: 'theme-color', content: '#E20B1B' },
 				{ property: 'og:site_name', content: 'OC Plaza Liberec' },
 				{ property: 'og:locale', content: 'cs_CZ' },
 			],

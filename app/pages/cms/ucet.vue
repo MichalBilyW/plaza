@@ -174,7 +174,9 @@ const flash = useFlashMessages()
 
 const handleChangePassword = async () => {
 	// Reset messages
-	Object.keys(errors).forEach((key) => delete errors[key])
+	for (const key of Object.keys(errors)) {
+		Reflect.deleteProperty(errors, key)
+	}
 	submitError.value = ''
 
 	// Client-side validation

@@ -13,6 +13,9 @@
 		</div>
 
 		<template v-else>
+			<!-- Hidden H1 for SEO -->
+			<h1 class="sr-only">{{ shop?.name }}</h1>
+
 			<!-- Hero Section -->
 			<ShopHeroShopSection v-if="shop" :shop="shop" :pending="shopPending" />
 
