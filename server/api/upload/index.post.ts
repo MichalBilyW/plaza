@@ -53,8 +53,14 @@ export default defineEventHandler(
 			)
 		}
 
-		// Vytvořit složku pro uploady pokud neexistuje
-		const uploadsDir = join(process.cwd(), 'public', 'uploads')
+		// Určit správnou cestu pro uploads
+		// - Development (npm run dev): public/uploads - Nuxt servíruje přímo
+		// - Production (Nitro): .output/public/uploads - Nitro servíruje z .output
+		const isProduction = process.env.NODE_ENV === 'production'
+		const uploadsDir = isProduction
+			? join(process.cwd(), '.output', 'public', 'uploads')
+			: join(process.cwd(), 'public', 'uploads')
+
 		if (!existsSync(uploadsDir)) {
 			await mkdir(uploadsDir, { recursive: true })
 		}
