@@ -317,4 +317,7 @@ const normalizeUrl = (url: string): string => {
 const stripProtocol = (url: string): string => {
 	return url.replace(/^https?:\/\//, '').replace(/\/$/, '')
 }
+
+// DataLayer
+const { trackContactClick } = useDataLayer()
 </script>

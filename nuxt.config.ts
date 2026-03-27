@@ -27,6 +27,7 @@ export default defineNuxtConfig({
 			siteDescription:
 				'Obchodní centrum Plaza Liberec - nakupování, zábava a služby na jednom místě',
 			defaultLocale: process.env.NUXT_PUBLIC_DEFAULT_LOCALE || 'cs',
+			gtmId: process.env.NUXT_PUBLIC_GTM_ID || 'GTM-WB3N3SCX',
 		},
 	},
 
@@ -127,6 +128,12 @@ export default defineNuxtConfig({
 				{ property: 'og:locale', content: 'cs_CZ' },
 			],
 			link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+			noscript: [
+				{
+					innerHTML: `<iframe src="https://www.googletagmanager.com/ns.html?id=${process.env.NUXT_PUBLIC_GTM_ID || 'GTM-WB3N3SCX'}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
+					tagPosition: 'bodyOpen',
+				},
+			],
 		},
 	},
 

@@ -45,6 +45,7 @@
 		v-else
 		:to="`/obchody/${shop.slug}`"
 		class="relative flex flex-col justify-center items-center bg-white border border-gray-200 w-[173px] h-[173px] rounded-[5px_20px_5px_5px] p-5 transition-shadow hover:shadow-lg cursor-pointer"
+		@click="trackShopClick(shop)"
 	>
 		<!-- Logo -->
 		<div class="flex items-center justify-center text-center h-full w-[70px]">
@@ -86,4 +87,6 @@ const props = defineProps<{
 const isUpcoming = computed(
 	() => !!props.shop.publishDate && new Date(props.shop.publishDate) > new Date(),
 )
+
+const { trackShopClick } = useDataLayer()
 </script>

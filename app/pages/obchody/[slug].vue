@@ -124,4 +124,14 @@ const relatedShops = computed(() => {
 	const shops = relatedData.value?.data ?? []
 	return shops.filter((s) => s._id !== shop.value?._id)
 })
+
+// DataLayer - shop_view
+const { trackShopView } = useDataLayer()
+watch(
+	shop,
+	(newShop) => {
+		if (newShop) trackShopView(newShop)
+	},
+	{ immediate: true },
+)
 </script>
