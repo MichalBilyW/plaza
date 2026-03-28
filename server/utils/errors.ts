@@ -139,7 +139,7 @@ export function defineApiHandler<T>(
 				const apiError = zodErrorToApiError(error)
 				throw h3CreateError({
 					statusCode: apiError.statusCode,
-					statusMessage: apiError.message,
+					message: apiError.message,
 					data: apiError.toResponse(),
 				})
 			}
@@ -148,7 +148,7 @@ export function defineApiHandler<T>(
 			if (error instanceof ApiError) {
 				throw h3CreateError({
 					statusCode: error.statusCode,
-					statusMessage: error.message,
+					message: error.message,
 					data: error.toResponse(),
 				})
 			}
@@ -161,7 +161,7 @@ export function defineApiHandler<T>(
 					const notFoundError = createNotFoundError()
 					throw h3CreateError({
 						statusCode: notFoundError.statusCode,
-						statusMessage: notFoundError.message,
+						message: notFoundError.message,
 						data: notFoundError.toResponse(),
 					})
 				}
@@ -170,7 +170,7 @@ export function defineApiHandler<T>(
 					const conflictError = createConflictError('Záznam s těmito údaji již existuje')
 					throw h3CreateError({
 						statusCode: conflictError.statusCode,
-						statusMessage: conflictError.message,
+						message: conflictError.message,
 						data: conflictError.toResponse(),
 					})
 				}
@@ -186,7 +186,7 @@ export function defineApiHandler<T>(
 			const internalError = createInternalError()
 			throw h3CreateError({
 				statusCode: internalError.statusCode,
-				statusMessage: internalError.message,
+				message: internalError.message,
 				data: internalError.toResponse(),
 			})
 		}
