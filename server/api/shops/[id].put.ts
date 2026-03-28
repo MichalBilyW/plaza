@@ -4,15 +4,11 @@
  */
 
 import { connectToDatabase } from '@/server/utils/db'
-// Import all models needed for populate to ensure they're registered
-import { Shop, Floor } from '@/server/models'
+import { Shop } from '@/server/models'
 import { shopUpdateSchema } from '@/shared/schemas'
 import { requireEditor } from '@/server/utils/auth'
 import { generateUniqueSlug } from '@/server/utils/slug'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
-
-// Ensure models are registered
-void Floor
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {

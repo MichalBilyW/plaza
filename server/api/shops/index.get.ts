@@ -4,16 +4,11 @@
  */
 
 import { connectToDatabase } from '@/server/utils/db'
-// Import all models needed for populate to ensure they're registered
-import { Shop, Floor, Category } from '@/server/models'
+import { Shop } from '@/server/models'
 import { shopFilterQuerySchema } from '@/shared/schemas'
 import { defineApiHandler } from '@/server/utils/errors'
 import type { FilterQuery } from 'mongoose'
 import type { IShopDocument } from '@/server/models/Shop'
-
-// Ensure models are registered (fixes production build tree-shaking issue)
-void Floor
-void Category
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {

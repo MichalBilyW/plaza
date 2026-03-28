@@ -7,6 +7,33 @@
 
 import mongoose from 'mongoose'
 
+// Import all models to ensure they're registered with mongoose
+// This is critical for production builds where tree-shaking can remove unused imports
+import { User } from '@/server/models/User'
+import { Shop } from '@/server/models/Shop'
+import { Event } from '@/server/models/Event'
+import { News } from '@/server/models/News'
+import { Floor } from '@/server/models/Floor'
+import { Service } from '@/server/models/Service'
+import { Session } from '@/server/models/Session'
+import { GeneralInfo } from '@/server/models/GeneralInfo'
+import { Category } from '@/server/models/Category'
+import { Homepage } from '@/server/models/Homepage'
+
+// Force models to be registered by accessing their modelName
+const registeredModels = [
+	User.modelName,
+	Shop.modelName,
+	Event.modelName,
+	News.modelName,
+	Floor.modelName,
+	Service.modelName,
+	Session.modelName,
+	GeneralInfo.modelName,
+	Category.modelName,
+	Homepage.modelName,
+]
+
 // Globální cache pro development (HMR)
 declare global {
 	var mongooseCache: {
@@ -56,6 +83,7 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
 	try {
 		cache.conn = await cache.promise
 		console.log('✅ MongoDB connected successfully')
+		console.log('📦 Registered models:', registeredModels.join(', '))
 		return cache.conn
 	} catch (error) {
 		cache.promise = null

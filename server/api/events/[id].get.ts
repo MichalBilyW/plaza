@@ -4,12 +4,8 @@
  */
 
 import { connectToDatabase } from '@/server/utils/db'
-// Import all models needed for populate to ensure they're registered
-import { Event, Shop } from '@/server/models'
+import { Event } from '@/server/models'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
-
-// Ensure models are registered
-void Shop
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
