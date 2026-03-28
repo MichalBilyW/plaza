@@ -367,6 +367,9 @@ import 'swiper/css'
 const { t } = useI18n()
 const { sanitize } = useSanitizeHtml()
 
+// SSR-safe timestamp for hydration
+const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
+
 usePlazaSeo({
 	title: t('seo.about.title'),
 	description: t('seo.about.description'),
@@ -400,7 +403,7 @@ const services = computed(() => servicesData.value?.data || [])
 const activeSpecialHours = computed(() => {
 	if (!generalInfo.value?.specialOpeningHours) return []
 
-	const today = new Date()
+	const today = new Date(serverTimestamp.value)
 	today.setHours(0, 0, 0, 0)
 
 	return generalInfo.value.specialOpeningHours.filter((entry) => {

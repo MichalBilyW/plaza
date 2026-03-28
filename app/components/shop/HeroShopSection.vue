@@ -211,6 +211,9 @@ import 'swiper/css'
 
 const { t } = useI18n()
 
+// SSR-safe timestamp for hydration
+const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
+
 const props = defineProps<{
 	shop: Shop
 	pending?: boolean
@@ -260,7 +263,7 @@ const dayNames: Record<DayOfWeek, string> = {
 const getDayName = (day: DayOfWeek): string => dayNames[day]
 
 const isToday = (day: DayOfWeek): boolean => {
-	const todayIndex = new Date().getDay()
+	const todayIndex = new Date(serverTimestamp.value).getDay()
 	return dayMapping[todayIndex] === day
 }
 
@@ -274,7 +277,7 @@ const formatTime = (time: string): string => {
 
 // === Open status ===
 const todayOpeningHours = computed(() => {
-	const todayIndex = new Date().getDay()
+	const todayIndex = new Date(serverTimestamp.value).getDay()
 	const today = dayMapping[todayIndex] as DayOfWeek
 
 	const hours = props.shop.openingHours?.find((h) => h.day === today)
@@ -290,7 +293,7 @@ const todayOpeningHours = computed(() => {
 const isOpen = computed(() => {
 	if (!todayOpeningHours.value || todayOpeningHours.value.closed) return false
 
-	const now = new Date()
+	const now = new Date(serverTimestamp.value)
 	const currentMinutes = now.getHours() * 60 + now.getMinutes()
 
 	const openParts = todayOpeningHours.value.open.split(':').map(Number)

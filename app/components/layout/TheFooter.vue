@@ -127,9 +127,7 @@
 
 			<!-- Copyright -->
 			<div class="mt-8 pt-6 border-t border-white/10 text-center text-sm text-white/50">
-				<p>
-					&copy; {{ new Date().getFullYear() }} OC Plaza Liberec. Všechna práva vyhrazena.
-				</p>
+				<p>&copy; {{ currentYear }} OC Plaza Liberec. Všechna práva vyhrazena.</p>
 			</div>
 		</div>
 	</footer>
@@ -139,6 +137,10 @@
 import type { GeneralInfo } from '@/shared/types'
 
 const { t } = useI18n()
+
+// SSR-safe year
+const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
+const currentYear = computed(() => new Date(serverTimestamp.value).getFullYear())
 
 // Fetch general info for social links
 const { data: generalInfo } = useFetch<GeneralInfo>('/api/general-info', {

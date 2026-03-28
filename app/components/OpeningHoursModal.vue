@@ -78,6 +78,9 @@ import type { GeneralInfo, SpecialOpeningHours } from '@/shared/types'
 const { t } = useI18n()
 const { isModalOpen, closeModal } = useOpeningHoursModal()
 
+// SSR-safe timestamp for hydration
+const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
+
 // Fetch general info when modal opens
 const {
 	data: generalInfo,
@@ -99,7 +102,7 @@ watch(isModalOpen, (isOpen) => {
 const activeSpecialHours = computed(() => {
 	if (!generalInfo.value?.specialOpeningHours) return []
 
-	const today = new Date()
+	const today = new Date(serverTimestamp.value)
 	today.setHours(0, 0, 0, 0)
 
 	return generalInfo.value.specialOpeningHours.filter((entry) => {

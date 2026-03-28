@@ -8,7 +8,7 @@
 		<span
 			class="upcoming-badge absolute top-2 left-2 z-10 rounded-[5px_10px_5px_5px] bg-plaza px-2 py-0.5 text-[10px] font-semibold text-white shadow"
 		>
-			Otevíráme: {{ new Date(shop.publishDate!).toLocaleDateString('cs-CZ') }}
+			Otevíráme: {{ formatPublishDate(shop.publishDate!) }}
 		</span>
 
 		<!-- Logo -->
@@ -84,9 +84,20 @@ const props = defineProps<{
 	shop: Shop
 }>()
 
+// Use consistent timestamp for SSR/client hydration
+const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
+
 const isUpcoming = computed(
-	() => !!props.shop.publishDate && new Date(props.shop.publishDate) > new Date(),
+	() =>
+		!!props.shop.publishDate &&
+		new Date(props.shop.publishDate).getTime() > serverTimestamp.value,
 )
+
+// SSR-safe date formatting
+const formatPublishDate = (dateStr: string) => {
+	const d = new Date(dateStr)
+	return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`
+}
 
 const { trackShopClick } = useDataLayer()
 </script>

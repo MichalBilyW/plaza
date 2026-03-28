@@ -388,6 +388,9 @@ const route = useRoute()
 const router = useRouter()
 const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
 
+// SSR-safe timestamp for hydration
+const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
+
 const isMobileMenuOpen = ref(false)
 const isHeaderVisible = ref(true)
 const lastScrollY = ref(0)
@@ -417,7 +420,7 @@ const dayShortNames: Record<DayOfWeek, string> = {
 const todaySpecialHours = computed(() => {
 	if (!props.specialOpeningHours?.length) return null
 
-	const today = new Date()
+	const today = new Date(serverTimestamp.value)
 	today.setHours(0, 0, 0, 0)
 	const todayTime = today.getTime()
 
@@ -443,7 +446,7 @@ const todaySpecialHours = computed(() => {
 })
 
 const todayOpeningHours = computed(() => {
-	const todayIndex = new Date().getDay()
+	const todayIndex = new Date(serverTimestamp.value).getDay()
 	const today = dayMapping[todayIndex] as DayOfWeek
 	const dayName = dayShortNames[today]
 
@@ -488,7 +491,7 @@ const specialNote = computed(() => {
 const isOpen = computed(() => {
 	if (!todayOpeningHours.value || todayOpeningHours.value.closed) return false
 
-	const now = new Date()
+	const now = new Date(serverTimestamp.value)
 	const currentMinutes = now.getHours() * 60 + now.getMinutes()
 
 	const openParts = todayOpeningHours.value.open.split(':').map(Number)
