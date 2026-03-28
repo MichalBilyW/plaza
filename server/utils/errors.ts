@@ -177,7 +177,12 @@ export function defineApiHandler<T>(
 			}
 
 			// Unknown error
-			console.error('Unhandled API error:', error)
+			console.error('Unhandled API error:', {
+				message: error instanceof Error ? error.message : String(error),
+				stack: error instanceof Error ? error.stack : undefined,
+				name: error instanceof Error ? error.name : typeof error,
+				url: event.path,
+			})
 			const internalError = createInternalError()
 			throw h3CreateError({
 				statusCode: internalError.statusCode,
