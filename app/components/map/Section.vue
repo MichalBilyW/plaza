@@ -1,10 +1,10 @@
 <template>
-	<section class="relative">
+	<section class="relative container py-8">
 		<!-- Gradient overlay -->
 		<div class="z-10 absolute left-0 top-[40px] w-full h-[60px] bg-gradient-to-b from-white to-transparent"></div>
 
 		<!-- Map Tools -->
-		<div class="z-20 relative container flex flex-col lg:flex-row gap-4 md:gap-6 justify-between items-center px-4">
+		<div class="z-20 relative absolute left-0 top-0 md:top-32 lg:top-20 container flex flex-col md:flex-row gap-4 md:gap-6 justify-start items-start md:justify-between px-4">
 			<!-- Search input -->
 			<div class="relative w-full max-w-[400px]">
 				<label for="shop-search" class="sr-only">{{
@@ -29,12 +29,12 @@
 					type="search"
 					autocomplete="off"
 					:placeholder="t('shops.shopName')"
-					class="h-[41px] w-full rounded-[5px_20px_5px_5px] border border-plaza-dark/10 bg-transparent pl-10 pr-3 font-heading placeholder:text-plaza-dark/70"
+					class="h-[41px] w-full rounded-[5px_20px_5px_5px] bg-white border border-plaza-dark/10 bg-transparent pl-10 pr-3 font-heading placeholder:text-plaza-dark/70"
 				/>
 			</div>
 
 			<!-- Přepínač pater -->
-			<div v-if="floors.length > 1" class="flex justify-center items-between w-full flex-wrap gap-3">
+			<div v-if="floors.length > 1" class="flex justify-start md:justify-end items-center w-full flex-wrap gap-3">
 				<button
 					v-for="floor in floors"
 					:key="floor.floorId"
@@ -48,24 +48,6 @@
 					@click="selectFloor(floor.floorId)"
 				>
 					{{ floor.floorName }}
-				</button>
-			</div>
-
-			<!-- Ovládání zoomu -->
-			<div class="flex justify-center gap-2 mb-4 container px-4 lg:hidden">
-				<button
-					v-for="level in zoomLevels"
-					:key="level.value"
-					type="button"
-					:class="[
-						'px-4 py-2 rounded-lg font-medium transition-colors text-sm',
-						zoomLevel === level.value
-							? 'bg-gray-800 text-white shadow-lg'
-							: 'bg-white text-gray-700 hover:bg-gray-100 shadow',
-					]"
-					@click="setZoom(level.value)"
-				>
-					{{ level.label }}
 				</button>
 			</div>
 		</div>
@@ -97,16 +79,34 @@
 
 			<template v-else>
 				<ClientOnly>
+					<!-- Ovládání zoomu -->
+					<div class="z-20 absolute top-12 right-0 flex justify-start md:justify-center gap-2 mb-4 container md:hidden">
+						<button
+							v-for="level in zoomLevels"
+							:key="level.value"
+							type="button"
+							:class="[
+								'px-2 py-1 rounded-[5px_10px_5px_5px] transition-colors text-xs',
+								zoomLevel === level.value
+									? 'bg-gray-800 text-white shadow-lg'
+									: 'bg-white text-gray-700 hover:bg-gray-100 shadow',
+							]"
+							@click="setZoom(level.value)"
+						>
+							{{ level.label }}
+						</button>
+					</div>
+
 					<!-- Interaktivní mapa -->
-					<div ref="mapScrollRef" class="overflow-auto h-full min-h-[600px] max-h-[90vh] max-w-full">
-						<div ref="mapLayersRef" class="relative map-layers transition-[width] duration-500 ease-out" :style="{ width: `${zoomLevel * 100}%` }">
+					<div ref="mapContainerRef" class="overflow-hidden h-full min-h-[600px] max-h-[90vh] max-w-full" :class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''">
+						<div ref="mapContentRef" class="relative map-layers">
 							<!-- Spodní vrstva: SVG okolí -->
 							<div class="absolute inset-0 z-0">
 								<MapStaticAround
 									v-if="staticAroundMap"
 									:svg-path="staticAroundMap"
 									class="w-full h-full"
-									@animation-complete="showFloor = true"
+									@animation-complete="handleAnimationComplete"
 								/>
 							</div>
 
@@ -209,6 +209,7 @@ const {
 	handleUnitClick,
 	closePopup,
 	refresh,
+	onFloorChange,
 } = useInteractiveMap()
 
 // Úvodní animace
@@ -217,5 +218,16 @@ const floorVisible = computed(() => !staticAroundMap.value || showFloor.value)
 const search = ref('')
 
 // Zoom
-const { zoomLevel, zoomLevels, mapScrollRef, mapLayersRef, setZoom } = useMapZoom()
+const { zoomLevel, zoomLevels, mapContainerRef, mapContentRef, setZoom, resetAndCenter, isZoomed, isTouch } = useMapZoom()
+
+// Centrovat mapu při změně patra
+onFloorChange(() => {
+	resetAndCenter()
+})
+
+// Handler pro dokončení animace SVG okolí
+function handleAnimationComplete() {
+	showFloor.value = true
+	resetAndCenter()
+}
 </script>

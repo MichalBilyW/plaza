@@ -67,14 +67,30 @@ export function useInteractiveMap() {
 		return map
 	})
 
-	// Při změně dat automaticky vybrat první patro
+	// Callback pro centrování mapy (nastaví se z komponenty)
+	let onFloorChangeCallback: (() => void) | null = null
+
+	function onFloorChange(callback: () => void) {
+		onFloorChangeCallback = callback
+	}
+
+	// Při načtení dat automaticky vybrat 1. patro (level: 1) nebo první dostupné
 	watch(
 		floors,
 		(newFloors) => {
-			if (newFloors.length > 0 && !state.currentFloorId) {
-				const firstFloor = newFloors[0]
-				if (firstFloor) {
-					state.currentFloorId = firstFloor.floorId
+			if (newFloors.length === 0) return
+
+			// Zkontrolovat jestli aktuální patro existuje v datech
+			const currentExists = newFloors.some((f) => f.floorId === state.currentFloorId)
+
+			// Pokud není vybrané patro nebo neexistuje, vybrat defaultní
+			if (!state.currentFloorId || !currentExists) {
+				// Preferovat 1. patro (level: 1)
+				const defaultFloor = newFloors.find((f) => f.level === 1) ?? newFloors[0]
+				if (defaultFloor) {
+					state.currentFloorId = defaultFloor.floorId
+					// Zavolat callback pro centrování po prvním načtení
+					nextTick(() => onFloorChangeCallback?.())
 				}
 			}
 		},
@@ -88,6 +104,8 @@ export function useInteractiveMap() {
 		state.currentFloorId = floorId
 		state.selectedUnit = null
 		state.popupPosition = null
+		// Zavolat callback pro centrování při změně patra
+		nextTick(() => onFloorChangeCallback?.())
 	}
 
 	/**
@@ -185,6 +203,7 @@ export function useInteractiveMap() {
 		handleUnitClick,
 		closePopup,
 		refresh,
+		onFloorChange,
 
 		// Helpers
 		hasShop,

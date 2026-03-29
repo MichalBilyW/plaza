@@ -69,15 +69,15 @@
 					</div>
 
 					<!-- Interaktivní mapa - vrstvy nad sebou -->
-					<div ref="mapScrollRef" class="bg-white rounded-xl shadow-lg p-4 md:p-8 overflow-auto" style="max-height: 80vh">
-						<div ref="mapLayersRef" class="relative map-layers transition-[width] duration-500 ease-out" :style="{ width: `${zoomLevel * 100}%` }">
+					<div ref="mapContainerRef" class="bg-white rounded-xl shadow-lg p-4 md:p-8 overflow-hidden max-h-[80vh]" :class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''">
+						<div ref="mapContentRef" class="relative map-layers">
 							<!-- Spodní vrstva: SVG okolí (static_around) -->
 							<div class="absolute inset-0 z-0">
 								<MapStaticAround
 									v-if="staticAroundMap"
 									:svg-path="staticAroundMap"
 									class="w-full h-full"
-									@animation-complete="showFloor = true"
+									@animation-complete="handleAnimationComplete"
 								/>
 							</div>
 
@@ -166,6 +166,7 @@ const {
 	handleUnitClick,
 	closePopup,
 	refresh,
+	onFloorChange,
 } = useInteractiveMap()
 
 // Úvodní animace
@@ -173,5 +174,16 @@ const showFloor = ref(false)
 const floorVisible = computed(() => !staticAroundMap.value || showFloor.value)
 
 // Zoom
-const { zoomLevel, zoomLevels, mapScrollRef, mapLayersRef, setZoom } = useMapZoom()
+const { zoomLevel, zoomLevels, mapContainerRef, mapContentRef, setZoom, resetAndCenter, isZoomed, isTouch } = useMapZoom()
+
+// Centrovat mapu při změně patra
+onFloorChange(() => {
+	resetAndCenter()
+})
+
+// Handler pro dokončení animace SVG okolí
+function handleAnimationComplete() {
+	showFloor.value = true
+	resetAndCenter()
+}
 </script>
