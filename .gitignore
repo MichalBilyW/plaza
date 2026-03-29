@@ -23,3 +23,7 @@ logs
 .env.*
 !.env.example
 testcases.json
+scripts/clone-db.ts
+
+# Local scripts with potential credentials
+scripts/*.ts
