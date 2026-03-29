@@ -8,7 +8,8 @@
  * - Touch gesta zakázané (neblokují scroll stránky)
  */
 
-import Panzoom, { type PanzoomObject } from '@panzoom/panzoom'
+import Panzoom from '@panzoom/panzoom'
+type PanzoomObject = ReturnType<typeof Panzoom>
 
 interface ZoomLevel {
 	value: number

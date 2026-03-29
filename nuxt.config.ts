@@ -119,8 +119,13 @@ export default defineNuxtConfig({
 			},
 		},
 		optimizeDeps: {
-			include: ['swiper/vue', 'swiper/modules'],
+			include: ['swiper/vue', 'swiper/modules', '@panzoom/panzoom'],
 		},
+	},
+
+	// Build configuration
+	build: {
+		transpile: ['@panzoom/panzoom'],
 	},
 
 	// Aliasy pro TypeScript a Vue komponenty
