@@ -117,16 +117,10 @@
 							<span
 								:class="[
 									'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-									user.role === 'admin'
-										? 'bg-purple-100 text-purple-800'
-										: 'bg-blue-100 text-blue-800',
+									getRoleBadgeClass(user.role),
 								]"
 							>
-								{{
-									user.role === 'admin'
-										? $t('cms.roles.admin')
-										: $t('cms.roles.editor')
-								}}
+								{{ getRoleLabel(user.role) }}
 							</span>
 						</td>
 						<td class="px-4 py-3">
@@ -170,7 +164,7 @@
 									</svg>
 								</NuxtLink>
 								<button
-									v-if="user._id !== currentUserId"
+									v-if="user._id !== currentUserId && canManageUser(user)"
 									@click="confirmDelete(user)"
 									class="text-red-600 hover:text-red-700 p-1"
 									:title="$t('common.delete')"
@@ -221,16 +215,10 @@
 								<span
 									:class="[
 										'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-										user.role === 'admin'
-											? 'bg-purple-100 text-purple-800'
-											: 'bg-blue-100 text-blue-800',
+										getRoleBadgeClass(user.role),
 									]"
 								>
-									{{
-										user.role === 'admin'
-											? $t('cms.roles.admin')
-											: $t('cms.roles.editor')
-									}}
+									{{ getRoleLabel(user.role) }}
 								</span>
 								<span
 									:class="[
@@ -274,7 +262,7 @@
 									</svg>
 								</NuxtLink>
 								<button
-									v-if="user._id !== currentUserId"
+									v-if="user._id !== currentUserId && canManageUser(user)"
 									@click="confirmDelete(user)"
 									class="text-red-600 hover:text-red-700 p-1"
 									:title="$t('common.delete')"
@@ -344,7 +332,7 @@ definePageMeta({
 })
 
 const { t } = useI18n()
-const { user: currentUser, secureFetch } = useCmsAuth()
+const { user: currentUser, secureFetch, isSuperAdmin } = useCmsAuth()
 const flash = useFlashMessages()
 
 usePlazaSeo({
@@ -364,6 +352,22 @@ const { data, pending, error, refresh } = await useFetch<{
 
 const users = computed(() => data.value?.data || [])
 
+const getRoleBadgeClass = (role: User['role']) => {
+	if (role === 'superadmin') return 'bg-amber-100 text-amber-800'
+	if (role === 'admin') return 'bg-purple-100 text-purple-800'
+	return 'bg-blue-100 text-blue-800'
+}
+
+const getRoleLabel = (role: User['role']) => {
+	if (role === 'superadmin') return t('cms.roles.superadmin')
+	if (role === 'admin') return t('cms.roles.admin')
+	return t('cms.roles.editor')
+}
+
+const canManageUser = (targetUser: User) => {
+	return targetUser.role !== 'superadmin' || isSuperAdmin.value
+}
+
 // Sorting
 const { toggleSort, getSortIcon, sortedItems } = useTableSort(users)
 const sortedUsers = sortedItems
@@ -373,6 +377,7 @@ const userToDelete = ref<User | null>(null)
 const deleting = ref(false)
 
 const confirmDelete = (user: User) => {
+	if (!canManageUser(user)) return
 	userToDelete.value = user
 }
 

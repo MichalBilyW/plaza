@@ -1,59 +1,61 @@
 <template>
-	<Teleport to="body">
-		<Transition name="modal">
-			<div
-				v-if="modelValue"
-				class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-8"
-				@keydown="handleKeydown"
-			>
-				<!-- Overlay -->
+	<ClientOnly>
+		<Teleport to="body">
+			<Transition name="modal">
 				<div
-					class="absolute inset-0 bg-black/50 backdrop-blur"
-					aria-hidden="true"
-					@click="close"
-				></div>
-
-				<!-- Modal content -->
-				<div
-					ref="modalRef"
-					class="modal-scrollbar relative bg-white !rounded-[5px] overflow-x-hidden shadow-xl w-full max-w-[1024px] max-h-[90vh] overflow-y-auto"
-					role="dialog"
-					aria-modal="true"
-					:aria-label="$t('common.more')"
-					tabindex="-1"
+					v-if="modelValue"
+					class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-8"
+					@keydown="handleKeydown"
 				>
-					<!-- Close button -->
-					<button
-						ref="closeButtonRef"
-						type="button"
-						class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center text-plaza-dark hover:text-gray-700 transition-colors"
-						:aria-label="$t('common.close')"
+					<!-- Overlay -->
+					<div
+						class="absolute inset-0 bg-black/50 backdrop-blur"
+						aria-hidden="true"
 						@click="close"
-					>
-						<svg
-							class="w-6 h-6"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							stroke-width="1.5"
-							aria-hidden="true"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M6 18L18 6M6 6l12 12"
-							/>
-						</svg>
-					</button>
+					></div>
 
-					<!-- Content slot -->
-					<div class="container-small">
-						<slot></slot>
+					<!-- Modal content -->
+					<div
+						ref="modalRef"
+						class="modal-scrollbar relative bg-white !rounded-[5px] overflow-x-hidden shadow-xl w-full max-w-[1024px] max-h-[90vh] overflow-y-auto"
+						role="dialog"
+						aria-modal="true"
+						:aria-label="$t('common.more')"
+						tabindex="-1"
+					>
+						<!-- Close button -->
+						<button
+							ref="closeButtonRef"
+							type="button"
+							class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center text-plaza-dark hover:text-gray-700 transition-colors"
+							:aria-label="$t('common.close')"
+							@click="close"
+						>
+							<svg
+								class="w-6 h-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								aria-hidden="true"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M6 18L18 6M6 6l12 12"
+								/>
+							</svg>
+						</button>
+
+						<!-- Content slot -->
+						<div class="container-small">
+							<slot></slot>
+						</div>
 					</div>
 				</div>
-			</div>
-		</Transition>
-	</Teleport>
+			</Transition>
+		</Teleport>
+	</ClientOnly>
 </template>
 
 <script setup lang="ts">

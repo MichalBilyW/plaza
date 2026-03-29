@@ -6,17 +6,22 @@
 import { connectToDatabase } from '@/server/utils/db'
 import { GeneralInfo } from '@/server/models'
 import { generalInfoUpdateSchema } from '@/shared/schemas'
-import { requireEditor } from '@/server/utils/auth'
+import { requireEditor, requireSuperAdmin } from '@/server/utils/auth'
 import { defineApiHandler } from '@/server/utils/errors'
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
-		requireEditor(event)
+		const body = await readBody(event)
+
+		if (Object.prototype.hasOwnProperty.call(body ?? {}, 'staticAroundMap')) {
+			requireSuperAdmin(event)
+		} else {
+			requireEditor(event)
+		}
 
 		await connectToDatabase()
 
 		// Validace vstupu
-		const body = await readBody(event)
 		const data = generalInfoUpdateSchema.parse(body)
 
 		// Získat nebo vytvořit záznam

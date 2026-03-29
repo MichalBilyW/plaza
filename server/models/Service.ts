@@ -45,7 +45,7 @@ const serviceSchema = new Schema<IServiceDocument>(
 		},
 		description: {
 			type: String,
-			maxlength: 2000,
+			maxlength: 50000,
 		},
 		isActive: {
 			type: Boolean,

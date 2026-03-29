@@ -209,18 +209,22 @@ export function requireRole(event: H3Event, roles: UserRole[]): AuthUser & { ses
 	return user
 }
 
+export function requireSuperAdmin(event: H3Event): AuthUser & { sessionId: string } {
+	return requireRole(event, ['superadmin'])
+}
+
 /**
  * Vyžaduje admin roli
  */
 export function requireAdmin(event: H3Event): AuthUser & { sessionId: string } {
-	return requireRole(event, ['admin'])
+	return requireRole(event, ['superadmin', 'admin'])
 }
 
 /**
  * Vyžaduje admin nebo editor roli
  */
 export function requireEditor(event: H3Event): AuthUser & { sessionId: string } {
-	return requireRole(event, ['admin', 'editor'])
+	return requireRole(event, ['superadmin', 'admin', 'editor'])
 }
 
 // ==========================================

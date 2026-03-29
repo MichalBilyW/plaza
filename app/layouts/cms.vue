@@ -350,11 +350,7 @@
 					>
 						<p class="text-sm font-medium truncate">{{ user?.name }}</p>
 						<p class="text-xs text-gray-400">
-							{{
-								user?.role === 'admin'
-									? $t('cms.roles.admin')
-									: $t('cms.roles.editor')
-							}}
+							{{ $t(roleLabel) }}
 						</p>
 					</NuxtLink>
 					<button
@@ -385,6 +381,12 @@
 <script setup lang="ts">
 const { user, isAdmin, logout } = useCmsAuth()
 const sidebarOpen = ref(false)
+
+const roleLabel = computed(() => {
+	if (user.value?.role === 'superadmin') return 'cms.roles.superadmin'
+	if (user.value?.role === 'admin') return 'cms.roles.admin'
+	return 'cms.roles.editor'
+})
 
 // Prevent indexing of CMS pages
 useHead({

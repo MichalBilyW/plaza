@@ -12,7 +12,6 @@ import mongoose, { Schema } from 'mongoose'
 export interface ICategory {
 	name: string
 	slug: string
-	description?: string
 	isActive: boolean
 	sortOrder: number
 }
@@ -41,10 +40,6 @@ const categorySchema = new Schema<ICategoryDocument>(
 			lowercase: true,
 			trim: true,
 			index: true,
-		},
-		description: {
-			type: String,
-			maxlength: 500,
 		},
 		isActive: {
 			type: Boolean,

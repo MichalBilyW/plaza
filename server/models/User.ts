@@ -50,7 +50,7 @@ const userSchema = new Schema<IUserDocument>(
 		},
 		role: {
 			type: String,
-			enum: ['admin', 'editor'],
+			enum: ['superadmin', 'admin', 'editor'],
 			default: 'editor',
 		},
 		isActive: {

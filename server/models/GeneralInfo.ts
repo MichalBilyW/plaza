@@ -36,6 +36,7 @@ export interface IGeneralInfo {
 	facebook?: string
 	instagram?: string
 	gallery?: string[]
+	staticAroundMap?: string
 }
 
 export interface IGeneralInfoDocument extends IGeneralInfo, Document {
@@ -109,6 +110,10 @@ const generalInfoSchema = new Schema<IGeneralInfoDocument>(
 				type: String,
 			},
 		],
+		staticAroundMap: {
+			type: String,
+			trim: true,
+		},
 	},
 	{
 		timestamps: true,

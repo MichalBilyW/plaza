@@ -17,7 +17,9 @@
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						<address class="text-sm text-white/80 not-italic text-center md:text-left">
+						<address
+							class="font-heading text-sm text-white not-italic text-center md:text-left hover:text-plaza transition-colors"
+						>
 							<p>Palachova 1404</p>
 							<p>460 90 Liberec</p>
 						</address>
@@ -32,63 +34,63 @@
 					<nav class="flex flex-col gap-y-2">
 						<NuxtLink
 							to="/obchody"
-							class="text-sm text-white/80 hover:text-white transition-colors"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
 							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.shops') }}
 						</NuxtLink>
 						<NuxtLink
 							to="/akce"
-							class="text-sm text-white/80 hover:text-white transition-colors"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
 							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.events') }}
 						</NuxtLink>
 						<NuxtLink
-							to="/o-nas"
-							class="text-sm text-white/80 hover:text-white transition-colors"
-							active-class="!text-plaza"
-						>
-							{{ t('footer.nav.about') }}
-						</NuxtLink>
-						<NuxtLink
 							to="/mapa"
-							class="text-sm text-white/80 hover:text-white transition-colors"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
 							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.map') }}
+						</NuxtLink>
+						<NuxtLink
+							to="/o-nas"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
+							active-class="!text-plaza"
+						>
+							{{ t('footer.nav.about') }}
 						</NuxtLink>
 					</nav>
 					<!-- Sloupec 2 -->
 					<nav class="flex flex-col gap-y-2">
 						<NuxtLink
 							to="/o-nas"
-							class="text-sm text-white/80 hover:text-white transition-colors"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
 							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.contacts') }}
 						</NuxtLink>
 						<NuxtLink
 							to="/cookies"
-							class="text-sm text-white/80 hover:text-white transition-colors"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
 							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.cookies') }}
 						</NuxtLink>
-						<NuxtLink
+						<!-- <NuxtLink
 							to="/o-nas"
-							class="text-sm text-white/80 hover:text-white transition-colors"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
 							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.visitorRules') }}
 						</NuxtLink>
 						<NuxtLink
 							to="/o-nas"
-							class="text-sm text-white/80 hover:text-white transition-colors"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
 							active-class="!text-plaza"
 						>
 							{{ t('footer.nav.parkingRules') }}
-						</NuxtLink>
+						</NuxtLink> -->
 					</nav>
 				</div>
 
@@ -99,7 +101,7 @@
 						:href="generalInfo.facebook"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-white/90 transition-colors"
+						class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-plaza transition-colors"
 						aria-label="Facebook"
 					>
 						<svg class="w-5 h-5 text-[#131313]" fill="currentColor" viewBox="0 0 24 24">
@@ -113,7 +115,7 @@
 						:href="generalInfo.instagram"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-white/90 transition-colors"
+						class="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-plaza transition-colors"
 						aria-label="Instagram"
 					>
 						<svg class="w-5 h-5 text-[#131313]" fill="currentColor" viewBox="0 0 24 24">
@@ -127,7 +129,7 @@
 
 			<!-- Copyright -->
 			<div class="mt-8 pt-6 border-t border-white/10 text-center text-sm text-white/50">
-				<p>&copy; {{ currentYear }} OC Plaza Liberec. Všechna práva vyhrazena.</p>
+				<p>{{ t('footer.copyright', { year: currentYear }) }}</p>
 			</div>
 		</div>
 	</footer>

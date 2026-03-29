@@ -312,13 +312,13 @@ textarea:focus-visible {
 /* Kurzíva */
 .prose em,
 .prose i {
-	font-style: italic;
+	font-style: italic !important;
 }
 
 /* Tučné */
 .prose strong,
 .prose b {
-	font-weight: 600;
+	font-weight: 600 !important;
 }
 
 /* Podtržené */
@@ -393,4 +393,106 @@ textarea:focus-visible {
 
 .prose *[style*='vertical-align: top'] {
 	vertical-align: top !important;
+}
+
+/* ============================================
+   Prose - Tabulky z WYSIWYG
+   ============================================ */
+
+/* Tabulka jako scrollovatelný blok */
+.prose table {
+	display: block !important;
+	width: 100% !important;
+	overflow-x: auto !important;
+	-webkit-overflow-scrolling: touch;
+	border-collapse: collapse !important;
+	font-size: 0.875rem !important;
+	line-height: 1.5 !important;
+	margin: 1rem 0 !important;
+	border-radius: 0 !important;
+}
+
+/* Červený scrollbar pro tabulky */
+.prose table::-webkit-scrollbar {
+	height: 8px;
+}
+
+.prose table::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 4px;
+}
+
+.prose table::-webkit-scrollbar-thumb {
+	background: #e20b1b;
+	border-radius: 4px;
+}
+
+.prose table::-webkit-scrollbar-thumb:hover {
+	background: #b30816;
+}
+
+/* Firefox scrollbar */
+.prose table {
+	scrollbar-width: thin;
+	scrollbar-color: #e20b1b #f1f1f1;
+}
+
+/* Thead a tbody jako tabulka uvnitř bloku */
+.prose table thead,
+.prose table tbody {
+	display: table !important;
+	width: 100% !important;
+	min-width: 400px !important;
+	table-layout: auto !important;
+}
+
+/* Řádky tabulky */
+.prose table tr {
+	display: table-row !important;
+}
+
+/* Hlavička tabulky */
+.prose th {
+	display: table-cell !important;
+	background-color: #131313 !important;
+	color: white !important;
+	font-weight: 600 !important;
+	text-align: left !important;
+	padding: 0.75rem 1rem !important;
+	border: 1px solid #131313 !important;
+	white-space: nowrap !important;
+	border-radius: 0 !important;
+}
+
+/* Buňky tabulky */
+.prose td {
+	display: table-cell !important;
+	padding: 0.75rem 1rem !important;
+	border: 1px solid #e5e7eb !important;
+	vertical-align: top !important;
+	background-color: white !important;
+	min-width: 80px !important;
+	border-radius: 0 !important;
+}
+
+/* Alternující řádky */
+.prose tbody tr:nth-child(even) td {
+	background-color: #f9fafb !important;
+}
+
+/* Hover efekt na řádky */
+.prose tbody tr:hover td {
+	background-color: #fef2f2 !important;
+}
+
+/* Desktop - lepší čitelnost */
+@media screen and (min-width: 640px) {
+	.prose table {
+		font-size: 0.9375rem !important;
+	}
+
+	.prose th,
+	.prose td {
+		padding: 0.875rem 1.25rem !important;
+	}
 }

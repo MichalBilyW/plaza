@@ -509,12 +509,6 @@
 						v-if="showTableMenu && editor.isActive('table')"
 						class="absolute left-0 top-full mt-1 z-50 bg-white border border-gray-300 rounded-lg shadow-lg p-2 min-w-[200px]"
 					>
-						<div
-							class="text-xs font-semibold text-plaza-dark px-2 py-1 border-b border-gray-200 mb-1"
-						>
-							Úpravy tabulky
-						</div>
-
 						<div class="text-xs font-medium text-gray-400 px-2 py-1 mt-1">Sloupce</div>
 						<button
 							type="button"
@@ -646,6 +640,82 @@
 		</div>
 
 		<p v-if="hint" class="mt-1 text-xs text-plaza-dark">{{ hint }}</p>
+
+		<!-- Link Dialog Modal -->
+		<ClientOnly>
+			<Teleport to="body">
+				<div
+					v-if="showLinkDialog"
+					class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50"
+					@click.self="closeLinkDialog"
+				>
+				<div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+					<h3 class="text-lg font-bold text-plaza-dark mb-4">Vložit odkaz</h3>
+
+					<div class="space-y-4">
+						<!-- URL input -->
+						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-1">
+								URL odkazu
+							</label>
+							<input
+								v-model="linkUrl"
+								type="url"
+								placeholder="https://example.com"
+								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza focus:border-plaza outline-none"
+								@keydown.enter="confirmLink"
+							/>
+						</div>
+
+						<!-- Open in new tab checkbox -->
+						<div class="flex items-start gap-3">
+							<input
+								id="link-new-tab"
+								v-model="linkOpenInNewTab"
+								type="checkbox"
+								class="mt-1 h-4 w-4 text-plaza border-gray-300 rounded focus:ring-plaza"
+							/>
+							<label for="link-new-tab" class="text-sm text-gray-700">
+								Otevřít v novém okně
+							</label>
+						</div>
+
+						<!-- Hint -->
+						<p class="text-xs text-amber-600 bg-amber-50 p-3 rounded-lg">
+							💡 <strong>Doporučení:</strong> Odkazy mimo tento web vždy otevírejte v
+							novém okně, aby web nepřicházel o uživatele.
+						</p>
+					</div>
+
+					<!-- Buttons -->
+					<div class="flex justify-end gap-3 mt-6">
+						<button
+							type="button"
+							class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+							@click="closeLinkDialog"
+						>
+							Zrušit
+						</button>
+						<button
+							v-if="linkUrl"
+							type="button"
+							class="px-4 py-2 text-sm text-red-600 hover:text-red-800 transition-colors"
+							@click="removeLink"
+						>
+							Odstranit odkaz
+						</button>
+						<button
+							type="button"
+							class="px-4 py-2 text-sm bg-plaza text-white rounded-lg hover:bg-plaza-dark transition-colors"
+							@click="confirmLink"
+						>
+							Potvrdit
+						</button>
+					</div>
+				</div>
+			</div>
+			</Teleport>
+		</ClientOnly>
 	</div>
 </template>
 
@@ -661,14 +731,41 @@ import { TableRow } from '@tiptap/extension-table-row'
 import { TableCell } from '@tiptap/extension-table-cell'
 import { TableHeader } from '@tiptap/extension-table-header'
 
+// Custom Link extension with target and rel support
+const CustomLink = Link.extend({
+	addAttributes() {
+		return {
+			...this.parent?.(),
+			target: {
+				default: null,
+				parseHTML: (element) => element.getAttribute('target'),
+				renderHTML: (attributes) => {
+					if (!attributes.target) return {}
+					return { target: attributes.target }
+				},
+			},
+			rel: {
+				default: null,
+				parseHTML: (element) => element.getAttribute('rel'),
+				renderHTML: (attributes) => {
+					if (!attributes.rel) return {}
+					return { rel: attributes.rel }
+				},
+			},
+		}
+	},
+})
+
 // Define extensions array once to avoid HMR duplication
 const editorExtensions = [
 	StarterKit.configure({
 		// Ensure no conflicts with custom extensions
 	}),
 	Underline,
-	Link.configure({
+	CustomLink.configure({
 		openOnClick: false,
+		autolink: true,
+		linkOnPaste: true,
 		HTMLAttributes: {
 			class: 'text-plaza-600 underline hover:text-plaza-800',
 		},
@@ -731,6 +828,11 @@ const tableMenuWrapper = ref<HTMLElement | null>(null)
 
 // Table menu state
 const showTableMenu = ref(false)
+
+// Link dialog state
+const showLinkDialog = ref(false)
+const linkUrl = ref('')
+const linkOpenInNewTab = ref(true)
 
 const toggleTableMenu = () => {
 	showTableMenu.value = !showTableMenu.value
@@ -932,24 +1034,50 @@ const handleAlignRight = () => {
 	editor.value.chain().focus().setTextAlign('right').run()
 }
 
-// Set link
+// Open link dialog
 const setLink = () => {
-	const previousUrl = editor.value?.getAttributes('link').href
-	const url = window.prompt('URL odkazu:', previousUrl)
+	const attrs = editor.value?.getAttributes('link')
+	linkUrl.value = attrs?.href || ''
+	linkOpenInNewTab.value = attrs?.target === '_blank' || !attrs?.href
+	showLinkDialog.value = true
+}
 
-	// cancelled
-	if (url === null) {
+// Close link dialog
+const closeLinkDialog = () => {
+	showLinkDialog.value = false
+	linkUrl.value = ''
+	linkOpenInNewTab.value = true
+	editor.value?.chain().focus().run()
+}
+
+// Remove link
+const removeLink = () => {
+	editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
+	closeLinkDialog()
+}
+
+// Confirm link
+const confirmLink = () => {
+	if (!linkUrl.value) {
+		removeLink()
 		return
 	}
 
-	// empty
-	if (url === '') {
-		editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
-		return
+	// Ensure URL has protocol
+	let url = linkUrl.value.trim()
+	if (!/^https?:\/\//i.test(url) && !/^mailto:/i.test(url) && !/^tel:/i.test(url)) {
+		url = 'https://' + url
 	}
 
-	// update link
-	editor.value?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+	const linkAttrs: { href: string; target?: string; rel?: string } = { href: url }
+
+	if (linkOpenInNewTab.value) {
+		linkAttrs.target = '_blank'
+		linkAttrs.rel = 'noopener noreferrer'
+	}
+
+	editor.value?.chain().focus().extendMarkRange('link').setLink(linkAttrs).run()
+	closeLinkDialog()
 }
 
 // Insert table
@@ -1161,6 +1289,7 @@ onBeforeUnmount(() => {
 	padding: 0.5rem 0.75rem;
 	text-align: left;
 	vertical-align: top;
+	position: relative;
 }
 
 .cms-wysiwyg .ProseMirror th {
@@ -1172,8 +1301,30 @@ onBeforeUnmount(() => {
 	background-color: #f9fafb;
 }
 
+/* Vybraná buňka/buňky v tabulce */
 .cms-wysiwyg .ProseMirror .selectedCell {
-	background-color: #dbeafe;
+	background-color: #bfdbfe !important;
+	position: relative;
+}
+
+.cms-wysiwyg .ProseMirror .selectedCell::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border: 2px solid #3b82f6;
+	pointer-events: none;
+}
+
+/* Vybraná hlavička */
+.cms-wysiwyg .ProseMirror th.selectedCell {
+	background-color: #93c5fd !important;
+}
+
+/* Aktivní buňka (kurzor uvnitř) */
+.cms-wysiwyg .ProseMirror td:has(:focus),
+.cms-wysiwyg .ProseMirror th:has(:focus) {
+	outline: 2px solid #3b82f6;
+	outline-offset: -2px;
 }
 
 .cms-wysiwyg .ProseMirror .column-resize-handle {

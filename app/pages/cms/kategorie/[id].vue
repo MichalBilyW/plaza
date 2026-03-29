@@ -76,27 +76,6 @@
 						</p>
 					</div>
 
-					<!-- Popis -->
-					<div>
-						<label
-							for="description"
-							class="block text-sm font-medium text-gray-700 mb-1"
-						>
-							{{ t('cms.categories.description') }}
-						</label>
-						<textarea
-							id="description"
-							v-model="form.description"
-							rows="3"
-							maxlength="500"
-							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-categories-500 focus:border-transparent"
-							:placeholder="t('cms.categories.descriptionPlaceholder')"
-						></textarea>
-						<p class="mt-1 text-xs text-plaza-dark">
-							{{ form.description?.length || 0 }}/500
-						</p>
-					</div>
-
 					<!-- Aktivní -->
 					<div>
 						<label class="inline-flex items-center gap-3 cursor-pointer">
@@ -235,7 +214,6 @@ watchEffect(() => {
 const form = reactive({
 	name: '',
 	slug: '',
-	description: '',
 	isActive: true,
 })
 
@@ -246,7 +224,6 @@ watch(
 		if (newCategory) {
 			form.name = newCategory.name || ''
 			form.slug = newCategory.slug || ''
-			form.description = newCategory.description || ''
 			form.isActive = newCategory.isActive ?? true
 		}
 	},
@@ -270,7 +247,6 @@ const handleSubmit = async () => {
 		const data: Record<string, unknown> = {
 			name: form.name.trim(),
 			slug: form.slug.trim() || undefined,
-			description: form.description.trim() || undefined,
 			isActive: form.isActive,
 		}
 

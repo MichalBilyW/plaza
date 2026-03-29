@@ -30,40 +30,140 @@
 			<div class="flex flex-wrap gap-2">
 				<button
 					v-for="floor in floors"
-					:key="floor.level"
-					@click="selectedFloorLevel = floor.level"
+					:key="floor.floorId"
+					@click="selectedFloorId = floor.floorId"
 					:class="[
 						'px-4 py-2 rounded-lg font-medium transition-colors',
-						selectedFloorLevel === floor.level
+						selectedFloorId === floor.floorId
 							? 'bg-indigo-600 text-white'
 							: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
 					]"
 				>
-					{{ getFloorName(floor.level) }}
+					{{ floor.floorName }}
 				</button>
 			</div>
 		</div>
 
-		<!-- Mapa -->
-		<div class="bg-white rounded-xl shadow-sm p-6">
-			<h2 class="text-lg font-semibold mb-4 text-gray-900">
-				{{ getFloorName(selectedFloorLevel) }}
-			</h2>
+		<!-- Info o SVG mapě -->
+		<div
+			v-if="currentFloor && !currentFloor.svgMap"
+			class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6"
+		>
+			<div class="flex items-start gap-3">
+				<svg
+					class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+					/>
+				</svg>
+				<div>
+					<p class="text-sm text-amber-800 font-medium">{{ t('cms.map.noSvgMap') }}</p>
+					<p class="text-sm text-amber-700 mt-1">
+						{{ t('cms.map.noSvgMapHint') }}
+					</p>
+					<NuxtLink
+						v-if="currentFloor"
+						:to="`/cms/patra/${currentFloor.floorId}`"
+						class="inline-flex items-center gap-1 mt-2 text-sm text-amber-800 hover:text-amber-900 font-medium"
+					>
+						{{ t('cms.map.editFloor') }}
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
+							/>
+						</svg>
+					</NuxtLink>
+				</div>
+			</div>
+		</div>
 
-			<!-- Legenda -->
-			<div class="flex flex-wrap gap-4 mb-6 text-sm">
-				<div class="flex items-center gap-2">
-					<div class="w-4 h-4 bg-green-500 rounded"></div>
-					<span>{{ t('cms.map.occupied') }}</span>
+		<!-- Interaktivní SVG mapa -->
+		<ClientOnly>
+			<div
+				v-if="currentFloor?.svgMap"
+				class="bg-white rounded-xl shadow-sm p-4 mb-6"
+			>
+				<div class="flex items-center justify-between mb-4">
+					<h2 class="text-lg font-semibold text-gray-900">{{ t('cms.map.interactiveMap') }}</h2>
+					<div class="flex items-center gap-4 text-sm">
+						<span class="flex items-center gap-2">
+							<span class="w-4 h-4 rounded bg-indigo-500"></span>
+							{{ t('cms.map.occupied') }}
+						</span>
+						<span class="flex items-center gap-2">
+							<span class="w-4 h-4 rounded bg-gray-300"></span>
+							{{ t('cms.map.emptyUnit') }}
+						</span>
+					</div>
 				</div>
-				<div class="flex items-center gap-2">
-					<div class="w-4 h-4 bg-gray-300 rounded"></div>
-					<span>{{ t('cms.map.empty') }}</span>
+				<div
+					ref="svgContainerRef"
+					class="svg-container relative w-full border rounded-lg overflow-hidden bg-gray-50"
+					@mouseleave="hoveredUnitCode = null"
+				>
+					<div
+						v-if="svgContent"
+						ref="svgWrapperRef"
+						class="svg-wrapper w-full"
+						v-html="processedSvg"
+					></div>
+					<div v-else-if="svgPending" class="flex items-center justify-center h-64">
+						<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+					</div>
+					<div v-else-if="svgError" class="flex items-center justify-center h-64 text-red-500">
+						{{ t('cms.map.svgLoadError') }}
+					</div>
+
+					<!-- Hover tooltip -->
+					<Transition name="fade">
+						<div
+							v-if="hoveredUnit && tooltipPosition"
+							class="absolute z-10 pointer-events-none bg-white rounded-lg shadow-lg p-2 text-sm"
+							:style="{
+								left: `${tooltipPosition.x}px`,
+								top: `${tooltipPosition.y}px`,
+								transform: 'translate(-50%, -100%) translateY(-8px)',
+							}"
+						>
+							<div v-if="hoveredUnit.shop" class="text-center">
+								<img
+									v-if="hoveredUnit.shop.logo"
+									:src="hoveredUnit.shop.logo"
+									:alt="hoveredUnit.shop.name"
+									class="w-12 h-12 object-contain mx-auto mb-1"
+								/>
+								<p class="font-medium">{{ hoveredUnit.shop.name }}</p>
+							</div>
+							<div v-else class="text-gray-500">
+								<span class="font-mono">{{ hoveredUnit.unitCode }}</span>
+								<span class="ml-1">({{ t('cms.map.emptyUnit') }})</span>
+							</div>
+						</div>
+					</Transition>
 				</div>
-				<div class="flex items-center gap-2">
-					<div class="w-4 h-4 bg-orange-500 rounded"></div>
-					<span>{{ t('cms.map.inactive') }}</span>
-				</div>
+				<p class="text-sm text-plaza-dark mt-2">{{ t('cms.map.clickToEdit') }}</p>
+			</div>
+		</ClientOnly>
+
+		<!-- Tabulka jednotek -->
+		<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+			<div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+				<h2 class="text-lg font-semibold text-gray-900">
+					{{ t('cms.map.unitsTable') }}
+				</h2>
+				<span class="text-sm text-plaza-dark">
+					{{ currentFloorUnits.length }} {{ t('cms.map.units') }}
+				</span>
 			</div>
 
 			<!-- Loading -->
@@ -76,91 +176,131 @@
 				{{ t('common.error') }}: {{ error.message }}
 			</div>
 
-			<!-- SVG Mapa -->
+			<!-- Žádné jednotky -->
+			<div v-else-if="currentFloorUnits.length === 0" class="text-center py-12">
+				<p class="text-plaza-dark">{{ t('cms.map.noUnits') }}</p>
+				<p class="text-sm text-gray-400 mt-2">{{ t('cms.map.noUnitsHint') }}</p>
+			</div>
+
+			<!-- Tabulka -->
 			<div v-else class="overflow-x-auto">
-				<svg
-					viewBox="0 0 420 200"
-					class="w-full max-w-2xl mx-auto"
-					style="min-width: 400px"
-				>
-					<!-- Pozadí mapy -->
-					<rect x="0" y="0" width="420" height="200" fill="#f3f4f6" rx="8" />
-
-					<!-- Popis patra -->
-					<text x="210" y="25" text-anchor="middle" class="fill-gray-500 text-xs">
-						{{ getFloorName(selectedFloorLevel) }}
-					</text>
-
-					<!-- Jednotky -->
-					<g
-						v-for="unit in currentFloorUnits"
-						:key="unit.id"
-						@click="selectUnit(unit)"
-						class="cursor-pointer"
-					>
-						<rect
-							:x="unit.position.x"
-							:y="unit.position.y"
-							:width="unit.position.width"
-							:height="unit.position.height"
-							:fill="getUnitColor(unit)"
-							stroke="#fff"
-							stroke-width="2"
-							rx="4"
-							class="transition-all hover:opacity-80"
-						/>
-						<!-- ID jednotky -->
-						<text
-							:x="unit.position.x + unit.position.width / 2"
-							:y="unit.position.y + 20"
-							text-anchor="middle"
-							class="fill-white text-xs font-bold pointer-events-none"
+				<table class="w-full">
+					<thead class="bg-gray-50">
+						<tr>
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								{{ t('cms.map.unitCode') }}
+							</th>
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								{{ t('cms.map.shop') }}
+							</th>
+							<th
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								{{ t('cms.map.status') }}
+							</th>
+							<th
+								class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+							>
+								{{ t('common.actions') }}
+							</th>
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-gray-200">
+						<tr
+							v-for="unit in currentFloorUnits"
+							:key="unit.unitCode"
+							:class="[
+								'hover:bg-gray-50 transition-colors cursor-pointer',
+								unit.shop ? '' : 'bg-gray-50/50',
+							]"
+							@click="selectUnit(unit)"
 						>
-							{{ unit.id }}
-						</text>
-						<!-- Název obchodu -->
-						<text
-							v-if="unit.shop"
-							:x="unit.position.x + unit.position.width / 2"
-							:y="unit.position.y + unit.position.height / 2 + 5"
-							text-anchor="middle"
-							class="fill-white text-xs pointer-events-none"
-						>
-							{{ truncateShopName(unit.shop.name) }}
-						</text>
-						<!-- Prázdná jednotka -->
-						<text
-							v-else
-							:x="unit.position.x + unit.position.width / 2"
-							:y="unit.position.y + unit.position.height / 2 + 5"
-							text-anchor="middle"
-							class="fill-gray-600 text-xs pointer-events-none"
-						>
-							{{ t('cms.map.emptyUnit') }}
-						</text>
-					</g>
-
-					<!-- Okolní prvky (dekorativní) -->
-					<rect x="5" y="170" width="60" height="25" fill="#e5e7eb" rx="3" />
-					<text x="35" y="186" text-anchor="middle" class="fill-gray-500 text-xs">
-						Vchod
-					</text>
-
-					<rect x="355" y="170" width="60" height="25" fill="#e5e7eb" rx="3" />
-					<text x="385" y="186" text-anchor="middle" class="fill-gray-500 text-xs">
-						Výtah
-					</text>
-				</svg>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<span class="font-mono text-sm font-medium text-gray-900">
+									{{ unit.unitCode }}
+								</span>
+							</td>
+							<td class="px-6 py-4">
+								<div v-if="unit.shop" class="flex items-center gap-3">
+									<div
+										v-if="unit.shop.logo"
+										class="w-8 h-8 rounded bg-white border flex-shrink-0 overflow-hidden"
+									>
+										<img
+											:src="unit.shop.logo"
+											:alt="unit.shop.name"
+											class="w-full h-full object-contain"
+										/>
+									</div>
+									<div
+										v-else
+										class="w-8 h-8 rounded bg-gray-200 flex-shrink-0 flex items-center justify-center"
+									>
+										<span class="text-xs font-bold text-gray-500">
+											{{ unit.shop.name.charAt(0) }}
+										</span>
+									</div>
+									<span class="text-sm text-gray-900">{{ unit.shop.name }}</span>
+								</div>
+								<span v-else class="text-sm text-gray-400 italic">
+									{{ t('cms.map.empty') }}
+								</span>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<span
+									v-if="unit.shop"
+									:class="[
+										'inline-flex px-2 py-1 text-xs font-medium rounded-full',
+										unit.shop.isActive
+											? 'bg-green-100 text-green-800'
+											: 'bg-orange-100 text-orange-800',
+									]"
+								>
+									{{
+										unit.shop.isActive
+											? t('cms.shops.active')
+											: t('cms.shops.inactive')
+									}}
+								</span>
+								<span
+									v-else
+									class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600"
+								>
+									{{ t('cms.map.emptyUnit') }}
+								</span>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-right">
+								<span
+									v-if="unit.shop"
+									class="text-sm text-indigo-600"
+								>
+									{{ t('common.edit') }}
+								</span>
+								<span
+									v-else
+									class="text-sm text-indigo-600"
+								>
+									{{ t('cms.map.assign') }}
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
-		<!-- Modal pro detail jednotky -->
-		<Teleport to="body">
-			<div
-				v-if="selectedUnit"
-				class="fixed inset-0 z-50 flex items-center justify-center p-4"
-				@click.self="selectedUnit = null"
-			>
+		<!-- Modal pro přiřazení/odebrání obchodu -->
+		<ClientOnly>
+			<Teleport to="body">
+				<div
+					v-if="selectedUnit"
+					class="fixed inset-0 z-50 flex items-center justify-center p-4"
+					@click.self="selectedUnit = null"
+				>
 				<div class="fixed inset-0 bg-black/50" @click="selectedUnit = null"></div>
 				<div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md p-6 z-10">
 					<button
@@ -178,17 +318,11 @@
 					</button>
 
 					<h3 class="text-lg font-semibold mb-4">
-						{{ t('cms.map.unitDetail') }}: {{ selectedUnit.id }}
+						{{ t('cms.map.unitDetail') }}:
+						<span class="font-mono">{{ selectedUnit.unitCode }}</span>
 					</h3>
 
 					<div class="space-y-4">
-						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-1">
-								{{ t('cms.map.position') }}
-							</label>
-							<p class="text-gray-600">{{ selectedUnit.label }}</p>
-						</div>
-
 						<!-- Aktuální obchod -->
 						<div v-if="selectedUnit.shop">
 							<label class="block text-sm font-medium text-gray-700 mb-1">
@@ -209,9 +343,9 @@
 									v-else
 									class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center"
 								>
-									<span class="text-plaza-dark text-lg font-bold">{{
-										selectedUnit.shop.name.charAt(0)
-									}}</span>
+									<span class="text-plaza-dark text-lg font-bold">
+										{{ selectedUnit.shop.name.charAt(0) }}
+									</span>
 								</div>
 								<div>
 									<p class="font-medium text-gray-900">
@@ -260,7 +394,6 @@
 								{{ t('cms.map.assignShop') }}
 							</label>
 
-							<!-- Žádné dostupné obchody -->
 							<div
 								v-if="availableShops.length === 0"
 								class="p-4 bg-gray-50 rounded-lg text-center"
@@ -289,7 +422,6 @@
 								</NuxtLink>
 							</div>
 
-							<!-- Dropdown s obchody -->
 							<template v-else>
 								<select
 									v-model="shopToAssign"
@@ -308,7 +440,7 @@
 								<button
 									@click="assignShop"
 									:disabled="!shopToAssign || assigning"
-									class="mt-3 w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+									class="mt-3 w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
 								>
 									{{ assigning ? t('common.loading') : t('cms.map.assign') }}
 								</button>
@@ -326,46 +458,63 @@
 							</button>
 						</div>
 					</div>
+					</div>
 				</div>
-			</div>
-		</Teleport>
+			</Teleport>
+		</ClientOnly>
 	</div>
 </template>
 
 <script setup lang="ts">
-import type { UnitWithShop } from '~~/shared/map/units'
+import type { FloorUnitsResponse, MapUnit } from '~~/shared/map/units'
+import { createUnitElementId } from '~~/shared/map/units'
 import type { Shop } from '~~/shared/types'
 
-// Types for API responses
-interface MapFloor {
-	level: number
-	units: UnitWithShop[]
-}
-
 interface MapUnitsResponse {
-	floors: MapFloor[]
+	floors: FloorUnitsResponse[]
 	totalUnits: number
 	occupiedUnits: number
 }
 
 interface ShopsListResponse {
 	data: Shop[]
+	pagination?: {
+		page: number
+		limit: number
+		total: number
+		totalPages: number
+	}
 }
 
 definePageMeta({
 	layout: 'cms',
+	middleware: 'cms',
 })
 
 const { t } = useI18n()
 const { secureFetch } = useCmsAuth()
 const flash = useFlashMessages()
 
+usePlazaSeo({
+	title: t('cms.map.title'),
+	noIndex: true,
+})
+
 // State
-const selectedFloorLevel = ref(0)
-const selectedUnit = ref<UnitWithShop | null>(null)
+const selectedFloorId = ref<string | null>(null)
+const selectedUnit = ref<MapUnit | null>(null)
 const shopToAssign = ref('')
 const assigning = ref(false)
 const removing = ref(false)
+
+// SVG state
+const svgContainerRef = ref<HTMLElement | null>(null)
+const svgWrapperRef = ref<HTMLElement | null>(null)
+const svgContent = ref<string | null>(null)
+const svgPending = ref(false)
+const svgError = ref<Error | null>(null)
+const hoveredUnitCode = ref<string | null>(null)
+const tooltipPosition = ref<{ x: number; y: number } | null>(null)
 
 // Fetch map units
 const {
@@ -375,25 +524,61 @@ const {
 	refresh,
 } = await useFetch<MapUnitsResponse>('/api/map/units')
 
-// Fetch all shops for assignment
-const { data: shopsData } = await useFetch<ShopsListResponse>('/api/shops', {
-	query: { limit: 100, isActive: true },
+// Shops for assignment - load on client
+const allShops = ref<Shop[]>([])
+const shopsLoading = ref(false)
+
+async function loadShops() {
+	shopsLoading.value = true
+	try {
+		const response = await $fetch<ShopsListResponse>('/api/shops', {
+			query: { limit: 100, page: 1 },
+		})
+		let shops = response.data ?? []
+		// Pokud je více stránek, načíst všechny
+		const totalPages = response.pagination?.totalPages ?? 1
+		for (let page = 2; page <= totalPages; page++) {
+			const next = await $fetch<ShopsListResponse>('/api/shops', {
+				query: { limit: 100, page },
+			})
+			shops = shops.concat(next.data ?? [])
+		}
+		allShops.value = shops
+	} catch (err) {
+		console.error('[CMS Map] Failed to load shops:', err)
+	} finally {
+		shopsLoading.value = false
+	}
+}
+
+// Load shops on client
+if (import.meta.client) {
+	loadShops()
+}
+
+const floors = computed(() => mapData.value?.floors ?? [])
+
+// Automaticky vybrat první patro
+watch(
+	floors,
+	(newFloors) => {
+		if (newFloors.length > 0 && !selectedFloorId.value) {
+			const firstFloor = newFloors[0]
+			if (firstFloor) {
+				selectedFloorId.value = firstFloor.floorId
+			}
+		}
+	},
+	{ immediate: true },
+)
+
+const currentFloor = computed(() => {
+	if (!selectedFloorId.value) return null
+	return floors.value.find((f) => f.floorId === selectedFloorId.value) ?? null
 })
 
-// Computed
-const floors = computed(() => {
-	if (!mapData.value?.floors) return []
-	return mapData.value.floors.map((f: { level: number }) => ({
-		level: f.level,
-	}))
-})
-
-const currentFloorUnits = computed<UnitWithShop[]>(() => {
-	if (!mapData.value?.floors) return []
-	const floor = mapData.value.floors.find(
-		(f: { level: number }) => f.level === selectedFloorLevel.value,
-	)
-	return floor?.units ?? []
+const currentFloorUnits = computed<MapUnit[]>(() => {
+	return currentFloor.value?.units ?? []
 })
 
 const stats = computed(() => {
@@ -410,48 +595,193 @@ const stats = computed(() => {
 	}
 })
 
-// Obchody bez přiřazené jednotky
+// Obchody bez přiřazené jednotky nebo s jednotkou na jiném patře
 const availableShops = computed(() => {
-	if (!shopsData.value?.data) return []
+	if (allShops.value.length === 0) {
+		return []
+	}
 
-	// ID jednotek, které už mají obchod
-	const occupiedUnitIds = new Set<string>()
-	if (mapData.value?.floors) {
-		for (const floor of mapData.value.floors) {
-			for (const unit of floor.units) {
-				if (unit.shop) {
-					occupiedUnitIds.add(unit.id)
-				}
+	// ID obchodů které už jsou přiřazené k nějaké jednotce
+	const assignedShopIds = new Set<string>()
+	for (const floor of floors.value) {
+		for (const unit of floor.units) {
+			if (unit.shop) {
+				assignedShopIds.add(unit.shop._id)
 			}
 		}
 	}
 
-	// Vrátíme obchody, které nemají přiřazenou jednotku nebo mají jinou jednotku
-	return (shopsData.value.data as Shop[]).filter((shop) => {
-		if (!shop.unitCode) return true
-		return !occupiedUnitIds.has(shop.unitCode)
+	// Vrátíme obchody, které nemají přiřazenou jednotku
+	return allShops.value.filter(
+		(shop) => !assignedShopIds.has(shop._id as string),
+	)
+})
+
+// Mapa jednotek pro rychlý přístup
+const unitsMap = computed(() => {
+	const map = new Map<string, MapUnit>()
+	for (const unit of currentFloorUnits.value) {
+		map.set(unit.unitCode, unit)
+	}
+	return map
+})
+
+// Hovered unit
+const hoveredUnit = computed(() => {
+	if (!hoveredUnitCode.value) return null
+	return unitsMap.value.get(hoveredUnitCode.value) ?? null
+})
+
+// Zpracované SVG s přidanými třídami - v CMS jsou VŠECHNY jednotky klikací
+const processedSvg = computed(() => {
+	if (!svgContent.value) return ''
+
+	let svg = svgContent.value
+
+	// Odstranit bílé pozadí
+	svg = svg.replace(
+		/<rect[^>]*fill=["'](#fff|#ffffff|white|#FFFFFF|#FFF)["'][^>]*\/>/gi,
+		'',
+	)
+	svg = svg.replace(
+		/<rect[^>]*style=["'][^"']*fill:\s*(#fff|#ffffff|white)[^"']*["'][^>]*\/>/gi,
+		'',
+	)
+
+	// Pro každou jednotku přidat data atributy
+	for (const unit of currentFloorUnits.value) {
+		const elementId = createUnitElementId(unit.unitCode)
+		const hasShop = !!unit.shop
+		const isSelected = selectedUnit.value?.unitCode === unit.unitCode
+
+		const regex = new RegExp(`id=["']${elementId}["']`, 'g')
+
+		// V CMS jsou všechny jednotky klikací
+		const classes = [
+			'cms-unit',
+			hasShop ? 'cms-unit--occupied' : 'cms-unit--empty',
+			'cursor-pointer',
+			'transition-all',
+			'duration-200',
+			isSelected ? 'cms-unit--selected' : '',
+		]
+			.filter(Boolean)
+			.join(' ')
+
+		svg = svg.replace(
+			regex,
+			`id="${elementId}" class="${classes}" data-unit="${unit.unitCode}" data-has-shop="${hasShop}"`,
+		)
+	}
+
+	return svg
+})
+
+// Načtení SVG
+async function loadSvg() {
+	const svgPath = currentFloor.value?.svgMap
+	if (!svgPath) {
+		svgContent.value = null
+		return
+	}
+
+	try {
+		svgPending.value = true
+		svgError.value = null
+		const response = await fetch(svgPath)
+		if (!response.ok) {
+			throw new Error(`Failed to load SVG: ${response.status}`)
+		}
+		svgContent.value = await response.text()
+	} catch (e) {
+		svgError.value = e instanceof Error ? e : new Error('Unknown error')
+		console.error('Failed to load SVG:', e)
+	} finally {
+		svgPending.value = false
+	}
+}
+
+// Nastavení event listenerů po renderování SVG
+function setupEventListeners() {
+	const wrapper = svgWrapperRef.value
+	if (!wrapper) return
+
+	const svg = wrapper.querySelector('svg')
+	if (!svg) return
+
+	// Najít všechny jednotky
+	const unitElements = svg.querySelectorAll('[data-unit]')
+
+	unitElements.forEach((element) => {
+		const unitCode = element.getAttribute('data-unit')
+		if (!unitCode) return
+
+		// Hover events
+		element.addEventListener('mouseenter', (e) => handleUnitHover(unitCode, e as MouseEvent))
+		element.addEventListener('mouseleave', () => handleUnitLeave())
+
+		// Click event - v CMS můžeme kliknout na všechny jednotky
+		element.addEventListener('click', () => handleUnitClick(unitCode))
+	})
+}
+
+function handleUnitHover(unitCode: string, event: MouseEvent) {
+	hoveredUnitCode.value = unitCode
+
+	// Vypočítat pozici tooltipu
+	const target = event.currentTarget as SVGElement
+	const rect = target.getBoundingClientRect()
+	const containerRect = svgContainerRef.value?.getBoundingClientRect()
+
+	if (containerRect) {
+		tooltipPosition.value = {
+			x: rect.left + rect.width / 2 - containerRect.left,
+			y: rect.top - containerRect.top,
+		}
+	}
+}
+
+function handleUnitLeave() {
+	hoveredUnitCode.value = null
+	tooltipPosition.value = null
+}
+
+function handleUnitClick(unitCode: string) {
+	const unit = unitsMap.value.get(unitCode)
+	if (unit) {
+		selectUnit(unit)
+	}
+}
+
+// Při změně patra načíst nové SVG (pouze na klientu)
+onMounted(() => {
+	loadSvg()
+})
+
+watch(
+	() => currentFloor.value?.svgMap,
+	() => {
+		loadSvg()
+	},
+)
+
+// Při změně SVG obsahu nastavit listenery
+watch(svgWrapperRef, (wrapper) => {
+	if (wrapper) {
+		nextTick(() => {
+			setupEventListeners()
+		})
+	}
+})
+
+watch(processedSvg, () => {
+	nextTick(() => {
+		setupEventListeners()
 	})
 })
 
 // Methods
-function getFloorName(level: number): string {
-	if (level === 0) return t('cms.map.groundFloor')
-	if (level < 0) return t('cms.map.basement', { level: Math.abs(level) })
-	return t('cms.map.floor', { level })
-}
-
-function getUnitColor(unit: UnitWithShop): string {
-	if (!unit.shop) return '#d1d5db' // gray-300
-	if (!unit.shop.isActive) return '#f97316' // orange-500
-	return '#22c55e' // green-500
-}
-
-function truncateShopName(name: string): string {
-	if (name.length <= 10) return name
-	return name.substring(0, 8) + '...'
-}
-
-function selectUnit(unit: UnitWithShop) {
+function selectUnit(unit: MapUnit) {
 	selectedUnit.value = unit
 	shopToAssign.value = ''
 }
@@ -463,10 +793,15 @@ async function assignShop() {
 	try {
 		await secureFetch(`/api/shops/${shopToAssign.value}`, {
 			method: 'PUT',
-			body: { unitCode: selectedUnit.value.id },
+			body: {
+				unitCode: selectedUnit.value.unitCode,
+				floorId: selectedUnit.value.floorId,
+			},
 		})
 		flash.success(t('cms.flash.mapShopAssigned'))
-		await refresh()
+		await Promise.all([refresh(), loadShops()])
+		// Znovu načíst SVG aby se aktualizovaly barvy
+		await loadSvg()
 		selectedUnit.value = null
 	} catch (err) {
 		flash.error(t('cms.flash.mapAssignError'))
@@ -486,7 +821,9 @@ async function removeShop() {
 			body: { unitCode: '' },
 		})
 		flash.success(t('cms.flash.mapShopRemoved'))
-		await refresh()
+		await Promise.all([refresh(), loadShops()])
+		// Znovu načíst SVG aby se aktualizovaly barvy
+		await loadSvg()
 		selectedUnit.value = null
 	} catch (err) {
 		flash.error(t('cms.flash.mapRemoveError'))
@@ -496,3 +833,43 @@ async function removeShop() {
 	}
 }
 </script>
+
+<style scoped>
+/* CMS jednotky - všechny interaktivní */
+:deep(.cms-unit) {
+	cursor: pointer;
+}
+
+:deep(.cms-unit--occupied) {
+	fill: rgb(99 102 241) !important; /* indigo-500 */
+}
+
+:deep(.cms-unit--occupied:hover) {
+	fill: rgb(79 70 229) !important; /* indigo-600 */
+}
+
+:deep(.cms-unit--empty) {
+	fill: rgb(209 213 219) !important; /* gray-300 */
+}
+
+:deep(.cms-unit--empty:hover) {
+	fill: rgb(156 163 175) !important; /* gray-400 */
+}
+
+:deep(.cms-unit--selected) {
+	fill: rgb(251 146 60) !important; /* orange-400 */
+	stroke: rgb(234 88 12) !important; /* orange-600 */
+	stroke-width: 2px !important;
+}
+
+/* Fade animation pro tooltip */
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
+</style>

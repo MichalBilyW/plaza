@@ -170,11 +170,11 @@
 							</option>
 							<option
 								v-for="unit in availableUnits"
-								:key="unit.id"
-								:value="unit.id"
+								:key="unit.unitCode"
+								:value="unit.unitCode"
 								:disabled="unit.isOccupied"
 							>
-								{{ unit.id }} - {{ unit.label
+								{{ unit.unitCode
 								}}{{ unit.isOccupied ? ` (${unit.shopName})` : '' }}
 							</option>
 						</select>
@@ -653,7 +653,7 @@
 
 <script setup lang="ts">
 import type { Floor, DayOfWeek, Category } from '~~/shared/types'
-import { getUnitsForFloor } from '~~/shared/map/units'
+import type { FloorUnitsResponse } from '~~/shared/map/units'
 
 definePageMeta({
 	layout: 'cms',
@@ -767,35 +767,23 @@ const categories = computed(() => categoriesData.value?.data || [])
 
 // Fetch map units with occupancy
 const { data: mapData } = await useFetch<{
-	floors: Array<{
-		level: number
-		units: Array<{ id: string; shop: { _id: string; name: string } | null }>
-	}>
+	floors: FloorUnitsResponse[]
 }>('/api/map/units')
 
 // Computed: available units for selected floor
 const availableUnits = computed(() => {
 	if (!form.floorId) return []
 
-	// Find selected floor to get its level
-	const selectedFloor = floors.value.find((f) => f._id === form.floorId)
-	if (!selectedFloor) return []
+	// Find floor data from API
+	const floorData = mapData.value?.floors?.find((f) => f.floorId === form.floorId)
+	if (!floorData) return []
 
-	const floorLevel = selectedFloor.level
-
-	// Get units for this floor level
-	const units = getUnitsForFloor(floorLevel)
-
-	// Get occupancy data
-	const floorData = mapData.value?.floors?.find((f) => f.level === floorLevel)
-
-	return units.map((unit) => {
-		const unitData = floorData?.units?.find((u) => u.id === unit.id)
-		const isOccupied = !!unitData?.shop
+	return floorData.units.map((unit) => {
+		const isOccupied = !!unit.shop
 		return {
-			...unit,
+			unitCode: unit.unitCode,
 			isOccupied,
-			shopName: unitData?.shop?.name || '',
+			shopName: unit.shop?.name || '',
 		}
 	})
 })

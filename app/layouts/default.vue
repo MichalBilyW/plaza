@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import type { OpeningHoursEntry, SpecialOpeningHours } from '@/shared/types'
+import type { OpeningHoursEntry, SpecialOpeningHours } from '@/shared/types';
 
 // Načtení obecných informací (otevírací doba)
 const { data: generalInfo } = useFetch<{

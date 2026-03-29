@@ -37,16 +37,14 @@
 						<span
 							:class="[
 								'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-								user?.role === 'admin'
-									? 'bg-purple-100 text-purple-800'
-									: 'bg-blue-100 text-blue-800',
+								user?.role === 'superadmin'
+									? 'bg-amber-100 text-amber-800'
+									: user?.role === 'admin'
+										? 'bg-purple-100 text-purple-800'
+										: 'bg-blue-100 text-blue-800',
 							]"
 						>
-							{{
-								user?.role === 'admin'
-									? $t('cms.roles.admin')
-									: $t('cms.roles.editor')
-							}}
+							{{ $t(roleLabel) }}
 						</span>
 					</div>
 				</div>
@@ -155,6 +153,12 @@ definePageMeta({
 
 const { t } = useI18n()
 const { user, secureFetch } = useCmsAuth()
+
+const roleLabel = computed(() => {
+	if (user.value?.role === 'superadmin') return 'cms.roles.superadmin'
+	if (user.value?.role === 'admin') return 'cms.roles.admin'
+	return 'cms.roles.editor'
+})
 
 usePlazaSeo({
 	title: t('cms.account.title'),

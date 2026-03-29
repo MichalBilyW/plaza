@@ -13,10 +13,10 @@ export function useSanitizeHtml() {
 	const sanitize = (dirty: string | null | undefined): string => {
 		if (!dirty) return ''
 
-		// Pouze na klientovi - DOMPurify vyžaduje DOM
+		// Na serveru vrátíme původní HTML - data jsou z naší DB, sanitizace proběhne na klientovi
+		// DOMPurify vyžaduje DOM, který na serveru není k dispozici
 		if (import.meta.server) {
-			// Na serveru vrátíme prázdný string - obsah se doplní na klientovi
-			return ''
+			return dirty
 		}
 
 		return DOMPurify.sanitize(dirty, {

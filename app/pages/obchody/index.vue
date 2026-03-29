@@ -182,6 +182,9 @@
 				</button>
 			</div>
 		</div>
+
+		<!-- Map section -->
+		<MapSection />
 	</div>
 </template>
 

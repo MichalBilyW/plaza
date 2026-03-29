@@ -1,213 +1,113 @@
 /**
- * Definice jednotek (units) mapy obchodního centra
+ * Typy pro interaktivní SVG mapu obchodního centra
  *
- * Každé patro má své jednotky s pevně danými ID.
- * Jednotky jsou definovány jako konstantní pole a používají se:
- * - V SVG mapách jako ID elementů
- * - V CMS pro přiřazení obchodů k pozicím
- * - V API pro vrácení obsazenosti
+ * Jednotky jsou dynamicky extrahovány ze SVG souborů.
+ * SVG elementy používají formát: <g id="unit_{unitCode}">
+ * Shop.unitCode (např. "S11") odpovídá SVG elementu "unit_S11"
  */
 
 // ==========================================
 // TYPES
 // ==========================================
 
-export interface MapUnit {
-	/** Unikátní ID jednotky (např. "1-A", "1-B") */
-	id: string
-	/** Popisný název umístění */
-	label: string
-	/** ID patra ke kterému jednotka patří */
-	floorLevel: number
-	/** Souřadnice pro jednoduché SVG (x, y, width, height) */
-	position: {
-		x: number
-		y: number
-		width: number
-		height: number
-	}
+/** Otevírací hodiny pro dnešní den */
+export interface TodayOpeningHours {
+	/** Zda je dnes otevřeno */
+	isOpen: boolean
+	/** Čas otevření (např. "09:00") */
+	openTime?: string
+	/** Čas zavření (např. "21:00") */
+	closeTime?: string
+	/** Formátovaný text (např. "9:00 - 21:00" nebo "Zavřeno") */
+	formatted: string
 }
 
-export interface FloorUnits {
-	/** Číslo patra (0 = přízemí, 1 = 1. patro, atd.) */
+/** Data obchodu pro zobrazení v mapě */
+export interface MapShopData {
+	_id: string
+	name: string
+	slug: string
+	logo?: string
+	isActive: boolean
+	/** Dnešní otevírací hodiny */
+	todayHours: TodayOpeningHours
+}
+
+/** Jednotka mapy s přiřazeným obchodem */
+export interface MapUnit {
+	/** Kód jednotky (např. "S11", "134") - odpovídá SVG id "unit_S11" */
+	unitCode: string
+	/** ID patra (MongoDB _id) */
+	floorId: string
+	/** Přiřazený obchod (null pokud jednotka není obsazená) */
+	shop: MapShopData | null
+}
+
+/** Odpověď API pro jednotky patra */
+export interface FloorUnitsResponse {
+	/** ID patra */
+	floorId: string
+	/** Název patra */
+	floorName: string
+	/** Level patra (0 = přízemí, 1 = 1. patro, atd.) */
 	level: number
-	/** Seznam jednotek na patře */
+	/** Cesta k SVG souboru */
+	svgMap?: string
+	/** Seznam jednotek s přiřazenými obchody */
 	units: MapUnit[]
 }
 
-export interface UnitWithShop extends MapUnit {
-	/** Přiřazený obchod (pokud existuje) */
-	shop?: {
-		_id: string
-		name: string
-		slug: string
-		logo?: string
-		isActive: boolean
-	} | null
-}
-
 // ==========================================
-// CONSTANTS - Definice jednotek pro každé patro
+// SVG HELPER FUNKCE
 // ==========================================
 
-/**
- * Jednotky pro přízemí (level 0)
- * Pro testovací účely: 4 čtverce vedle sebe
- */
-export const FLOOR_0_UNITS: MapUnit[] = [
-	{
-		id: '0-A',
-		label: 'Jednotka A',
-		floorLevel: 0,
-		position: { x: 10, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '0-B',
-		label: 'Jednotka B',
-		floorLevel: 0,
-		position: { x: 110, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '0-C',
-		label: 'Jednotka C',
-		floorLevel: 0,
-		position: { x: 210, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '0-D',
-		label: 'Jednotka D',
-		floorLevel: 0,
-		position: { x: 310, y: 50, width: 80, height: 100 },
-	},
-]
+/** Regex pro extrakci unitCode z SVG element ID */
+const UNIT_ID_REGEX = /^unit_(.+)$/
 
 /**
- * Jednotky pro 1. patro (level 1)
- * Pro testovací účely: 4 čtverce vedle sebe
+ * Extrahuje unitCode z SVG element ID
+ * @example extractUnitCode("unit_S11") => "S11"
+ * @example extractUnitCode("unit_134") => "134"
  */
-export const FLOOR_1_UNITS: MapUnit[] = [
-	{
-		id: '1-A',
-		label: 'Jednotka A',
-		floorLevel: 1,
-		position: { x: 10, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '1-B',
-		label: 'Jednotka B',
-		floorLevel: 1,
-		position: { x: 110, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '1-C',
-		label: 'Jednotka C',
-		floorLevel: 1,
-		position: { x: 210, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '1-D',
-		label: 'Jednotka D',
-		floorLevel: 1,
-		position: { x: 310, y: 50, width: 80, height: 100 },
-	},
-]
-
-/**
- * Jednotky pro 2. patro (level 2)
- * Pro testovací účely: 4 čtverce vedle sebe
- */
-export const FLOOR_2_UNITS: MapUnit[] = [
-	{
-		id: '2-A',
-		label: 'Jednotka A',
-		floorLevel: 2,
-		position: { x: 10, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '2-B',
-		label: 'Jednotka B',
-		floorLevel: 2,
-		position: { x: 110, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '2-C',
-		label: 'Jednotka C',
-		floorLevel: 2,
-		position: { x: 210, y: 50, width: 80, height: 100 },
-	},
-	{
-		id: '2-D',
-		label: 'Jednotka D',
-		floorLevel: 2,
-		position: { x: 310, y: 50, width: 80, height: 100 },
-	},
-]
-
-// ==========================================
-// AGREGOVANÉ KONSTANTY
-// ==========================================
-
-/**
- * Všechny jednotky seskupené podle patra
- */
-export const ALL_FLOOR_UNITS: FloorUnits[] = [
-	{ level: 0, units: FLOOR_0_UNITS },
-	{ level: 1, units: FLOOR_1_UNITS },
-	{ level: 2, units: FLOOR_2_UNITS },
-]
-
-/**
- * Všechny jednotky jako ploché pole
- */
-export const ALL_UNITS: MapUnit[] = [...FLOOR_0_UNITS, ...FLOOR_1_UNITS, ...FLOOR_2_UNITS]
-
-/**
- * Mapa jednotek podle ID pro rychlý přístup
- */
-export const UNITS_BY_ID: Record<string, MapUnit> = ALL_UNITS.reduce(
-	(acc, unit) => {
-		acc[unit.id] = unit
-		return acc
-	},
-	{} as Record<string, MapUnit>,
-)
-
-// ==========================================
-// HELPER FUNKCE
-// ==========================================
-
-/**
- * Získá jednotky pro dané patro
- */
-export function getUnitsForFloor(level: number): MapUnit[] {
-	const floor = ALL_FLOOR_UNITS.find((f) => f.level === level)
-	return floor?.units ?? []
+export function extractUnitCode(elementId: string): string | null {
+	const match = elementId.match(UNIT_ID_REGEX)
+	return match?.[1] ?? null
 }
 
 /**
- * Získá jednotku podle ID
+ * Vytvoří SVG element ID z unitCode
+ * @example createUnitElementId("S11") => "unit_S11"
  */
-export function getUnitById(id: string): MapUnit | undefined {
-	return UNITS_BY_ID[id]
+export function createUnitElementId(unitCode: string): string {
+	return `unit_${unitCode}`
 }
 
 /**
- * Zkontroluje, zda ID jednotky existuje
+ * Extrahuje všechny unitCodes z SVG stringu
+ * Hledá elementy s id="unit_*" nebo id='unit_*'
  */
-export function isValidUnitId(id: string): boolean {
-	return id in UNITS_BY_ID
+export function extractUnitCodesFromSvg(svgContent: string): string[] {
+	const regex = /id=["']unit_([^"']+)["']/g
+	const unitCodes: string[] = []
+	let match
+
+	while ((match = regex.exec(svgContent)) !== null) {
+		if (match[1]) {
+			unitCodes.push(match[1])
+		}
+	}
+
+	return unitCodes
 }
 
-/**
- * Získá všechna validní ID jednotek
- */
-export function getAllUnitIds(): string[] {
-	return ALL_UNITS.map((u) => u.id)
-}
+// ==========================================
+// KONSTANTY PRO SVG ANIMACI
+// ==========================================
 
 /**
- * Získá ID jednotek pro dané patro
+ * Skupiny ve static_around.svg pro animaci
+ * Pořadí definuje sekvenci animace při scrollu
  */
-export function getUnitIdsForFloor(level: number): string[] {
-	return getUnitsForFloor(level).map((u) => u.id)
-}
+export const STATIC_AROUND_GROUPS = ['Cesty', 'Budovy', 'Pudorys'] as const
+
+export type StaticAroundGroup = (typeof STATIC_AROUND_GROUPS)[number]

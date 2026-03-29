@@ -11,6 +11,16 @@ import { serveStatic, createError, setHeader } from 'h3'
 // Povolené přípony (whitelist pro bezpečnost)
 const ALLOWED_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'])
 
+// Content-Type mapping
+const CONTENT_TYPES: Record<string, string> = {
+	'.jpg': 'image/jpeg',
+	'.jpeg': 'image/jpeg',
+	'.png': 'image/png',
+	'.webp': 'image/webp',
+	'.gif': 'image/gif',
+	'.svg': 'image/svg+xml',
+}
+
 // Určit uploads adresář jednou při startu
 const uploadsDir =
 	process.env.NODE_ENV === 'production'
@@ -50,6 +60,10 @@ export default defineEventHandler(async (event) => {
 
 	// Cache headers - soubory mají UUID, takže immutable cache je bezpečná
 	setHeader(event, 'Cache-Control', 'public, max-age=31536000, immutable')
+
+	// Content-Type header
+	const contentType = CONTENT_TYPES[ext] || 'application/octet-stream'
+	setHeader(event, 'Content-Type', contentType)
 
 	// Nitro serveStatic - optimalizovanější než manuální streaming
 	// Podporuje Range requests, ETag, Last-Modified automaticky

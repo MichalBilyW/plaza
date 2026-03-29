@@ -19,6 +19,9 @@
 
 		<!-- Featured shops -->
 		<LazyHomepageFeaturedShops :shops="shops" :pending="shopsPending" />
+
+		<!-- Map section -->
+		<MapSection />
 	</div>
 </template>
 

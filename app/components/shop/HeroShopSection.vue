@@ -47,12 +47,13 @@
 						<!-- Opening hours table -->
 						<div v-if="shop.openingHours?.length" class="mb-2">
 							<div
-								v-for="entry in shop.openingHours"
+								v-for="(entry, index) in shop.openingHours"
 								:key="entry.day"
-								class="flex justify-between py-1 border-b border-gray-100 last:border-0"
+								class="flex justify-between p-1 border-b border-gray-100 last:border-0"
 								:class="{
 									'font-black': isToday(entry.day),
 									'opacity-70 text-sm': !isToday(entry.day),
+									'bg-plaza-light/20 rounded-xl': index % 2 !== 0,
 								}"
 							>
 								<span class="text-plaza-dark">{{ getDayName(entry.day) }}</span>

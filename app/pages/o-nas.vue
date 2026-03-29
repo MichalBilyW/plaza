@@ -204,11 +204,11 @@
 				<!-- Služby centra -->
 				<section
 					v-if="services.length"
-					class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] px-4 py-12 md:px-8 lg:px-16"
+					class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] rounded-[5px_20px_5px_5px] px-4 py-12 md:px-8 lg:px-16"
 				>
 					<div class="max-w-5xl mx-auto">
 						<h2
-							class="text-plaza font-heading font-black text-2xl md:text-3xl mb-8 text-center uppercase"
+							class="font-heading font-black text-white text-2xl md:text-3xl mb-8 text-center uppercase"
 						>
 							{{ t('aboutPage.services') }}
 						</h2>
@@ -216,7 +216,9 @@
 							<div
 								v-for="service in services"
 								:key="service._id"
-								class="flex flex-col items-center text-center group bg-white rounded-[5px_20px_5px_5px] p-4 w-full max-w-xs hover:bg-white/90 transition-colors"
+								class="flex flex-col items-center justify-between text-center group bg-white rounded-[5px_20px_5px_5px] p-4 w-[200px] h-[160px] hover:bg-white/90 transition-colors"
+								:class="{ 'cursor-pointer': service.description }"
+								@click="service.description && openServiceModal(service)"
 							>
 								<div
 									class="w-16 h-16 md:w-20 md:h-20 mb-3 flex items-center justify-center"
@@ -354,6 +356,9 @@
 				</section>
 			</div>
 		</div>
+
+		<!-- Service Modal -->
+		<ServiceModal />
 	</div>
 </template>
 
@@ -366,6 +371,7 @@ import 'swiper/css'
 
 const { t } = useI18n()
 const { sanitize } = useSanitizeHtml()
+const { openModal: openServiceModal } = useServiceModal()
 
 // SSR-safe timestamp for hydration
 const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())

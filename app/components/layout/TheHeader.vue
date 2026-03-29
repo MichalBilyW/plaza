@@ -1,7 +1,7 @@
 <template>
 	<!-- Header Desktop -->
 	<header
-		class="hidden bg-plaza-dark lg:block fixed top-0 pt-5 left-1/2 -translate-x-1/2 z-50 w-full transition-transform duration-300"
+		class="hidden lg:block fixed top-0 pt-5 left-1/2 -translate-x-1/2 z-50 w-full transition-transform duration-300"
 		:class="{ '-translate-y-[calc(100%+30px)]': !isHeaderVisible }"
 	>
 		<nav
@@ -21,7 +21,7 @@
 			<div class="flex items-center gap-8">
 				<NuxtLink
 					to="/"
-					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza/80 transition-colors"
+					class="font-heading font-bold text-[18px] leading-[30px] hover:text-plaza/80 transition-colors"
 					:class="{
 						'text-plaza': route.path === '/',
 						'text-black': route.path !== '/',
@@ -32,7 +32,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/obchody"
-					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[18px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/obchody'),
 						'text-black': !route.path.startsWith('/obchody'),
@@ -43,7 +43,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/akce"
-					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[18px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/akce'),
 						'text-black': !route.path.startsWith('/akce'),
@@ -54,7 +54,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/o-nas"
-					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[18px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/o-nas',
 						'text-black': route.path !== '/o-nas',
@@ -66,7 +66,7 @@
 				<!-- CTA Button -->
 				<NuxtLink
 					to="/mapa"
-					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
+					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-200"
 				>
 					{{ t('nav.mapCenter') }}
 				</NuxtLink>
@@ -79,7 +79,7 @@
 				:aria-label="t('nav.showOpeningHours')"
 				@click="openOpeningHoursModal"
 			>
-				<div class="font-sans text-base text-right text-black">
+				<div class="font-heading text-base text-right text-black">
 					<div class="flex items-center justify-center gap-1.5 font-semibold">
 						<svg
 							class="w-5 h-5 flex-shrink-0 text-black"
@@ -216,7 +216,7 @@
 			>
 				<NuxtLink
 					to="/"
-					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[18px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/',
 						'text-black': route.path !== '/',
@@ -228,7 +228,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/obchody"
-					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[18px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/obchody'),
 						'text-black': !route.path.startsWith('/obchody'),
@@ -240,7 +240,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/akce"
-					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[18px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path.startsWith('/akce'),
 						'text-black': !route.path.startsWith('/akce'),
@@ -252,7 +252,7 @@
 				</NuxtLink>
 				<NuxtLink
 					to="/o-nas"
-					class="font-sans font-bold text-[17px] leading-[30px] hover:text-plaza transition-colors"
+					class="font-heading font-bold text-[18px] leading-[30px] hover:text-plaza transition-colors"
 					:class="{
 						'text-plaza': route.path === '/o-nas',
 						'text-black': route.path !== '/o-nas',
@@ -278,7 +278,7 @@
 				<!-- Opening hours -->
 				<button
 					type="button"
-					class="font-sans text-base text-right text-black cursor-pointer hover:opacity-80 transition-opacity"
+					class="font-heading text-base text-right text-black cursor-pointer hover:opacity-80 transition-opacity"
 					:aria-label="t('nav.showOpeningHours')"
 					@click="openOpeningHoursModal"
 				>

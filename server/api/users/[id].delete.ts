@@ -11,6 +11,7 @@ import { requireCsrf } from '@/server/utils/csrf'
 import { objectIdSchema } from '@/shared/schemas'
 import {
 	defineApiHandler,
+	createForbiddenError,
 	createNotFoundError,
 	createValidationError,
 	ApiError,
@@ -45,6 +46,10 @@ export default defineEventHandler(
 
 		if (!user) {
 			throw createNotFoundError('Správce')
+		}
+
+		if (user.role === 'superadmin' && currentUser.role !== 'superadmin') {
+			throw createForbiddenError('Pouze SuperAdmin může smazat SuperAdmin účet')
 		}
 
 		// Zneplatnit všechny sessions uživatele

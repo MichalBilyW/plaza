@@ -5,7 +5,12 @@
 
 import { connectToDatabase } from '@/server/utils/db'
 import { User } from '@/server/models'
-import { requireAuth } from '@/server/utils/auth'
+import {
+	requireAuth,
+	generateAccessToken,
+	getRefreshTokenFromCookie,
+	setAuthCookies,
+} from '@/server/utils/auth'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
 
 export default defineEventHandler(
@@ -18,6 +23,22 @@ export default defineEventHandler(
 
 		if (!user || !user.isActive) {
 			throw createNotFoundError('Uživatel')
+		}
+
+		if (user.role !== authUser.role) {
+			const refreshToken = getRefreshTokenFromCookie(event)
+			if (refreshToken) {
+				const accessToken = generateAccessToken(
+					{
+						id: user._id.toString(),
+						email: user.email,
+						name: user.name,
+						role: user.role,
+					},
+					authUser.sessionId,
+				)
+				setAuthCookies(event, accessToken, refreshToken)
+			}
 		}
 
 		return {

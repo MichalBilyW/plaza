@@ -15,6 +15,8 @@ export interface IFloor {
 	level: number
 	description?: string
 	mapImage?: string
+	/** SVG mapa patra - cesta k souboru */
+	svgMap?: string
 	isActive: boolean
 	sortOrder: number
 }
@@ -54,6 +56,8 @@ const floorSchema = new Schema<IFloorDocument>(
 			maxlength: 500,
 		},
 		mapImage: String,
+		/** SVG mapa patra */
+		svgMap: String,
 		isActive: {
 			type: Boolean,
 			default: true,

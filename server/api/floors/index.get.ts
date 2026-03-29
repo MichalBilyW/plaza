@@ -4,7 +4,7 @@
  */
 
 import { connectToDatabase } from '@/server/utils/db'
-import { Floor } from '@/server/models'
+import { Floor, Shop } from '@/server/models'
 import { paginationQuerySchema } from '@/shared/schemas'
 import { defineApiHandler } from '@/server/utils/errors'
 import type { FilterQuery } from 'mongoose'
@@ -55,10 +55,19 @@ export default defineEventHandler(
 			.limit(limit)
 			.lean()
 
+		// Získat počet obchodů pro každé patro
+		const floorIds = floors.map((f) => f._id)
+		const shopCounts = await Shop.aggregate([
+			{ $match: { floorId: { $in: floorIds } } },
+			{ $group: { _id: '$floorId', count: { $sum: 1 } } },
+		])
+		const shopCountMap = new Map(shopCounts.map((s) => [s._id.toString(), s.count]))
+
 		// Transformace pro konzistentní response
 		const data = floors.map((floor) => ({
 			...floor,
 			_id: floor._id.toString(),
+			shopCount: shopCountMap.get(floor._id.toString()) ?? 0,
 		}))
 
 		return {

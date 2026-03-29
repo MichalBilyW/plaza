@@ -129,7 +129,6 @@ export type PaginationQueryInput = z.input<typeof paginationQuerySchema>
 export const categoryCreateSchema = z.object({
 	name: z.string().min(2, 'Název musí mít alespoň 2 znaky').max(100),
 	slug: optionalSlugSchema,
-	description: z.string().max(500).optional(),
 	isActive: z.boolean().default(true),
 	sortOrder: z.number().int().default(0),
 })
@@ -280,7 +279,7 @@ export const serviceCreateSchema = z.object({
 		.string()
 		.min(1, 'Popisek je povinný')
 		.max(120, 'Popisek může mít max. 120 znaků'),
-	description: z.string().max(2000).optional(),
+	description: z.string().max(50000, 'Popis může mít max. 50000 znaků').optional(),
 	isActive: z.boolean().default(true),
 	sortOrder: z.number().int().default(0),
 })
@@ -311,6 +310,7 @@ export const floorCreateSchema = z.object({
 	level: z.number().int(),
 	description: z.string().max(500).optional(),
 	mapImage: z.string().optional(),
+	svgMap: z.string().optional(),
 	isActive: z.boolean().default(true),
 	sortOrder: z.number().int().default(0),
 })
@@ -324,7 +324,7 @@ export type FloorUpdateInput = z.infer<typeof floorUpdateSchema>
 // USER SCHÉMATA
 // ==========================================
 
-export const userRoleSchema = z.enum(['admin', 'editor'])
+export const userRoleSchema = z.enum(['superadmin', 'admin', 'editor'])
 
 export const userCreateSchema = z.object({
 	email: emailSchema,
@@ -438,6 +438,7 @@ export const generalInfoUpdateSchema = z.object({
 	facebook: urlSchema,
 	instagram: urlSchema,
 	gallery: z.array(z.string()).max(10, 'Maximálně 10 fotek v galerii').optional(),
+	staticAroundMap: z.string().optional(),
 })
 
 export type GeneralInfoUpdateInput = z.infer<typeof generalInfoUpdateSchema>

@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<UiTopLoadingBar />
 		<NuxtRouteAnnouncer />
 		<NuxtLayout>
 			<NuxtPage />

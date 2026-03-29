@@ -20,7 +20,7 @@ export interface EndpointDefinition {
 	path: string
 	description?: string
 	auth?: boolean // Vyžaduje autentizaci?
-	roles?: ('admin' | 'editor')[] // Omezení na role
+	roles?: ('superadmin' | 'admin' | 'editor')[] // Omezení na role
 }
 
 // ==========================================

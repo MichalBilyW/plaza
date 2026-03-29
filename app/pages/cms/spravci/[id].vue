@@ -2,15 +2,15 @@
 	<div class="p-8">
 		<CmsBreadcrumbs />
 		<div class="mb-8">
-			<h1 class="text-2xl font-bold text-gray-900">{{ $t('cms.users.editUser') }}</h1>
+			<h1 class="text-2xl font-bold text-gray-900">{{ t('cms.users.editUser') }}</h1>
 		</div>
 
 		<div v-if="pending" class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
-			<p class="text-plaza-dark">{{ $t('common.loading') }}</p>
+			<p class="text-plaza-dark">{{ t('common.loading') }}</p>
 		</div>
 
 		<div v-else-if="error" class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
-			<p class="text-red-500">{{ $t('common.error') }}: {{ error.message }}</p>
+			<p class="text-red-500">{{ t('common.error') }}: {{ error.message }}</p>
 		</div>
 
 		<div v-else class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
@@ -18,7 +18,7 @@
 				<!-- Jméno -->
 				<div>
 					<label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-						{{ $t('cms.users.name') }} *
+						{{ t('cms.users.name') }} *
 					</label>
 					<input
 						id="name"
@@ -26,7 +26,7 @@
 						type="text"
 						required
 						class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
-						:placeholder="$t('cms.users.namePlaceholder')"
+						:placeholder="t('cms.users.namePlaceholder')"
 					/>
 					<p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
 				</div>
@@ -34,7 +34,7 @@
 				<!-- Email -->
 				<div>
 					<label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-						{{ $t('cms.users.email') }} *
+						{{ t('cms.users.email') }} *
 					</label>
 					<input
 						id="email"
@@ -42,7 +42,7 @@
 						type="email"
 						required
 						class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
-						:placeholder="$t('cms.users.emailPlaceholder')"
+						:placeholder="t('cms.users.emailPlaceholder')"
 					/>
 					<p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
 				</div>
@@ -50,7 +50,7 @@
 				<!-- Nové heslo (volitelné) -->
 				<div>
 					<label for="password" class="block text-sm font-medium text-gray-700 mb-1">
-						{{ $t('cms.users.newPassword') }}
+						{{ t('cms.users.newPassword') }}
 					</label>
 					<input
 						id="password"
@@ -58,10 +58,10 @@
 						type="password"
 						minlength="8"
 						class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
-						:placeholder="$t('cms.users.newPasswordPlaceholder')"
+						:placeholder="t('cms.users.newPasswordPlaceholder')"
 					/>
 					<p class="mt-1 text-sm text-plaza-dark">
-						{{ $t('cms.users.newPasswordHint') }}
+						{{ t('cms.users.newPasswordHint') }}
 					</p>
 					<p v-if="errors.password" class="mt-1 text-sm text-red-600">
 						{{ errors.password }}
@@ -71,17 +71,21 @@
 				<!-- Role -->
 				<div>
 					<label for="role" class="block text-sm font-medium text-gray-700 mb-1">
-						{{ $t('cms.users.role') }} *
+						{{ t('cms.users.role') }} *
 					</label>
 					<select
 						id="role"
 						v-model="form.role"
+						:disabled="form.role === 'superadmin' && !isSuperAdmin"
 						class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza-500 focus:border-transparent"
 					>
-						<option value="editor">{{ $t('cms.roles.editor') }}</option>
-						<option value="admin">{{ $t('cms.roles.admin') }}</option>
+						<option value="editor">{{ t('cms.roles.editor') }}</option>
+						<option value="admin">{{ t('cms.roles.admin') }}</option>
+						<option v-if="isSuperAdmin || form.role === 'superadmin'" value="superadmin">
+							{{ t('cms.roles.superadmin') }}
+						</option>
 					</select>
-					<p class="mt-1 text-sm text-plaza-dark">{{ $t('cms.users.roleHint') }}</p>
+					<p class="mt-1 text-sm text-plaza-dark">{{ t('cms.users.roleHint') }}</p>
 				</div>
 
 				<!-- Aktivní -->
@@ -93,17 +97,17 @@
 						class="w-4 h-4 text-plaza-600 rounded focus:ring-plaza-500"
 					/>
 					<label for="isActive" class="text-sm font-medium text-gray-700">
-						{{ $t('cms.users.isActive') }}
+						{{ t('cms.users.isActive') }}
 					</label>
 				</div>
 
 				<!-- Metadata -->
 				<div class="pt-4 border-t text-sm text-plaza-dark">
 					<p v-if="userData?.createdAt">
-						{{ $t('cms.users.createdAt') }}: {{ formatDate(userData.createdAt) }}
+						{{ t('cms.users.createdAt') }}: {{ formatDate(userData.createdAt) }}
 					</p>
 					<p v-if="userData?.lastLoginAt">
-						{{ $t('cms.users.lastLogin') }}: {{ formatDate(userData.lastLoginAt) }}
+						{{ t('cms.users.lastLogin') }}: {{ formatDate(userData.lastLoginAt) }}
 					</p>
 				</div>
 
@@ -118,14 +122,14 @@
 						to="/cms/spravci"
 						class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
 					>
-						{{ $t('common.cancel') }}
+						{{ t('common.cancel') }}
 					</NuxtLink>
 					<button
 						type="submit"
 						:disabled="submitting"
 						class="px-6 py-2 bg-plaza text-white rounded-lg hover:bg-plaza transition-colors disabled:opacity-50"
 					>
-						{{ submitting ? $t('common.loading') : $t('common.save') }}
+						{{ submitting ? t('common.loading') : t('common.save') }}
 					</button>
 				</div>
 			</form>
@@ -143,7 +147,7 @@ definePageMeta({
 
 const route = useRoute()
 const { t } = useI18n()
-const { secureFetch } = useCmsAuth()
+const { secureFetch, isSuperAdmin } = useCmsAuth()
 
 usePlazaSeo({
 	title: t('cms.users.editUser'),
@@ -165,7 +169,7 @@ const form = reactive({
 	name: userData.value?.name || '',
 	email: userData.value?.email || '',
 	password: '',
-	role: userData.value?.role || ('editor' as 'admin' | 'editor'),
+	role: userData.value?.role || ('editor' as 'superadmin' | 'admin' | 'editor'),
 	isActive: userData.value?.isActive ?? true,
 })
 

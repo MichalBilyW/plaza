@@ -145,6 +145,7 @@ export default defineNuxtConfig({
 				},
 				{ name: 'format-detection', content: 'telephone=no' },
 				{ name: 'theme-color', content: '#E20B1B' },
+				{ name: 'author', content: 'MichalBily.cz' },
 				{ property: 'og:site_name', content: 'OC Plaza Liberec' },
 				{ property: 'og:locale', content: 'cs_CZ' },
 			],

@@ -1,3 +1,5 @@
+import plugin from 'tailwindcss/plugin'
+
 /** @type {import('tailwindcss').Config} */
 export default {
 	future: {
@@ -120,5 +122,10 @@ export default {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [
+		// Varianta pro touch zařízení (tablety, mobily)
+		plugin(function ({ addVariant }) {
+			addVariant('touch', '@media (pointer: coarse)')
+		}),
+	],
 }

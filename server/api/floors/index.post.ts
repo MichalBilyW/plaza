@@ -6,19 +6,23 @@
 import { connectToDatabase } from '@/server/utils/db'
 import { Floor } from '@/server/models'
 import { floorCreateSchema } from '@/shared/schemas'
-import { requireEditor } from '@/server/utils/auth'
+import { requireEditor, requireSuperAdmin } from '@/server/utils/auth'
 import { generateUniqueSlug } from '@/server/utils/slug'
 import { defineApiHandler } from '@/server/utils/errors'
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
-		// Vyžadovat editor nebo admin roli
-		requireEditor(event)
+		const body = await readBody(event)
+
+		if (Object.prototype.hasOwnProperty.call(body ?? {}, 'svgMap')) {
+			requireSuperAdmin(event)
+		} else {
+			requireEditor(event)
+		}
 
 		await connectToDatabase()
 
 		// Validace vstupu
-		const body = await readBody(event)
 		const data = floorCreateSchema.parse(body)
 
 		// Generovat slug pokud není zadán

@@ -55,6 +55,7 @@
 					<button
 						type="button"
 						class="flex items-center gap-1.5 text-sm text-plaza-gray hover:text-plaza transition-colors"
+						:class="{ 'max-md:hidden': isLocked }"
 						:aria-label="
 							viewMode === 'slider'
 								? t('home.shops.showGrid')

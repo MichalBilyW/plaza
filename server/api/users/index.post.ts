@@ -10,6 +10,7 @@ import { requireAdmin, hashPassword } from '@/server/utils/auth'
 import { requireCsrf } from '@/server/utils/csrf'
 import {
 	defineApiHandler,
+	createForbiddenError,
 	createValidationError,
 	ApiError,
 	ErrorCodes,
@@ -21,7 +22,7 @@ export default defineEventHandler(
 		requireCsrf(event)
 
 		// Pouze admin může vytvářet správce
-		requireAdmin(event)
+		const currentUser = requireAdmin(event)
 
 		await connectToDatabase()
 
@@ -39,6 +40,10 @@ export default defineEventHandler(
 		}
 
 		const { email, name, password, role, isActive } = result.data
+
+		if (role === 'superadmin' && currentUser.role !== 'superadmin') {
+			throw createForbiddenError('Pouze SuperAdmin může vytvářet uživatele s rolí SuperAdmin')
+		}
 
 		// Kontrola zda email již neexistuje
 		const existingUser = await User.findOne({ email })

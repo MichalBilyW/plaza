@@ -36,18 +36,32 @@ export const useCmsAuth = () => {
 			headers?: Record<string, string>
 		} = {},
 	): Promise<T> => {
-		const token = csrfToken.value || getCsrfFromCookie()
+		const executeRequest = async () => {
+			const token = csrfToken.value || getCsrfFromCookie()
 
-		const result = await $fetch<T>(url, {
-			method: options.method,
-			body: options.body as Record<string, unknown> | undefined,
-			credentials: 'include',
-			headers: {
-				...options.headers,
-				...(token ? { 'X-CSRF-Token': token } : {}),
-			},
-		})
-		return result as T
+			return $fetch<T>(url, {
+				method: options.method,
+				body: options.body as Record<string, unknown> | undefined,
+				credentials: 'include',
+				headers: {
+					...options.headers,
+					...(token ? { 'X-CSRF-Token': token } : {}),
+				},
+			})
+		}
+
+		try {
+			const result = await executeRequest()
+			return result as T
+		} catch (error: unknown) {
+			const fetchError = error as { statusCode?: number }
+			if (fetchError.statusCode === 403) {
+				await fetchUser()
+				const result = await executeRequest()
+				return result as T
+			}
+			throw error
+		}
 	}
 
 	const fetchUser = async () => {
@@ -139,12 +153,14 @@ export const useCmsAuth = () => {
 		})
 	}
 
-	const isAdmin = computed(() => user.value?.role === 'admin')
+	const isSuperAdmin = computed(() => user.value?.role === 'superadmin')
+	const isAdmin = computed(() => user.value?.role === 'admin' || isSuperAdmin.value)
 	const isEditor = computed(() => user.value?.role === 'editor' || isAdmin.value)
 
 	return {
 		user,
 		isLoading,
+		isSuperAdmin,
 		isAdmin,
 		isEditor,
 		csrfToken,

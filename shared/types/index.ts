@@ -7,7 +7,7 @@
 // ==========================================
 
 /** Role uživatele v CMS */
-export type UserRole = 'admin' | 'editor'
+export type UserRole = 'superadmin' | 'admin' | 'editor'
 
 /** Stav publikace obsahu */
 export type PublishStatus = 'draft' | 'published' | 'archived'
@@ -64,7 +64,6 @@ export interface BaseEntity {
 export interface Category extends BaseEntity {
 	name: string
 	slug: string
-	description?: string
 	isActive: boolean
 	sortOrder: number
 	shopCount?: number // Virtuální pole - počet obchodů v kategorii
@@ -179,7 +178,8 @@ export interface Floor extends BaseEntity {
 	slug: string
 	level: number // číselné pořadí (-1 = podzemí, 0 = přízemí, 1 = 1. patro)
 	description?: string
-	mapImage?: string // SVG nebo obrázek mapy patra
+	mapImage?: string // obrázek mapy patra (náhled)
+	svgMap?: string // SVG mapa patra pro interaktivní zobrazení
 	isActive: boolean
 	sortOrder: number
 }

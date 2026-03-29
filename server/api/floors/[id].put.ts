@@ -6,13 +6,19 @@
 import { connectToDatabase } from '@/server/utils/db'
 import { Floor } from '@/server/models'
 import { floorUpdateSchema } from '@/shared/schemas'
-import { requireEditor } from '@/server/utils/auth'
+import { requireEditor, requireSuperAdmin } from '@/server/utils/auth'
 import { generateUniqueSlug } from '@/server/utils/slug'
 import { defineApiHandler, createNotFoundError, createValidationError } from '@/server/utils/errors'
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
-		requireEditor(event)
+		const body = await readBody(event)
+
+		if (Object.prototype.hasOwnProperty.call(body ?? {}, 'svgMap')) {
+			requireSuperAdmin(event)
+		} else {
+			requireEditor(event)
+		}
 
 		await connectToDatabase()
 
@@ -25,7 +31,6 @@ export default defineEventHandler(
 		}
 
 		// Validace vstupu
-		const body = await readBody(event)
 		const data = floorUpdateSchema.parse(body)
 
 		// Pokud se mění název a není explicitně zadán slug, vygenerovat nový
@@ -47,7 +52,7 @@ export default defineEventHandler(
 		// Aktualizovat jen pole, která byla v requestu (ne Zod defaults)
 		for (const key of Object.keys(data)) {
 			if (key in body) {
-				;(floor as Record<string, unknown>)[key] = data[key as keyof typeof data]
+				floor.set(key, data[key as keyof typeof data])
 			}
 		}
 		await floor.save()
