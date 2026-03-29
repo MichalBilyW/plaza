@@ -129,7 +129,11 @@ async function getUnitCodesFromSvgFile(svgPath: string): Promise<string[]> {
 			relativePath = relativePath.replace('api/uploads/', 'uploads/')
 		}
 
-		const publicDir = join(process.cwd(), 'public')
+		// V produkci hledáme v .output/public/, v dev v public/
+		const isDev = process.env.NODE_ENV !== 'production'
+		const publicDir = isDev
+			? join(process.cwd(), 'public')
+			: join(process.cwd(), '.output', 'public')
 		const fullPath = join(publicDir, relativePath)
 
 		const svgContent = await readFile(fullPath, 'utf-8')
