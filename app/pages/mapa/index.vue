@@ -1,5 +1,5 @@
 <template>
-	<div class="min-h-screen pt-[130px] lg:pt-[160px]">
+	<div class="min-h-screen pt-[80px] md:pt-0 lg:pt-[40px]">
 		<!-- Hidden header -->
 		<div class="hidden visibility-hidden absolute -top-[9999px] -left-[9999px] opacity-0">
 			<h1

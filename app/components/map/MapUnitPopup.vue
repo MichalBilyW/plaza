@@ -20,16 +20,20 @@
 
 							<!-- Otevírací hodiny -->
 							<p class="text-sm text-gray-300 mb-4">
-								• {{ unit.shop?.todayHours.formatted }}
+								<span
+									:class="unit.shop?.todayHours.isOpen ? 'text-plaza-success' : 'text-plaza'"
+									aria-hidden="true"
+								>●</span>
+								{{ unit.shop?.todayHours.formatted }}
 							</p>
 
 							<!-- Tlačítko více -->
 							<NuxtLink
 								v-if="unit.shop?.slug"
 								:to="`/obchody/${unit.shop.slug}`"
-								class="inline-block px-8 py-2.5 bg-plaza hover:brightness-110 text-white text-center rounded font-medium transition-all"
+								class="mt-1 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] hover:brightness-110 transition-all duration-200"
 							>
-								více
+								{{ t('common.more') }}
 							</NuxtLink>
 						</div>
 					</div>
@@ -41,6 +45,7 @@
 
 <script setup lang="ts">
 import type { MapUnit } from '~~/shared/map/units'
+const { t } = useI18n()
 
 interface Props {
 	/** Vybraná jednotka */

@@ -32,6 +32,22 @@ const DAYS_MAP: DayOfWeek[] = [
 ]
 
 /**
+ * Kontroluje, zda je právě otevřeno na základě aktuálního času
+ */
+function isCurrentlyOpen(openTime: string, closeTime: string): boolean {
+	const now = new Date()
+	const currentMinutes = now.getHours() * 60 + now.getMinutes()
+
+	const [openH, openM] = openTime.split(':').map(Number)
+	const [closeH, closeM] = closeTime.split(':').map(Number)
+
+	const openMinutes = (openH ?? 0) * 60 + (openM ?? 0)
+	const closeMinutes = (closeH ?? 0) * 60 + (closeM ?? 0)
+
+	return currentMinutes >= openMinutes && currentMinutes < closeMinutes
+}
+
+/**
  * Vypočítá dnešní otevírací hodiny pro obchod
  */
 function getTodayOpeningHours(
@@ -66,7 +82,7 @@ function getTodayOpeningHours(
 					}
 					if (special.open && special.close) {
 						return {
-							isOpen: true,
+							isOpen: isCurrentlyOpen(special.open, special.close),
 							openTime: special.open,
 							closeTime: special.close,
 							formatted: `${special.open} - ${special.close}`,
@@ -84,7 +100,7 @@ function getTodayOpeningHours(
 					}
 					if (special.open && special.close) {
 						return {
-							isOpen: true,
+							isOpen: isCurrentlyOpen(special.open, special.close),
 							openTime: special.open,
 							closeTime: special.close,
 							formatted: `${special.open} - ${special.close}`,
@@ -103,7 +119,7 @@ function getTodayOpeningHours(
 				return { isOpen: false, formatted: 'Zavřeno' }
 			}
 			return {
-				isOpen: true,
+				isOpen: isCurrentlyOpen(todayHours.open, todayHours.close),
 				openTime: todayHours.open,
 				closeTime: todayHours.close,
 				formatted: `${todayHours.open} - ${todayHours.close}`,
