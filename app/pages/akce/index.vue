@@ -1,16 +1,16 @@
 <template>
-	<div class="bg-gradient-to-b from-[#131313] to-[#1A1A1A]">
+	<div class="min-h-screen">
 		<!-- Dark header -->
-		<div>
+		<div class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[130px] lg:pt-[160px] pb-20">
 			<h1
-				class="text-center text-white font-heading font-black text-3xl md:text-4xl uppercase pt-20"
+				class="text-center text-white font-heading font-black text-3xl md:text-4xl uppercase"
 			>
 				{{ t('eventsPage.title') }}
 			</h1>
 		</div>
 
 		<!-- Filter bar -->
-		<div class="relative z-10 container-small transform translate-y-9 px-4">
+		<div class="relative z-10 container-small transform -translate-y-9 px-4">
 			<div
 				class="flex flex-col gap-3 rounded-[5px_20px_5px_5px] bg-white px-5 py-4 drop-shadow-md md:flex-row md:justify-between"
 				role="search"
@@ -47,7 +47,7 @@
 		</div>
 
 		<!-- Content area -->
-		<div class="min-h-screen bg-gradient-to-b from-[#131313] to-[#1A1A1A] py-20">
+		<div class="min-h-screen pb-12">
 			<div class="container-small px-4">
 				<!-- Loading skeleton (initial load only) -->
 				<div v-if="initialLoading" class="flex flex-wrap justify-center gap-5">

@@ -22,7 +22,7 @@ export interface MapState {
 }
 
 export function useInteractiveMap() {
-	// Data z API
+	// Data z API - pouze na klientu aby se zabránilo hydration mismatch
 	const {
 		data: mapData,
 		pending,
@@ -33,7 +33,7 @@ export function useInteractiveMap() {
 		totalUnits: number
 		occupiedUnits: number
 		staticAroundMap: string | null
-	}>('/api/map/units')
+	}>('/api/map/units', { server: false })
 
 	// Computed: seznam pater
 	const floors = computed(() => mapData.value?.floors ?? [])

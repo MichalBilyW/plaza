@@ -1,7 +1,7 @@
 <template>
 	<div class="min-h-screen">
 		<!-- Dark header -->
-		<div class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-20 pb-12">
+		<div class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[130px] lg:pt-[160px] pb-20">
 			<h1
 				class="text-center text-white font-heading font-black text-3xl md:text-4xl uppercase"
 			>

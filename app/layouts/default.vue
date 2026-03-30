@@ -10,7 +10,7 @@
 		/>
 
 		<!-- Main content -->
-		<main id="main-content" class="w-full pt-[60px] lg:pt-[90px]">
+		<main id="main-content" class="w-full">
 			<slot></slot>
 		</main>
 

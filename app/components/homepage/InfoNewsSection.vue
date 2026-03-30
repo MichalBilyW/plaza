@@ -15,7 +15,7 @@
 						to="/obchody"
 						class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]"
 					>
-						<span class="text-plaza text-xl md:text-2xl lg:text-3xl">{{
+						<span class="font-bold text-plaza text-xl md:text-2xl lg:text-3xl">{{
 							animatedShopsCount
 						}}</span>
 						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
@@ -52,7 +52,7 @@
 						to="/obchody?kategorie=jidlo-a-obcerstveni"
 						class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]"
 					>
-						<span class="text-plaza text-xl md:text-2xl lg:text-3xl">{{
+						<span class="font-bold text-plaza text-xl md:text-2xl lg:text-3xl">{{
 							animatedRestaurantsCount
 						}}</span>
 						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
@@ -89,7 +89,7 @@
 						to="/"
 						class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]"
 					>
-						<span class="text-plaza text-xl md:text-2xl lg:text-3xl">{{
+						<span class="font-bold text-plaza text-xl md:text-2xl lg:text-3xl">{{
 							animatedParkingCount
 						}}</span>
 						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
@@ -131,7 +131,7 @@
 							>
 								{{ t('home.infoSection.openingHours') }}
 								<svg
-									class="absolute right-3 top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
+									class="absolute right-3 top-3.5 md:top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +163,7 @@
 							>
 								{{ t('home.infoSection.mapCenter') }}
 								<svg
-									class="absolute right-3 top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
+									class="absolute right-3 top-3.5 md:top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
@@ -229,7 +229,7 @@
 						<!-- Fallback when no news -->
 						<img
 							v-if="!newsPending && news.length === 0"
-							src="/images/homepage/default-hero.jpg"
+							src="/images/homepage/default-info.jpg"
 							:alt="t('home.infoSection.newsAlt')"
 							class="w-full h-full object-cover"
 						/>

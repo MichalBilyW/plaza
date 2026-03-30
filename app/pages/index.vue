@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="min-h-screen">
 		<h1 class="absolute -top-[9999px] -left-[9999px] opacity-0 visibility-hidden">
 			{{ t('home.hero.title') }}
 		</h1>

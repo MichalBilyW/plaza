@@ -4,96 +4,34 @@
 			<Transition name="popup">
 				<div v-if="unit && position" class="fixed inset-0 z-50" @click.self="emit('close')">
 					<!-- Overlay -->
-					<div class="absolute inset-0 bg-black/20" @click="emit('close')"></div>
+					<div class="absolute inset-0" @click="emit('close')"></div>
 
-				<!-- Popup -->
-				<div
-					ref="popupRef"
-					class="absolute bg-white rounded-xl shadow-xl overflow-hidden max-w-xs w-full"
-					:style="popupStyle"
-				>
-					<!-- Header s logem -->
+					<!-- Popup -->
 					<div
-						class="relative h-24 bg-gradient-to-br from-primary-100 to-primary-50 flex items-center justify-center"
+						ref="popupRef"
+						class="popup-card absolute bg-gray-900/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden w-64"
+						:style="popupStyle"
 					>
-						<img
-							v-if="unit.shop?.logo"
-							:src="unit.shop.logo"
-							:alt="unit.shop.name"
-							class="max-h-16 max-w-[80%] object-contain"
-						/>
-						<div v-else class="text-lg font-semibold text-primary-700 text-center px-4">
-							{{ unit.shop?.name }}
-						</div>
+						<div class="p-5 text-center">
+							<!-- Název obchodu -->
+							<h3 class="text-xl font-bold text-white mb-2">
+								{{ unit.shop?.name }}
+							</h3>
 
-						<!-- Zavřít -->
-						<button
-							type="button"
-							class="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white text-gray-600 hover:text-gray-900 transition-colors"
-							@click="emit('close')"
-						>
-							<svg
-								class="w-4 h-4"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
+							<!-- Otevírací hodiny -->
+							<p class="text-sm text-gray-300 mb-4">
+								• {{ unit.shop?.todayHours.formatted }}
+							</p>
+
+							<!-- Tlačítko více -->
+							<NuxtLink
+								v-if="unit.shop?.slug"
+								:to="`/obchody/${unit.shop.slug}`"
+								class="inline-block px-8 py-2.5 bg-plaza hover:brightness-110 text-white text-center rounded font-medium transition-all"
 							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M6 18L18 6M6 6l12 12"
-								/>
-							</svg>
-						</button>
-					</div>
-
-					<!-- Obsah -->
-					<div class="p-4">
-						<!-- Název obchodu -->
-						<h3 class="text-lg font-semibold text-gray-900 mb-3">
-							{{ unit.shop?.name }}
-						</h3>
-
-						<!-- Otevírací hodiny -->
-						<div class="flex items-center gap-2 mb-4">
-							<svg
-								class="w-5 h-5 text-gray-400 flex-shrink-0"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-							<div>
-								<span class="text-sm text-gray-500">Dnes:</span>
-								<span
-									:class="[
-										'ml-1 text-sm font-medium',
-										unit.shop?.todayHours.isOpen
-											? 'text-green-600'
-											: 'text-red-600',
-									]"
-								>
-									{{ unit.shop?.todayHours.formatted }}
-								</span>
-							</div>
+								více
+							</NuxtLink>
 						</div>
-
-						<!-- Tlačítko na detail -->
-						<NuxtLink
-							v-if="unit.shop?.slug"
-							:to="`/obchody/${unit.shop.slug}`"
-							class="block w-full py-2.5 px-4 bg-primary-600 hover:bg-primary-700 text-white text-center rounded-lg font-medium transition-colors"
-						>
-							Zobrazit detail
-						</NuxtLink>
-					</div>
 					</div>
 				</div>
 			</Transition>
@@ -124,11 +62,12 @@ const popupStyle = computed(() => {
 	if (!props.position) return {}
 
 	const { x, y } = props.position
-	const popupWidth = 320 // max-w-xs
-	const popupHeight = 250 // přibližná výška
+	const popupWidth = 256 // w-64
+	const popupHeight = 160 // přibližná výška kompaktního popupu
 	const margin = 16
 
-	let left = x
+	// Vycentrovat horizontálně na pozici kliknutí
+	let left = x - popupWidth / 2
 	let top = y + 10 // Trochu pod kliknutím
 
 	// Kontrola pravého okraje
@@ -157,25 +96,34 @@ const popupStyle = computed(() => {
 	}
 })
 
-// Zavřít na Escape
+// Zavřít na Escape a při scrollu
 onMounted(() => {
 	const handleEscape = (e: KeyboardEvent) => {
 		if (e.key === 'Escape' && props.unit) {
 			emit('close')
 		}
 	}
+	const handleScroll = () => {
+		if (props.unit) {
+			emit('close')
+		}
+	}
 	window.addEventListener('keydown', handleEscape)
+	window.addEventListener('scroll', handleScroll, { passive: true })
 	onUnmounted(() => {
 		window.removeEventListener('keydown', handleEscape)
+		window.removeEventListener('scroll', handleScroll)
 	})
 })
 </script>
 
 <style scoped>
 /* Popup animace */
-.popup-enter-active,
+.popup-enter-active {
+	transition: opacity 0.25s ease;
+}
 .popup-leave-active {
-	transition: all 0.2s ease;
+	transition: opacity 0.15s ease;
 }
 
 .popup-enter-from,
@@ -183,8 +131,17 @@ onMounted(() => {
 	opacity: 0;
 }
 
-.popup-enter-from .bg-white,
-.popup-leave-to .bg-white {
-	transform: scale(0.95);
+/* Popup card animace */
+.popup-enter-active :deep(.popup-card) {
+	transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+.popup-leave-active :deep(.popup-card) {
+	transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.popup-enter-from :deep(.popup-card),
+.popup-leave-to :deep(.popup-card) {
+	opacity: 0;
+	transform: scale(0.9) translateY(8px);
 }
 </style>

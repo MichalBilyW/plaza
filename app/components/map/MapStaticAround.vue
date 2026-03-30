@@ -5,14 +5,9 @@
 			v-if="svgContent"
 			ref="svgWrapperRef"
 			class="svg-wrapper w-full"
+			:class="isReady ? 'opacity-100' : 'opacity-0'"
 			v-html="svgContent"
 		></div>
-		<div v-else-if="pending" class="flex items-center justify-center h-64">
-			<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-		</div>
-		<div v-else-if="error" class="flex items-center justify-center h-64 text-red-500">
-			Nepodařilo se načíst SVG
-		</div>
 	</div>
 </template>
 
@@ -27,140 +22,92 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
+	'loaded': []
 	'animation-complete': []
 }>()
 
-// Načtení SVG obsahu - použít useAsyncData místo useFetch pro statické soubory
+// Načtení SVG obsahu
 const svgContent = ref<string | null>(null)
-const pending = ref(true)
-const error = ref<Error | null>(null)
+const isReady = ref(false)
 
-// Načíst SVG pouze na klientu (statické soubory v public/ nejsou API endpointy)
+// Refs
+const containerRef = ref<HTMLElement | null>(null)
+const svgWrapperRef = ref<HTMLElement | null>(null)
+
+// Načíst SVG okamžitě po mount
 onMounted(async () => {
 	try {
-		pending.value = true
 		const response = await fetch(props.svgPath)
 		if (!response.ok) {
 			throw new Error(`Failed to load SVG: ${response.status}`)
 		}
 		svgContent.value = await response.text()
 	} catch (e) {
-		error.value = e instanceof Error ? e : new Error('Unknown error')
 		console.error('Failed to load SVG:', e)
-	} finally {
-		pending.value = false
 	}
 })
 
-// Refs
-const containerRef = ref<HTMLElement | null>(null)
-const svgWrapperRef = ref<HTMLElement | null>(null)
+// Po načtení SVG: připravit animaci a emitovat 'loaded'
+watch(svgContent, async (newContent) => {
+	if (!newContent) return
 
-// Stav animace - které skupiny jsou viditelné
-const visibleGroups = reactive<Set<string>>(new Set())
-const hasAnimated = ref(false)
-const isInView = ref(false)
+	await nextTick()
 
-/**
- * Intersection Observer pro detekci viditelnosti
- */
-let observer: IntersectionObserver | null = null
-
-onMounted(() => {
-	observer = new IntersectionObserver(
-		(entries) => {
-			if (entries[0]?.isIntersecting) {
-				isInView.value = true
-				observer?.disconnect()
-			}
-		},
-		{ threshold: 0.3 },
-	)
-
-	if (containerRef.value) {
-		observer.observe(containerRef.value)
-	}
-})
-
-onUnmounted(() => {
-	observer?.disconnect()
-})
-
-/**
- * Spustí animaci po doscrollování (pokud je SVG už načtené)
- */
-watch(isInView, (inView) => {
-	if (inView && svgContent.value && !hasAnimated.value) {
-		hasAnimated.value = true
-		nextTick(() => startAnimation())
-	}
-})
-
-/**
- * Postupně animuje skupiny v SVG (Cesty → Budovy → Pudorys)
- */
-async function startAnimation() {
 	const svg = svgWrapperRef.value?.querySelector('svg')
 	if (!svg) return
 
-	// Přidat CSS přechody
+	// Skrýt všechny skupiny pro animaci
 	for (const groupName of STATIC_AROUND_GROUPS) {
 		const group = svg.querySelector(`#${groupName}`) as SVGElement | null
 		if (group) {
-			group.style.transition = 'opacity 0.8s ease-out'
+			group.style.opacity = '0'
+			group.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
 		}
 	}
 
-	// Malá prodleva pro registraci přechodů
+	// SVG je načtené, emitovat event
+	emit('loaded')
+})
+
+/**
+ * Spustí animaci zobrazení skupin (voláno z rodiče)
+ */
+async function startAnimation() {
+	const svg = svgWrapperRef.value?.querySelector('svg')
+	if (!svg) {
+		emit('animation-complete')
+		return
+	}
+
+	// Zobrazit wrapper
+	isReady.value = true
+
+	// Krátká prodleva pro CSS transition
 	await new Promise((resolve) => setTimeout(resolve, 50))
 
-	// Animovat skupiny postupně
+	// Animovat skupiny postupně s kratšími intervaly
 	for (let i = 0; i < STATIC_AROUND_GROUPS.length; i++) {
-		if (i > 0) {
-			await new Promise((resolve) => setTimeout(resolve, 400))
-		}
-
 		const groupName = STATIC_AROUND_GROUPS[i]
 		if (!groupName) continue
 
 		const group = svg.querySelector(`#${groupName}`) as SVGElement | null
 		if (group) {
 			group.style.opacity = '1'
-			visibleGroups.add(groupName)
+		}
+
+		// Kratší delay mezi skupinami
+		if (i < STATIC_AROUND_GROUPS.length - 1) {
+			await new Promise((resolve) => setTimeout(resolve, 200))
 		}
 	}
 
-	// Počkat na dokončení posledního CSS přechodu
-	await new Promise((resolve) => setTimeout(resolve, 800))
+	// Počkat na dokončení posledního přechodu
+	await new Promise((resolve) => setTimeout(resolve, 600))
 	emit('animation-complete')
 }
 
-// Při změně SVG obsahu: skrýt skupiny + případně znovu animovat
-watch(svgContent, (newContent) => {
-	visibleGroups.clear()
-	hasAnimated.value = false
-
-	if (newContent) {
-		nextTick(() => {
-			const svg = svgWrapperRef.value?.querySelector('svg')
-			if (!svg) return
-
-			// Okamžitě skrýt skupiny
-			for (const groupName of STATIC_AROUND_GROUPS) {
-				const group = svg.querySelector(`#${groupName}`) as SVGElement | null
-				if (group) {
-					group.style.opacity = '0'
-				}
-			}
-
-			// Pokud je sekce již viditelná, spustit animaci
-			if (isInView.value) {
-				hasAnimated.value = true
-				startAnimation()
-			}
-		})
-	}
-})
+// Expose metody pro rodiče
+defineExpose({ startAnimation })
 </script>
 
 <style scoped>
@@ -172,5 +119,13 @@ watch(svgContent, (newContent) => {
 
 .svg-wrapper {
 	line-height: 0;
+	transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+	will-change: opacity;
+	transform: translateZ(0);
+}
+
+/* Plynulé animace pro SVG skupiny */
+.map-static-around :deep(svg g) {
+	will-change: opacity;
 }
 </style>

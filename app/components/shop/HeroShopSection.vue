@@ -7,7 +7,7 @@
 
 		<!-- Hero section -->
 		<section class="z-10 relative" aria-label="Hero obchodu">
-			<div class="flex flex-col md:flex-row items-center justify-center pt-6 md:pt-12 px-6">
+			<div class="flex flex-col md:flex-row items-center justify-center pt-20 md:pt-32 px-6">
 				<!-- Info Card (left on desktop, bottom on mobile) -->
 				<div
 					class="order-2 md:order-1 w-full max-w-[290px] md:max-w-[380px] max-md:mt-3 z-20"

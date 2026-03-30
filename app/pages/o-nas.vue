@@ -3,7 +3,7 @@
 		<!-- Dark header -->
 		<div
 			v-if="generalInfo?.title || generalInfo?.shortText"
-			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-20 pb-[300px] text-center text-white font-heading !translate-y-0 font-black"
+			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[130px] lg:pt-[160px] pb-20"
 		>
 			<h1 v-if="generalInfo?.title" class="text-3xl md:text-4xl uppercase">
 				{{ generalInfo.title }}

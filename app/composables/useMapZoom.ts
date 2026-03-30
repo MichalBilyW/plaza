@@ -4,8 +4,9 @@
  * Funkce:
  * - Double click/tap zoom
  * - Tlačítka pro diskrétní zoom úrovně
- * - Pan pouze při přiblížení (myší na desktopu)
- * - Touch gesta zakázané (neblokují scroll stránky)
+ * - Pan pouze při přiblížení
+ * - Touch: 1 prst = scroll stránky, 2 prsty = pinch zoom + pan mapy
+ * - Desktop: wheel zoom, drag při přiblížení
  */
 
 import Panzoom from '@panzoom/panzoom'
@@ -16,36 +17,29 @@ interface ZoomLevel {
 	label: string
 }
 
-const ALL_ZOOM_LEVELS: ZoomLevel[] = [
+const ZOOM_LEVELS: ZoomLevel[] = [
 	{ value: 1, label: '1×' },
 	{ value: 2, label: '2×' },
 	{ value: 3, label: '3×' },
 ]
 
-const MD_BREAKPOINT = 768
+const MAX_ZOOM = 3
 
 export function useMapZoom() {
 	const mapContainerRef = ref<HTMLElement | null>(null)
 	const mapContentRef = ref<HTMLElement | null>(null)
-	const isMobile = ref(false)
 	const isTouch = ref(false)
 	const currentScale = ref(1)
 
 	let panzoomInstance: PanzoomObject | null = null
 
-	// Detekce breakpointu a touch zařízení
-	function checkBreakpoint() {
-		isMobile.value = window.innerWidth < MD_BREAKPOINT
+	// Detekce touch zařízení
+	function checkTouch() {
 		isTouch.value = 'ontouchstart' in window || navigator.maxTouchPoints > 0
 	}
 
-	// Zoom úrovně podle breakpointu
-	const zoomLevels = computed(() => {
-		if (isMobile.value) return ALL_ZOOM_LEVELS
-		return ALL_ZOOM_LEVELS.filter((l) => l.value <= 2)
-	})
-
-	const maxZoom = computed(() => (isMobile.value ? 3 : 2))
+	// Zoom úrovně: vždy 1–3× na všech zařízeních
+	const zoomLevels = computed(() => ZOOM_LEVELS)
 
 	// Aktivní úroveň zoomu (zaokrouhlená)
 	const activeZoomLevel = computed(() => Math.round(currentScale.value))
@@ -66,51 +60,42 @@ export function useMapZoom() {
 		}
 
 		panzoomInstance = Panzoom(content, {
-			maxScale: maxZoom.value,
+			maxScale: MAX_ZOOM,
 			minScale: 1,
-			contain: 'outside',
 			startScale: 1,
 			startX: 0,
 			startY: 0,
 			cursor: 'default',
 			panOnlyWhenZoomed: true,
 			animate: true,
-			duration: 200,
-			easing: 'ease-out',
-			// KLÍČOVÉ: Zakázat touch gesta - neblokují scroll stránky
-			touchAction: 'auto',
-			// Na touch zařízeních zakázat pan (koliduje se scrollem)
-			disablePan: isTouch.value,
+			duration: 300,
+			easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+			// Touch: pan-y = 1 prst scrolluje stránku, 2 prsty = pinch zoom + pan mapy
+			touchAction: 'pan-y',
 		})
 
 		// Double click/tap zoom
 		container.addEventListener('dblclick', handleDoubleClick)
+
+		// Wheel zoom jen s Ctrl/Cmd (jinak scroll stránky)
+		container.addEventListener('wheel', handleWheel, { passive: false })
 
 		// Aktualizovat currentScale při změně
 		content.addEventListener('panzoomchange', (e: Event) => {
 			const detail = (e as CustomEvent).detail
 			currentScale.value = detail.scale
 		})
-
-		// Posunout mapu dolů - prvních 25% je jen ilustrace
-		scrollToContent()
 	}
 
-	// Posunout mapu tak, aby byl vidět hlavní obsah (od 30% výšky)
-	function scrollToContent(animate = false) {
-		if (!panzoomInstance || !mapContentRef.value || !mapContainerRef.value) return
+	// Wheel zoom: jen s Ctrl/Cmd klávesou, jinak scroll stránky
+	function handleWheel(e: WheelEvent) {
+		if (!panzoomInstance) return
 
-		const contentHeight = mapContentRef.value.offsetHeight
-		const containerHeight = mapContainerRef.value.offsetHeight
-
-		// Posunout o 25% výšky obsahu nahoru (záporná hodnota = obsah jde nahoru = vidíme spodní část)
-		const offsetY = -(contentHeight * 0.25)
-
-		// Omezit aby se nepřescrollovalo
-		const maxOffset = -(contentHeight - containerHeight)
-		const clampedOffset = Math.max(offsetY, maxOffset)
-
-		panzoomInstance.pan(0, clampedOffset, { animate })
+		if (e.ctrlKey || e.metaKey) {
+			e.preventDefault()
+			panzoomInstance.zoomWithWheel(e)
+		}
+		// Bez modifikátoru - nechat prohlížeč scrollovat stránku
 	}
 
 	// Double click/tap zoom
@@ -118,7 +103,7 @@ export function useMapZoom() {
 		if (!panzoomInstance) return
 
 		const current = panzoomInstance.getScale()
-		const newScale = current >= maxZoom.value ? 1 : Math.min(current + 1, maxZoom.value)
+		const newScale = current >= MAX_ZOOM ? 1 : Math.min(current + 1, MAX_ZOOM)
 
 		// Na touch zařízeních zoomovat do středu, ne k pozici kliknutí
 		if (isTouch.value) {
@@ -127,11 +112,9 @@ export function useMapZoom() {
 			panzoomInstance.zoomToPoint(newScale, e, { animate: true })
 		}
 
-		// Pokud se vrací na 1×, posunout zpět na hlavní obsah
+		// Pokud se vrací na 1×, resetovat pozici
 		if (newScale === 1) {
-			nextTick(() => {
-				scrollToContent(true)
-			})
+			panzoomInstance.reset({ animate: true })
 		}
 	}
 
@@ -139,35 +122,19 @@ export function useMapZoom() {
 	function setZoom(level: number) {
 		if (!panzoomInstance) return
 
-		const newLevel = Math.max(1, Math.min(level, maxZoom.value))
+		const newLevel = Math.max(1, Math.min(level, MAX_ZOOM))
 		panzoomInstance.zoom(newLevel, { animate: true })
 
-		// Pokud se vrací na 1×, posunout zpět na hlavní obsah
+		// Pokud se vrací na 1×, resetovat pozici
 		if (newLevel === 1) {
-			nextTick(() => {
-				scrollToContent(true)
-			})
+			panzoomInstance.reset({ animate: true })
 		}
 	}
 
-	// Vystředit mapu na hlavní obsah
-	function centerMap() {
-		if (!panzoomInstance) return
-		panzoomInstance.reset({ animate: true })
-		nextTick(() => {
-			scrollToContent(true)
-		})
-	}
-
-	// Reset a posunout na hlavní obsah (při změně patra)
+	// Reset a vystředit mapu (při změně patra)
 	function resetAndCenter() {
 		if (panzoomInstance) {
-			// Reset zoom na 1×
 			panzoomInstance.reset({ animate: false })
-			// Posunout na hlavní obsah
-			nextTick(() => {
-				scrollToContent(false)
-			})
 		}
 	}
 
@@ -184,16 +151,9 @@ export function useMapZoom() {
 		{ immediate: true },
 	)
 
-	// Reinicializovat při změně maxZoom
-	watch(maxZoom, () => {
-		if (panzoomInstance && mapContentRef.value && mapContainerRef.value) {
-			initPanzoom()
-		}
-	})
-
 	// Lifecycle
 	onMounted(() => {
-		checkBreakpoint()
+		checkTouch()
 		window.addEventListener('resize', handleWindowResize)
 	})
 
@@ -203,6 +163,7 @@ export function useMapZoom() {
 		const container = mapContainerRef.value
 		if (container) {
 			container.removeEventListener('dblclick', handleDoubleClick)
+			container.removeEventListener('wheel', handleWheel)
 		}
 
 		if (panzoomInstance) {
@@ -214,7 +175,7 @@ export function useMapZoom() {
 	// Window resize handler
 	let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 	function handleWindowResize() {
-		checkBreakpoint()
+		checkTouch()
 
 		if (resizeTimeout) clearTimeout(resizeTimeout)
 		resizeTimeout = setTimeout(() => {
@@ -233,7 +194,6 @@ export function useMapZoom() {
 		isTouch,
 		// Akce
 		setZoom,
-		centerMap,
 		resetAndCenter,
 	}
 }

@@ -1,7 +1,7 @@
 <template>
 	<section class="relative container py-8">
 		<!-- Gradient overlay -->
-		<div class="z-10 absolute left-0 top-[40px] w-full h-[60px] bg-gradient-to-b from-white to-transparent"></div>
+		<div class="z-10 absolute left-0 top-[80px] w-full h-[240px] bg-gradient-to-b from-white to-transparent"></div>
 
 		<!-- Map Tools -->
 		<div class="z-20 relative absolute left-0 top-0 md:top-32 lg:top-20 container flex flex-col md:flex-row gap-4 md:gap-6 justify-start items-start md:justify-between px-4">
@@ -34,104 +34,110 @@
 			</div>
 
 			<!-- Přepínač pater -->
-			<div v-if="floors.length > 1" class="flex justify-start md:justify-end items-center w-full flex-wrap gap-3">
-				<button
-					v-for="floor in floors"
-					:key="floor.floorId"
-					type="button"
-					:class="[
-						'px-5 py-2.5 rounded-[5px_20px_5px_5px] transition-colors text-sm',
-						state.currentFloorId === floor.floorId
-							? 'bg-primary-600 bg-plaza !text-white'
-							: 'bg-white text-red hover:bg-gray-100 shadow',
-					]"
-					@click="selectFloor(floor.floorId)"
-				>
-					{{ floor.floorName }}
-				</button>
-			</div>
+			<ClientOnly>
+				<div v-if="floors.length > 1" class="w-full overflow-x-auto md:overflow-visible scrollbar-none">
+					<div class="flex justify-start md:justify-end items-center flex-wrap gap-2 md:gap-3">
+						<button
+							v-for="floor in floors"
+							:key="floor.floorId"
+							type="button"
+							:class="[
+								'px-4 md:px-5 py-2 md:py-2.5 rounded-[5px_20px_5px_5px] text-sm whitespace-nowrap transition-all duration-300 ease-out',
+								state.currentFloorId === floor.floorId
+									? 'bg-primary-600 bg-plaza !text-white md:scale-105 shadow-lg'
+									: 'bg-white text-red hover:bg-gray-100 shadow hover:scale-102',
+							]"
+							@click="handleFloorChange(floor.floorId)"
+						>
+							{{ floor.floorName }}
+						</button>
+					</div>
+				</div>
+			</ClientOnly>
 		</div>
 
-		<div class="z-0 relative w-full">
+		<div class="relative w-full min-h-[500px]">
 			<h2
 				class="absolute -left-[9990px] -top-[9990px] opacity-0 visibility-hidden"
 			>
 				{{ t('mapPage.title') }}
 			</h2>
-			<!-- Loading state -->
-			<div v-if="pending" class="flex items-center justify-center h-64">
-				<div
-					class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"
-				></div>
-			</div>
 
-			<!-- Error state -->
-			<div v-else-if="error" class="text-center py-8">
-				<p class="text-red-500 mb-4">{{ t('common.error') }}</p>
-				<button
-					type="button"
-					class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-					@click="refresh()"
-				>
-					{{ t('common.retry') }}
-				</button>
-			</div>
-
-			<template v-else>
-				<ClientOnly>
-					<!-- Ovládání zoomu -->
-					<div class="z-20 absolute top-12 right-0 flex justify-start md:justify-center gap-2 mb-4 container md:hidden">
-						<button
-							v-for="level in zoomLevels"
-							:key="level.value"
-							type="button"
-							:class="[
-								'px-2 py-1 rounded-[5px_10px_5px_5px] transition-colors text-xs',
-								zoomLevel === level.value
-									? 'bg-gray-800 text-white shadow-lg'
-									: 'bg-white text-gray-700 hover:bg-gray-100 shadow',
-							]"
-							@click="setZoom(level.value)"
-						>
-							{{ level.label }}
-						</button>
+			<ClientOnly>
+				<!-- Loading state - zobrazit dokud se načítají data nebo SVG -->
+				<div v-if="pending || isLoading" class="flex items-center justify-center min-h-[500px]">
+					<div class="flex flex-col items-center gap-4">
+						<div class="map-spinner"></div>
+						<p class="text-gray-500 text-sm">{{ t('common.loading') }}</p>
 					</div>
+				</div>
 
+				<!-- Error state -->
+				<div v-else-if="error" class="text-center py-8">
+					<p class="text-red-500 mb-4">{{ t('common.error') }}</p>
+					<button
+						type="button"
+						class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+						@click="refresh()"
+					>
+						{{ t('common.retry') }}
+					</button>
+				</div>
+
+				<template v-else>
 					<!-- Interaktivní mapa -->
-					<div ref="mapContainerRef" class="overflow-hidden h-full min-h-[600px] max-h-[90vh] max-w-full" :class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''">
+					<div ref="mapContainerRef" class="map-container relative overflow-hidden max-w-full min-h-[500px]" :class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''">
+						<!-- Zoom ovládání - top-right -->
+						<div class="z-30 absolute bottom-8 md:bottom-16 lg:bottom-32 left-6 z-30 flex gap-1">
+							<button
+								v-for="level in zoomLevels"
+								:key="level.value"
+								type="button"
+								:class="[
+									'w-9 h-9 flex items-center justify-center rounded-[5px_10px_5px_5px] transition-colors text-xs font-medium',
+									zoomLevel === level.value
+										? 'bg-gray-800 text-white shadow-lg'
+										: 'bg-white text-gray-700 hover:bg-gray-100 shadow',
+								]"
+								@click="setZoom(level.value)"
+							>
+								{{ level.label }}
+							</button>
+						</div>
+
 						<div ref="mapContentRef" class="relative map-layers">
 							<!-- Spodní vrstva: SVG okolí -->
 							<div class="absolute inset-0 z-0">
 								<MapStaticAround
 									v-if="staticAroundMap"
+									ref="staticAroundRef"
 									:svg-path="staticAroundMap"
 									class="w-full h-full"
+									@loaded="handleStaticAroundLoaded"
 									@animation-complete="handleAnimationComplete"
 								/>
 							</div>
 
 							<!-- Horní vrstva: SVG patra -->
-							<MapFloor
-								v-if="currentFloor?.svgMap"
-								:svg-path="currentFloor.svgMap"
-								:units="currentFloor.units"
-								:selected-unit="state.selectedUnit"
-								class="relative z-10 transition-opacity duration-700 ease-out"
-								:class="floorVisible ? 'opacity-100' : 'opacity-0'"
-								@unit-hover="handleUnitHover"
-								@unit-click="handleUnitClick"
-							/>
-
-							<!-- Fallback pokud není SVG patra -->
-							<div
-								v-else-if="staticAroundMap"
-								class="relative z-10"
+							<Transition
+								enter-active-class="transition-opacity duration-500 ease-out"
+								enter-from-class="opacity-0"
+								enter-to-class="opacity-100"
+								leave-active-class="transition-opacity duration-300 ease-in"
+								leave-from-class="opacity-100"
+								leave-to-class="opacity-0"
+								mode="out-in"
 							>
-								<MapStaticAround
-									:svg-path="staticAroundMap"
-									class="w-full opacity-0"
+								<MapFloor
+									v-if="currentFloor?.svgMap && mapReady"
+									:key="currentFloor.floorId"
+									:svg-path="currentFloor.svgMap"
+									:units="currentFloor.units"
+									:selected-unit="state.selectedUnit"
+									class="relative z-10"
+									@unit-click="handleUnitClick"
 								/>
-							</div>
+							</Transition>
 
 							<!-- Chybí obě SVG -->
 							<div
@@ -155,8 +161,8 @@
 						</div>
 					</div>
 
-					<!-- Odkaz na celou mapu -->
-					<div class="mt-6 text-center">
+					<!-- Odkaz na celou mapu (skrytý na stránce /mapa) -->
+					<div v-if="!hideFullMapLink" class="mt-6 text-center">
 						<NuxtLink
 							to="/mapa"
 							class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
@@ -179,22 +185,34 @@
 						:position="state.popupPosition"
 						@close="closePopup"
 					/>
+				</template>
 
-					<template #fallback>
-						<div class="flex items-center justify-center h-64">
-							<div
-								class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"
-							></div>
+				<template #fallback>
+					<div class="flex items-center justify-center min-h-[600px]">
+						<div class="flex flex-col items-center gap-4">
+							<div class="map-spinner"></div>
+							<p class="text-gray-500 text-sm">{{ t('common.loading') }}</p>
 						</div>
-					</template>
-				</ClientOnly>
-			</template>
+					</div>
+				</template>
+			</ClientOnly>
 		</div>
 
 	</section>
 </template>
 
 <script setup lang="ts">
+import type MapStaticAround from './MapStaticAround.vue'
+
+interface Props {
+	/** Skrýt odkaz na celou mapu (pro použití na stránce /mapa) */
+	hideFullMapLink?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+	hideFullMapLink: false,
+})
+
 const { t } = useI18n()
 
 const {
@@ -205,29 +223,138 @@ const {
 	pending,
 	error,
 	selectFloor,
-	handleUnitHover,
 	handleUnitClick,
 	closePopup,
 	refresh,
 	onFloorChange,
 } = useInteractiveMap()
 
-// Úvodní animace
-const showFloor = ref(false)
-const floorVisible = computed(() => !staticAroundMap.value || showFloor.value)
+// Reference na MapStaticAround pro volání animace
+const staticAroundRef = ref<InstanceType<typeof MapStaticAround> | null>(null)
+
+// Stav načítání
+const isLoading = ref(true)
+const mapReady = ref(false)
 const search = ref('')
 
 // Zoom
 const { zoomLevel, zoomLevels, mapContainerRef, mapContentRef, setZoom, resetAndCenter, isZoomed, isTouch } = useMapZoom()
+
+// Resetovat stav při mount (důležité pro navigaci)
+onMounted(() => {
+	isLoading.value = true
+	mapReady.value = false
+})
+
+// Timeout jako fallback - pokud se mapa nenačte do 5 sekund, zobrazit ji
+let loadingTimeout: ReturnType<typeof setTimeout> | null = null
+
+watch(isLoading, (loading) => {
+	if (loading) {
+		// Nastavit timeout fallback
+		loadingTimeout = setTimeout(() => {
+			if (isLoading.value) {
+				console.warn('Map loading timeout - forcing display')
+				isLoading.value = false
+				mapReady.value = true
+			}
+		}, 5000)
+	} else {
+		// Zrušit timeout když se načte
+		if (loadingTimeout) {
+			clearTimeout(loadingTimeout)
+			loadingTimeout = null
+		}
+	}
+}, { immediate: true })
+
+onUnmounted(() => {
+	if (loadingTimeout) {
+		clearTimeout(loadingTimeout)
+	}
+})
 
 // Centrovat mapu při změně patra
 onFloorChange(() => {
 	resetAndCenter()
 })
 
+// Handler pro změnu patra s plynulou animací
+function handleFloorChange(floorId: string) {
+	if (state.currentFloorId === floorId) return
+	selectFloor(floorId)
+}
+
+// Handler pro načtení SVG okolí
+function handleStaticAroundLoaded() {
+	isLoading.value = false
+	// Spustit animaci okamžitě
+	nextTick(() => {
+		staticAroundRef.value?.startAnimation()
+	})
+}
+
 // Handler pro dokončení animace SVG okolí
 function handleAnimationComplete() {
-	showFloor.value = true
+	mapReady.value = true
 	resetAndCenter()
 }
+
+// Sledovat stav načítání - pokud není staticAroundMap nebo data jsou načtená bez SVG
+watch([staticAroundMap, pending], ([svgMap, isPending]) => {
+	// Pokud není SVG okolí a data jsou načtená, zobrazit mapu rovnou
+	if (svgMap === null && !isPending) {
+		isLoading.value = false
+		mapReady.value = true
+	}
+}, { immediate: true })
+
+// Sledovat currentFloor - když je patro načtené, zajistit že mapa je připravená
+watch(currentFloor, (floor) => {
+	if (floor?.svgMap && !staticAroundMap.value) {
+		// Mapa patra je načtená a není SVG okolí - zobrazit
+		isLoading.value = false
+		mapReady.value = true
+	}
+})
 </script>
+
+<style scoped>
+/* Loading spinner */
+.map-spinner {
+	width: 48px;
+	height: 48px;
+	border: 4px solid #e5e7eb;
+	border-top-color: #E20B1B;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Cursor pointer na desktopu (hover-enabled zařízení) */
+@media (hover: hover) {
+	.map-container {
+		cursor: pointer;
+	}
+}
+
+/* Skrytí scrollbaru v přepínači pater */
+.scrollbar-none {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+	display: none;
+}
+
+/* GPU akcelerace pro plynulé animace */
+.map-layers {
+	will-change: transform;
+	transform: translateZ(0);
+}
+</style>

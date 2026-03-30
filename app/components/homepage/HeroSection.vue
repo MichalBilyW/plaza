@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[60px] lg:pt-[90px]">
 		<!-- hero bg -->
 		<div
 			class="z-0 absolute top-0 left-0 w-full h-[450px] bg-gradient-to-b from-[#131313] to-[#1A1A1A]"
@@ -7,7 +7,7 @@
 
 		<!-- Hero section -->
 		<section
-			class="z-10 container relative transparent rounded-[0px_0px_5px_5px] overflow-hidden"
+			class="z-10 container relative transparent overflow-hidden"
 			aria-label="Hero"
 		>
 			<!-- Border overlay -->

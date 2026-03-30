@@ -1,83 +1,38 @@
 <template>
-	<div ref="containerRef" class="map-floor relative w-full" @mouseleave="handleMouseLeave">
+	<div ref="containerRef" class="map-floor relative w-full">
 		<!-- SVG obsah -->
 		<div
 			v-if="svgContent"
 			ref="svgWrapperRef"
-			class="svg-wrapper w-full relative"
+			class="svg-wrapper w-full relative transition-opacity duration-300"
+			:class="isReady ? 'opacity-100' : 'opacity-0'"
 			v-html="processedSvg"
 		></div>
-		<div v-else-if="pending" class="flex items-center justify-center h-64">
-			<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-		</div>
-		<div v-else-if="error" class="flex items-center justify-center h-64 text-red-500">
-			Nepodařilo se načíst SVG mapy
-		</div>
 
 		<!-- Loga obsazených jednotek -->
 		<div
 			v-for="overlay in logoOverlays"
 			:key="overlay.unitCode"
-			class="absolute z-[5] pointer-events-none overflow-hidden flex items-center justify-center"
+			class="absolute z-[5] pointer-events-none overflow-hidden flex items-center justify-center transition-opacity duration-300"
+			:class="isReady ? 'opacity-100' : 'opacity-0'"
 			:style="{
-				left: `${overlay.left}px`,
-				top: `${overlay.top}px`,
-				width: `${overlay.unitWidth}px`,
-				height: `${overlay.unitHeight}px`,
+				left: `${overlay.leftPct}%`,
+				top: `${overlay.topPct}%`,
+				width: `${overlay.widthPct}%`,
+				height: `${overlay.heightPct}%`,
+				clipPath: overlay.clipPath ?? undefined,
 			}"
 		>
 			<div
 				v-if="overlay.isDot"
-				class="rounded-full bg-primary-600 shrink-0"
-				:style="{
-					width: `${overlay.logoSize}px`,
-					height: `${overlay.logoSize}px`,
-				}"
+				class="rounded-full bg-primary-600 w-1/2 h-1/2 max-w-[8px] max-h-[8px]"
 			></div>
 			<img
 				v-else
 				:src="overlay.logo"
 				:alt="overlay.shopName"
-				class="object-contain shrink-0"
-				:style="{
-					maxWidth: `${overlay.logoSize}px`,
-					maxHeight: `${overlay.logoSize}px`,
-				}"
+				class="object-contain max-w-[85%] max-h-[85%]"
 			/>
-		</div>
-
-		<!-- Hover tooltip s logem -->
-		<div
-			v-if="hoveredShop && tooltipPosition"
-			class="absolute z-10 pointer-events-none"
-			:style="{
-				left: `${tooltipPosition.x}px`,
-				top: `${tooltipPosition.y}px`,
-				transform: 'translate(-50%, -50%)',
-			}"
-		>
-			<div
-				class="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg px-2 py-2 text-center"
-				:style="{
-					maxWidth: `${tooltipMaxWidth}px`,
-				}"
-			>
-				<img
-					v-if="hoveredShop.logo"
-					:src="hoveredShop.logo"
-					:alt="hoveredShop.name"
-					class="w-10 h-10 object-contain mx-auto mb-1"
-				/>
-				<div v-else class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-[10px] text-gray-500 text-center px-1 mx-auto mb-1">
-					{{ hoveredShop.name }}
-				</div>
-				<p class="text-[11px] font-semibold text-gray-900 leading-tight break-words">
-					{{ hoveredShop.name }}
-				</p>
-				<p class="text-[10px] text-gray-600 leading-tight mt-0.5 break-words">
-					{{ hoveredShop.todayHours.formatted }}
-				</p>
-			</div>
 		</div>
 	</div>
 </template>
@@ -98,7 +53,6 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-	'unit-hover': [unitCode: string | null]
 	'unit-click': [unitCode: string, event: MouseEvent]
 }>()
 
@@ -106,17 +60,24 @@ const emit = defineEmits<{
 const svgContent = ref<string | null>(null)
 const pending = ref(true)
 const error = ref<Error | null>(null)
+const isReady = ref(false)
 
 // Načíst SVG
 const loadSvg = async () => {
 	try {
 		pending.value = true
 		error.value = null
+		isReady.value = false
 		const response = await fetch(props.svgPath)
 		if (!response.ok) {
 			throw new Error(`Failed to load SVG: ${response.status}`)
 		}
 		svgContent.value = await response.text()
+		// Malá prodleva pro plynulý přechod
+		await nextTick()
+		setTimeout(() => {
+			isReady.value = true
+		}, 50)
 	} catch (e) {
 		error.value = e instanceof Error ? e : new Error('Unknown error')
 		console.error('Failed to load SVG:', e)
@@ -138,25 +99,20 @@ watch(() => props.svgPath, () => {
 const containerRef = ref<HTMLElement | null>(null)
 const svgWrapperRef = ref<HTMLElement | null>(null)
 
-// Stav
-const hoveredUnitCode = ref<string | null>(null)
-const tooltipPosition = ref<{ x: number; y: number } | null>(null)
-const tooltipMaxWidth = ref(80)
-
 interface LogoOverlay {
 	unitCode: string
 	shopName: string
 	logo: string
-	left: number
-	top: number
-	unitWidth: number
-	unitHeight: number
-	logoSize: number
+	/** Pozice a rozměry v procentech SVG viewBoxu */
+	leftPct: number
+	topPct: number
+	widthPct: number
+	heightPct: number
 	isDot: boolean
+	clipPath: string | null
 }
 
 const logoOverlays = ref<LogoOverlay[]>([])
-let resizeObserver: ResizeObserver | null = null
 
 // Mapa jednotek pro rychlý přístup
 const unitsMap = computed(() => {
@@ -165,13 +121,6 @@ const unitsMap = computed(() => {
 		map.set(unit.unitCode, unit)
 	}
 	return map
-})
-
-// Data hoveru obchodu
-const hoveredShop = computed(() => {
-	if (!hoveredUnitCode.value) return null
-	const unit = unitsMap.value.get(hoveredUnitCode.value)
-	return unit?.shop ?? null
 })
 
 // Zpracované SVG s přidanými třídami a event handlery
@@ -262,10 +211,6 @@ function setupEventListeners() {
 
 		if (!unitCode || !hasShop) return
 
-		// Hover events
-		element.addEventListener('mouseenter', (e) => handleUnitHover(unitCode, e as MouseEvent))
-		element.addEventListener('mouseleave', () => handleUnitLeave())
-
 		// Click event
 		element.addEventListener('click', (e) => handleUnitClick(unitCode, e as MouseEvent))
 	})
@@ -274,27 +219,27 @@ function setupEventListeners() {
 }
 
 function setupResizeObserver() {
-	if (resizeObserver) {
-		resizeObserver.disconnect()
-	}
-
-	const wrapper = svgWrapperRef.value
-	if (!wrapper) return
-
-	resizeObserver = new ResizeObserver(() => {
-		updateLogoOverlays()
-	})
-
-	resizeObserver.observe(wrapper)
+	// Nepotřebujeme - procenta se škálují automaticky
 }
 
 function updateLogoOverlays() {
 	const wrapper = svgWrapperRef.value
-	const containerRect = containerRef.value?.getBoundingClientRect()
-	if (!wrapper || !containerRect) {
+	if (!wrapper) {
 		logoOverlays.value = []
 		return
 	}
+
+	const svg = wrapper.querySelector('svg') as SVGSVGElement | null
+	if (!svg) {
+		logoOverlays.value = []
+		return
+	}
+
+	// Získat viewBox SVG pro převod souřadnic na procenta
+	const viewBox = svg.viewBox.baseVal
+	const vbWidth = viewBox.width || svg.getBBox().width
+	const vbHeight = viewBox.height || svg.getBBox().height
+	if (vbWidth <= 0 || vbHeight <= 0) return
 
 	const unitElements = wrapper.querySelectorAll('[data-unit][data-has-shop="true"]')
 	const overlays: LogoOverlay[] = []
@@ -307,60 +252,64 @@ function updateLogoOverlays() {
 		const logo = unit?.shop?.logo
 		if (!logo) return
 
-		const rect = (element as SVGGraphicsElement).getBoundingClientRect()
-		if (rect.width <= 0 || rect.height <= 0) return
+		// getBBox() vrací SVG coordinate space - nezávisí na CSS transformech
+		const bbox = (element as SVGGraphicsElement).getBBox()
+		if (bbox.width <= 0 || bbox.height <= 0) return
 
-		const unitWidth = rect.width
-		const unitHeight = rect.height
-		const logoSize = Math.min(80, unitWidth * 0.72, unitHeight * 0.72)
-		const isDot = logoSize < 14
+		const minDim = Math.min(bbox.width, bbox.height)
+		const isDot = minDim < 10
+
+		// Pozice v procentech viewBoxu
+		const leftPct = ((bbox.x - viewBox.x) / vbWidth) * 100
+		const topPct = ((bbox.y - viewBox.y) / vbHeight) * 100
+		const widthPct = (bbox.width / vbWidth) * 100
+		const heightPct = (bbox.height / vbHeight) * 100
+
+		// Clip-path podle skutečného tvaru SVG polygonu
+		const clipPath = computeClipPath(element)
 
 		overlays.push({
 			unitCode,
 			shopName: unit?.shop?.name ?? unitCode,
 			logo,
-			left: rect.left - containerRect.left,
-			top: rect.top - containerRect.top,
-			unitWidth,
-			unitHeight,
-			logoSize: isDot ? Math.min(unitWidth, unitHeight) * 0.5 : logoSize,
+			leftPct,
+			topPct,
+			widthPct,
+			heightPct,
 			isDot,
+			clipPath,
 		})
 	})
 
 	logoOverlays.value = overlays
 }
 
-function handleUnitHover(unitCode: string, event: MouseEvent) {
-	hoveredUnitCode.value = unitCode
-	emit('unit-hover', unitCode)
+/**
+ * Vzorek bodů z SVG path a převod na CSS clip-path: polygon()
+ * Používá getBBox() — imunní vůči CSS transformům (panzoom, viewport)
+ */
+function computeClipPath(element: Element): string | null {
+	const path = element.querySelector('path') as SVGPathElement | null
+	if (!path?.getTotalLength) return null
 
-	// Vypočítat pozici tooltipu
-	const target = event.currentTarget as SVGElement
-	const rect = target.getBoundingClientRect()
-	const containerRect = containerRef.value?.getBoundingClientRect()
+	const totalLength = path.getTotalLength()
+	if (totalLength <= 0) return null
 
-	if (containerRect) {
-		const boundedWidth = Math.min(rect.width, 80)
-		tooltipMaxWidth.value = boundedWidth
+	// getBBox vrací souřadnice v SVG coordinate space — nezávisí na CSS transformech
+	const bbox = (element as SVGGraphicsElement).getBBox()
+	if (bbox.width <= 0 || bbox.height <= 0) return null
 
-		tooltipPosition.value = {
-			x: rect.left + rect.width / 2 - containerRect.left,
-			y: rect.top + rect.height / 2 - containerRect.top,
-		}
+	const numPoints = 32
+	const points: string[] = []
+
+	for (let i = 0; i < numPoints; i++) {
+		const pt = path.getPointAtLength((i / numPoints) * totalLength)
+		const pctX = ((pt.x - bbox.x) / bbox.width) * 100
+		const pctY = ((pt.y - bbox.y) / bbox.height) * 100
+		points.push(`${pctX.toFixed(1)}% ${pctY.toFixed(1)}%`)
 	}
-}
 
-function handleUnitLeave() {
-	hoveredUnitCode.value = null
-	tooltipPosition.value = null
-	emit('unit-hover', null)
-}
-
-function handleMouseLeave() {
-	hoveredUnitCode.value = null
-	tooltipPosition.value = null
-	emit('unit-hover', null)
+	return `polygon(${points.join(', ')})`
 }
 
 function handleUnitClick(unitCode: string, event: MouseEvent) {
@@ -368,13 +317,16 @@ function handleUnitClick(unitCode: string, event: MouseEvent) {
 }
 
 onBeforeUnmount(() => {
-	if (resizeObserver) {
-		resizeObserver.disconnect()
-	}
+	// Cleanup - nic extra nepotřebujeme, procenta se škálují automaticky
 })
 </script>
 
 <style scoped>
+.map-floor {
+	will-change: opacity;
+	transform: translateZ(0);
+}
+
 .map-floor :deep(svg) {
 	width: 100%;
 	height: auto;
@@ -396,6 +348,7 @@ onBeforeUnmount(() => {
 .map-floor :deep(.map-unit--occupied) {
 	cursor: pointer;
 	overflow: hidden;
+	transition: filter 0.2s ease-out;
 }
 
 .map-floor :deep(.map-unit--occupied:hover) {
