@@ -1,4 +1,8 @@
 export default defineNuxtPlugin(() => {
+	// Skip cookie bar on CMS pages
+	const route = useRoute()
+	if (route.path.startsWith('/cms')) return
+
 	// Inject CSS
 	const cssLink = document.createElement('link')
 	cssLink.rel = 'stylesheet'

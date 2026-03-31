@@ -27,6 +27,7 @@
 						'text-black': route.path !== '/',
 					}"
 					active-class="text-plaza"
+					@click="handleDesktopNavClick('homepage')"
 				>
 					{{ t('nav.homePage') }}
 				</NuxtLink>
@@ -38,6 +39,7 @@
 						'text-black': !route.path.startsWith('/obchody'),
 					}"
 					active-class="text-plaza"
+					@click="handleDesktopNavClick('obchody')"
 				>
 					{{ t('nav.shopsAndServices') }}
 				</NuxtLink>
@@ -49,6 +51,7 @@
 						'text-black': !route.path.startsWith('/akce'),
 					}"
 					active-class="text-plaza"
+					@click="handleDesktopNavClick('akce')"
 				>
 					{{ t('nav.eventsAndSales') }}
 				</NuxtLink>
@@ -60,6 +63,7 @@
 						'text-black': route.path !== '/o-nas',
 					}"
 					active-class="text-plaza"
+					@click="handleDesktopNavClick('o-nas')"
 				>
 					{{ t('nav.about') }}
 				</NuxtLink>
@@ -67,6 +71,7 @@
 				<NuxtLink
 					to="/mapa"
 					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-heading font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] hover:brightness-110 transition-all duration-300"
+					@click="handleMapCtaClick(false)"
 				>
 					{{ t('nav.mapCenter') }}
 				</NuxtLink>
@@ -222,7 +227,7 @@
 						'text-black': route.path !== '/',
 					}"
 					active-class="text-plaza"
-					@click="closeMobileMenu"
+					@click="handleMobileNavClick('homepage')"
 				>
 					{{ t('nav.homePage') }}
 				</NuxtLink>
@@ -234,7 +239,7 @@
 						'text-black': !route.path.startsWith('/obchody'),
 					}"
 					active-class="text-plaza"
-					@click="closeMobileMenu"
+					@click="handleMobileNavClick('obchody')"
 				>
 					{{ t('nav.shopsAndServices') }}
 				</NuxtLink>
@@ -246,7 +251,7 @@
 						'text-black': !route.path.startsWith('/akce'),
 					}"
 					active-class="text-plaza"
-					@click="closeMobileMenu"
+					@click="handleMobileNavClick('akce')"
 				>
 					{{ t('nav.eventsAndSales') }}
 				</NuxtLink>
@@ -258,7 +263,7 @@
 						'text-black': route.path !== '/o-nas',
 					}"
 					active-class="text-plaza"
-					@click="closeMobileMenu"
+					@click="handleMobileNavClick('o-nas')"
 				>
 					{{ t('nav.about') }}
 				</NuxtLink>
@@ -267,7 +272,7 @@
 				<NuxtLink
 					to="/mapa"
 					class="mt-4 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-300"
-					@click="closeMobileMenu"
+					@click="handleMapCtaClick(true)"
 				>
 					{{ t('nav.mapCenter') }}
 				</NuxtLink>
@@ -387,6 +392,7 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
+const { trackNavClick, trackCtaClick } = useDataLayer()
 
 // SSR-safe timestamp for hydration
 const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
@@ -512,11 +518,31 @@ const isOpen = computed(() => {
 const toggleMobileMenu = () => {
 	isMobileMenuOpen.value = !isMobileMenuOpen.value
 	document.body.style.overflow = isMobileMenuOpen.value ? 'hidden' : ''
+	if (isMobileMenuOpen.value) {
+		trackNavClick('mobile_menu_open', true)
+	}
 }
 
 const closeMobileMenu = () => {
 	isMobileMenuOpen.value = false
 	document.body.style.overflow = ''
+}
+
+// Track desktop navigation clicks
+const handleDesktopNavClick = (navItem: string) => {
+	trackNavClick(navItem, false)
+}
+
+// Track mobile navigation clicks
+const handleMobileNavClick = (navItem: string) => {
+	trackNavClick(navItem, true)
+	closeMobileMenu()
+}
+
+// Track CTA button clicks
+const handleMapCtaClick = (isMobile: boolean) => {
+	trackCtaClick('mapa_centra', '/mapa', isMobile ? 'mobile_menu' : 'header')
+	if (isMobile) closeMobileMenu()
 }
 
 const handleLogoClick = () => {

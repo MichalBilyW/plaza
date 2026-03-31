@@ -69,7 +69,7 @@
 								:key="shop.unitCode"
 								type="button"
 								class="w-full px-3 py-2.5 flex items-center gap-3 hover:bg-plaza-light/30 transition-colors text-left"
-								@mousedown.prevent="selectSuggestion(floorGroup.floorId)"
+								@mousedown.prevent="selectSuggestion(floorGroup.floorId, shop.name)"
 							>
 								<img
 									v-if="shop.logo"
@@ -297,6 +297,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { t } = useI18n()
+const { trackMapSearch } = useDataLayer()
 
 const {
 	floors,
@@ -375,9 +376,11 @@ function hideSuggestionsDelayed() {
 }
 
 // Vybrat položku z našeptávače - přepnout patro, zachovat search
-function selectSuggestion(floorId: string) {
+function selectSuggestion(floorId: string, shopName?: string) {
 	showSuggestions.value = false
 	selectFloor(floorId)
+	// Track map search with selected unit
+	trackMapSearch(search.value, shopName)
 	// search zůstává - obchod se zvýrazní v novém patře
 }
 
@@ -409,7 +412,6 @@ watch(
 			// Nastavit timeout fallback
 			loadingTimeout = setTimeout(() => {
 				if (isLoading.value) {
-					console.warn('Map loading timeout - forcing display')
 					isLoading.value = false
 					mapReady.value = true
 				}

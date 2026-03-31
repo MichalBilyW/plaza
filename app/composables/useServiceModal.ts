@@ -8,9 +8,12 @@ const isModalOpen = ref(false)
 const selectedService = ref<Service | null>(null)
 
 export const useServiceModal = () => {
+	const { trackModalOpen } = useDataLayer()
+
 	const openModal = (service: Service) => {
 		selectedService.value = service
 		isModalOpen.value = true
+		trackModalOpen('service', service.shortDescription)
 	}
 
 	const closeModal = () => {

@@ -198,6 +198,7 @@ interface ShopsResponse {
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
+const { trackSearch, trackFilterApply, trackLoadMore } = useDataLayer()
 
 usePlazaSeo({
 	title: t('seo.shops.title'),
@@ -286,8 +287,10 @@ const loadMore = async () => {
 		const result = await $fetch<ShopsResponse>('/api/shops', {
 			query: buildQuery(currentPage.value),
 		})
-		allShops.value = [...allShops.value, ...(result.data || [])]
+		const newItems = result.data || []
+		allShops.value = [...allShops.value, ...newItems]
 		totalShops.value = result.pagination?.total || totalShops.value
+		trackLoadMore('shops', currentPage.value, newItems.length)
 	} finally {
 		loadingMore.value = false
 	}
@@ -301,5 +304,20 @@ watch([debouncedSearch, selectedCategory], async () => {
 	allShops.value = shopsData.value?.data || []
 	totalShops.value = shopsData.value?.pagination?.total || 0
 	initialLoading.value = false
+})
+
+// Track search after debounce settles
+watch(debouncedSearch, (query) => {
+	if (query) {
+		trackSearch(query, 'shops', totalShops.value)
+	}
+})
+
+// Track category filter changes
+watch(selectedCategory, (slug) => {
+	if (slug) {
+		const categoryName = categories.value.find((c) => c.slug === slug)?.name || slug
+		trackFilterApply('category', categoryName, 'shops')
+	}
 })
 </script>

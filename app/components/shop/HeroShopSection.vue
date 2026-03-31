@@ -80,6 +80,7 @@
 									target="_blank"
 									rel="noopener noreferrer"
 									class="text-plaza hover:underline"
+									@click="trackContactClick('website', shop.name)"
 								>
 									{{ stripProtocol(shop.website) }}
 								</a>
@@ -89,6 +90,7 @@
 								<a
 									:href="`mailto:${shop.email}`"
 									class="text-plaza hover:underline"
+									@click="trackContactClick('email', shop.name)"
 								>
 									{{ shop.email }}
 								</a>
@@ -96,8 +98,9 @@
 							<div v-if="shop.phone" class="flex justify-between">
 								<span class="text-plaza-gray">telefon</span>
 								<a
-									:href="`tel:${shop.phone.replace(/\s/g, '')}`"
+									:href="`tel:${shop.phone.replace(/\\s/g, '')}`"
 									class="text-plaza hover:underline"
+									@click="trackContactClick('phone', shop.name)"
 								>
 									{{ shop.phone }}
 								</a>
@@ -237,7 +240,10 @@ const onSwiperInit = (swiper: SwiperType) => {
 }
 
 const slideNext = () => {
-	swiperInstance.value?.slideNext()
+	if (swiperInstance.value) {
+		swiperInstance.value.slideNext()
+		trackGalleryInteraction('slide_next', 'shop_detail', swiperInstance.value.realIndex)
+	}
 }
 
 // === Opening hours logic ===
@@ -322,6 +328,6 @@ const stripProtocol = (url: string): string => {
 	return url.replace(/^https?:\/\//, '').replace(/\/$/, '')
 }
 
-// DataLayer - prepared for future use
-const { trackContactClick: _trackContactClick } = useDataLayer()
+// DataLayer tracking
+const { trackContactClick, trackGalleryInteraction } = useDataLayer()
 </script>

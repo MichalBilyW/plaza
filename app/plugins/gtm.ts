@@ -1,5 +1,9 @@
 export default defineNuxtPlugin(() => {
 	if (import.meta.client) {
+		// Skip GTM on CMS pages
+		const route = useRoute()
+		if (route.path.startsWith('/cms')) return
+
 		const config = useRuntimeConfig()
 		const gtmId = config.public.gtmId as string
 

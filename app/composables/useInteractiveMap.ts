@@ -22,6 +22,8 @@ export interface MapState {
 }
 
 export function useInteractiveMap(options?: { initialFloorId?: string }) {
+	const { trackMapFloorSelect, trackMapUnitClick } = useDataLayer()
+
 	// Data z API - server: false odstraněno, data jsou v SSR payload = okamžitě dostupná
 	const {
 		data: mapData,
@@ -114,6 +116,10 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 	 * Přepne na jiné patro
 	 */
 	function selectFloor(floorId: string) {
+		const floor = floors.value.find((f) => f.floorId === floorId)
+		if (floor) {
+			trackMapFloorSelect(floor.floorName, floor.level)
+		}
 		state.currentFloorId = floorId
 		state.selectedUnit = null
 		state.popupPosition = null
@@ -137,6 +143,13 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 
 		// Pokud jednotka nemá přiřazený obchod, ignorovat kliknutí
 		if (!unit.shop) return
+
+		// Track click on map unit
+		trackMapUnitClick(
+			unit.shop.name,
+			'shop',
+			currentFloor.value?.floorName || 'unknown',
+		)
 
 		// Nastavit vybranou jednotku a pozici popupu
 		state.selectedUnit = unit

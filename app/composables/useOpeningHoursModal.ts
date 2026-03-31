@@ -5,8 +5,11 @@
 const isModalOpen = ref(false)
 
 export const useOpeningHoursModal = () => {
+	const { trackModalOpen } = useDataLayer()
+
 	const openModal = () => {
 		isModalOpen.value = true
+		trackModalOpen('opening_hours')
 	}
 
 	const closeModal = () => {
@@ -14,6 +17,9 @@ export const useOpeningHoursModal = () => {
 	}
 
 	const toggleModal = () => {
+		if (!isModalOpen.value) {
+			trackModalOpen('opening_hours')
+		}
 		isModalOpen.value = !isModalOpen.value
 	}
 

@@ -199,6 +199,7 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { openModal: openEventModal } = useEventModal()
+const { trackSearch, trackLoadMore } = useDataLayer()
 
 usePlazaSeo({
 	title: t('seo.events.title'),
@@ -267,8 +268,10 @@ const loadMore = async () => {
 		const result = await $fetch<EventsResponse>('/api/events', {
 			query: buildQuery(currentPage.value),
 		})
-		allEvents.value = [...allEvents.value, ...(result.data || [])]
+		const newItems = result.data || []
+		allEvents.value = [...allEvents.value, ...newItems]
 		totalEvents.value = result.meta?.total || totalEvents.value
+		trackLoadMore('events', currentPage.value, newItems.length)
 	} finally {
 		loadingMore.value = false
 	}
@@ -282,6 +285,13 @@ watch([debouncedSearch], async () => {
 	allEvents.value = eventsData.value?.data || []
 	totalEvents.value = eventsData.value?.meta?.total || 0
 	initialLoading.value = false
+})
+
+// Track search after debounce settles
+watch(debouncedSearch, (query) => {
+	if (query) {
+		trackSearch(query, 'events', totalEvents.value)
+	}
 })
 </script>
 
