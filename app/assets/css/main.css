@@ -196,7 +196,6 @@ textarea:focus-visible {
 	display: inline-block !important;
 	vertical-align: top;
 	max-width: 100%;
-	margin: 0.25rem;
 }
 
 /* Obrázky s explicitním max-width - použít hodnotu z inline stylu */
@@ -216,13 +215,11 @@ textarea:focus-visible {
 .prose img[style*='float: left'] {
 	float: left !important;
 	margin-right: 1rem !important;
-	margin-bottom: 0.5rem !important;
 }
 
 .prose img[style*='float: right'] {
 	float: right !important;
 	margin-left: 1rem !important;
-	margin-bottom: 0.5rem !important;
 }
 
 /* Centered obrázky */

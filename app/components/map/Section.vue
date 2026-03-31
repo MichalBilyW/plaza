@@ -1,15 +1,19 @@
 <template>
 	<section class="relative container py-8">
-		<!-- Gradient overlay -->
-		<div class="z-10 absolute left-0 top-[80px] w-full h-[240px] bg-gradient-to-b from-white to-transparent"></div>
+		<!-- Gradient overlay (skrytý když je zamčené patro) -->
+		<div
+			v-if="!props.lockedFloorId"
+			class="z-10 absolute left-0 top-[80px] w-full h-[240px] bg-gradient-to-b from-white to-transparent"
+		></div>
 
-		<!-- Map Tools -->
-		<div class="z-20 relative absolute left-0 top-0 md:top-32 lg:top-20 container flex flex-col md:flex-row gap-4 md:gap-6 justify-start items-start md:justify-between px-4">
+		<!-- Map Tools (skryté když je zamčené patro) -->
+		<div
+			v-if="!props.lockedFloorId"
+			class="z-20 relative absolute left-0 top-0 md:top-32 lg:top-20 container flex flex-col md:flex-row gap-4 md:gap-6 justify-start items-start md:justify-between px-4"
+		>
 			<!-- Search input -->
 			<div class="relative w-full max-w-[400px]">
-				<label for="shop-search" class="sr-only">{{
-					t('common.searchShop')
-				}}</label>
+				<label for="shop-search" class="sr-only">{{ t('common.searchShop') }}</label>
 				<svg
 					class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-plaza-dark"
 					width="18"
@@ -30,13 +34,71 @@
 					autocomplete="off"
 					:placeholder="t('shops.shopName')"
 					class="h-[41px] w-full rounded-[5px_20px_5px_5px] bg-white border border-plaza-dark/10 bg-transparent pl-10 pr-3 font-heading placeholder:text-plaza-dark/70"
+					@focus="showSuggestions = true"
+					@blur="hideSuggestionsDelayed"
 				/>
+
+				<!-- Našeptávač - výsledky z ostatních pater -->
+				<Transition
+					enter-active-class="transition-all duration-300 ease-out"
+					enter-from-class="opacity-0 -translate-y-2"
+					enter-to-class="opacity-100 translate-y-0"
+					leave-active-class="transition-all duration-150 ease-in"
+					leave-from-class="opacity-100 translate-y-0"
+					leave-to-class="opacity-0 -translate-y-2"
+				>
+					<div
+						v-if="showSuggestions && search.trim() && otherFloorsResults.length > 0"
+						class="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-xl border border-gray-200 max-h-[300px] overflow-y-auto z-50"
+					>
+						<div
+							v-for="floorGroup in otherFloorsResults"
+							:key="floorGroup.floorId"
+							class="border-b border-gray-100 last:border-b-0"
+						>
+							<!-- Název patra -->
+							<div class="px-3 py-2 bg-gray-50 text-xs text-gray-500 tracking-wide">
+								{{ t('mapPage.findInFloor') }}
+								<span class="font-bold text-plaza uppercase">{{
+									floorGroup.floorName
+								}}</span>
+							</div>
+							<!-- Obchody v patře -->
+							<button
+								v-for="shop in floorGroup.shops"
+								:key="shop.unitCode"
+								type="button"
+								class="w-full px-3 py-2.5 flex items-center gap-3 hover:bg-plaza-light/30 transition-colors text-left"
+								@mousedown.prevent="selectSuggestion(floorGroup.floorId)"
+							>
+								<img
+									v-if="shop.logo"
+									:src="shop.logo"
+									:alt="shop.name"
+									class="w-8 h-8 object-contain rounded"
+								/>
+								<div
+									v-else
+									class="w-8 h-8 bg-gray-200 rounded flex items-center justify-center text-xs font-bold text-gray-500"
+								>
+									{{ shop.name.charAt(0) }}
+								</div>
+								<span class="text-sm text-gray-800">{{ shop.name }}</span>
+							</button>
+						</div>
+					</div>
+				</Transition>
 			</div>
 
 			<!-- Přepínač pater -->
 			<ClientOnly>
-				<div v-if="floors.length > 1" class="w-full overflow-x-auto md:overflow-visible scrollbar-none">
-					<div class="flex justify-start md:justify-end items-center flex-wrap gap-2 md:gap-3">
+				<div
+					v-if="floors.length > 1"
+					class="w-full overflow-x-auto md:overflow-visible scrollbar-none"
+				>
+					<div
+						class="flex justify-start md:justify-end items-center flex-wrap gap-2 md:gap-3"
+					>
 						<button
 							v-for="floor in floors"
 							:key="floor.floorId"
@@ -57,15 +119,16 @@
 		</div>
 
 		<div class="relative w-full min-h-[500px]">
-			<h2
-				class="absolute -left-[9990px] -top-[9990px] opacity-0 visibility-hidden"
-			>
+			<h2 class="absolute -left-[9990px] -top-[9990px] opacity-0 visibility-hidden">
 				{{ t('mapPage.title') }}
 			</h2>
 
 			<ClientOnly>
 				<!-- Loading state - zobrazit dokud se načítají data nebo SVG -->
-				<div v-if="pending || isLoading" class="flex items-center justify-center min-h-[500px]">
+				<div
+					v-if="pending || isLoading"
+					class="flex items-center justify-center min-h-[500px]"
+				>
 					<div class="flex flex-col items-center gap-4">
 						<div class="map-spinner"></div>
 						<p class="text-gray-500 text-sm">{{ t('common.loading') }}</p>
@@ -86,9 +149,15 @@
 
 				<template v-else>
 					<!-- Interaktivní mapa -->
-					<div ref="mapContainerRef" class="map-container relative overflow-hidden max-w-full min-h-[500px]" :class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''">
+					<div
+						ref="mapContainerRef"
+						class="map-container relative overflow-hidden max-w-full min-h-[500px]"
+						:class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''"
+					>
 						<!-- Zoom ovládání - top-right -->
-						<div class="z-30 absolute bottom-8 md:bottom-16 lg:bottom-32 left-6 z-30 flex gap-1">
+						<div
+							class="z-30 absolute bottom-8 md:bottom-16 lg:bottom-32 left-6 z-30 flex gap-1"
+						>
 							<button
 								v-for="level in zoomLevels"
 								:key="level.value"
@@ -134,6 +203,7 @@
 									:svg-path="currentFloor.svgMap"
 									:units="currentFloor.units"
 									:selected-unit="state.selectedUnit"
+									:search-query="search"
 									class="relative z-10"
 									@unit-click="handleUnitClick"
 								/>
@@ -168,7 +238,12 @@
 							class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
 						>
 							{{ t('mapPage.viewFullMap') }}
-							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<svg
+								class="w-4 h-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
@@ -197,7 +272,6 @@
 				</template>
 			</ClientOnly>
 		</div>
-
 	</section>
 </template>
 
@@ -207,9 +281,13 @@ import type MapStaticAround from './MapStaticAround.vue'
 interface Props {
 	/** Skrýt odkaz na celou mapu (pro použití na stránce /mapa) */
 	hideFullMapLink?: boolean
+	/** Zamknout na konkrétní patro (skryje přepínač pater a vyhledávání) */
+	lockedFloorId?: string
+	/** Zvýraznit obchod podle názvu (jako při vyhledávání) */
+	highlightShopName?: string
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
 	hideFullMapLink: false,
 })
 
@@ -227,7 +305,7 @@ const {
 	closePopup,
 	refresh,
 	onFloorChange,
-} = useInteractiveMap()
+} = useInteractiveMap({ initialFloorId: props.lockedFloorId })
 
 // Reference na MapStaticAround pro volání animace
 const staticAroundRef = ref<InstanceType<typeof MapStaticAround> | null>(null)
@@ -235,10 +313,79 @@ const staticAroundRef = ref<InstanceType<typeof MapStaticAround> | null>(null)
 // Stav načítání
 const isLoading = ref(true)
 const mapReady = ref(false)
-const search = ref('')
+const search = ref(props.highlightShopName ?? '')
+const showSuggestions = ref(false)
+
+// Vyhledávání ve všech patrech - seskupené podle patra (kromě aktuálního)
+interface FloorSearchGroup {
+	floorId: string
+	floorName: string
+	shops: Array<{ unitCode: string; name: string; logo?: string }>
+}
+
+const otherFloorsResults = computed<FloorSearchGroup[]>(() => {
+	const query = search.value.trim().toLowerCase()
+	if (!query) return []
+
+	// Escape regex speciálních znaků (stejně jako na /obchody)
+	const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+	const regex = new RegExp(escaped, 'i')
+
+	const results: FloorSearchGroup[] = []
+
+	for (const floor of floors.value) {
+		// Přeskočit aktuální patro (to se zvýrazňuje přímo v mapě)
+		if (floor.floorId === state.currentFloorId) continue
+
+		const matchedShops: FloorSearchGroup['shops'] = []
+
+		for (const unit of floor.units) {
+			if (unit.shop?.name && regex.test(unit.shop.name)) {
+				matchedShops.push({
+					unitCode: unit.unitCode,
+					name: unit.shop.name,
+					logo: unit.shop.logo,
+				})
+			}
+		}
+
+		if (matchedShops.length > 0) {
+			results.push({
+				floorId: floor.floorId,
+				floorName: floor.floorName,
+				shops: matchedShops,
+			})
+		}
+	}
+
+	return results
+})
+
+// Skrýt našeptávač s malým zpožděním (aby stihl proběhnout click)
+function hideSuggestionsDelayed() {
+	setTimeout(() => {
+		showSuggestions.value = false
+	}, 150)
+}
+
+// Vybrat položku z našeptávače - přepnout patro, zachovat search
+function selectSuggestion(floorId: string) {
+	showSuggestions.value = false
+	selectFloor(floorId)
+	// search zůstává - obchod se zvýrazní v novém patře
+}
 
 // Zoom
-const { zoomLevel, zoomLevels, mapContainerRef, mapContentRef, setZoom, resetAndCenter, isZoomed, isTouch } = useMapZoom()
+const {
+	zoomLevel,
+	zoomLevels,
+	mapContainerRef,
+	mapContentRef,
+	setZoom,
+	resetAndCenter,
+	isZoomed,
+	isTouch,
+} = useMapZoom()
 
 // Resetovat stav při mount (důležité pro navigaci)
 onMounted(() => {
@@ -249,24 +396,28 @@ onMounted(() => {
 // Timeout jako fallback - pokud se mapa nenačte do 5 sekund, zobrazit ji
 let loadingTimeout: ReturnType<typeof setTimeout> | null = null
 
-watch(isLoading, (loading) => {
-	if (loading) {
-		// Nastavit timeout fallback
-		loadingTimeout = setTimeout(() => {
-			if (isLoading.value) {
-				console.warn('Map loading timeout - forcing display')
-				isLoading.value = false
-				mapReady.value = true
+watch(
+	isLoading,
+	(loading) => {
+		if (loading) {
+			// Nastavit timeout fallback
+			loadingTimeout = setTimeout(() => {
+				if (isLoading.value) {
+					console.warn('Map loading timeout - forcing display')
+					isLoading.value = false
+					mapReady.value = true
+				}
+			}, 5000)
+		} else {
+			// Zrušit timeout když se načte
+			if (loadingTimeout) {
+				clearTimeout(loadingTimeout)
+				loadingTimeout = null
 			}
-		}, 5000)
-	} else {
-		// Zrušit timeout když se načte
-		if (loadingTimeout) {
-			clearTimeout(loadingTimeout)
-			loadingTimeout = null
 		}
-	}
-}, { immediate: true })
+	},
+	{ immediate: true },
+)
 
 onUnmounted(() => {
 	if (loadingTimeout) {
@@ -301,13 +452,17 @@ function handleAnimationComplete() {
 }
 
 // Sledovat stav načítání - pokud není staticAroundMap nebo data jsou načtená bez SVG
-watch([staticAroundMap, pending], ([svgMap, isPending]) => {
-	// Pokud není SVG okolí a data jsou načtená, zobrazit mapu rovnou
-	if (svgMap === null && !isPending) {
-		isLoading.value = false
-		mapReady.value = true
-	}
-}, { immediate: true })
+watch(
+	[staticAroundMap, pending],
+	([svgMap, isPending]) => {
+		// Pokud není SVG okolí a data jsou načtená, zobrazit mapu rovnou
+		if (svgMap === null && !isPending) {
+			isLoading.value = false
+			mapReady.value = true
+		}
+	},
+	{ immediate: true },
+)
 
 // Sledovat currentFloor - když je patro načtené, zajistit že mapa je připravená
 watch(currentFloor, (floor) => {
@@ -325,7 +480,7 @@ watch(currentFloor, (floor) => {
 	width: 48px;
 	height: 48px;
 	border: 4px solid #e5e7eb;
-	border-top-color: #E20B1B;
+	border-top-color: #e20b1b;
 	border-radius: 50%;
 	animation: spin 1s linear infinite;
 }

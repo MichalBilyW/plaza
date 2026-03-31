@@ -159,7 +159,12 @@
 								for="svg-upload"
 								class="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors"
 							>
-								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg
+									class="w-4 h-4"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
 									<path
 										stroke-linecap="round"
 										stroke-linejoin="round"
@@ -167,7 +172,11 @@
 										d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
 									/>
 								</svg>
-								{{ currentSvgMap ? t('cms.floors.changeSvgMap') : t('cms.floors.uploadSvgMap') }}
+								{{
+									currentSvgMap
+										? t('cms.floors.changeSvgMap')
+										: t('cms.floors.uploadSvgMap')
+								}}
 							</label>
 							<input
 								v-if="isSuperAdmin"
@@ -183,7 +192,12 @@
 								@click="removeSvgMap"
 								class="inline-flex items-center gap-1 px-3 py-1.5 text-red-600 text-sm hover:bg-red-50 rounded-lg transition-colors"
 							>
-								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg
+									class="w-4 h-4"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
 									<path
 										stroke-linecap="round"
 										stroke-linejoin="round"
@@ -203,7 +217,6 @@
 							/>
 						</div>
 					</div>
-
 
 					<!-- Aktivní -->
 					<div class="flex items-center gap-3">

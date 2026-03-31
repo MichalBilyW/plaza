@@ -60,42 +60,12 @@
 						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.shops.slugHint') }}</p>
 					</div>
 
-					<!-- Krátký popis -->
+					<!-- Popis obchodu (WYSIWYG) -->
 					<div class="lg:col-span-2">
-						<label
-							for="shortDescription"
-							class="block text-sm font-medium text-gray-700 mb-1"
-						>
-							{{ t('cms.shops.shortDescription') }}
-						</label>
-						<input
-							id="shortDescription"
-							v-model="form.shortDescription"
-							type="text"
-							maxlength="300"
-							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
-							:placeholder="t('cms.shops.shortDescriptionPlaceholder')"
-						/>
-						<p class="mt-1 text-xs text-plaza-dark">
-							{{ form.shortDescription?.length || 0 }}/300
-						</p>
-					</div>
-
-					<!-- Popis -->
-					<div class="lg:col-span-2">
-						<label
-							for="description"
-							class="block text-sm font-medium text-gray-700 mb-1"
-						>
-							{{ t('cms.shops.description') }}
-						</label>
-						<textarea
-							id="description"
+						<CmsWysiwyg
 							v-model="form.description"
-							rows="5"
-							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
-							:placeholder="t('cms.shops.descriptionPlaceholder')"
-						></textarea>
+							:label="t('cms.shops.shopDescription')"
+						/>
 					</div>
 				</div>
 			</div>
@@ -696,7 +666,6 @@ const form = reactive({
 	name: '',
 	slug: '',
 	description: '',
-	shortDescription: '',
 	logo: '',
 	gallery: [] as string[],
 	phone: '',
@@ -818,7 +787,6 @@ const handleSubmit = async () => {
 		if (form.slug) data.slug = form.slug.trim()
 		if (form.publishDate) data.publishDate = new Date(form.publishDate).toISOString()
 		if (form.description) data.description = form.description.trim()
-		if (form.shortDescription) data.shortDescription = form.shortDescription.trim()
 		if (form.logo) data.logo = form.logo.trim()
 		if (form.gallery.length) data.gallery = form.gallery
 		if (form.phone) data.phone = form.phone.trim()

@@ -1,7 +1,10 @@
 <template>
 	<Transition name="top-loading-bar-fade">
 		<div v-show="visible" class="top-loading-bar" aria-hidden="true">
-			<div class="top-loading-bar__fill" :style="{ transform: `scaleX(${progress / 100})` }"></div>
+			<div
+				class="top-loading-bar__fill"
+				:style="{ transform: `scaleX(${progress / 100})` }"
+			></div>
 		</div>
 	</Transition>
 </template>

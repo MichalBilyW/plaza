@@ -89,12 +89,11 @@
 
 		<!-- Interaktivní SVG mapa -->
 		<ClientOnly>
-			<div
-				v-if="currentFloor?.svgMap"
-				class="bg-white rounded-xl shadow-sm p-4 mb-6"
-			>
+			<div v-if="currentFloor?.svgMap" class="bg-white rounded-xl shadow-sm p-4 mb-6">
 				<div class="flex items-center justify-between mb-4">
-					<h2 class="text-lg font-semibold text-gray-900">{{ t('cms.map.interactiveMap') }}</h2>
+					<h2 class="text-lg font-semibold text-gray-900">
+						{{ t('cms.map.interactiveMap') }}
+					</h2>
 					<div class="flex items-center gap-4 text-sm">
 						<span class="flex items-center gap-2">
 							<span class="w-4 h-4 rounded bg-indigo-500"></span>
@@ -118,9 +117,14 @@
 						v-html="processedSvg"
 					></div>
 					<div v-else-if="svgPending" class="flex items-center justify-center h-64">
-						<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+						<div
+							class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"
+						></div>
 					</div>
-					<div v-else-if="svgError" class="flex items-center justify-center h-64 text-red-500">
+					<div
+						v-else-if="svgError"
+						class="flex items-center justify-center h-64 text-red-500"
+					>
 						{{ t('cms.map.svgLoadError') }}
 					</div>
 
@@ -274,16 +278,10 @@
 								</span>
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap text-right">
-								<span
-									v-if="unit.shop"
-									class="text-sm text-indigo-600"
-								>
+								<span v-if="unit.shop" class="text-sm text-indigo-600">
 									{{ t('common.edit') }}
 								</span>
-								<span
-									v-else
-									class="text-sm text-indigo-600"
-								>
+								<span v-else class="text-sm text-indigo-600">
 									{{ t('cms.map.assign') }}
 								</span>
 							</td>
@@ -301,111 +299,82 @@
 					class="fixed inset-0 z-50 flex items-center justify-center p-4"
 					@click.self="selectedUnit = null"
 				>
-				<div class="fixed inset-0 bg-black/50" @click="selectedUnit = null"></div>
-				<div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md p-6 z-10">
-					<button
-						@click="selectedUnit = null"
-						class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-					>
-						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M6 18L18 6M6 6l12 12"
-							/>
-						</svg>
-					</button>
+					<div class="fixed inset-0 bg-black/50" @click="selectedUnit = null"></div>
+					<div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md p-6 z-10">
+						<button
+							@click="selectedUnit = null"
+							class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+						>
+							<svg
+								class="w-6 h-6"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M6 18L18 6M6 6l12 12"
+								/>
+							</svg>
+						</button>
 
-					<h3 class="text-lg font-semibold mb-4">
-						{{ t('cms.map.unitDetail') }}:
-						<span class="font-mono">{{ selectedUnit.unitCode }}</span>
-					</h3>
+						<h3 class="text-lg font-semibold mb-4">
+							{{ t('cms.map.unitDetail') }}:
+							<span class="font-mono">{{ selectedUnit.unitCode }}</span>
+						</h3>
 
-					<div class="space-y-4">
-						<!-- Aktuální obchod -->
-						<div v-if="selectedUnit.shop">
-							<label class="block text-sm font-medium text-gray-700 mb-1">
-								{{ t('cms.map.currentShop') }}
-							</label>
-							<div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-								<div
-									v-if="selectedUnit.shop.logo"
-									class="w-10 h-10 rounded-lg bg-white flex items-center justify-center overflow-hidden"
-								>
-									<img
-										:src="selectedUnit.shop.logo"
-										:alt="selectedUnit.shop.name"
-										class="w-full h-full object-contain"
-									/>
-								</div>
-								<div
-									v-else
-									class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center"
-								>
-									<span class="text-plaza-dark text-lg font-bold">
-										{{ selectedUnit.shop.name.charAt(0) }}
-									</span>
-								</div>
-								<div>
-									<p class="font-medium text-gray-900">
-										{{ selectedUnit.shop.name }}
-									</p>
-									<span
-										:class="
-											selectedUnit.shop.isActive
-												? 'text-green-600'
-												: 'text-orange-600'
-										"
-										class="text-xs"
+						<div class="space-y-4">
+							<!-- Aktuální obchod -->
+							<div v-if="selectedUnit.shop">
+								<label class="block text-sm font-medium text-gray-700 mb-1">
+									{{ t('cms.map.currentShop') }}
+								</label>
+								<div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+									<div
+										v-if="selectedUnit.shop.logo"
+										class="w-10 h-10 rounded-lg bg-white flex items-center justify-center overflow-hidden"
 									>
-										{{
-											selectedUnit.shop.isActive
-												? t('cms.shops.active')
-												: t('cms.shops.inactive')
-										}}
-									</span>
+										<img
+											:src="selectedUnit.shop.logo"
+											:alt="selectedUnit.shop.name"
+											class="w-full h-full object-contain"
+										/>
+									</div>
+									<div
+										v-else
+										class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center"
+									>
+										<span class="text-plaza-dark text-lg font-bold">
+											{{ selectedUnit.shop.name.charAt(0) }}
+										</span>
+									</div>
+									<div>
+										<p class="font-medium text-gray-900">
+											{{ selectedUnit.shop.name }}
+										</p>
+										<span
+											:class="
+												selectedUnit.shop.isActive
+													? 'text-green-600'
+													: 'text-orange-600'
+											"
+											class="text-xs"
+										>
+											{{
+												selectedUnit.shop.isActive
+													? t('cms.shops.active')
+													: t('cms.shops.inactive')
+											}}
+										</span>
+									</div>
 								</div>
-							</div>
-							<NuxtLink
-								:to="`/cms/obchody/${selectedUnit.shop._id}`"
-								class="inline-flex items-center gap-1 mt-2 text-sm text-indigo-600 hover:text-indigo-700"
-							>
-								{{ t('common.edit') }}
-								<svg
-									class="w-4 h-4"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M9 5l7 7-7 7"
-									/>
-								</svg>
-							</NuxtLink>
-						</div>
-
-						<!-- Přiřazení obchodu -->
-						<div v-else>
-							<label class="block text-sm font-medium text-gray-700 mb-1">
-								{{ t('cms.map.assignShop') }}
-							</label>
-
-							<div
-								v-if="availableShops.length === 0"
-								class="p-4 bg-gray-50 rounded-lg text-center"
-							>
-								<p class="text-plaza-dark text-sm">
-									{{ t('cms.map.noShopsToAssign') }}
-								</p>
 								<NuxtLink
-									to="/cms/obchody/novy"
+									:to="`/cms/obchody/${selectedUnit.shop._id}`"
 									class="inline-flex items-center gap-1 mt-2 text-sm text-indigo-600 hover:text-indigo-700"
 								>
-									{{ t('cms.shops.addShop') }}
+									{{ t('common.edit') }}
 									<svg
 										class="w-4 h-4"
 										fill="none"
@@ -422,42 +391,76 @@
 								</NuxtLink>
 							</div>
 
-							<template v-else>
-								<select
-									v-model="shopToAssign"
-									class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+							<!-- Přiřazení obchodu -->
+							<div v-else>
+								<label class="block text-sm font-medium text-gray-700 mb-1">
+									{{ t('cms.map.assignShop') }}
+								</label>
+
+								<div
+									v-if="availableShops.length === 0"
+									class="p-4 bg-gray-50 rounded-lg text-center"
 								>
-									<option value="">{{ t('cms.map.selectShop') }}</option>
-									<option
-										v-for="shop in availableShops"
-										:key="shop._id"
-										:value="shop._id"
+									<p class="text-plaza-dark text-sm">
+										{{ t('cms.map.noShopsToAssign') }}
+									</p>
+									<NuxtLink
+										to="/cms/obchody/novy"
+										class="inline-flex items-center gap-1 mt-2 text-sm text-indigo-600 hover:text-indigo-700"
 									>
-										{{ shop.name }}
-									</option>
-								</select>
+										{{ t('cms.shops.addShop') }}
+										<svg
+											class="w-4 h-4"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M9 5l7 7-7 7"
+											/>
+										</svg>
+									</NuxtLink>
+								</div>
 
+								<template v-else>
+									<select
+										v-model="shopToAssign"
+										class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+									>
+										<option value="">{{ t('cms.map.selectShop') }}</option>
+										<option
+											v-for="shop in availableShops"
+											:key="shop._id"
+											:value="shop._id"
+										>
+											{{ shop.name }}
+										</option>
+									</select>
+
+									<button
+										@click="assignShop"
+										:disabled="!shopToAssign || assigning"
+										class="mt-3 w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+									>
+										{{ assigning ? t('common.loading') : t('cms.map.assign') }}
+									</button>
+								</template>
+							</div>
+
+							<!-- Odebrat obchod -->
+							<div v-if="selectedUnit.shop" class="pt-4 border-t">
 								<button
-									@click="assignShop"
-									:disabled="!shopToAssign || assigning"
-									class="mt-3 w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+									@click="removeShop"
+									:disabled="removing"
+									class="w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
 								>
-									{{ assigning ? t('common.loading') : t('cms.map.assign') }}
+									{{ removing ? t('common.loading') : t('cms.map.removeShop') }}
 								</button>
-							</template>
+							</div>
 						</div>
-
-						<!-- Odebrat obchod -->
-						<div v-if="selectedUnit.shop" class="pt-4 border-t">
-							<button
-								@click="removeShop"
-								:disabled="removing"
-								class="w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
-							>
-								{{ removing ? t('common.loading') : t('cms.map.removeShop') }}
-							</button>
-						</div>
-					</div>
 					</div>
 				</div>
 			</Teleport>
@@ -612,9 +615,7 @@ const availableShops = computed(() => {
 	}
 
 	// Vrátíme obchody, které nemají přiřazenou jednotku
-	return allShops.value.filter(
-		(shop) => !assignedShopIds.has(shop._id as string),
-	)
+	return allShops.value.filter((shop) => !assignedShopIds.has(shop._id as string))
 })
 
 // Mapa jednotek pro rychlý přístup
@@ -639,10 +640,7 @@ const processedSvg = computed(() => {
 	let svg = svgContent.value
 
 	// Odstranit bílé pozadí
-	svg = svg.replace(
-		/<rect[^>]*fill=["'](#fff|#ffffff|white|#FFFFFF|#FFF)["'][^>]*\/>/gi,
-		'',
-	)
+	svg = svg.replace(/<rect[^>]*fill=["'](#fff|#ffffff|white|#FFFFFF|#FFF)["'][^>]*\/>/gi, '')
 	svg = svg.replace(
 		/<rect[^>]*style=["'][^"']*fill:\s*(#fff|#ffffff|white)[^"']*["'][^>]*\/>/gi,
 		'',
@@ -662,7 +660,7 @@ const processedSvg = computed(() => {
 			hasShop ? 'cms-unit--occupied' : 'cms-unit--empty',
 			'cursor-pointer',
 			'transition-all',
-			'duration-200',
+			'duration-300',
 			isSelected ? 'cms-unit--selected' : '',
 		]
 			.filter(Boolean)

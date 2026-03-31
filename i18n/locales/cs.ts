@@ -130,6 +130,8 @@ export default {
 		noRelatedShops: 'V této kategorii nejsou žádné další obchody.',
 		prevShop: 'Předchozí obchod',
 		nextShop: 'Další obchod',
+		findOnMap: 'Kde nás najdete',
+		shopDescription: 'Popis obchodu',
 	},
 
 	events: {
@@ -289,6 +291,7 @@ export default {
 			slug: 'URL slug',
 			slugPlaceholder: 'nazev-obchodu',
 			slugHint: 'Automaticky generováno z názvu, pokud není vyplněno',
+			shopDescription: 'Popis obchodu',
 			shortDescription: 'Krátký popis',
 			shortDescriptionPlaceholder: 'Krátký popis obchodu pro přehledy',
 			description: 'Popis',
@@ -430,7 +433,8 @@ export default {
 			svgRemoveError: 'Chyba při odstraňování SVG mapy',
 			svgInvalidFormat: 'Neplatný formát souboru, vyžadován SVG',
 			staticAroundTitle: 'SVG okolí centra',
-			staticAroundDescription: 'Společné SVG pro všechna patra - zobrazuje okolí centra (cesty, budovy, půdorys)',
+			staticAroundDescription:
+				'Společné SVG pro všechna patra - zobrazuje okolí centra (cesty, budovy, půdorys)',
 			hasStaticAround: 'Nahráno',
 			noStaticAround: 'Nenahrán',
 			uploadStaticAround: 'Nahrát SVG okolí',
@@ -779,6 +783,7 @@ export default {
 		occupiedUnit: 'Obsazená jednotka',
 		emptyUnit: 'Volná jednotka',
 		viewFullMap: 'Zobrazit celou mapu',
+		findInFloor: 'Najdete v',
 	},
 
 	errorPage: {

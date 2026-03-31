@@ -14,10 +14,38 @@
 
 		<template v-else>
 			<!-- Hidden H1 for SEO -->
-			<h1 class="sr-only">{{ shop?.name }}</h1>
+			<h1 class="sr-only hidden visibility-hidden absolute -top-[9999px] -left-[9999px]">
+				{{ shop?.name }}
+			</h1>
 
 			<!-- Hero Section -->
 			<ShopHeroShopSection v-if="shop" :shop="shop" :pending="shopPending" />
+
+			<!-- Shop Description Section -->
+			<div v-if="hasDescription" class="px-4 my-20">
+				<div class="container max-w-4xl">
+					<div
+						class="prose prose-lg max-w-none text-plaza-dark [&_img]:max-w-full [&_img]:h-auto"
+						v-html="sanitize(shop?.description)"
+					></div>
+				</div>
+			</div>
+
+			<!-- Map Section - zobrazit mapu s označeným obchodem -->
+			<div v-if="shop?.floorId" class="my-20">
+				<div class="container">
+					<h2
+						class="font-heading text-2xl md:text-3xl font-bold text-plaza-dark uppercase mb-8 text-center"
+					>
+						{{ t('shopDetail.findOnMap') }}
+					</h2>
+				</div>
+				<MapSection
+					:locked-floor-id="shop.floorId"
+					:highlight-shop-name="shop.name"
+					hide-full-map-link
+				/>
+			</div>
 
 			<!-- Shop Events Section (Akce a slevy) -->
 			<div class="my-20">
@@ -29,7 +57,7 @@
 			</div>
 
 			<!-- Related Shops Section -->
-			<div class="my-20">
+			<div class="px-4 my-20">
 				<ShopRelatedShops
 					v-if="shop?.category && categories.length > 0"
 					:shops="relatedShops"
@@ -48,6 +76,7 @@ import type { Shop, Event, Category } from '@/shared/types'
 
 const { t } = useI18n()
 const route = useRoute()
+const { sanitize } = useSanitizeHtml()
 
 // === Fetch shop detail ===
 const {
@@ -58,11 +87,20 @@ const {
 	key: `shop-${route.params.slug}`,
 })
 
+// === Check if description has actual content (not just empty HTML tags) ===
+const hasDescription = computed(() => {
+	const desc = shop.value?.description
+	if (!desc) return false
+	// Strip HTML tags and check if there's actual text
+	const textContent = desc.replace(/<[^>]*>/g, '').trim()
+	return textContent.length > 0
+})
+
 // === SEO ===
 const seoTitle = computed(() => shop.value?.seoTitle || shop.value?.name || t('shops.title'))
 usePlazaSeo({
 	title: seoTitle.value,
-	description: shop.value?.seoDescription || shop.value?.shortDescription,
+	description: shop.value?.seoDescription,
 	image: shop.value?.gallery?.[0] || shop.value?.logo,
 })
 

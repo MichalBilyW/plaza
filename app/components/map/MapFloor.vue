@@ -48,9 +48,29 @@ interface Props {
 	units: MapUnit[]
 	/** Aktuálně vybraná jednotka */
 	selectedUnit?: MapUnit | null
+	/** Vyhledávací dotaz pro zvýraznění jednotek */
+	searchQuery?: string
 }
 
 const props = defineProps<Props>()
+
+// Jednotky které odpovídají vyhledávání (case-insensitive, částečná shoda)
+const matchedUnitCodes = computed(() => {
+	const query = props.searchQuery?.trim().toLowerCase()
+	if (!query) return new Set<string>()
+
+	// Escape regex speciálních znaků (stejně jako na /obchody)
+	const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+	const regex = new RegExp(escaped, 'i')
+
+	const matched = new Set<string>()
+	for (const unit of props.units) {
+		if (unit.shop?.name && regex.test(unit.shop.name)) {
+			matched.add(unit.unitCode)
+		}
+	}
+	return matched
+})
 
 const emit = defineEmits<{
 	'unit-click': [unitCode: string, event: MouseEvent]
@@ -91,9 +111,12 @@ onMounted(() => {
 })
 
 // Při změně cesty znovu načíst
-watch(() => props.svgPath, () => {
-	loadSvg()
-})
+watch(
+	() => props.svgPath,
+	() => {
+		loadSvg()
+	},
+)
 
 // Refs
 const containerRef = ref<HTMLElement | null>(null)
@@ -131,10 +154,7 @@ const processedSvg = computed(() => {
 
 	// Odstranit bílé pozadí z SVG (rect na začátku s bílou výplní)
 	// Toto umožní vidět vrstvu pod tímto SVG
-	svg = svg.replace(
-		/<rect[^>]*fill=["'](#fff|#ffffff|white|#FFFFFF|#FFF)["'][^>]*\/>/gi,
-		'',
-	)
+	svg = svg.replace(/<rect[^>]*fill=["'](#fff|#ffffff|white|#FFFFFF|#FFF)["'][^>]*\/>/gi, '')
 	svg = svg.replace(
 		/<rect[^>]*style=["'][^"']*fill:\s*(#fff|#ffffff|white)[^"']*["'][^>]*\/>/gi,
 		'',
@@ -151,13 +171,17 @@ const processedSvg = computed(() => {
 
 		if (hasShop) {
 			// Obsazená jednotka - interaktivní
+			const isHighlighted = matchedUnitCodes.value.has(unit.unitCode)
+			const isDimmed = matchedUnitCodes.value.size > 0 && !isHighlighted
 			const classes = [
 				'map-unit',
 				'map-unit--occupied',
 				'cursor-pointer',
 				'transition-all',
-				'duration-200',
+				'duration-300',
 				isSelected ? 'map-unit--selected' : '',
+				isHighlighted ? 'map-unit--highlighted' : '',
+				isDimmed ? 'map-unit--dimmed' : '',
 			]
 				.filter(Boolean)
 				.join(' ')
@@ -364,5 +388,18 @@ onBeforeUnmount(() => {
 .map-floor :deep(.map-unit--empty) {
 	opacity: 0.4;
 	filter: grayscale(0.5);
+}
+
+/* Zvýrazněná jednotka (odpovídá vyhledávání) */
+.map-floor :deep(.map-unit--highlighted) {
+	filter: brightness(1.15) saturate(1.3);
+	stroke: theme('colors.plaza.DEFAULT');
+	stroke-width: 1;
+}
+
+/* Ztmavená jednotka (neodpovídá vyhledávání) */
+.map-floor :deep(.map-unit--dimmed) {
+	opacity: 0.35;
+	filter: grayscale(0.6) brightness(0.8);
 }
 </style>

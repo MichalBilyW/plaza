@@ -147,7 +147,9 @@
 								{{ floor.slug }}
 							</td>
 							<td class="px-4 py-3 text-center">
-								<span class="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 text-sm font-medium rounded-full bg-gray-100 text-gray-800">
+								<span
+									class="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 text-sm font-medium rounded-full bg-gray-100 text-gray-800"
+								>
 									{{ floor.shopCount ?? 0 }}
 								</span>
 							</td>
@@ -275,7 +277,8 @@
 									</p>
 									<span class="text-sm text-plaza-dark">•</span>
 									<span class="text-sm text-plaza-dark">
-										{{ floor.shopCount ?? 0 }} {{ t('cms.floors.shopCount').toLowerCase() }}
+										{{ floor.shopCount ?? 0 }}
+										{{ t('cms.floors.shopCount').toLowerCase() }}
 									</span>
 								</div>
 							</div>
@@ -344,10 +347,7 @@
 			<div class="flex items-center gap-4">
 				<!-- Aktuální stav -->
 				<div class="flex items-center gap-2">
-					<span
-						v-if="staticAroundMap"
-						class="text-green-600 flex items-center gap-1"
-					>
+					<span v-if="staticAroundMap" class="text-green-600 flex items-center gap-1">
 						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
 							<path
 								fill-rule="evenodd"
@@ -386,7 +386,11 @@
 							d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
 						/>
 					</svg>
-					{{ staticAroundMap ? t('cms.floors.changeStaticAround') : t('cms.floors.uploadStaticAround') }}
+					{{
+						staticAroundMap
+							? t('cms.floors.changeStaticAround')
+							: t('cms.floors.uploadStaticAround')
+					}}
 				</label>
 				<input
 					v-if="isSuperAdmin"
@@ -465,7 +469,9 @@ const {
 const floors = computed(() => floorsData.value?.data || [])
 
 // Load general info for staticAroundMap
-const { data: generalInfo, refresh: refreshGeneralInfo } = await useFetch<{ staticAroundMap?: string }>('/api/general-info')
+const { data: generalInfo, refresh: refreshGeneralInfo } = await useFetch<{
+	staticAroundMap?: string
+}>('/api/general-info')
 const staticAroundMap = computed(() => generalInfo.value?.staticAroundMap || null)
 
 // Sortable items for drag & drop

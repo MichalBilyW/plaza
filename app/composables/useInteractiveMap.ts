@@ -21,7 +21,7 @@ export interface MapState {
 	popupPosition: { x: number; y: number } | null
 }
 
-export function useInteractiveMap() {
+export function useInteractiveMap(options?: { initialFloorId?: string }) {
 	// Data z API - pouze na klientu aby se zabránilo hydration mismatch
 	const {
 		data: mapData,
@@ -74,7 +74,7 @@ export function useInteractiveMap() {
 		onFloorChangeCallback = callback
 	}
 
-	// Při načtení dat automaticky vybrat 1. patro (level: 1) nebo první dostupné
+	// Při načtení dat automaticky vybrat patro
 	watch(
 		floors,
 		(newFloors) => {
@@ -85,7 +85,16 @@ export function useInteractiveMap() {
 
 			// Pokud není vybrané patro nebo neexistuje, vybrat defaultní
 			if (!state.currentFloorId || !currentExists) {
-				// Preferovat 1. patro (level: 1)
+				// Pokud je zadané initialFloorId, použít ho
+				if (options?.initialFloorId) {
+					const initialFloor = newFloors.find((f) => f.floorId === options.initialFloorId)
+					if (initialFloor) {
+						state.currentFloorId = initialFloor.floorId
+						nextTick(() => onFloorChangeCallback?.())
+						return
+					}
+				}
+				// Jinak preferovat 1. patro (level: 1)
 				const defaultFloor = newFloors.find((f) => f.level === 1) ?? newFloors[0]
 				if (defaultFloor) {
 					state.currentFloorId = defaultFloor.floorId
@@ -157,7 +166,7 @@ export function useInteractiveMap() {
 		const isHovered = state.hoveredUnitCode === unitCode
 		const isSelected = state.selectedUnit?.unitCode === unitCode
 
-		const classes: string[] = ['map-unit', 'transition-all', 'duration-200']
+		const classes: string[] = ['map-unit', 'transition-all', 'duration-300']
 
 		if (!unit?.shop) {
 			// Neobsazená jednotka - ztmavit, žádná interakce

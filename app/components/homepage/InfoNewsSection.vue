@@ -22,27 +22,17 @@
 							t('home.infoSection.shops')
 						}}</span>
 						<svg
-							class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
-							viewBox="0 0 24 24"
+							class="w-4 h-4 absolute right-3 top-3.5 md:top-[25px] inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
 							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
 							aria-hidden="true"
 						>
-							<circle
-								cx="12"
-								cy="12"
-								r="9"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
 							<path
-								d="M11 15L14 12L11 9"
-								stroke="currentColor"
-								stroke-width="2"
 								stroke-linecap="round"
 								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
 							/>
 						</svg>
 					</NuxtLink>
@@ -59,27 +49,17 @@
 							t('home.infoSection.restaurants')
 						}}</span>
 						<svg
-							class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
-							viewBox="0 0 24 24"
+							class="w-4 h-4 absolute right-3 top-3.5 md:top-[25px] inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
 							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
 							aria-hidden="true"
 						>
-							<circle
-								cx="12"
-								cy="12"
-								r="9"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
 							<path
-								d="M11 15L14 12L11 9"
-								stroke="currentColor"
-								stroke-width="2"
 								stroke-linecap="round"
 								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
 							/>
 						</svg>
 					</NuxtLink>
@@ -96,27 +76,17 @@
 							t('home.infoSection.parkingSpots')
 						}}</span>
 						<svg
-							class="absolute right-3 top-6 inline-block ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
-							viewBox="0 0 24 24"
+							class="w-4 h-4 absolute right-3 top-3.5 md:top-[25px] inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
 							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
 							aria-hidden="true"
 						>
-							<circle
-								cx="12"
-								cy="12"
-								r="9"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
 							<path
-								d="M11 15L14 12L11 9"
-								stroke="currentColor"
-								stroke-width="2"
 								stroke-linecap="round"
 								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 5l7 7-7 7"
 							/>
 						</svg>
 					</NuxtLink>
@@ -131,27 +101,17 @@
 							>
 								{{ t('home.infoSection.openingHours') }}
 								<svg
-									class="absolute right-3 top-3.5 md:top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
-									viewBox="0 0 24 24"
+									class="w-4 h-4 absolute right-3 top-3.5 md:top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
 									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
 									aria-hidden="true"
 								>
-									<circle
-										cx="12"
-										cy="12"
-										r="9"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
 									<path
-										d="M11 15L14 12L11 9"
-										stroke="currentColor"
-										stroke-width="2"
 										stroke-linecap="round"
 										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
 									/>
 								</svg>
 							</button>
@@ -163,27 +123,17 @@
 							>
 								{{ t('home.infoSection.mapCenter') }}
 								<svg
-									class="absolute right-3 top-3.5 md:top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
-									viewBox="0 0 24 24"
+									class="w-4 h-4 absolute right-3 top-3.5 md:top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
 									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
 									aria-hidden="true"
 								>
-									<circle
-										cx="12"
-										cy="12"
-										r="9"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
 									<path
-										d="M11 15L14 12L11 9"
-										stroke="currentColor"
-										stroke-width="2"
 										stroke-linecap="round"
 										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
 									/>
 								</svg>
 							</NuxtLink>
@@ -221,8 +171,13 @@
 							:src="item.image"
 							:alt="item.name || t('home.infoSection.newsAlt')"
 							loading="lazy"
-							class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out"
-							:class="index === currentNewsIndex ? 'opacity-100' : 'opacity-0'"
+							class="absolute inset-0 w-full h-full object-contain transition-all duration-300 ease-in-out"
+							:class="[
+								index === currentNewsIndex ? 'opacity-100' : 'opacity-0',
+								currentNews?.content
+									? 'group-hover:scale-105 transition-transform ease-in-out'
+									: '',
+							]"
 							:aria-hidden="index !== currentNewsIndex"
 						/>
 
@@ -231,16 +186,16 @@
 							v-if="!newsPending && news.length === 0"
 							src="/images/homepage/default-info.jpg"
 							:alt="t('home.infoSection.newsAlt')"
-							class="w-full h-full object-cover"
+							class="w-full h-full object-contain"
 						/>
 
 						<!-- Hover badge -->
 						<div
 							v-if="currentNews?.content"
-							class="absolute bottom-6 max-md:opacity-90 max-md:right-6 md:-right-full group-hover:right-6 md:opacity-0 group-hover:opacity-90 transition-all ease-in-out"
+							class="absolute bottom-6 right-6 md:opacity-90 touch:!opacity-100 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
 						>
 							<span
-								class="bg-plaza-dark text-white px-4 py-2 rounded-[5px_20px_5px_5px] w-full font-semibold shadow-lg"
+								class="bg-plaza text-white px-4 py-2 rounded-[5px_20px_5px_5px] w-full shadow-lg"
 								v-html="t('home.infoSection.showMore')"
 							>
 							</span>
@@ -259,7 +214,7 @@
 							})
 						}}</span>
 						<button
-							class="w-10 h-10 rounded-full border-2 flex items-center justify-center hover:bg-gray-100 transition-colors"
+							class="w-10 h-10 rounded-full flex items-center justify-center rounded-full backdrop-blur-xs flex items-center justify-center hover:border transition-all"
 							:aria-label="t('home.infoSection.prevNews')"
 							@click="prevNews"
 						>
@@ -279,7 +234,7 @@
 							</svg>
 						</button>
 						<button
-							class="w-10 h-10 rounded-full border-2 flex items-center justify-center hover:bg-gray-100 transition-colors"
+							class="w-10 h-10 rounded-full flex items-center justify-center rounded-full backdrop-blur-xs flex items-center justify-center hover:border transition-all"
 							:aria-label="t('home.infoSection.nextNews')"
 							@click="nextNews"
 						>

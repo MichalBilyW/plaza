@@ -649,71 +649,71 @@
 					class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50"
 					@click.self="closeLinkDialog"
 				>
-				<div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
-					<h3 class="text-lg font-bold text-plaza-dark mb-4">Vložit odkaz</h3>
+					<div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+						<h3 class="text-lg font-bold text-plaza-dark mb-4">Vložit odkaz</h3>
 
-					<div class="space-y-4">
-						<!-- URL input -->
-						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-1">
-								URL odkazu
-							</label>
-							<input
-								v-model="linkUrl"
-								type="url"
-								placeholder="https://example.com"
-								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza focus:border-plaza outline-none"
-								@keydown.enter="confirmLink"
-							/>
+						<div class="space-y-4">
+							<!-- URL input -->
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-1">
+									URL odkazu
+								</label>
+								<input
+									v-model="linkUrl"
+									type="url"
+									placeholder="https://example.com"
+									class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-plaza focus:border-plaza outline-none"
+									@keydown.enter="confirmLink"
+								/>
+							</div>
+
+							<!-- Open in new tab checkbox -->
+							<div class="flex items-start gap-3">
+								<input
+									id="link-new-tab"
+									v-model="linkOpenInNewTab"
+									type="checkbox"
+									class="mt-1 h-4 w-4 text-plaza border-gray-300 rounded focus:ring-plaza"
+								/>
+								<label for="link-new-tab" class="text-sm text-gray-700">
+									Otevřít v novém okně
+								</label>
+							</div>
+
+							<!-- Hint -->
+							<p class="text-xs text-amber-600 bg-amber-50 p-3 rounded-lg">
+								💡 <strong>Doporučení:</strong> Odkazy mimo tento web vždy
+								otevírejte v novém okně, aby web nepřicházel o uživatele.
+							</p>
 						</div>
 
-						<!-- Open in new tab checkbox -->
-						<div class="flex items-start gap-3">
-							<input
-								id="link-new-tab"
-								v-model="linkOpenInNewTab"
-								type="checkbox"
-								class="mt-1 h-4 w-4 text-plaza border-gray-300 rounded focus:ring-plaza"
-							/>
-							<label for="link-new-tab" class="text-sm text-gray-700">
-								Otevřít v novém okně
-							</label>
+						<!-- Buttons -->
+						<div class="flex justify-end gap-3 mt-6">
+							<button
+								type="button"
+								class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+								@click="closeLinkDialog"
+							>
+								Zrušit
+							</button>
+							<button
+								v-if="linkUrl"
+								type="button"
+								class="px-4 py-2 text-sm text-red-600 hover:text-red-800 transition-colors"
+								@click="removeLink"
+							>
+								Odstranit odkaz
+							</button>
+							<button
+								type="button"
+								class="px-4 py-2 text-sm bg-plaza text-white rounded-lg hover:bg-plaza-dark transition-colors"
+								@click="confirmLink"
+							>
+								Potvrdit
+							</button>
 						</div>
-
-						<!-- Hint -->
-						<p class="text-xs text-amber-600 bg-amber-50 p-3 rounded-lg">
-							💡 <strong>Doporučení:</strong> Odkazy mimo tento web vždy otevírejte v
-							novém okně, aby web nepřicházel o uživatele.
-						</p>
-					</div>
-
-					<!-- Buttons -->
-					<div class="flex justify-end gap-3 mt-6">
-						<button
-							type="button"
-							class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
-							@click="closeLinkDialog"
-						>
-							Zrušit
-						</button>
-						<button
-							v-if="linkUrl"
-							type="button"
-							class="px-4 py-2 text-sm text-red-600 hover:text-red-800 transition-colors"
-							@click="removeLink"
-						>
-							Odstranit odkaz
-						</button>
-						<button
-							type="button"
-							class="px-4 py-2 text-sm bg-plaza text-white rounded-lg hover:bg-plaza-dark transition-colors"
-							@click="confirmLink"
-						>
-							Potvrdit
-						</button>
 					</div>
 				</div>
-			</div>
 			</Teleport>
 		</ClientOnly>
 	</div>
@@ -822,6 +822,7 @@ const emit = defineEmits<{
 }>()
 
 const { secureFetch } = useCmsAuth()
+const { addMessage } = useFlashMessages()
 const imageInput = ref<HTMLInputElement | null>(null)
 const uploading = ref(false)
 const tableMenuWrapper = ref<HTMLElement | null>(null)
@@ -899,13 +900,18 @@ const uploadImage = async (file: File): Promise<string | null> => {
 
 	try {
 		uploading.value = true
-		const response = await secureFetch('/api/upload', {
+		const response = await secureFetch<{ url: string }>('/api/upload', {
 			method: 'POST',
 			body: formData,
 		})
 		return response.url
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error('Image upload failed:', error)
+		// Extrahovat chybovou hlášku z FetchError
+		const fetchError = error as { data?: { message?: string }; message?: string }
+		const errorMessage =
+			fetchError?.data?.message || fetchError?.message || 'Nahrávání obrázku selhalo'
+		addMessage('error', errorMessage)
 		return null
 	} finally {
 		uploading.value = false

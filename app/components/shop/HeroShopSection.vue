@@ -2,7 +2,7 @@
 	<div>
 		<!-- hero bg -->
 		<div
-			class="z-0 absolute top-0 left-0 w-full h-[350px] lg:h-[550px] bg-gradient-to-b from-[#131313] to-[#1A1A1A]"
+			class="z-0 absolute top-0 left-0 w-full h-[550px] bg-gradient-to-b from-[#131313] to-[#1A1A1A]"
 		></div>
 
 		<!-- Hero section -->
@@ -10,7 +10,7 @@
 			<div class="flex flex-col md:flex-row items-center justify-center pt-20 md:pt-32 px-6">
 				<!-- Info Card (left on desktop, bottom on mobile) -->
 				<div
-					class="order-2 md:order-1 w-full max-w-[290px] md:max-w-[380px] max-md:mt-3 z-20"
+					class="order-2 md:order-1 w-full max-w-[290px] md:max-w-[380px] max-md:-mt-8 z-20"
 				>
 					<div class="bg-white rounded-[5px_20px_5px_5px] shadow-lg p-6 lg:p-8">
 						<!-- Logo -->
@@ -147,7 +147,7 @@
 							<!-- Navigation arrow -->
 							<button
 								type="button"
-								class="absolute right-4 md:right-6 bottom-4 md:bottom-6 z-20 w-10 h-10 rounded-full border-2 border-white/50 bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors"
+								class="absolute right-4 md:right-6 bottom-10 md:bottom-6 z-20 w-10 h-10 rounded-full bg-plaza-dark/50 backdrop-blur-xs flex items-center justify-center hover:bg-white/20 transition-colors"
 								:aria-label="t('shopDetail.nextImage')"
 								@click="slideNext"
 							>

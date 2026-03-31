@@ -21,9 +21,14 @@
 							<!-- Otevírací hodiny -->
 							<p class="text-sm text-gray-300 mb-4">
 								<span
-									:class="unit.shop?.todayHours.isOpen ? 'text-plaza-success' : 'text-plaza'"
+									:class="
+										unit.shop?.todayHours.isOpen
+											? 'text-plaza-success'
+											: 'text-plaza'
+									"
 									aria-hidden="true"
-								>●</span>
+									>●</span
+								>
 								{{ unit.shop?.todayHours.formatted }}
 							</p>
 
@@ -31,7 +36,7 @@
 							<NuxtLink
 								v-if="unit.shop?.slug"
 								:to="`/obchody/${unit.shop.slug}`"
-								class="mt-1 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] hover:brightness-110 transition-all duration-200"
+								class="mt-1 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] hover:brightness-110 transition-all duration-300"
 							>
 								{{ t('common.more') }}
 							</NuxtLink>
@@ -138,10 +143,14 @@ onMounted(() => {
 
 /* Popup card animace */
 .popup-enter-active :deep(.popup-card) {
-	transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+	transition:
+		transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+		opacity 0.25s ease;
 }
 .popup-leave-active :deep(.popup-card) {
-	transition: transform 0.15s ease, opacity 0.15s ease;
+	transition:
+		transform 0.15s ease,
+		opacity 0.15s ease;
 }
 
 .popup-enter-from :deep(.popup-card),

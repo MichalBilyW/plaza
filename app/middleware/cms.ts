@@ -33,7 +33,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
 		user.value = userData
 
 		// Kontrola oprávnění pro admin-only stránky
-		if (to.path.startsWith('/cms/spravci') && !['admin', 'superadmin'].includes(userData.role)) {
+		if (
+			to.path.startsWith('/cms/spravci') &&
+			!['admin', 'superadmin'].includes(userData.role)
+		) {
 			throw createError({
 				statusCode: 403,
 				statusMessage: 'Forbidden',

@@ -81,7 +81,10 @@
 					>
 						<option value="editor">{{ t('cms.roles.editor') }}</option>
 						<option value="admin">{{ t('cms.roles.admin') }}</option>
-						<option v-if="isSuperAdmin || form.role === 'superadmin'" value="superadmin">
+						<option
+							v-if="isSuperAdmin || form.role === 'superadmin'"
+							value="superadmin"
+						>
 							{{ t('cms.roles.superadmin') }}
 						</option>
 					</select>
