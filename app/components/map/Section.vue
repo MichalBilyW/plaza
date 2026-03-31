@@ -9,7 +9,7 @@
 		<!-- Map Tools (skryté když je zamčené patro) -->
 		<div
 			v-if="!props.lockedFloorId"
-			class="z-20 relative absolute left-0 top-0 md:top-32 lg:top-20 container flex flex-col md:flex-row gap-4 md:gap-6 justify-start items-start md:justify-between px-4"
+			class="z-20 relative absolute left-0 top-0 md:top-32 lg:top-20 container flex flex-col md:flex-row gap-4 md:gap-6 justify-start items-start md:justify-between p-4"
 		>
 			<!-- Search input -->
 			<div class="relative w-full max-w-[400px]">
@@ -118,7 +118,7 @@
 			</ClientOnly>
 		</div>
 
-		<div class="relative w-full min-h-[300px] md:min-h-[500px] mb-8 md:mb-16">
+		<div class="relative w-full min-h-[600px] mb-8 md:mb-16">
 			<h2 class="absolute -left-[9990px] -top-[9990px] opacity-0 visibility-hidden">
 				{{ t('mapPage.title') }}
 			</h2>
@@ -127,7 +127,7 @@
 				<!-- Loading state - zobrazit dokud se načítají data nebo SVG -->
 				<div
 					v-if="pending || isLoading"
-					class="flex items-center justify-center min-h-[300px] md:min-h-[500px]"
+					class="flex items-center justify-center min-h-[600px]"
 				>
 					<div class="flex flex-col items-center gap-4">
 						<div class="map-spinner"></div>
@@ -151,7 +151,7 @@
 					<!-- Interaktivní mapa -->
 					<div
 						ref="mapContainerRef"
-						class="map-container relative overflow-hidden max-w-full min-h-[300px] md:min-h-[500px]"
+						class="map-container relative overflow-hidden max-w-full min-h-[600px]"
 						:class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''"
 					>
 						<!-- Zoom ovládání - top-right -->
@@ -268,7 +268,7 @@
 				</template>
 
 				<template #fallback>
-					<div class="flex items-center justify-center min-h-[300px] md:min-h-[500px]">
+					<div class="flex items-center justify-center min-h-[600px]">
 						<div class="flex flex-col items-center gap-4">
 							<div class="map-spinner"></div>
 							<p class="text-gray-500 text-sm">{{ t('common.loading') }}</p>

@@ -15,9 +15,14 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",
+		"test:e2e": "vitest run --config vitest.e2e.config.ts",
+		"typecheck": "nuxi typecheck",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"validate": "npm run lint && npm run typecheck && npm run test",
+		"predeploy": "npm run validate && npm run build",
+		"health-check": "node scripts/health-check.mjs"
 	},
 	"dependencies": {
 		"@formkit/icons": "^1.7.2",
