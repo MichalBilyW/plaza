@@ -3,20 +3,22 @@
 		<!-- Dark header -->
 		<div
 			v-if="generalInfo?.title || generalInfo?.shortText"
-			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[130px] lg:pt-[160px] pb-20"
+			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[80px] lg:pt-[160px] pb-[320px]"
 		>
-			<h1 v-if="generalInfo?.title" class="text-3xl md:text-4xl uppercase">
-				{{ generalInfo.title }}
-			</h1>
-			<h2 v-if="generalInfo?.shortText" class="text-2xl md:text-3xl">
-				{{ generalInfo.shortText }}
-			</h2>
+			<div class="container mx-auto text-center text-white ">
+				<h1 v-if="generalInfo?.title" class="text-3xl md:text-4xl uppercase">
+					{{ generalInfo.title }}
+				</h1>
+				<h2 v-if="generalInfo?.shortText" class="text-2xl md:text-3xl">
+					{{ generalInfo.shortText }}
+				</h2>
+			</div>
 		</div>
 
 		<!-- Galerie -->
 		<section
 			v-if="!pending && generalInfo?.gallery?.length"
-			class="container-small -mt-[250px] px-4"
+			class="container-small -mt-[280px] px-4"
 		>
 			<div class="relative rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg">
 				<!-- Border overlay -->
