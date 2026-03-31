@@ -5,8 +5,8 @@
  * Běží bez databáze - testují pouze strukturu odpovědí.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import { setup, $fetch, createPage } from '@nuxt/test-utils/e2e'
+import { describe, it, expect } from 'vitest'
+import { setup, $fetch } from '@nuxt/test-utils/e2e'
 
 describe('API Health Tests', async () => {
 	await setup({
@@ -60,8 +60,8 @@ describe('API Health Tests', async () => {
 			try {
 				await $fetch('/api/shops', { method: 'POST', body: {} })
 				expect.fail('Should have thrown 401')
-			} catch (error: any) {
-				expect(error.statusCode).toBe(401)
+			} catch (error) {
+				expect((error as { statusCode: number }).statusCode).toBe(401)
 			}
 		})
 
@@ -69,8 +69,8 @@ describe('API Health Tests', async () => {
 			try {
 				await $fetch('/api/auth/me')
 				expect.fail('Should have thrown 401')
-			} catch (error: any) {
-				expect(error.statusCode).toBe(401)
+			} catch (error) {
+				expect((error as { statusCode: number }).statusCode).toBe(401)
 			}
 		})
 	})
