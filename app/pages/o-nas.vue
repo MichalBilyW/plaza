@@ -6,7 +6,7 @@
 			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[80px] lg:pt-[160px] pb-[320px]"
 		>
 			<div class="container mx-auto text-center text-white ">
-				<h1 v-if="generalInfo?.title" class="text-3xl md:text-4xl uppercase">
+				<h1 v-if="generalInfo?.title" class="font-heading font-bold text-3xl md:text-4xl uppercase">
 					{{ generalInfo.title }}
 				</h1>
 				<h2 v-if="generalInfo?.shortText" class="text-2xl md:text-3xl">
