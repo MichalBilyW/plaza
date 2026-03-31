@@ -27,9 +27,7 @@
 				</div>
 
 				<!-- Navigace -->
-				<div
-					class="flex flex-col xs:flex-row xs:items-center justify-center gap-y-2 xs:gap-x-32"
-				>
+				<div class="flex justify-center gap-y-2 gap-x-16 md:gap-x-32">
 					<!-- Sloupec 1 -->
 					<nav class="flex flex-col gap-y-2">
 						<NuxtLink

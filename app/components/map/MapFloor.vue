@@ -411,7 +411,7 @@ onBeforeUnmount(() => {
 
 .map-floor :deep(.map-unit--selected) {
 	filter: brightness(1.2);
-	stroke: theme('colors.indigo.600');
+	stroke: theme('colors.plaza.DEFAULT');
 	stroke-width: 2;
 }
 

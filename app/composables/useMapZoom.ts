@@ -24,11 +24,13 @@ const ZOOM_LEVELS: ZoomLevel[] = [
 ]
 
 const MAX_ZOOM = 3
+const MOBILE_BREAKPOINT = 768 // md breakpoint
 
 export function useMapZoom() {
 	const mapContainerRef = ref<HTMLElement | null>(null)
 	const mapContentRef = ref<HTMLElement | null>(null)
 	const isTouch = ref(false)
+	const isMobile = ref(false)
 	const currentScale = ref(1)
 
 	let panzoomInstance: PanzoomObject | null = null
@@ -36,6 +38,11 @@ export function useMapZoom() {
 	// Detekce touch zařízení
 	function checkTouch() {
 		isTouch.value = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+	}
+
+	// Detekce mobile (< md breakpoint)
+	function checkMobile() {
+		isMobile.value = window.innerWidth < MOBILE_BREAKPOINT
 	}
 
 	// Zoom úrovně: vždy 1–3× na všech zařízeních
@@ -59,10 +66,14 @@ export function useMapZoom() {
 			panzoomInstance = null
 		}
 
+		// Na mobile (< md) výchozí zoom 2×
+		checkMobile()
+		const initialScale = isMobile.value ? 2 : 1
+
 		panzoomInstance = Panzoom(content, {
 			maxScale: MAX_ZOOM,
 			minScale: 1,
-			startScale: 1,
+			startScale: initialScale,
 			startX: 0,
 			startY: 0,
 			cursor: 'default',
@@ -73,6 +84,9 @@ export function useMapZoom() {
 			// Touch: pan-y = 1 prst scrolluje stránku, 2 prsty = pinch zoom + pan mapy
 			touchAction: 'pan-y',
 		})
+
+		// Nastavit aktuální scale
+		currentScale.value = initialScale
 
 		// Double click/tap zoom
 		container.addEventListener('dblclick', handleDoubleClick)
@@ -133,8 +147,16 @@ export function useMapZoom() {
 
 	// Reset a vystředit mapu (při změně patra)
 	function resetAndCenter() {
-		if (panzoomInstance) {
+		if (!panzoomInstance) return
+
+		// Na mobile (< md) výchozí zoom je 2×
+		checkMobile()
+		if (isMobile.value) {
+			panzoomInstance.zoom(2, { animate: false })
+			currentScale.value = 2
+		} else {
 			panzoomInstance.reset({ animate: false })
+			currentScale.value = 1
 		}
 	}
 
@@ -154,6 +176,7 @@ export function useMapZoom() {
 	// Lifecycle
 	onMounted(() => {
 		checkTouch()
+		checkMobile()
 		window.addEventListener('resize', handleWindowResize)
 	})
 
@@ -176,10 +199,14 @@ export function useMapZoom() {
 	let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 	function handleWindowResize() {
 		checkTouch()
+		checkMobile()
 
 		if (resizeTimeout) clearTimeout(resizeTimeout)
 		resizeTimeout = setTimeout(() => {
-			resetAndCenter()
+			// Na mobile nikdy neresetovat zoom při resize
+			if (!isMobile.value) {
+				resetAndCenter()
+			}
 		}, 150)
 	}
 

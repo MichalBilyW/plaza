@@ -2,7 +2,7 @@
 	<!-- Upcoming shop - not clickable -->
 	<div
 		v-if="isUpcoming"
-		class="upcoming-card relative group rounded-[5px_20px_5px_5px] bg-white max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4 w-full aspect-square min-[380px]:w-[173px] min-[380px]:h-[173px] min-[380px]:aspect-auto md:w-auto md:h-auto md:aspect-auto md:overflow-hidden"
+		class="upcoming-card relative group rounded-[5px_20px_5px_5px] bg-white max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4 w-full md:w-auto md:h-auto md:overflow-hidden"
 		:class="[
 			{ 'max-sm:max-h-[240px] max-sm:overflow-hidden': !compact },
 			{ 'max-h-[240px] overflow-hidden': compact },
@@ -109,7 +109,7 @@
 	<NuxtLink
 		v-else
 		:to="`/obchody/${shop.slug}`"
-		class="relative group rounded-[5px_20px_5px_5px] bg-white transition-shadow hover:shadow-lg cursor-pointer max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4 w-full aspect-square min-[380px]:w-[173px] min-[380px]:h-[173px] min-[380px]:aspect-auto md:w-auto md:h-auto md:aspect-auto md:overflow-hidden"
+		class="relative group rounded-[5px_20px_5px_5px] bg-white transition-shadow hover:shadow-lg cursor-pointer max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:border max-md:border-gray-200 max-md:p-4 w-full md:w-auto md:h-auto md:overflow-hidden"
 		@click="trackShopClick(shop)"
 		:class="[
 			{ 'max-sm:max-h-[240px] max-sm:overflow-hidden': !compact },

@@ -97,14 +97,11 @@
 		<!-- Content area -->
 		<div class="container-small px-4 py-8">
 			<!-- Loading skeleton (initial load only) -->
-			<div
-				v-if="initialLoading"
-				class="flex flex-col items-center gap-3 xs:flex-row xs:flex-wrap xs:justify-center md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-3"
-			>
+			<div v-if="initialLoading" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
 				<div
 					v-for="i in 9"
 					:key="i"
-					class="animate-pulse overflow-hidden rounded-[5px_20px_5px_5px] w-full aspect-square xs:w-[173px] xs:h-[173px] xs:aspect-auto md:w-auto md:h-auto"
+					class="animate-pulse overflow-hidden rounded-[5px_20px_5px_5px] bg-white w-full"
 				>
 					<div class="h-[200px] bg-plaza-light"></div>
 					<div class="flex flex-col items-center py-4">
@@ -140,17 +137,14 @@
 			</div>
 
 			<!-- Shops grid -->
-			<div
-				v-else
-				class="flex items-center gap-3 flex-wrap justify-center md:grid md:grid-cols-2 lg:grid-cols-3"
-			>
+			<div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
 				<ShopCard v-for="shop in allShops" :key="shop._id" :shop="shop" />
 			</div>
 
 			<!-- Load more button -->
 			<div
 				v-if="!initialLoading && allShops.length > 0 && !allLoaded"
-				class="mt-8 flex justify-center"
+				class="mt-8 flex justify-center items-center"
 			>
 				<button
 					:disabled="loadingMore"

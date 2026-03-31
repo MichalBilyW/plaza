@@ -15,12 +15,12 @@
 			<div class="relative w-full max-w-[400px]">
 				<label for="shop-search" class="sr-only">{{ t('common.searchShop') }}</label>
 				<svg
-					class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-plaza-dark"
+					class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 z-10"
 					width="18"
 					height="18"
 					viewBox="0 0 24 24"
 					fill="none"
-					stroke="currentColor"
+					stroke="#131313"
 					stroke-width="2"
 					aria-hidden="true"
 				>
@@ -33,7 +33,7 @@
 					type="search"
 					autocomplete="off"
 					:placeholder="t('shops.shopName')"
-					class="h-[41px] w-full rounded-[5px_20px_5px_5px] bg-white border border-plaza-dark/10 bg-transparent pl-10 pr-3 font-heading placeholder:text-plaza-dark/70"
+					class="h-[41px] w-full rounded-[5px_20px_5px_5px] bg-white border border-plaza-dark/10 pl-10 pr-3 font-heading placeholder:text-plaza-dark/70"
 					@focus="showSuggestions = true"
 					@blur="hideSuggestionsDelayed"
 				/>
@@ -118,7 +118,7 @@
 			</ClientOnly>
 		</div>
 
-		<div class="relative w-full min-h-[500px]">
+		<div class="relative w-full min-h-[300px] md:min-h-[500px] mb-8 md:mb-16">
 			<h2 class="absolute -left-[9990px] -top-[9990px] opacity-0 visibility-hidden">
 				{{ t('mapPage.title') }}
 			</h2>
@@ -127,7 +127,7 @@
 				<!-- Loading state - zobrazit dokud se načítají data nebo SVG -->
 				<div
 					v-if="pending || isLoading"
-					class="flex items-center justify-center min-h-[500px]"
+					class="flex items-center justify-center min-h-[300px] md:min-h-[500px]"
 				>
 					<div class="flex flex-col items-center gap-4">
 						<div class="map-spinner"></div>
@@ -151,7 +151,7 @@
 					<!-- Interaktivní mapa -->
 					<div
 						ref="mapContainerRef"
-						class="map-container relative overflow-hidden max-w-full min-h-[500px]"
+						class="map-container relative overflow-hidden max-w-full min-h-[300px] md:min-h-[500px]"
 						:class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''"
 					>
 						<!-- Zoom ovládání - top-right -->
@@ -222,39 +222,42 @@
 					</div>
 
 					<!-- Legenda -->
-					<div class="mt-4 flex justify-center gap-6 text-sm text-gray-600">
+					<!-- <div
+						class="mt-4 flex flex-wrap justify-center gap-4 md:gap-6 text-sm text-gray-600"
+					>
 						<div class="flex items-center gap-2">
-							<div class="w-4 h-4 rounded bg-primary-500"></div>
-							<span>{{ t('mapPage.occupiedUnit') }}</span>
+							<div
+								class="w-5 h-5 rounded bg-[#f4f4f4] border border-gray-300 flex items-center justify-center"
+							>
+								<div
+									class="w-3 h-3 rounded-sm bg-gray-400 flex items-center justify-center text-[6px] font-bold text-white"
+								>
+									L
+								</div>
+							</div>
+							<span>{{ t('mapPage.unitWithLogo') }}</span>
 						</div>
 						<div class="flex items-center gap-2">
-							<div class="w-4 h-4 rounded bg-gray-300 opacity-40"></div>
+							<div
+								class="w-5 h-5 rounded bg-[#f4f4f4] border border-gray-300 flex items-center justify-center"
+							>
+								<div class="w-2 h-2 rounded-full bg-primary-600"></div>
+							</div>
+							<span>{{ t('mapPage.unitWithDot') }}</span>
+						</div>
+						<div class="flex items-center gap-2">
+							<div
+								class="w-5 h-5 rounded bg-[#fafafa] border border-gray-200"
+							></div>
 							<span>{{ t('mapPage.emptyUnit') }}</span>
 						</div>
-					</div>
-
-					<!-- Odkaz na celou mapu (skrytý na stránce /mapa) -->
-					<div v-if="!hideFullMapLink" class="mt-6 text-center">
-						<NuxtLink
-							to="/mapa"
-							class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
-						>
-							{{ t('mapPage.viewFullMap') }}
-							<svg
-								class="w-4 h-4"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 5l7 7-7 7"
-								/>
-							</svg>
-						</NuxtLink>
-					</div>
+						<div class="flex items-center gap-2">
+							<div
+								class="w-5 h-5 rounded bg-[#f4f4f4] border-2 border-plaza"
+							></div>
+							<span>{{ t('mapPage.highlightedUnit') }}</span>
+						</div>
+					</div> -->
 
 					<!-- Popup s detailem obchodu -->
 					<MapUnitPopup
@@ -265,7 +268,7 @@
 				</template>
 
 				<template #fallback>
-					<div class="flex items-center justify-center min-h-[600px]">
+					<div class="flex items-center justify-center min-h-[300px] md:min-h-[500px]">
 						<div class="flex flex-col items-center gap-4">
 							<div class="map-spinner"></div>
 							<p class="text-gray-500 text-sm">{{ t('common.loading') }}</p>
