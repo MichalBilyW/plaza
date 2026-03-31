@@ -17,6 +17,9 @@
 <script setup lang="ts">
 import Section from '~/components/map/Section.vue'
 
+// Prefetch map dat na serveru — data přijdou v SSR payload, MapSection je ihned zobrazí
+await useFetch('/api/map/units', { key: 'map-units' })
+
 const { t } = useI18n()
 
 usePlazaSeo({

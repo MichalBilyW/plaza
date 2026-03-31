@@ -181,6 +181,7 @@
 									v-if="staticAroundMap"
 									ref="staticAroundRef"
 									:svg-path="staticAroundMap"
+									:svg-content="staticAroundMapContent"
 									class="w-full h-full"
 									@loaded="handleStaticAroundLoaded"
 									@animation-complete="handleAnimationComplete"
@@ -201,6 +202,7 @@
 									v-if="currentFloor?.svgMap && mapReady"
 									:key="currentFloor.floorId"
 									:svg-path="currentFloor.svgMap"
+									:svg-content="currentFloor.svgContent"
 									:units="currentFloor.units"
 									:selected-unit="state.selectedUnit"
 									:search-query="search"
@@ -297,6 +299,7 @@ const {
 	floors,
 	currentFloor,
 	staticAroundMap,
+	staticAroundMapContent,
 	state,
 	pending,
 	error,

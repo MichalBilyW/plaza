@@ -57,7 +57,7 @@
 			</div>
 
 			<!-- Related Shops Section -->
-			<div class="px-4 my-20">
+			<div v-if="categories.length" class="px-4 my-20">
 				<ShopRelatedShops
 					v-if="shop?.category && categories.length > 0"
 					:shops="relatedShops"

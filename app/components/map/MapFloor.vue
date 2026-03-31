@@ -44,6 +44,8 @@ import { createUnitElementId } from '~~/shared/map/units'
 interface Props {
 	/** Cesta k SVG souboru patra */
 	svgPath: string
+	/** Inline obsah SVG (pokud je předán, přeskočí se fetch) */
+	svgContent?: string | null
 	/** Jednotky patra s daty obchodů */
 	units: MapUnit[]
 	/** Aktuálně vybraná jednotka */
@@ -76,13 +78,13 @@ const emit = defineEmits<{
 	'unit-click': [unitCode: string, event: MouseEvent]
 }>()
 
-// Načtení SVG obsahu - použít fetch místo useFetch pro statické soubory
-const svgContent = ref<string | null>(null)
-const pending = ref(true)
+// Načtení SVG obsahu - použít inline obsah pokud je k dispozici, jinak fetch
+const svgContent = ref<string | null>(props.svgContent ?? null)
+const pending = ref(!props.svgContent)
 const error = ref<Error | null>(null)
 const isReady = ref(false)
 
-// Načíst SVG
+// Načíst SVG přes fetch (fallback)
 const loadSvg = async () => {
 	try {
 		pending.value = true
@@ -107,14 +109,42 @@ const loadSvg = async () => {
 }
 
 onMounted(() => {
-	loadSvg()
+	if (props.svgContent) {
+		// Obsah je předán inline — rovnou zobrazit bez fetch
+		pending.value = false
+		nextTick(() =>
+			setTimeout(() => {
+				isReady.value = true
+			}, 50),
+		)
+	} else {
+		loadSvg()
+	}
 })
 
-// Při změně cesty znovu načíst
+// Při změně cesty znovu načíst (jen pokud není inline obsah)
 watch(
 	() => props.svgPath,
 	() => {
-		loadSvg()
+		if (!props.svgContent) {
+			loadSvg()
+		}
+	},
+)
+
+// Při změně inline obsahu aktualizovat
+watch(
+	() => props.svgContent,
+	(newContent) => {
+		if (newContent) {
+			svgContent.value = newContent
+			pending.value = false
+			nextTick(() =>
+				setTimeout(() => {
+					isReady.value = true
+				}, 50),
+			)
+		}
 	},
 )
 

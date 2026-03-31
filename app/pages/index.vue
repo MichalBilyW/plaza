@@ -28,6 +28,9 @@
 <script setup lang="ts">
 import type { Shop, Event, News, Category, Homepage } from '@/shared/types'
 
+// Prefetch map dat na serveru — data přijdou v SSR payload, MapSection je ihned zobrazí
+await useFetch('/api/map/units', { key: 'map-units' })
+
 const { t } = useI18n()
 
 usePlazaSeo({

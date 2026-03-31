@@ -131,10 +131,12 @@ function getTodayOpeningHours(
 }
 
 /**
- * Načte SVG soubor a extrahuje unit kódy
+ * Načte SVG soubor, extrahuje unit kódy a vrátí i raw obsah
  */
-async function getUnitCodesFromSvgFile(svgPath: string): Promise<string[]> {
-	if (!svgPath) return []
+async function loadSvgFile(
+	svgPath: string,
+): Promise<{ unitCodes: string[]; svgContent: string | null }> {
+	if (!svgPath) return { unitCodes: [], svgContent: null }
 
 	try {
 		// SVG soubory nahrané přes /api/upload jsou uloženy v public/uploads/
@@ -153,10 +155,10 @@ async function getUnitCodesFromSvgFile(svgPath: string): Promise<string[]> {
 		const fullPath = join(publicDir, relativePath)
 
 		const svgContent = await readFile(fullPath, 'utf-8')
-		return extractUnitCodesFromSvg(svgContent)
+		return { unitCodes: extractUnitCodesFromSvg(svgContent), svgContent }
 	} catch (error) {
 		console.warn(`Could not read SVG file ${svgPath}:`, error)
-		return []
+		return { unitCodes: [], svgContent: null }
 	}
 }
 
@@ -169,6 +171,10 @@ export default defineEventHandler(async (event) => {
 	// Získáme GeneralInfo pro staticAroundMap
 	const generalInfo = await GeneralInfo.findOne().lean()
 	const staticAroundMap = generalInfo?.staticAroundMap || null
+
+	// Načíst inline obsah staticAroundMap SVG
+	const staticAroundMapResult = staticAroundMap ? await loadSvgFile(staticAroundMap) : null
+	const staticAroundMapContent = staticAroundMapResult?.svgContent ?? null
 
 	// Získáme patra z databáze - seřazeno podle sortOrder
 	const floorsQuery = filterFloorId ? { _id: filterFloorId, isActive: true } : { isActive: true }
@@ -210,7 +216,9 @@ export default defineEventHandler(async (event) => {
 	const floorsResponse: FloorUnitsResponse[] = await Promise.all(
 		floors.map(async (floor) => {
 			const floorId = floor._id.toString()
-			const unitCodes = floor.svgMap ? await getUnitCodesFromSvgFile(floor.svgMap) : []
+			const { unitCodes, svgContent } = floor.svgMap
+				? await loadSvgFile(floor.svgMap)
+				: { unitCodes: [], svgContent: null }
 
 			const units: MapUnit[] = unitCodes.map((unitCode) => ({
 				unitCode,
@@ -223,6 +231,7 @@ export default defineEventHandler(async (event) => {
 				floorName: floor.name,
 				level: floor.level,
 				svgMap: floor.svgMap,
+				svgContent,
 				units,
 			}
 		}),
@@ -245,5 +254,6 @@ export default defineEventHandler(async (event) => {
 		totalUnits,
 		occupiedUnits,
 		staticAroundMap,
+		staticAroundMapContent,
 	}
 })

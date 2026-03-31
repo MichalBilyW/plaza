@@ -53,6 +53,8 @@ export interface FloorUnitsResponse {
 	level: number
 	/** Cesta k SVG souboru */
 	svgMap?: string
+	/** Inline obsah SVG souboru (bez nutnosti dalšího fetch na klientovi) */
+	svgContent?: string | null
 	/** Seznam jednotek s přiřazenými obchody */
 	units: MapUnit[]
 }

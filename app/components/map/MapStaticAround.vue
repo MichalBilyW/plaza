@@ -17,6 +17,8 @@ import { STATIC_AROUND_GROUPS } from '~~/shared/map/units'
 interface Props {
 	/** Cesta k SVG souboru */
 	svgPath: string
+	/** Inline obsah SVG (pokud je předán, přeskočí se fetch) */
+	svgContent?: string | null
 }
 
 const props = defineProps<Props>()
@@ -26,16 +28,20 @@ const emit = defineEmits<{
 	'animation-complete': []
 }>()
 
-// Načtení SVG obsahu
-const svgContent = ref<string | null>(null)
+// Načtení SVG obsahu - použít inline obsah pokud je k dispozici, jinak fetch
+const svgContent = ref<string | null>(props.svgContent ?? null)
 const isReady = ref(false)
 
 // Refs
 const containerRef = ref<HTMLElement | null>(null)
 const svgWrapperRef = ref<HTMLElement | null>(null)
 
-// Načíst SVG okamžitě po mount
 onMounted(async () => {
+	if (props.svgContent) {
+		// Inline obsah je předán — DOM je připraven, spustit init přímo
+		await initSvgAnimation()
+		return
+	}
 	try {
 		const response = await fetch(props.svgPath)
 		if (!response.ok) {
@@ -45,12 +51,24 @@ onMounted(async () => {
 	} catch (e) {
 		console.error('Failed to load SVG:', e)
 	}
+	// watch(svgContent) se postará o emit('loaded') po fetch
 })
 
-// Po načtení SVG: připravit animaci a emitovat 'loaded'
+// Při změně inline obsahu aktualizovat
+watch(
+	() => props.svgContent,
+	(newContent) => {
+		if (newContent) svgContent.value = newContent
+	},
+)
+
+// Po fetch: připravit animaci a emitovat 'loaded'
 watch(svgContent, async (newContent) => {
 	if (!newContent) return
+	await initSvgAnimation()
+})
 
+async function initSvgAnimation() {
 	await nextTick()
 
 	const svg = svgWrapperRef.value?.querySelector('svg')
@@ -67,7 +85,7 @@ watch(svgContent, async (newContent) => {
 
 	// SVG je načtené, emitovat event
 	emit('loaded')
-})
+}
 
 /**
  * Spustí animaci zobrazení skupin (voláno z rodiče)

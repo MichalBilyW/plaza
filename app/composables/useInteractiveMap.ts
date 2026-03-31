@@ -22,7 +22,7 @@ export interface MapState {
 }
 
 export function useInteractiveMap(options?: { initialFloorId?: string }) {
-	// Data z API - pouze na klientu aby se zabránilo hydration mismatch
+	// Data z API - server: false odstraněno, data jsou v SSR payload = okamžitě dostupná
 	const {
 		data: mapData,
 		pending,
@@ -33,13 +33,17 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 		totalUnits: number
 		occupiedUnits: number
 		staticAroundMap: string | null
-	}>('/api/map/units', { server: false })
+		staticAroundMapContent: string | null
+	}>('/api/map/units', { key: 'map-units' })
 
 	// Computed: seznam pater
 	const floors = computed(() => mapData.value?.floors ?? [])
 
 	// Computed: cesta k SVG okolí
 	const staticAroundMap = computed(() => mapData.value?.staticAroundMap ?? null)
+
+	// Computed: inline obsah SVG okolí
+	const staticAroundMapContent = computed(() => mapData.value?.staticAroundMapContent ?? null)
 
 	// Reactive state
 	const state = reactive<MapState>({
@@ -200,6 +204,7 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 		currentUnits,
 		unitsMap,
 		staticAroundMap,
+		staticAroundMapContent,
 		pending,
 		error,
 
