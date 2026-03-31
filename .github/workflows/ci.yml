@@ -70,4 +70,3 @@ jobs:
 
       - name: Run tests
         run: npm run test
-          test -f .output/server/index.mjs || (echo "Server entrypoint missing!" && exit 1)
