@@ -3,7 +3,7 @@
 		<!-- Gradient overlay (skrytý když je zamčené patro) -->
 		<div
 			v-if="!props.lockedFloorId"
-			class="z-10 absolute left-0 top-[80px] w-full h-[240px] bg-gradient-to-b from-white to-transparent"
+			class="z-10 absolute left-0 top-[60px] md:top-[80px] w-full h-[80px] md:h-[240px] bg-gradient-to-b from-white to-transparent"
 		></div>
 
 		<!-- Map Tools (skryté když je zamčené patro) -->
