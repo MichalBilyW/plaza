@@ -82,6 +82,9 @@
 			</div>
 		</section>
 
+		<!-- Sekce Parkování -->
+		<ONasParkingSection :general-info="generalInfo" :pending="pending" />
+
 		<!-- Content area -->
 		<div class="container-small px-4 py-12">
 			<!-- Loading skeleton -->
@@ -100,9 +103,6 @@
 				</section>
 			</div>
 		</div>
-
-		<!-- Sekce Parkování -->
-		<ONasParkingSection :general-info="generalInfo" :pending="pending" />
 
 		<!-- Content area (pokračování) -->
 		<div class="container-small px-4 pb-12">
