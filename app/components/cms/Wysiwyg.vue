@@ -55,6 +55,7 @@
 				</button>
 
 				<button
+					v-if="!limited"
 					type="button"
 					class="p-2 rounded hover:bg-gray-200 transition-colors"
 					:class="{ 'bg-gray-200 text-plaza-600': editor.isActive('underline') }"
@@ -88,10 +89,11 @@
 					</svg>
 				</button>
 
-				<div class="w-px bg-gray-300 mx-1"></div>
+				<div v-if="!limited" class="w-px bg-gray-300 mx-1"></div>
 
 				<!-- Headings -->
 				<button
+					v-if="!limited"
 					type="button"
 					class="p-2 rounded hover:bg-gray-200 transition-colors text-sm font-semibold"
 					:class="{
@@ -146,10 +148,11 @@
 					</svg>
 				</button>
 
-				<div class="w-px bg-gray-300 mx-1"></div>
+				<div v-if="!limited" class="w-px bg-gray-300 mx-1"></div>
 
 				<!-- Text align -->
 				<button
+					v-if="!limited"
 					type="button"
 					class="p-2 rounded hover:bg-gray-200 transition-colors"
 					:class="{
@@ -169,6 +172,7 @@
 				</button>
 
 				<button
+					v-if="!limited"
 					type="button"
 					class="p-2 rounded hover:bg-gray-200 transition-colors"
 					:class="{
@@ -188,6 +192,7 @@
 				</button>
 
 				<button
+					v-if="!limited"
 					type="button"
 					class="p-2 rounded hover:bg-gray-200 transition-colors"
 					:class="{
@@ -206,7 +211,7 @@
 					</svg>
 				</button>
 
-				<div class="w-px bg-gray-300 mx-1"></div>
+				<div v-if="!limited" class="w-px bg-gray-300 mx-1"></div>
 
 				<!-- Link -->
 				<button
@@ -243,10 +248,11 @@
 					</svg>
 				</button>
 
-				<div class="w-px bg-gray-300 mx-1"></div>
+				<div v-if="!limited" class="w-px bg-gray-300 mx-1"></div>
 
 				<!-- Blockquote -->
 				<button
+					v-if="!limited"
 					type="button"
 					class="p-2 rounded hover:bg-gray-200 transition-colors"
 					:class="{ 'bg-gray-200 text-plaza-600': editor.isActive('blockquote') }"
@@ -265,6 +271,7 @@
 
 				<!-- Horizontal rule -->
 				<button
+					v-if="!limited"
 					type="button"
 					class="p-2 rounded hover:bg-gray-200 transition-colors"
 					@click="editor.chain().focus().setHorizontalRule().run()"
@@ -280,10 +287,11 @@
 					</svg>
 				</button>
 
-				<div class="w-px bg-gray-300 mx-1"></div>
+				<div v-if="!limited" class="w-px bg-gray-300 mx-1"></div>
 
 				<!-- Image upload -->
 				<button
+					v-if="!limited"
 					type="button"
 					class="p-2 rounded hover:bg-gray-200 transition-colors"
 					:class="{ 'opacity-50 cursor-not-allowed': uploading }"
@@ -322,6 +330,7 @@
 					</svg>
 				</button>
 				<input
+					v-if="!limited"
 					ref="imageInput"
 					type="file"
 					accept="image/*"
@@ -330,7 +339,7 @@
 				/>
 
 				<!-- Image float options (when image selected) -->
-				<template v-if="editor.isActive('image')">
+				<template v-if="!limited && editor.isActive('image')">
 					<div class="w-px bg-gray-300 mx-1"></div>
 					<button
 						type="button"
@@ -483,10 +492,10 @@
 					</button>
 				</template>
 
-				<div class="w-px bg-gray-300 mx-1"></div>
+				<div v-if="!limited" class="w-px bg-gray-300 mx-1"></div>
 
 				<!-- Table -->
-				<div ref="tableMenuWrapper" class="relative">
+				<div v-if="!limited" ref="tableMenuWrapper" class="relative">
 					<button
 						type="button"
 						class="p-2 rounded hover:bg-gray-200 transition-colors"
@@ -815,6 +824,7 @@ const props = defineProps<{
 	modelValue?: string
 	label?: string
 	hint?: string
+	limited?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -991,9 +1001,21 @@ const handleDrop = (view: unknown, event: DragEvent) => {
 	return hasImage
 }
 
-const editor = useEditor({
-	content: props.modelValue || '',
-	extensions: [
+const activeExtensions = computed(() => {
+	if (props.limited) {
+		return [
+			StarterKit.configure({}),
+			CustomLink.configure({
+				openOnClick: false,
+				autolink: true,
+				linkOnPaste: true,
+				HTMLAttributes: {
+					class: 'text-plaza-600 underline hover:text-plaza-800',
+				},
+			}),
+		]
+	}
+	return [
 		...editorExtensions,
 		CustomImage.configure({
 			inline: true,
@@ -1002,7 +1024,12 @@ const editor = useEditor({
 				class: 'max-w-full h-auto rounded-lg',
 			},
 		}),
-	],
+	]
+})
+
+const editor = useEditor({
+	content: props.modelValue || '',
+	extensions: activeExtensions.value,
 	editorProps: {
 		handlePaste,
 		handleDrop,
@@ -1010,7 +1037,10 @@ const editor = useEditor({
 		handleScrollToSelection: () => false,
 	},
 	onUpdate: ({ editor }) => {
-		emit('update:modelValue', editor.getHTML())
+		let html = editor.getHTML()
+		// Strip trailing empty paragraphs that TipTap always keeps
+		html = html.replace(/(<p><\/p>|<p><br><\/p>)+$/g, '')
+		emit('update:modelValue', html)
 	},
 })
 

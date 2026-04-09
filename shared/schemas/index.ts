@@ -156,7 +156,7 @@ export type CategoryFilterQueryInput = z.input<typeof categoryFilterQuerySchema>
 export const shopCreateSchema = z.object({
 	name: z.string().min(2, 'Název musí mít alespoň 2 znaky').max(100),
 	slug: optionalSlugSchema, // Automaticky generováno pokud není zadáno
-	description: z.string().max(5000).optional(),
+	description: z.string().max(50000, 'Popis může mít max. 50000 znaků').optional(),
 	shortDescription: z.string().max(300).optional(),
 	logo: z.string().optional(),
 	gallery: z.array(z.string()).optional(),
@@ -439,6 +439,9 @@ export const generalInfoUpdateSchema = z.object({
 	instagram: urlSchema,
 	gallery: z.array(z.string()).max(10, 'Maximálně 10 fotek v galerii').optional(),
 	staticAroundMap: z.string().optional(),
+	parkingContent: z.string().max(1000).optional(),
+	parkingImage: z.string().optional(),
+	parkingOtherInfo: z.string().max(10000).optional(),
 })
 
 export type GeneralInfoUpdateInput = z.infer<typeof generalInfoUpdateSchema>

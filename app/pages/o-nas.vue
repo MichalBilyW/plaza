@@ -98,7 +98,15 @@
 				<section v-if="generalInfo?.text" class="prose prose-lg max-w-none">
 					<div v-html="sanitize(generalInfo.text)"></div>
 				</section>
+			</div>
+		</div>
 
+		<!-- Sekce Parkování -->
+		<ONasParkingSection :general-info="generalInfo" :pending="pending" />
+
+		<!-- Content area (pokračování) -->
+		<div class="container-small px-4 pb-12">
+			<div v-if="!pending" class="space-y-12">
 				<!-- Otevírací doba -->
 				<section id="oteviraci-doba" class="max-w-2xl mx-auto scroll-mt-32">
 					<h2

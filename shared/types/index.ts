@@ -286,6 +286,9 @@ export interface GeneralInfo extends BaseEntity {
 	facebook?: string
 	instagram?: string
 	gallery?: string[]
+	parkingContent?: string
+	parkingImage?: string
+	parkingOtherInfo?: string
 }
 
 // ==========================================

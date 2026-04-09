@@ -271,7 +271,7 @@ async function uploadFiles(files: File[]) {
 
 	// Filter to allowed types
 	const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']
-	const maxSize = 5 * 1024 * 1024
+	const maxSize = 3 * 1024 * 1024
 
 	const validFiles = files.filter((file) => {
 		if (!allowedTypes.includes(file.type)) {

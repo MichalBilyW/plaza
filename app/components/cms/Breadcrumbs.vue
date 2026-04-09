@@ -49,7 +49,7 @@ const pathLabels: Record<string, string> = {
 	akce: 'Akce',
 	novinky: 'Novinky',
 	sluzby: 'Služby',
-	'obecne-informace': 'Obecné informace',
+	'o-nas': 'Obecné informace',
 	spravci: 'Správci',
 	ucet: 'Účet',
 	novy: 'Nový',

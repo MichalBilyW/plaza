@@ -297,9 +297,9 @@
 					</NuxtLink>
 
 					<NuxtLink
-						to="/cms/obecne-informace"
+						to="/cms/o-nas"
 						class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
-						:class="{ 'bg-gray-800': $route.path.startsWith('/cms/obecne-informace') }"
+						:class="{ 'bg-gray-800': $route.path.startsWith('/cms/o-nas') }"
 						@click="sidebarOpen = false"
 					>
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,6 +311,23 @@
 							/>
 						</svg>
 						{{ $t('cms.sidebar.generalInfo') }}
+					</NuxtLink>
+
+					<NuxtLink
+						to="/cms/parkovani"
+						class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-800 transition-colors"
+						:class="{ 'bg-gray-800': $route.path.startsWith('/cms/parkovani') }"
+						@click="sidebarOpen = false"
+					>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+							/>
+						</svg>
+						{{ $t('cms.sidebar.parking') }}
 					</NuxtLink>
 
 					<NuxtLink

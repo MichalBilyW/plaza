@@ -65,9 +65,10 @@
 					</NuxtLink>
 
 					<!-- Parkovací místa -->
-					<NuxtLink
-						to="/"
+					<button
+						type="button"
 						class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]"
+						@click="openParkingModal"
 					>
 						<span class="font-bold text-plaza text-xl md:text-2xl lg:text-3xl">{{
 							animatedParkingCount
@@ -89,7 +90,7 @@
 								d="M9 5l7 7-7 7"
 							/>
 						</svg>
-					</NuxtLink>
+					</button>
 
 					<div class="flex justify-end w-full text-right">
 						<div class="flex flex-col gap-3 md:gap-1.5">
@@ -277,6 +278,9 @@
 				</div>
 			</div>
 		</UiModal>
+
+		<!-- Parking Modal -->
+		<ParkingModal />
 	</section>
 </template>
 
@@ -292,6 +296,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
+const { openModal: openParkingModal } = useParkingModal()
 const { sanitize } = useSanitizeHtml()
 
 const PARKING_SPOTS = 500

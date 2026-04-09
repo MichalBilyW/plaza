@@ -37,6 +37,9 @@ export interface IGeneralInfo {
 	instagram?: string
 	gallery?: string[]
 	staticAroundMap?: string
+	parkingContent?: string
+	parkingImage?: string
+	parkingOtherInfo?: string
 }
 
 export interface IGeneralInfoDocument extends IGeneralInfo, Document {
@@ -113,6 +116,17 @@ const generalInfoSchema = new Schema<IGeneralInfoDocument>(
 		staticAroundMap: {
 			type: String,
 			trim: true,
+		},
+		parkingContent: {
+			type: String,
+			maxlength: 1000,
+		},
+		parkingImage: {
+			type: String,
+		},
+		parkingOtherInfo: {
+			type: String,
+			maxlength: 10000,
 		},
 	},
 	{

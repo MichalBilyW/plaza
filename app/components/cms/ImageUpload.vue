@@ -246,8 +246,8 @@ async function uploadFile(file: File) {
 		return
 	}
 
-	// Validate file size (5MB)
-	const maxSize = 5 * 1024 * 1024
+	// Validate file size (3MB)
+	const maxSize = 3 * 1024 * 1024
 	if (file.size > maxSize) {
 		error.value = t('cms.upload.fileTooLarge')
 		return
