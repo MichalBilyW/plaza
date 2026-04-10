@@ -1,0 +1,17 @@
+{
+  "createdAt": "2026-04-10T16:22:21.788Z",
+  "database": "ocplazaliberec-prod",
+  "collections": [
+    "floors",
+    "units",
+    "generalinfos",
+    "events",
+    "shops",
+    "users",
+    "sessions",
+    "news",
+    "categories",
+    "homepages",
+    "services"
+  ]
+}

@@ -22,7 +22,9 @@
 		"format": "prettier --write .",
 		"validate": "npm run lint && npm run typecheck && npm run test",
 		"predeploy": "npm run validate && npm run build",
-		"health-check": "node scripts/health-check.mjs"
+		"health-check": "node scripts/health-check.mjs",
+		"backup:db": "tsx scripts/backup-db.ts",
+		"restore:db": "tsx scripts/restore-db.ts"
 	},
 	"dependencies": {
 		"@formkit/icons": "^1.7.2",

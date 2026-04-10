@@ -5,7 +5,7 @@
 	>
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<!-- Desktop: side-by-side layout / Mobile: stacked -->
-			<div class="flex flex-col lg:flex-row lg:items-start lg:gap-10">
+			<div class="flex flex-col lg:flex-row lg:items-start lg:gap-10" :class="{ 'lg:justify-center': events.length <= 2 }">
 				<!-- Left side: heading + perex + arrows -->
 				<div class="lg:w-[220px] shrink-0 mb-8 lg:mb-0 lg:pt-4">
 					<h2
@@ -61,7 +61,7 @@
 				</div>
 
 				<!-- Right side: slider -->
-				<div class="flex-1 min-w-0">
+				<div :class="events.length <= 2 ? 'shrink-0' : 'flex-1 min-w-0'">
 					<!-- Events skeleton -->
 					<div v-if="pending" class="flex gap-5 overflow-hidden">
 						<div
@@ -166,7 +166,7 @@
 					to="/akce"
 					class="inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] shadow-md hover:shadow-[0_6px_20px_rgba(226,11,27,0.4)] hover:brightness-110 transition-all duration-300"
 				>
-					{{ t('home.sections.eventsList') }}
+					{{ t('home.sections.eventsBtn') }}
 				</NuxtLink>
 			</div>
 		</div>
@@ -232,7 +232,7 @@ const onSwiperResize = (swiper: SwiperType) => {
 	pointer-events: none;
 }
 
-/* Center slides when all are visible */
+/* Center slides when all are visible (swiper-locked) */
 .events-slider :deep(.swiper-locked .swiper-wrapper) {
 	justify-content: center;
 }

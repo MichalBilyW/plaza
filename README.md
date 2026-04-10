@@ -305,7 +305,24 @@ Obrázky nahrané přes CMS přežijí redeploy.
 | **Uploads** | Server `/data/plaza/uploads` | Hetzner backup (každý den ~22:19 UTC) |
 | **Server**  | Hetzner                      | Hetzner backup (7 rotujících záloh)   |
 
-### MongoDB záloha (ruční)
+### MongoDB záloha (lokální — před velkými změnami)
+
+Skript `scripts/backup-db.ts` se připojí k MongoDB a uloží všechny kolekce jako JSON do `mongo-backup/<datum>/`.
+
+```bash
+# Záloha produkční DB (URI z .env)
+npm run backup:db
+
+# Nebo s explicitním URI (přepíše .env)
+NUXT_MONGO_URI="mongodb+srv://..." npm run backup:db
+```
+
+Výsledek: složka `mongo-backup/YYYY-MM-DD_HH-MM-SS/` s jedním `.json` souborem na kolekci + `_meta.json`.
+Složku pak commitni do Gitu — záloha cestuje s kódem.
+
+> ⚠️  `sessions.json` je součástí zálohy, ale neobsahuje hesla (jen JWT tokeny s omezenou platností).
+
+### MongoDB záloha na serveru (ruční)
 
 Před velkými změnami v databázi spusť:
 
@@ -323,7 +340,21 @@ Tím se vytvoří dump MongoDB do `/data/plaza/mongo-backup/`, který bude souč
 2. Server se obnoví včetně uploads + MongoDB dump
 3. Spusť **Redeploy** v Coolify (stáhne aktuální kód z Gitu)
 
-#### B) Obnova pouze MongoDB (rollback obsahu)
+#### B) Obnova pouze MongoDB z lokální zálohy (rollback obsahu)
+
+```bash
+# Obnov zálohu do cílové DB (URI nastav dle potřeby)
+NUXT_MONGO_URI="mongodb+srv://..." npm run restore:db -- mongo-backup/2026-04-10_18-22-21
+```
+
+Skript smaže obsah každé kolekce a naplní ji daty ze zálohy. Prázdné kolekce přeskočí.
+
+Alternativně přes MongoDB Compass:
+- Připoj se k cílové DB
+- V kolekci klikni **Add Data → Import JSON**
+- Vyber soubor z `mongo-backup/<datum>/<kolekce>.json`
+
+#### C) Obnova na serveru
 
 ```bash
 ssh coolify-vps "mongorestore --uri='<MONGO_URI>' --gzip /data/plaza/mongo-backup/<DATUM>/"

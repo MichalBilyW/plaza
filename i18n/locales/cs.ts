@@ -94,6 +94,7 @@ export default {
 			events: 'AKCE A\u00a0SLEVY',
 			eventsPerex: 'Exkluzivní nabídky značek, které si\u00a0zamilujete',
 			eventsList: 'Akce a slevy',
+			eventsBtn: 'Filtrovat akce',
 			eventsPrev: 'Předchozí akce',
 			eventsNext: 'Další akce',
 		},

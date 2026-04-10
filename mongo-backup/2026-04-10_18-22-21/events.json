@@ -1,0 +1,14 @@
+[
+  {
+    "_id": "69b10e0afb2321123b767b5a",
+    "name": "50 hitů, 50 novinek, polovina ceny",
+    "image": "/api/uploads/90106739-7b58-40ec-a9fb-154d2fd39124.png",
+    "shopId": "69c52c14066b0f2f2116f192",
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-03-11T06:39:06.367Z",
+    "updatedAt": "2026-04-08T08:03:29.270Z",
+    "__v": 0,
+    "content": "<p>V <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-plaza-600 underline hover:text-plaza-800\" href=\"https://www.knihydobrovsky.cz/\"><u>Knihy Dobrovský</u></a>&nbsp;mají slevu na oblíbené tituly loňského roku, tak neváhejte a navštivte své oblíbené knihkupectví v našem obchodním centru, kde vás čeká 50 hitů s 50 % slevou. Slevy se nesčítají.</p>"
+  }
+]
