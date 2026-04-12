@@ -398,7 +398,7 @@ const saveContact = async () => {
 		flash.success(t('cms.flash.contactsSaved'))
 		modal.show = false
 		await refresh()
-	} catch (e) {
+	} catch {
 		flash.error(t('cms.flash.contactsSaveError'))
 	} finally {
 		submitting.value = false
@@ -432,7 +432,7 @@ const deleteContact = async () => {
 		flash.success(t('cms.flash.contactsSaved'))
 		deleteModal.show = false
 		await refresh()
-	} catch (e) {
+	} catch {
 		flash.error(t('cms.flash.contactsSaveError'))
 	} finally {
 		submitting.value = false
