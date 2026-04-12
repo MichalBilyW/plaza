@@ -31,7 +31,7 @@
 							</div>
 						</div>
 
-						<!-- Open status -->
+						<!-- Open status with special hours tooltip -->
 						<div class="flex items-center justify-center gap-1.5 mb-6">
 							<span
 								:class="isOpen ? 'text-plaza-success' : 'text-plaza'"
@@ -42,10 +42,60 @@
 							<span>
 								{{ isOpen ? t('common.openStatus') : t('common.closedStatus') }}
 							</span>
+							<!-- Special hours tooltip -->
+							<span v-if="specialNote" class="relative group">
+								<span
+									class="inline-flex items-center justify-center cursor-help"
+									:aria-label="t('common.specialHoursInfo')"
+								>
+									<svg
+										class="w-4 h-4 text-plaza-gray"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										aria-hidden="true"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+										/>
+									</svg>
+								</span>
+								<div
+									role="tooltip"
+									class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-plaza-dark text-white text-sm rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50"
+								>
+									{{ specialNote }}
+									<div
+										class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-plaza-dark"
+									></div>
+								</div>
+							</span>
 						</div>
 
-						<!-- Opening hours table -->
-						<div v-if="shop.openingHours?.length" class="mb-2">
+						<!-- Special opening hours today (when active) -->
+						<div v-if="todaySpecialHours" class="mb-2 text-center">
+							<div class="text-sm text-plaza-gray mb-1">
+								{{ t('common.specialOpeningHoursToday') }}
+							</div>
+							<!-- Only show time if not closed (closed status is already shown above) -->
+							<div v-if="!todaySpecialHours.closed" class="font-black text-plaza-dark">
+								{{ formatTime(todaySpecialHours.open || '09:00') }} -
+								{{ formatTime(todaySpecialHours.close || '21:00') }}
+							</div>
+							<button
+								type="button"
+								class="mt-2 text-sm text-plaza-gray underline hover:text-plaza-dark transition-colors cursor-pointer"
+								@click="openOpeningHoursModal"
+							>
+								{{ t('shopDetail.showRegularOpeningHours') }}
+							</button>
+						</div>
+
+						<!-- Opening hours table (only when no special hours today) -->
+						<div v-else-if="shop.openingHours?.length" class="mb-2">
 							<div
 								v-for="(entry, index) in shop.openingHours"
 								:key="entry.day"
@@ -210,10 +260,11 @@
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper'
-import type { Shop, DayOfWeek } from '@/shared/types'
+import type { Shop, DayOfWeek, SpecialOpeningHours } from '@/shared/types'
 import 'swiper/css'
 
 const { t } = useI18n()
+const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
 
 // SSR-safe timestamp for hydration
 const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
@@ -282,10 +333,52 @@ const formatTime = (time: string): string => {
 	return `${parseInt(hours, 10)}.${minutes}`
 }
 
+// === Special opening hours ===
+const todaySpecialHours = computed<SpecialOpeningHours | null>(() => {
+	if (!props.shop.specialOpeningHours?.length) return null
+
+	const today = new Date(serverTimestamp.value)
+	today.setHours(0, 0, 0, 0)
+	const todayTime = today.getTime()
+
+	for (const special of props.shop.specialOpeningHours) {
+		if (special.date) {
+			const specialDate = new Date(special.date)
+			specialDate.setHours(0, 0, 0, 0)
+			if (specialDate.getTime() === todayTime) {
+				return special
+			}
+		} else if (special.dateFrom && special.dateTo) {
+			const from = new Date(special.dateFrom)
+			from.setHours(0, 0, 0, 0)
+			const to = new Date(special.dateTo)
+			to.setHours(23, 59, 59, 999)
+			if (todayTime >= from.getTime() && todayTime <= to.getTime()) {
+				return special
+			}
+		}
+	}
+
+	return null
+})
+
+const specialNote = computed(() => {
+	return todaySpecialHours.value?.note || null
+})
+
 // === Open status ===
 const todayOpeningHours = computed(() => {
 	const todayIndex = new Date(serverTimestamp.value).getDay()
 	const today = dayMapping[todayIndex] as DayOfWeek
+
+	// If there's a special opening hours for today, use it
+	if (todaySpecialHours.value) {
+		return {
+			open: todaySpecialHours.value.open ?? '09:00',
+			close: todaySpecialHours.value.close ?? '21:00',
+			closed: todaySpecialHours.value.closed ?? false,
+		}
+	}
 
 	const hours = props.shop.openingHours?.find((h) => h.day === today)
 	if (!hours) return null

@@ -19,8 +19,8 @@ export default defineEventHandler(
 			throw createNotFoundError('Kategorie')
 		}
 
-		// Získat počet obchodů v kategorii
-		const shopCount = await Shop.countDocuments({ categoryId: id, isActive: true })
+		// Získat počet obchodů v kategorii (obchody, které mají tuto kategorii v categoryIds)
+		const shopCount = await Shop.countDocuments({ categoryIds: id, isActive: true })
 
 		return {
 			...category,

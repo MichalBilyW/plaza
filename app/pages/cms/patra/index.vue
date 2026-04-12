@@ -79,11 +79,6 @@
 							{{ t('cms.floors.name') }}
 						</th>
 						<th
-							class="px-4 py-3 text-left text-xs font-medium text-plaza-dark uppercase tracking-wider"
-						>
-							{{ t('cms.floors.slug') }}
-						</th>
-						<th
 							class="px-4 py-3 text-center text-xs font-medium text-plaza-dark uppercase tracking-wider w-24"
 						>
 							{{ t('cms.floors.shopCount') }}
@@ -142,9 +137,6 @@
 								>
 									{{ floor.name }}
 								</NuxtLink>
-							</td>
-							<td class="px-4 py-3 text-sm text-plaza-dark">
-								{{ floor.slug }}
 							</td>
 							<td class="px-4 py-3 text-center">
 								<span
@@ -272,10 +264,6 @@
 									</span>
 								</div>
 								<div class="flex items-center gap-2 mt-0.5">
-									<p class="text-sm text-plaza-dark truncate">
-										{{ floor.slug }}
-									</p>
-									<span class="text-sm text-plaza-dark">•</span>
 									<span class="text-sm text-plaza-dark">
 										{{ floor.shopCount ?? 0 }}
 										{{ t('cms.floors.shopCount').toLowerCase() }}

@@ -79,28 +79,54 @@
 				</h2>
 
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-					<!-- Kategorie -->
-					<div>
-						<label
-							for="categoryId"
-							class="block text-sm font-medium text-gray-700 mb-1"
-						>
-							{{ t('cms.shops.category') }}
+					<!-- Kategorie (multi-select) -->
+					<div class="lg:col-span-2">
+						<label class="block text-sm font-medium text-gray-700 mb-2">
+							{{ t('cms.shops.categories') }}
 						</label>
-						<select
-							id="categoryId"
-							v-model="form.categoryId"
-							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
+						<div
+							class="flex flex-wrap gap-2 p-3 border border-gray-300 rounded-lg min-h-[42px] bg-white"
 						>
-							<option value="">{{ t('cms.shops.selectCategory') }}</option>
-							<option
+							<label
 								v-for="category in categories"
 								:key="category._id"
-								:value="category._id"
+								class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full cursor-pointer transition-colors"
+								:class="
+									form.categoryIds.includes(category._id)
+										? 'bg-cms-shops-100 text-cms-shops-700 ring-1 ring-cms-shops-300'
+										: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+								"
 							>
-								{{ category.name }}
-							</option>
-						</select>
+								<input
+									type="checkbox"
+									:value="category._id"
+									v-model="form.categoryIds"
+									class="sr-only"
+								/>
+								<span class="text-sm font-medium">{{ category.name }}</span>
+								<svg
+									v-if="form.categoryIds.includes(category._id)"
+									class="w-4 h-4"
+									fill="currentColor"
+									viewBox="0 0 20 20"
+								>
+									<path
+										fill-rule="evenodd"
+										d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+							</label>
+							<span
+								v-if="categories.length === 0"
+								class="text-sm text-gray-400 italic"
+							>
+								{{ t('cms.shops.noCategories') }}
+							</span>
+						</div>
+						<p class="mt-1 text-xs text-plaza-dark">
+							{{ t('cms.shops.categoriesHint') }}
+						</p>
 					</div>
 
 					<!-- Patro -->
@@ -677,7 +703,7 @@ const form = reactive({
 		twitter: '',
 	},
 	floorId: '',
-	categoryId: '',
+	categoryIds: [] as string[],
 	unitCode: '',
 	openingHours: daysOfWeek.map((day) => ({
 		day,
@@ -793,7 +819,7 @@ const handleSubmit = async () => {
 		if (form.email) data.email = form.email.trim()
 		if (form.website) data.website = form.website.trim()
 		if (form.floorId) data.floorId = form.floorId
-		if (form.categoryId) data.categoryId = form.categoryId
+		if (form.categoryIds.length) data.categoryIds = form.categoryIds
 		if (form.unitCode) data.unitCode = form.unitCode.trim()
 		if (form.seoTitle) data.seoTitle = form.seoTitle.trim()
 		if (form.seoDescription) data.seoDescription = form.seoDescription.trim()

@@ -196,10 +196,9 @@ interface EventsResponse {
 }
 
 const { t } = useI18n()
-const route = useRoute()
-const router = useRouter()
 const { openModal: openEventModal } = useEventModal()
 const { trackSearch, trackLoadMore } = useDataLayer()
+const { loadFilters, syncFilters } = useFilterPersistence('events')
 
 usePlazaSeo({
 	title: t('seo.events.title'),
@@ -208,8 +207,9 @@ usePlazaSeo({
 
 const ITEMS_PER_PAGE = 12
 
-// State — inicializace z URL query parametrů
-const search = ref((route.query.search as string) || '')
+// State — inicializace z URL/sessionStorage
+const initialFilters = loadFilters({ search: '' })
+const search = ref(initialFilters.search)
 const currentPage = ref(1)
 const allEvents = ref<Event[]>([])
 const totalEvents = ref(0)
@@ -218,12 +218,10 @@ const initialLoading = ref(true)
 
 const allLoaded = computed(() => allEvents.value.length >= totalEvents.value)
 
-// Synchronizace filtrů do URL
+// Synchronizace filtrů do URL a sessionStorage
 const syncToUrl = () => {
-	router.replace({
-		query: {
-			...(search.value ? { search: search.value } : {}),
-		},
+	syncFilters({
+		search: search.value,
 	})
 }
 

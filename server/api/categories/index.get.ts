@@ -40,11 +40,13 @@ export default defineEventHandler(
 
 		// Pokud chceme pouze kategorie s obchody, získáme nejprve ID kategorií s aktivními obchody
 		if (withShopsOnly) {
-			const categoryIdsWithShops = await Shop.distinct('categoryId', {
-				isActive: true,
-				categoryId: { $exists: true, $ne: null },
-			})
-			filter._id = { $in: categoryIdsWithShops }
+			// Najdi všechny unikátní kategorie z pole categoryIds aktivních obchodů
+			const categoryIdsWithShops = await Shop.aggregate([
+				{ $match: { isActive: true, categoryIds: { $exists: true, $ne: [] } } },
+				{ $unwind: '$categoryIds' },
+				{ $group: { _id: '$categoryIds' } },
+			])
+			filter._id = { $in: categoryIdsWithShops.map((c) => c._id) }
 		}
 
 		// Celkový počet
@@ -65,8 +67,10 @@ export default defineEventHandler(
 		// Získat počet obchodů pro každou kategorii
 		const categoryIds = categories.map((c) => c._id)
 		const shopCounts = await Shop.aggregate([
-			{ $match: { categoryId: { $in: categoryIds }, isActive: true } },
-			{ $group: { _id: '$categoryId', count: { $sum: 1 } } },
+			{ $match: { categoryIds: { $in: categoryIds }, isActive: true } },
+			{ $unwind: '$categoryIds' },
+			{ $match: { categoryIds: { $in: categoryIds } } },
+			{ $group: { _id: '$categoryIds', count: { $sum: 1 } } },
 		])
 		const shopCountMap = new Map(shopCounts.map((s) => [s._id.toString(), s.count]))
 

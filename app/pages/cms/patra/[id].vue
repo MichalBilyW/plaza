@@ -60,30 +60,6 @@
 						</p>
 					</div>
 
-					<!-- Slug -->
-					<div>
-						<label for="slug" class="block text-sm font-medium text-gray-700 mb-1">
-							{{ t('cms.floors.slug') }}
-						</label>
-						<input
-							id="slug"
-							v-model="form.slug"
-							type="text"
-							:class="[
-								'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent',
-								hasError('slug') ? 'border-red-500 bg-red-50' : 'border-gray-300',
-							]"
-							:placeholder="t('cms.floors.slugPlaceholder')"
-							@input="errors.slug = undefined"
-						/>
-						<p v-if="hasError('slug')" class="mt-1 text-sm text-red-600">
-							{{ getError('slug') }}
-						</p>
-						<p v-else class="mt-1 text-xs text-plaza-dark">
-							{{ t('cms.floors.slugHint') }}
-						</p>
-					</div>
-
 					<!-- Level -->
 					<div>
 						<label for="level" class="block text-sm font-medium text-gray-700 mb-1">
@@ -107,23 +83,6 @@
 						<p v-else class="mt-1 text-xs text-plaza-dark">
 							{{ t('cms.floors.levelHint') }}
 						</p>
-					</div>
-
-					<!-- Popis -->
-					<div>
-						<label
-							for="description"
-							class="block text-sm font-medium text-gray-700 mb-1"
-						>
-							{{ t('cms.floors.description') }}
-						</label>
-						<textarea
-							id="description"
-							v-model="form.description"
-							rows="3"
-							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-							:placeholder="t('cms.floors.descriptionPlaceholder')"
-						></textarea>
 					</div>
 					<!-- SVG mapa patra -->
 					<div class="border border-gray-200 rounded-lg p-4">
@@ -315,9 +274,7 @@ const currentSvgMap = computed(() => floor.value?.svgMap || null)
 
 const form = reactive({
 	name: '',
-	slug: '',
 	level: 0,
-	description: '',
 	isActive: true,
 })
 
@@ -327,9 +284,7 @@ watch(
 	(newFloor) => {
 		if (newFloor) {
 			form.name = newFloor.name
-			form.slug = newFloor.slug
 			form.level = newFloor.level
-			form.description = newFloor.description || ''
 			form.isActive = newFloor.isActive
 		}
 	},

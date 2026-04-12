@@ -1,7 +1,7 @@
 <template>
 	<div class="min-h-screen bg-white">
 		<!-- Error state -->
-		<div v-if="error" class="container py-20 text-center">
+		<div v-if="error" class="container pt-[150px] lg:pt-[180px] pb-20 text-center">
 			<h1 class="text-2xl font-bold text-plaza-dark mb-4">{{ t('shopDetail.notFound') }}</h1>
 			<p class="text-plaza-gray mb-8">{{ t('shopDetail.notFoundDescription') }}</p>
 			<NuxtLink
@@ -57,11 +57,11 @@
 			</div>
 
 			<!-- Related Shops Section -->
-			<div v-if="categories.length" class="px-4 my-20">
+			<div v-if="shopCategories.length" class="px-4 my-20">
 				<ShopRelatedShops
-					v-if="shop?.category && categories.length > 0"
+					v-if="shopCategories.length > 0"
 					:shops="relatedShops"
-					:categories="categories"
+					:categories="shopCategories"
 					:category-id="selectedCategoryId"
 					:pending="relatedPending"
 					@category-change="onCategoryChange"
@@ -108,7 +108,13 @@ usePlazaSeo({
 const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/categories', {
 	key: 'all-categories',
 })
-const categories = computed(() => categoriesData.value?.data ?? [])
+
+// Get only the categories this shop belongs to
+const shopCategories = computed(() => {
+	const allCategories = categoriesData.value?.data ?? []
+	const shopCategoryIds = shop.value?.categoryIds ?? []
+	return allCategories.filter((c) => shopCategoryIds.includes(c._id))
+})
 
 // === Fetch shop events ===
 const { data: eventsData, pending: eventsPending } = await useFetch<{ data: Event[] }>(
@@ -128,14 +134,14 @@ const { data: eventsData, pending: eventsPending } = await useFetch<{ data: Even
 const shopEvents = computed(() => eventsData.value?.data ?? [])
 
 // === Related shops with category switching ===
-const selectedCategoryId = ref(shop.value?.categoryId ?? '')
+const selectedCategoryId = ref(shop.value?.categoryIds?.[0] ?? '')
 
-// Watch for shop changes to update selected category
+// Watch for shop changes to update selected category (use first category)
 watch(
-	() => shop.value?.categoryId,
-	(newCategoryId) => {
-		if (newCategoryId) {
-			selectedCategoryId.value = newCategoryId
+	() => shop.value?.categoryIds,
+	(newCategoryIds) => {
+		if (newCategoryIds && newCategoryIds.length > 0) {
+			selectedCategoryId.value = newCategoryIds[0]
 		}
 	},
 	{ immediate: true },

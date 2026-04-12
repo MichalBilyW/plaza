@@ -31,6 +31,13 @@
 					<!-- Sloupec 1 -->
 					<nav class="flex flex-col gap-y-2">
 						<NuxtLink
+							to="/"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
+							active-class="!text-plaza"
+						>
+							{{ t('footer.nav.homePage') }}
+						</NuxtLink>
+						<NuxtLink
 							to="/obchody"
 							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
 							active-class="!text-plaza"

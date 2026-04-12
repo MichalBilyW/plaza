@@ -23,10 +23,10 @@ export default defineEventHandler(
 		}
 
 		// Zkontrolovat, zda kategorie neobsahuje obchody
-		const shopsCount = await Shop.countDocuments({ categoryId: id })
+		const shopsCount = await Shop.countDocuments({ categoryIds: id })
 		if (shopsCount > 0) {
 			throw createValidationError(
-				`Nelze smazat kategorii obsahující ${shopsCount} obchodů. Nejprve přesuňte nebo smažte obchody.`,
+				`Nelze smazat kategorii obsahující ${shopsCount} obchodů. Nejprve odeberte kategorii z obchodů.`,
 			)
 		}
 

@@ -72,7 +72,7 @@ const news = computed(() => newsData.value?.data || [])
 
 const { data: eventsData, pending: eventsPending } = useFetch<{ data: Event[] }>('/api/events', {
 	key: 'homepage-events',
-	query: { limit: 100, published: true, upcoming: true },
+	query: { limit: 100, isActive: true },
 })
 const events = computed(() => eventsData.value?.data || [])
 </script>

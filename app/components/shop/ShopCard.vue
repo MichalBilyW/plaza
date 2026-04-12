@@ -32,11 +32,11 @@
 		<div class="md:hidden w-full max-w-[100px] h-0.5 bg-plaza-light my-2 opacity-80"></div>
 		<!-- Kategorie + Patro -->
 		<div class="md:hidden flex items-center justify-between w-full gap-2 opacity-80">
-			<span class="text-xs text-plaza/90" v-if="shop.category?.name">
+			<span class="text-xs text-plaza/90" v-if="firstCategory?.name">
 				{{
-					shop.category.name.length > 9
-						? shop.category.name.slice(0, 9) + '…'
-						: shop.category.name
+					firstCategory.name.length > 9
+						? firstCategory.name.slice(0, 9) + '…'
+						: firstCategory.name
 				}}
 			</span>
 			<span class="text-xs text-plaza-gray opacity-90" v-if="shop.floor?.name">{{
@@ -95,11 +95,11 @@
 
 			<!-- Category & Floor -->
 			<p
-				v-if="shop.category || shop.floor"
+				v-if="firstCategory || shop.floor"
 				class="mt-1 text-center font-sans text-[15px] text-plaza-gray"
 			>
-				<span v-if="shop.category" class="text-plaza">{{ shop.category.name }}</span>
-				<span v-if="shop.category && shop.floor"> · </span>
+				<span v-if="firstCategory" class="text-plaza">{{ firstCategory.name }}</span>
+				<span v-if="firstCategory && shop.floor"> · </span>
 				<span v-if="shop.floor">{{ shop.floor.name }}</span>
 			</p>
 		</div>
@@ -133,11 +133,11 @@
 		<div class="md:hidden w-full max-w-[100px] h-0.5 bg-plaza-light my-2"></div>
 		<!-- Kategorie + Patro -->
 		<div class="md:hidden flex items-center justify-between w-full gap-2">
-			<span class="text-xs text-plaza/90" v-if="shop.category?.name">
+			<span class="text-xs text-plaza/90" v-if="firstCategory?.name">
 				{{
-					shop.category.name.length > 10
-						? shop.category.name.slice(0, 10) + '…'
-						: shop.category.name
+					firstCategory.name.length > 10
+						? firstCategory.name.slice(0, 10) + '…'
+						: firstCategory.name
 				}}
 			</span>
 			<span class="text-xs text-plaza-gray opacity-90" v-if="shop.floor?.name">{{
@@ -188,11 +188,11 @@
 
 			<!-- Category & Floor -->
 			<p
-				v-if="shop.category || shop.floor"
+				v-if="firstCategory || shop.floor"
 				class="mt-1 text-center font-sans text-[15px] text-plaza-gray"
 			>
-				<span v-if="shop.category" class="text-plaza">{{ shop.category.name }}</span>
-				<span v-if="shop.category && shop.floor"> · </span>
+				<span v-if="firstCategory" class="text-plaza">{{ firstCategory.name }}</span>
+				<span v-if="firstCategory && shop.floor"> · </span>
 				<span v-if="shop.floor">{{ shop.floor.name }}</span>
 			</p>
 		</div>
@@ -220,6 +220,9 @@ const isUpcoming = computed(
 		!!props.shop.publishDate &&
 		new Date(props.shop.publishDate).getTime() > serverTimestamp.value,
 )
+
+// Get first category from array for display
+const firstCategory = computed(() => props.shop.categories?.[0] || null)
 
 // SSR-safe date formatting
 const formatPublishDate = (dateStr: string) => {

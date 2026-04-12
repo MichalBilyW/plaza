@@ -11,9 +11,7 @@ import mongoose, { Schema } from 'mongoose'
 
 export interface IFloor {
 	name: string
-	slug: string
 	level: number
-	description?: string
 	mapImage?: string
 	/** SVG mapa patra - cesta k souboru */
 	svgMap?: string
@@ -38,22 +36,10 @@ const floorSchema = new Schema<IFloorDocument>(
 			trim: true,
 			maxlength: 50,
 		},
-		slug: {
-			type: String,
-			required: true,
-			unique: true,
-			lowercase: true,
-			trim: true,
-			index: true,
-		},
 		level: {
 			type: Number,
 			required: true,
 			index: true,
-		},
-		description: {
-			type: String,
-			maxlength: 500,
 		},
 		mapImage: String,
 		/** SVG mapa patra */

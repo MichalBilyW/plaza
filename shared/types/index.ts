@@ -95,8 +95,8 @@ export interface Shop extends BaseEntity {
 	// Umístění
 	floorId?: string
 	floor?: Floor
-	categoryId?: string
-	category?: Category
+	categoryIds?: string[]
+	categories?: Category[]
 	unitCode?: string
 	mapPosition?: {
 		x: number
@@ -175,9 +175,7 @@ export interface Service extends BaseEntity {
 // ==========================================
 export interface Floor extends BaseEntity {
 	name: string // např. "1. patro", "Přízemí"
-	slug: string
 	level: number // číselné pořadí (-1 = podzemí, 0 = přízemí, 1 = 1. patro)
-	description?: string
 	mapImage?: string // obrázek mapy patra (náhled)
 	svgMap?: string // SVG mapa patra pro interaktivní zobrazení
 	isActive: boolean

@@ -19,7 +19,7 @@ export default defineEventHandler(
 		if (idOrSlug?.match(/^[0-9a-fA-F]{24}$/)) {
 			shop = await Shop.findById(idOrSlug)
 				.populate('floorId', 'name level')
-				.populate('categoryId', 'name slug icon color')
+				.populate('categoryIds', 'name slug icon color')
 				.lean()
 		}
 
@@ -27,7 +27,7 @@ export default defineEventHandler(
 		if (!shop) {
 			shop = await Shop.findOne({ slug: idOrSlug, isActive: true })
 				.populate('floorId', 'name level')
-				.populate('categoryId', 'name slug icon color')
+				.populate('categoryIds', 'name slug icon color')
 				.lean()
 		}
 
@@ -45,12 +45,14 @@ export default defineEventHandler(
 					? (shop.floorId as { _id: unknown })._id?.toString()
 					: shop.floorId?.toString()
 				: undefined,
-			category: shop.categoryId,
-			categoryId: shop.categoryId
-				? typeof shop.categoryId === 'object'
-					? (shop.categoryId as { _id: unknown })._id?.toString()
-					: shop.categoryId?.toString()
-				: undefined,
+			categories: shop.categoryIds,
+			categoryIds: shop.categoryIds
+				? (shop.categoryIds as Array<{ _id: unknown } | unknown>).map((cat) =>
+						typeof cat === 'object' && cat !== null
+							? (cat as { _id: unknown })._id?.toString()
+							: cat?.toString(),
+					)
+				: [],
 		}
 	}),
 )

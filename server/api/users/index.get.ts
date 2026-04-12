@@ -8,6 +8,7 @@ import { User } from '@/server/models'
 import { requireAdmin } from '@/server/utils/auth'
 import { paginationQuerySchema } from '@/shared/schemas'
 import { defineApiHandler } from '@/server/utils/errors'
+import { toISOString } from '@/server/utils/format'
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
@@ -44,9 +45,9 @@ export default defineEventHandler(
 			name: user.name,
 			role: user.role,
 			isActive: user.isActive,
-			lastLoginAt: user.lastLoginAt?.toISOString(),
-			createdAt: user.createdAt.toISOString(),
-			updatedAt: user.updatedAt.toISOString(),
+			lastLoginAt: toISOString(user.lastLoginAt),
+			createdAt: toISOString(user.createdAt),
+			updatedAt: toISOString(user.updatedAt),
 		}))
 
 		return {

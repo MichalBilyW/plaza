@@ -59,23 +59,6 @@
 						</p>
 					</div>
 
-					<!-- Slug -->
-					<div>
-						<label for="slug" class="block text-sm font-medium text-gray-700 mb-1">
-							{{ t('cms.categories.slug') }}
-						</label>
-						<input
-							id="slug"
-							v-model="form.slug"
-							type="text"
-							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-categories-500 focus:border-transparent"
-							:placeholder="t('cms.categories.slugPlaceholder')"
-						/>
-						<p class="mt-1 text-xs text-plaza-dark">
-							{{ t('cms.categories.slugHint') }}
-						</p>
-					</div>
-
 					<!-- Aktivní -->
 					<div>
 						<label class="inline-flex items-center gap-3 cursor-pointer">
@@ -213,7 +196,6 @@ watchEffect(() => {
 // Form state
 const form = reactive({
 	name: '',
-	slug: '',
 	isActive: true,
 })
 
@@ -223,7 +205,6 @@ watch(
 	(newCategory) => {
 		if (newCategory) {
 			form.name = newCategory.name || ''
-			form.slug = newCategory.slug || ''
 			form.isActive = newCategory.isActive ?? true
 		}
 	},
@@ -246,7 +227,6 @@ const handleSubmit = async () => {
 	try {
 		const data: Record<string, unknown> = {
 			name: form.name.trim(),
-			slug: form.slug.trim() || undefined,
 			isActive: form.isActive,
 		}
 

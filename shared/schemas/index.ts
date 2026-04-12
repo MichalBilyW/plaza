@@ -171,7 +171,7 @@ export const shopCreateSchema = z.object({
 		})
 		.optional(),
 	floorId: optionalObjectIdSchema,
-	categoryId: optionalObjectIdSchema,
+	categoryIds: z.array(objectIdSchema).optional(),
 	unitCode: z.preprocess(
 		(val) => (val === '' ? null : val),
 		z.string().max(20).nullable().optional(),
@@ -197,7 +197,7 @@ export const shopUpdateSchema = shopCreateSchema.partial()
 
 export const shopFilterQuerySchema = paginationQuerySchema.extend({
 	floorId: objectIdSchema.optional(),
-	categoryId: objectIdSchema.optional(),
+	categoryId: objectIdSchema.optional(), // Filtr pro jednu kategorii (obchody obsahující tuto kategorii)
 	search: z.string().max(100).optional(),
 	isActive: z.preprocess((val) => {
 		if (val === '' || val === undefined || val === null) return undefined
@@ -306,9 +306,7 @@ export type ServiceFilterQueryInput = z.input<typeof serviceFilterQuerySchema>
 
 export const floorCreateSchema = z.object({
 	name: z.string().min(1).max(50),
-	slug: optionalSlugSchema,
 	level: z.number().int(),
-	description: z.string().max(500).optional(),
 	mapImage: z.string().optional(),
 	svgMap: z.string().optional(),
 	isActive: z.boolean().default(true),
@@ -368,7 +366,7 @@ export type PublishStatus = z.infer<typeof publishStatusSchema>
 export const pageCreateSchema = z.object({
 	title: z.string().min(2).max(200),
 	slug: optionalSlugSchema,
-	content: z.string().min(10),
+	content: z.string().min(10).max(50000, 'Obsah může mít max. 50000 znaků'),
 	excerpt: z.string().max(500).optional(),
 	status: publishStatusSchema.default('draft'),
 	seoTitle: z.string().max(60).optional(),

@@ -34,7 +34,7 @@
 					<a
 						v-if="contact.phone"
 						:href="`tel:${formatPhoneForLink(contact.phone)}`"
-						class="block text-plaza-dark hover:text-plaza transition-colors"
+						class="block text-plaza hover:underline"
 					>
 						{{ contact.phone }}
 					</a>

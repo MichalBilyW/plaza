@@ -130,7 +130,6 @@
 								>
 									{{ category.name }}
 								</NuxtLink>
-								<p class="text-xs text-plaza-dark">{{ category.slug }}</p>
 							</td>
 							<td class="px-4 py-3 text-plaza-dark">
 								<span class="inline-flex items-center gap-1">

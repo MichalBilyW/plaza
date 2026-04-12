@@ -196,9 +196,8 @@ interface ShopsResponse {
 }
 
 const { t } = useI18n()
-const route = useRoute()
-const router = useRouter()
 const { trackSearch, trackFilterApply, trackLoadMore } = useDataLayer()
+const { loadFilters, syncFilters } = useFilterPersistence('shops')
 
 usePlazaSeo({
 	title: t('seo.shops.title'),
@@ -207,9 +206,10 @@ usePlazaSeo({
 
 const ITEMS_PER_PAGE = 9
 
-// State — inicializace z URL query parametrů
-const search = ref((route.query.search as string) || '')
-const selectedCategory = ref((route.query.kategorie as string) || '') // uchovává slug kategorie
+// State — inicializace z URL/sessionStorage
+const initialFilters = loadFilters({ search: '', kategorie: '' })
+const search = ref(initialFilters.search)
+const selectedCategory = ref(initialFilters.kategorie) // uchovává slug kategorie
 const currentPage = ref(1)
 const allShops = ref<Shop[]>([])
 const totalShops = ref(0)
@@ -218,13 +218,11 @@ const initialLoading = ref(true)
 
 const allLoaded = computed(() => allShops.value.length >= totalShops.value)
 
-// Synchronizace filtrů do URL
+// Synchronizace filtrů do URL a sessionStorage
 const syncToUrl = () => {
-	router.replace({
-		query: {
-			...(selectedCategory.value ? { kategorie: selectedCategory.value } : {}),
-			...(search.value ? { search: search.value } : {}),
-		},
+	syncFilters({
+		kategorie: selectedCategory.value,
+		search: search.value,
 	})
 }
 

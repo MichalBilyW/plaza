@@ -29,11 +29,11 @@
 
 		<!-- Category + Floor -->
 		<div class="flex items-center justify-between w-full gap-3 text-sm text-plaza-gray">
-			<span class="text-xs text-plaza/90" v-if="shop.category?.name">
+			<span class="text-xs text-plaza/90" v-if="firstCategory?.name">
 				{{
-					shop.category.name.length > 12
-						? shop.category.name.slice(0, 12) + '...'
-						: shop.category.name
+					firstCategory.name.length > 12
+						? firstCategory.name.slice(0, 12) + '...'
+						: firstCategory.name
 				}}
 			</span>
 			<span class="text-xs opacity-90" v-if="shop.floor?.name">{{ shop.floor.name }}</span>
@@ -65,11 +65,11 @@
 
 		<!-- Category + Floor -->
 		<div class="flex items-center justify-between w-full gap-3 text-sm text-plaza-gray">
-			<span class="text-xs text-plaza/90" v-if="shop.category?.name">
+			<span class="text-xs text-plaza/90" v-if="firstCategory?.name">
 				{{
-					shop.category.name.length > 12
-						? shop.category.name.slice(0, 12) + '...'
-						: shop.category.name
+					firstCategory.name.length > 12
+						? firstCategory.name.slice(0, 12) + '...'
+						: firstCategory.name
 				}}
 			</span>
 			<span class="text-xs opacity-90" v-if="shop.floor?.name">{{ shop.floor.name }}</span>
@@ -92,6 +92,9 @@ const isUpcoming = computed(
 		!!props.shop.publishDate &&
 		new Date(props.shop.publishDate).getTime() > serverTimestamp.value,
 )
+
+// Get first category from array for display
+const firstCategory = computed(() => props.shop.categories?.[0] || null)
 
 // SSR-safe date formatting
 const formatPublishDate = (dateStr: string) => {

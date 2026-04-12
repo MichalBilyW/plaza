@@ -39,6 +39,7 @@ export default {
 		filterCategory: 'Filtr dle kategorie',
 		searchShop: 'Vyhledávání obchodu',
 		specialHoursInfo: 'Informace o speciální otevírací době',
+		specialOpeningHoursToday: 'Dnes platí speciální otevírací doba',
 	},
 
 	nav: {
@@ -133,6 +134,7 @@ export default {
 		nextShop: 'Další obchod',
 		findOnMap: 'Kde nás najdete',
 		shopDescription: 'Popis obchodu',
+		showRegularOpeningHours: 'Zobrazit běžnou otevírací dobu',
 	},
 
 	events: {
@@ -225,6 +227,7 @@ export default {
 		instagram: 'Instagram',
 		copyright: '© {year} OC Plaza Liberec. Všechna práva vyhrazena.',
 		nav: {
+			homePage: 'Hlavní stránka',
 			shops: 'Obchody a služby',
 			events: 'Akce a slevy',
 			about: 'O nás',
@@ -318,7 +321,10 @@ export default {
 			noUnitsOnFloor: 'Na tomto patře nejsou žádné obchody',
 			selectFloorFirst: 'Nejprve vyberte patro',
 			category: 'Kategorie',
+			categories: 'Kategorie',
 			selectCategory: 'Vyberte kategorii',
+			categoriesHint: 'Obchod může patřit do více kategorií pro lepší filtrování',
+			noCategories: 'Žádné kategorie',
 			allCategories: 'Všechny kategorie',
 			contactInfo: 'Kontaktní údaje',
 			phone: 'Telefon',

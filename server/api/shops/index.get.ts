@@ -28,7 +28,8 @@ export default defineEventHandler(
 		}
 
 		if (categoryId) {
-			filter.categoryId = categoryId
+			// Filtrovat obchody, které mají tuto kategorii v poli categoryIds
+			filter.categoryIds = categoryId
 		}
 
 		if (typeof isActive === 'boolean') {
@@ -52,7 +53,7 @@ export default defineEventHandler(
 		// Dotaz s populací
 		const shops = await Shop.find(filter)
 			.populate('floorId', 'name level')
-			.populate('categoryId', 'name slug icon color')
+			.populate('categoryIds', 'name slug icon color')
 			.sort(sortObj)
 			.skip((page - 1) * limit)
 			.limit(limit)
@@ -68,12 +69,14 @@ export default defineEventHandler(
 					? (shop.floorId as { _id: unknown })._id?.toString()
 					: shop.floorId?.toString()
 				: undefined,
-			category: shop.categoryId,
-			categoryId: shop.categoryId
-				? typeof shop.categoryId === 'object'
-					? (shop.categoryId as { _id: unknown })._id?.toString()
-					: shop.categoryId?.toString()
-				: undefined,
+			categories: shop.categoryIds,
+			categoryIds: shop.categoryIds
+				? (shop.categoryIds as Array<{ _id: unknown } | unknown>).map((cat) =>
+						typeof cat === 'object' && cat !== null
+							? (cat as { _id: unknown })._id?.toString()
+							: cat?.toString(),
+					)
+				: [],
 		}))
 
 		return {
