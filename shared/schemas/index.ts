@@ -429,6 +429,13 @@ export type EventsQueryInput = z.input<typeof eventsQuerySchema>
 // GENERAL INFO SCHÉMATA
 // ==========================================
 
+export const contactSchema = z.object({
+	title: z.string().max(100).optional(),
+	name: z.string().max(100).optional(),
+	phone: z.string().max(30).optional(),
+	email: z.string().email().max(100).optional().or(z.literal('')),
+})
+
 export const generalInfoUpdateSchema = z.object({
 	title: z.string().max(200).optional(),
 	shortText: z.string().max(500).optional(),
@@ -442,6 +449,7 @@ export const generalInfoUpdateSchema = z.object({
 	parkingContent: z.string().max(1000).optional(),
 	parkingImage: z.string().optional(),
 	parkingOtherInfo: z.string().max(10000).optional(),
+	contacts: z.array(contactSchema).max(30).optional(),
 })
 
 export type GeneralInfoUpdateInput = z.infer<typeof generalInfoUpdateSchema>

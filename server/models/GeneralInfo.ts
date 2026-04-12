@@ -27,6 +27,13 @@ export interface ISpecialOpeningHours {
 	note?: string
 }
 
+export interface IContact {
+	title?: string
+	name?: string
+	phone?: string
+	email?: string
+}
+
 export interface IGeneralInfo {
 	title?: string
 	shortText?: string
@@ -40,6 +47,7 @@ export interface IGeneralInfo {
 	parkingContent?: string
 	parkingImage?: string
 	parkingOtherInfo?: string
+	contacts?: IContact[]
 }
 
 export interface IGeneralInfoDocument extends IGeneralInfo, Document {
@@ -74,6 +82,16 @@ const specialOpeningHoursSchema = new Schema(
 		close: { type: String },
 		closed: { type: Boolean, default: false },
 		note: { type: String, maxlength: 200 },
+	},
+	{ _id: false },
+)
+
+const contactSchema = new Schema(
+	{
+		title: { type: String, maxlength: 100, trim: true },
+		name: { type: String, maxlength: 100, trim: true },
+		phone: { type: String, maxlength: 30, trim: true },
+		email: { type: String, maxlength: 100, trim: true },
 	},
 	{ _id: false },
 )
@@ -128,6 +146,7 @@ const generalInfoSchema = new Schema<IGeneralInfoDocument>(
 			type: String,
 			maxlength: 10000,
 		},
+		contacts: [contactSchema],
 	},
 	{
 		timestamps: true,

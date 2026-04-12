@@ -275,6 +275,20 @@ export interface EventFilterQuery extends PaginationQuery {
 }
 
 // ==========================================
+// CONTACT (DŮLEŽITÝ KONTAKT)
+// ==========================================
+export interface Contact {
+	/** Název kontaktu (např. "Kontaktní email") */
+	title?: string
+	/** Jméno osoby */
+	name?: string
+	/** Telefonní číslo */
+	phone?: string
+	/** E-mail */
+	email?: string
+}
+
+// ==========================================
 // GENERAL INFO (OBECNÉ INFORMACE O CENTRU)
 // ==========================================
 export interface GeneralInfo extends BaseEntity {
@@ -289,6 +303,7 @@ export interface GeneralInfo extends BaseEntity {
 	parkingContent?: string
 	parkingImage?: string
 	parkingOtherInfo?: string
+	contacts?: Contact[]
 }
 
 // ==========================================

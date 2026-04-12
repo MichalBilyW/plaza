@@ -61,13 +61,13 @@
 					</nav>
 					<!-- Sloupec 2 -->
 					<nav class="flex flex-col gap-y-2">
-						<NuxtLink
-							to="/o-nas"
-							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
-							active-class="!text-plaza"
+						<button
+							type="button"
+							class="font-heading text-[18px] text-white hover:text-plaza transition-colors text-left"
+							@click="openContactsModal"
 						>
 							{{ t('footer.nav.contacts') }}
-						</NuxtLink>
+						</button>
 						<NuxtLink
 							to="/cookies"
 							class="font-heading text-[18px] text-white hover:text-plaza transition-colors"
@@ -130,6 +130,9 @@
 				<p>{{ t('footer.copyright', { year: currentYear }) }}</p>
 			</div>
 		</div>
+
+		<!-- Contacts Modal -->
+		<ContactsModal />
 	</footer>
 </template>
 
@@ -137,6 +140,7 @@
 import type { GeneralInfo } from '@/shared/types'
 
 const { t } = useI18n()
+const { openModal: openContactsModal } = useContactsModal()
 
 // SSR-safe year
 const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())

@@ -18,7 +18,7 @@
 		<!-- Galerie -->
 		<section
 			v-if="!pending && generalInfo?.gallery?.length"
-			class="container-small -mt-[280px] px-4"
+			class="container-small -mt-[280px] px-4 mb-12"
 		>
 			<div class="relative rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg">
 				<!-- Border overlay -->
@@ -85,6 +85,9 @@
 		<!-- Sekce Parkování -->
 		<ONasParkingSection :general-info="generalInfo" :pending="pending" />
 
+		<!-- Sekce Kontakty -->
+		<ONasContactsSection :contacts="generalInfo?.contacts" :pending="pending" />
+
 		<!-- Content area -->
 		<div class="container-small px-4 py-12">
 			<!-- Loading skeleton -->
@@ -105,7 +108,7 @@
 		</div>
 
 		<!-- Content area (pokračování) -->
-		<div class="container-small px-4 pb-12">
+		<div class="container-small px-4 py-12">
 			<div v-if="!pending" class="space-y-12">
 				<!-- Otevírací doba -->
 				<section id="oteviraci-doba" class="max-w-2xl mx-auto scroll-mt-32">
@@ -175,7 +178,7 @@
 				</section>
 
 				<!-- Sociální sítě -->
-				<section v-if="generalInfo?.facebook || generalInfo?.instagram" class="text-center">
+				<section v-if="generalInfo?.facebook || generalInfo?.instagram" class="text-center py-12">
 					<h2 class="font-heading font-black text-2xl md:text-3xl text-plaza-dark mb-6">
 						{{ t('aboutPage.followUs') }}
 					</h2>
@@ -249,7 +252,7 @@
 				</section>
 
 				<!-- Kudy k nám -->
-				<section class="max-w-5xl mx-auto">
+				<section class="max-w-5xl mx-auto py-12">
 					<h2
 						class="font-heading text-2xl md:text-3xl text-plaza-dark mb-8 text-center uppercase"
 					>
