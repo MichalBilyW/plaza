@@ -79,7 +79,7 @@ async function initSvgAnimation() {
 		const group = svg.querySelector(`#${groupName}`) as SVGElement | null
 		if (group) {
 			group.style.opacity = '0'
-			group.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+			group.style.transition = 'opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
 		}
 	}
 
@@ -113,14 +113,14 @@ async function startAnimation() {
 			group.style.opacity = '1'
 		}
 
-		// Kratší delay mezi skupinami
+		// Krátký delay mezi skupinami
 		if (i < STATIC_AROUND_GROUPS.length - 1) {
-			await new Promise((resolve) => setTimeout(resolve, 200))
+			await new Promise((resolve) => setTimeout(resolve, 80))
 		}
 	}
 
 	// Počkat na dokončení posledního přechodu
-	await new Promise((resolve) => setTimeout(resolve, 600))
+	await new Promise((resolve) => setTimeout(resolve, 350))
 	emit('animation-complete')
 }
 

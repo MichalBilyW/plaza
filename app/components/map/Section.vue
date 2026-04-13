@@ -124,19 +124,8 @@
 			</h2>
 
 			<ClientOnly>
-				<!-- Loading state - zobrazit dokud se načítají data nebo SVG -->
-				<div
-					v-if="pending || isLoading"
-					class="flex items-center justify-center min-h-[600px]"
-				>
-					<div class="flex flex-col items-center gap-4">
-						<div class="map-spinner"></div>
-						<p class="text-gray-500 text-sm">{{ t('common.loading') }}</p>
-					</div>
-				</div>
-
 				<!-- Error state -->
-				<div v-else-if="error" class="text-center py-8">
+				<div v-if="error && !pending" class="text-center py-8">
 					<p class="text-red-500 mb-4">{{ t('common.error') }}</p>
 					<button
 						type="button"
@@ -148,29 +137,57 @@
 				</div>
 
 				<template v-else>
-					<!-- Interaktivní mapa -->
+					<!-- Loading overlay — nad mapou, mizí po načtení -->
+					<Transition
+						leave-active-class="transition-opacity duration-500 ease-out"
+						leave-to-class="opacity-0"
+					>
+						<div
+							v-if="pending || isLoading"
+							class="absolute inset-0 z-40 flex items-center justify-center min-h-[600px] bg-white"
+						>
+							<div class="flex flex-col items-center gap-4">
+								<div class="map-spinner"></div>
+								<p class="text-gray-500 text-sm">{{ t('common.loading') }}</p>
+							</div>
+						</div>
+					</Transition>
+
+					<!-- Interaktivní mapa — renderuje se vždy (i pod spinnerem) -->
 					<div
 						ref="mapContainerRef"
 						class="map-container relative overflow-hidden max-w-full min-h-[600px]"
 						:class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''"
 					>
-						<!-- Zoom ovládání - top-right -->
+						<!-- Zoom ovládání -->
 						<div
-							class="z-30 absolute bottom-8 md:bottom-16 lg:bottom-32 left-6 z-30 flex gap-1"
+							class="z-30 absolute bottom-8 md:bottom-16 lg:bottom-32 left-6 z-30 flex flex-col gap-1"
 						>
 							<button
-								v-for="level in zoomLevels"
-								:key="level.value"
 								type="button"
+								:disabled="!canZoomIn"
 								:class="[
-									'w-9 h-9 flex items-center justify-center rounded-[5px_10px_5px_5px] transition-colors text-xs font-medium',
-									zoomLevel === level.value
-										? 'bg-gray-800 text-white shadow-lg'
-										: 'bg-white text-gray-700 hover:bg-gray-100 shadow',
+									'w-9 h-9 flex items-center justify-center rounded-[5px_10px_5px_5px] transition-colors text-lg font-bold',
+									canZoomIn
+										? 'bg-white text-gray-700 hover:bg-gray-100 shadow'
+										: 'bg-gray-100 text-gray-300 shadow cursor-not-allowed',
 								]"
-								@click="setZoom(level.value)"
+								@click="zoomIn()"
 							>
-								{{ level.label }}
+								+
+							</button>
+							<button
+								type="button"
+								:disabled="!canZoomOut"
+								:class="[
+									'w-9 h-9 flex items-center justify-center rounded-[5px_10px_5px_5px] transition-colors text-lg font-bold',
+									canZoomOut
+										? 'bg-white text-gray-700 hover:bg-gray-100 shadow'
+										: 'bg-gray-100 text-gray-300 shadow cursor-not-allowed',
+								]"
+								@click="zoomOut()"
+							>
+								−
 							</button>
 						</div>
 
@@ -204,10 +221,13 @@
 									:svg-path="currentFloor.svgMap"
 									:svg-content="currentFloor.svgContent"
 									:units="currentFloor.units"
-									:selected-unit="state.selectedUnit"
-									:search-query="search"
+									:hovered-unit-code="state.hoveredUnitCode"
+									:search-query="debouncedSearch"
 									class="relative z-10"
 									@unit-click="handleUnitClick"
+									@unit-hover="handleUnitHover"
+									@unit-hover-leave="handleUnitHoverLeave"
+									@unit-tap="handleUnitTap"
 								/>
 							</Transition>
 
@@ -261,9 +281,10 @@
 
 					<!-- Popup s detailem obchodu -->
 					<MapUnitPopup
-						:unit="state.selectedUnit"
+						:unit="state.hoveredUnit"
 						:position="state.popupPosition"
-						@close="closePopup"
+						@close="hideUnitPopup"
+						@cancel-hide="cancelPopupHide"
 					/>
 				</template>
 
@@ -308,7 +329,11 @@ const {
 	pending,
 	error,
 	selectFloor,
+	showUnitPopup,
+	hideUnitPopup,
+	cancelHide,
 	handleUnitClick,
+	handleUnitTap,
 	closePopup,
 	refresh,
 	onFloorChange,
@@ -322,6 +347,16 @@ const isLoading = ref(true)
 const mapReady = ref(false)
 const search = ref(props.highlightShopName ?? '')
 const showSuggestions = ref(false)
+
+// Debounced search pro MapFloor — nespouští SVG class update na každý keystroke
+let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null
+const debouncedSearch = ref(search.value)
+watch(search, (val) => {
+	if (searchDebounceTimer) clearTimeout(searchDebounceTimer)
+	searchDebounceTimer = setTimeout(() => {
+		debouncedSearch.value = val
+	}, 200)
+})
 
 // Vyhledávání ve všech patrech - seskupené podle patra (kromě aktuálního)
 interface FloorSearchGroup {
@@ -386,11 +421,13 @@ function selectSuggestion(floorId: string, shopName?: string) {
 
 // Zoom
 const {
-	zoomLevel,
-	zoomLevels,
+	currentScale,
+	canZoomIn,
+	canZoomOut,
 	mapContainerRef,
 	mapContentRef,
-	setZoom,
+	zoomIn,
+	zoomOut,
 	resetAndCenter,
 	isZoomed,
 	isTouch,
@@ -400,9 +437,36 @@ const {
 onMounted(() => {
 	isLoading.value = true
 	mapReady.value = false
+
+	// Touch: zavřít popup při dotyku mimo unit nebo při panování
+	const container = mapContainerRef.value
+	if (container) {
+		container.addEventListener('touchstart', handleTouchStart, { passive: true })
+		container.addEventListener('touchmove', handleTouchMove, { passive: true })
+	}
 })
 
-// Timeout jako fallback - pokud se mapa nenačte do 5 sekund, zobrazit ji
+// Touch: tap mimo unit → zavřít popup
+function handleTouchStart(e: TouchEvent) {
+	const target = e.target as Element
+	// Pokud tap je na unit elementu (nebo jeho potomku), nezavírat
+	if (target.closest?.('[data-unit][data-has-shop="true"]')) return
+	// Pokud tap je na popup nebo jeho potomku, nezavírat
+	if (target.closest?.('.popup-card')) return
+	closePopup()
+}
+
+// Touch: jakýkoli pan/scroll → zavřít popup
+function handleTouchMove() {
+	if (state.hoveredUnit) closePopup()
+}
+
+// Zoom změna → zavřít popup (pinch zoom, tlačítka, wheel)
+watch(currentScale, () => {
+	if (state.hoveredUnit) closePopup()
+})
+
+// Timeout jako fallback - pokud se mapa nenačte do 3 sekund, zobrazit ji
 let loadingTimeout: ReturnType<typeof setTimeout> | null = null
 
 watch(
@@ -415,7 +479,7 @@ watch(
 					isLoading.value = false
 					mapReady.value = true
 				}
-			}, 5000)
+			}, 3000)
 		} else {
 			// Zrušit timeout když se načte
 			if (loadingTimeout) {
@@ -442,6 +506,19 @@ onFloorChange(() => {
 function handleFloorChange(floorId: string) {
 	if (state.currentFloorId === floorId) return
 	selectFloor(floorId)
+}
+
+// Hover handlers pro Section → composable bridge
+function handleUnitHover(unitCode: string, position: { x: number; y: number }) {
+	showUnitPopup(unitCode, position)
+}
+
+function handleUnitHoverLeave() {
+	hideUnitPopup()
+}
+
+function cancelPopupHide() {
+	cancelHide()
 }
 
 // Handler pro načtení SVG okolí

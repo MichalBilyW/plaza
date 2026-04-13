@@ -131,12 +131,23 @@ function getTodayOpeningHours(
 }
 
 /**
- * Načte SVG soubor, extrahuje unit kódy a vrátí i raw obsah
+ * In-memory cache pro SVG soubory — čtení z disku je pomalé,
+ * ale SVG se mění jen při uploadu v CMS.
+ */
+const svgCache = new Map<string, { unitCodes: string[]; svgContent: string | null }>()
+
+/**
+ * Načte SVG soubor, extrahuje unit kódy a vrátí i raw obsah.
+ * Výsledek je cachovaný v paměti.
  */
 async function loadSvgFile(
 	svgPath: string,
 ): Promise<{ unitCodes: string[]; svgContent: string | null }> {
 	if (!svgPath) return { unitCodes: [], svgContent: null }
+
+	// Cache hit
+	const cached = svgCache.get(svgPath)
+	if (cached) return cached
 
 	try {
 		// SVG soubory nahrané přes /api/upload jsou uloženy v public/uploads/
@@ -155,7 +166,9 @@ async function loadSvgFile(
 		const fullPath = join(publicDir, relativePath)
 
 		const svgContent = await readFile(fullPath, 'utf-8')
-		return { unitCodes: extractUnitCodesFromSvg(svgContent), svgContent }
+		const result = { unitCodes: extractUnitCodesFromSvg(svgContent), svgContent }
+		svgCache.set(svgPath, result)
+		return result
 	} catch (error) {
 		console.warn(`Could not read SVG file ${svgPath}:`, error)
 		return { unitCodes: [], svgContent: null }
@@ -194,6 +207,7 @@ export default defineEventHandler(async (event) => {
 			floorId: 1,
 			openingHours: 1,
 			specialOpeningHours: 1,
+			publishDate: 1,
 		},
 	).lean()
 
@@ -208,6 +222,7 @@ export default defineEventHandler(async (event) => {
 				logo: shop.logo,
 				isActive: shop.isActive,
 				todayHours: getTodayOpeningHours(shop.openingHours, shop.specialOpeningHours),
+				publishDate: shop.publishDate ? new Date(shop.publishDate).toISOString() : undefined,
 			})
 		}
 	}

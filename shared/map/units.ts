@@ -31,6 +31,8 @@ export interface MapShopData {
 	isActive: boolean
 	/** Dnešní otevírací hodiny */
 	todayHours: TodayOpeningHours
+	/** Datum otevření (upcoming shop) */
+	publishDate?: string
 }
 
 /** Jednotka mapy s přiřazeným obchodem */

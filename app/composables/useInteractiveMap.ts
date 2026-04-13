@@ -4,8 +4,8 @@
  * Poskytuje:
  * - Načítání dat pater a jednotek z API
  * - Správu aktuálně vybraného patra
- * - Hover/click stav jednotek
- * - Helper pro stylování SVG elementů
+ * - Hover popup (desktop) / tap popup (mobile)
+ * - Klik na unit = navigace na detail obchodu
  */
 
 import type { FloorUnitsResponse, MapUnit } from '~~/shared/map/units'
@@ -13,12 +13,12 @@ import type { FloorUnitsResponse, MapUnit } from '~~/shared/map/units'
 export interface MapState {
 	/** Aktuálně vybrané patro (floorId) */
 	currentFloorId: string | null
-	/** Jednotka nad kterou je kurzor */
-	hoveredUnitCode: string | null
-	/** Jednotka, která je vybraná (pro popup) */
-	selectedUnit: MapUnit | null
+	/** Jednotka zobrazená v popup (hover desktop / tap mobile) */
+	hoveredUnit: MapUnit | null
 	/** Pozice popupu */
 	popupPosition: { x: number; y: number } | null
+	/** Unitcode pro CSS třídu zvýraznění */
+	hoveredUnitCode: string | null
 }
 
 export function useInteractiveMap(options?: { initialFloorId?: string }) {
@@ -50,9 +50,9 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 	// Reactive state
 	const state = reactive<MapState>({
 		currentFloorId: null,
-		hoveredUnitCode: null,
-		selectedUnit: null,
+		hoveredUnit: null,
 		popupPosition: null,
+		hoveredUnitCode: null,
 	})
 
 	// Computed: aktuální patro
@@ -121,50 +121,114 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 			trackMapFloorSelect(floor.floorName, floor.level)
 		}
 		state.currentFloorId = floorId
-		state.selectedUnit = null
+		state.hoveredUnit = null
 		state.popupPosition = null
+		state.hoveredUnitCode = null
 		// Zavolat callback pro centrování při změně patra
 		nextTick(() => onFloorChangeCallback?.())
 	}
 
+	// ─── Hover logika (desktop) ───
+
+	let hoverLeaveTimeout: ReturnType<typeof setTimeout> | null = null
+
 	/**
-	 * Handler pro hover nad jednotkou
+	 * Zobrazit popup nad unitem (desktop hover / mobile tap)
 	 */
-	function handleUnitHover(unitCode: string | null) {
+	function showUnitPopup(unitCode: string, position: { x: number; y: number }) {
+		// Zrušit případný leave timeout
+		if (hoverLeaveTimeout) {
+			clearTimeout(hoverLeaveTimeout)
+			hoverLeaveTimeout = null
+		}
+
+		const unit = unitsMap.value.get(unitCode)
+		if (!unit?.shop) return
+
+		state.hoveredUnit = unit
 		state.hoveredUnitCode = unitCode
+		state.popupPosition = position
 	}
 
 	/**
-	 * Handler pro kliknutí na jednotku
+	 * Schovat popup s debounce (aby neblikal při přechodu mezi unity)
 	 */
-	function handleUnitClick(unitCode: string, event: MouseEvent) {
+	function hideUnitPopup() {
+		if (hoverLeaveTimeout) clearTimeout(hoverLeaveTimeout)
+		hoverLeaveTimeout = setTimeout(() => {
+			state.hoveredUnit = null
+			state.popupPosition = null
+			state.hoveredUnitCode = null
+		}, 60)
+	}
+
+	/**
+	 * Zrušit debounced hide (uživatel najel myší na popup)
+	 */
+	function cancelHide() {
+		if (hoverLeaveTimeout) {
+			clearTimeout(hoverLeaveTimeout)
+			hoverLeaveTimeout = null
+		}
+	}
+
+	/**
+	 * Okamžitě schovat popup (pro tap mimo / escape)
+	 */
+	function closePopup() {
+		if (hoverLeaveTimeout) clearTimeout(hoverLeaveTimeout)
+		state.hoveredUnit = null
+		state.popupPosition = null
+		state.hoveredUnitCode = null
+	}
+
+	// ─── Click/Tap logika ───
+
+	/** Upcoming shop — publishDate v budoucnosti → neklikatelný */
+	function isUpcoming(unit: MapUnit): boolean {
+		return !!unit.shop?.publishDate && new Date(unit.shop.publishDate).getTime() > Date.now()
+	}
+
+	/**
+	 * Desktop klik = navigace na detail obchodu (ne pro upcoming)
+	 */
+	function handleUnitClick(unitCode: string) {
 		const unit = unitsMap.value.get(unitCode)
-		if (!unit) return
+		if (!unit?.shop) return
+		if (isUpcoming(unit)) return
 
-		// Pokud jednotka nemá přiřazený obchod, ignorovat kliknutí
-		if (!unit.shop) return
-
-		// Track click on map unit
 		trackMapUnitClick(
 			unit.shop.name,
 			'shop',
 			currentFloor.value?.floorName || 'unknown',
 		)
 
-		// Nastavit vybranou jednotku a pozici popupu
-		state.selectedUnit = unit
-		state.popupPosition = {
-			x: event.clientX,
-			y: event.clientY,
-		}
+		navigateTo(`/obchody/${unit.shop.slug}`)
 	}
 
 	/**
-	 * Zavře popup
+	 * Mobile tap na unit:
+	 * - Pokud popup není vidět nebo je jiný unit → zobrazit popup
+	 * - Pokud tap na stejný unit (popup už viditelný) → navigovat na detail (ne pro upcoming)
 	 */
-	function closePopup() {
-		state.selectedUnit = null
-		state.popupPosition = null
+	function handleUnitTap(unitCode: string, position: { x: number; y: number }) {
+		const unit = unitsMap.value.get(unitCode)
+		if (!unit?.shop) return
+
+		if (state.hoveredUnit?.unitCode === unitCode) {
+			// Druhý tap na stejný unit → navigace (ne pro upcoming)
+			if (isUpcoming(unit)) return
+
+			trackMapUnitClick(
+				unit.shop.name,
+				'shop',
+				currentFloor.value?.floorName || 'unknown',
+			)
+			navigateTo(`/obchody/${unit.shop.slug}`)
+		} else {
+			// První tap → zobrazit popup
+			showUnitPopup(unitCode, position)
+		}
 	}
 
 	/**
@@ -181,7 +245,6 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 	function getUnitClasses(unitCode: string): string {
 		const unit = unitsMap.value.get(unitCode)
 		const isHovered = state.hoveredUnitCode === unitCode
-		const isSelected = state.selectedUnit?.unitCode === unitCode
 
 		const classes: string[] = ['map-unit', 'transition-all', 'duration-300']
 
@@ -192,10 +255,8 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 			// Obsazená jednotka - interaktivní
 			classes.push('map-unit--occupied', 'cursor-pointer')
 
-			if (isSelected) {
+			if (isHovered) {
 				classes.push('map-unit--selected')
-			} else if (isHovered) {
-				classes.push('map-unit--hovered')
 			}
 		}
 
@@ -226,8 +287,11 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 
 		// Actions
 		selectFloor,
-		handleUnitHover,
+		showUnitPopup,
+		hideUnitPopup,
+		cancelHide,
 		handleUnitClick,
+		handleUnitTap,
 		closePopup,
 		refresh,
 		onFloorChange,
