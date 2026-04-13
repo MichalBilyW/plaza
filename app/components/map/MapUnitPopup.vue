@@ -16,21 +16,18 @@
 					@mouseleave="emit('close')"
 				>
 					<div class="p-3 md:p-5 text-center">
-					<!-- Logo nebo název obchodu -->
-					<img
-						v-if="unit.shop?.logo && !logoFailed"
-						:src="unit.shop.logo"
-						:alt="unit.shop.name"
-						class="mx-auto mb-2 object-contain max-h-12 md:max-h-[80px]"
-						style="max-width: 140px"
-						@error="logoFailed = true"
-					/>
-					<h3
-						v-else
-						class="text-base md:text-xl font-bold text-gray-900 mb-2"
-					>
-						{{ unit.shop?.name }}
-					</h3>
+						<!-- Logo nebo název obchodu -->
+						<img
+							v-if="unit.shop?.logo && !logoFailed"
+							:src="unit.shop.logo"
+							:alt="unit.shop.name"
+							class="mx-auto mb-2 object-contain max-h-12 md:max-h-[80px]"
+							style="max-width: 140px"
+							@error="logoFailed = true"
+						/>
+						<h3 v-else class="text-base md:text-xl font-bold text-gray-900 mb-2">
+							{{ unit.shop?.name }}
+						</h3>
 
 						<!-- Otevírací hodiny (ne pro upcoming) -->
 						<p v-if="!isUpcoming" class="text-sm text-gray-900 mb-4">
@@ -158,7 +155,8 @@ const popupStyle = computed(() => {
 	return {
 		left: `${left}px`,
 		top: `${top}px`,
-		transition: 'left 0.25s cubic-bezier(0.16, 1, 0.3, 1), top 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+		transition:
+			'left 0.25s cubic-bezier(0.16, 1, 0.3, 1), top 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
 	}
 })
 

@@ -81,7 +81,10 @@
 								{{ t('common.specialOpeningHoursToday') }}
 							</div>
 							<!-- Only show time if not closed (closed status is already shown above) -->
-							<div v-if="!todaySpecialHours.closed" class="font-black text-plaza-dark">
+							<div
+								v-if="!todaySpecialHours.closed"
+								class="font-black text-plaza-dark"
+							>
 								{{ formatTime(todaySpecialHours.open || '09:00') }} -
 								{{ formatTime(todaySpecialHours.close || '21:00') }}
 							</div>

@@ -174,10 +174,12 @@ const shopSchema = new Schema<IShopDocument>(
 			ref: 'Floor',
 			index: true,
 		},
-		categoryIds: [{
-			type: Schema.Types.ObjectId,
-			ref: 'Category',
-		}],
+		categoryIds: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Category',
+			},
+		],
 		unitCode: {
 			type: String,
 			trim: true,
@@ -218,7 +220,8 @@ const shopSchema = new Schema<IShopDocument>(
 			transform: (_doc, ret) => {
 				ret._id = ret._id.toString()
 				if (ret.floorId) ret.floorId = ret.floorId.toString()
-				if (ret.categoryIds) ret.categoryIds = ret.categoryIds.map((id: Types.ObjectId) => id.toString())
+				if (ret.categoryIds)
+					ret.categoryIds = ret.categoryIds.map((id: Types.ObjectId) => id.toString())
 				delete ret.__v
 				return ret
 			},

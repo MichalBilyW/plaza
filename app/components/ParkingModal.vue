@@ -8,11 +8,7 @@
 				></div>
 			</div>
 
-			<ONasParkingSection
-				v-else
-				:general-info="generalInfo"
-				:pending="false"
-			/>
+			<ONasParkingSection v-else :general-info="generalInfo" :pending="false" />
 		</div>
 	</UiModal>
 </template>

@@ -222,7 +222,9 @@ export default defineEventHandler(async (event) => {
 				logo: shop.logo,
 				isActive: shop.isActive,
 				todayHours: getTodayOpeningHours(shop.openingHours, shop.specialOpeningHours),
-				publishDate: shop.publishDate ? new Date(shop.publishDate).toISOString() : undefined,
+				publishDate: shop.publishDate
+					? new Date(shop.publishDate).toISOString()
+					: undefined,
 			})
 		}
 	}

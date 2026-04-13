@@ -166,10 +166,18 @@
 					<NuxtLink
 						to="/cms/patra"
 						class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-cms-shops-900/30 transition-colors group"
-						:class="{ 'bg-cms-shops-900/40 border-l-2 border-cms-shops-400': $route.path.startsWith('/cms/patra') }"
+						:class="{
+							'bg-cms-shops-900/40 border-l-2 border-cms-shops-400':
+								$route.path.startsWith('/cms/patra'),
+						}"
 						@click="sidebarOpen = false"
 					>
-						<svg class="w-5 h-5 text-cms-shops-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<svg
+							class="w-5 h-5 text-cms-shops-400"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
 							<path
 								stroke-linecap="round"
 								stroke-linejoin="round"
@@ -183,7 +191,7 @@
 									? 'text-cms-shops-300'
 									: 'group-hover:text-cms-shops-300'
 							"
-							>
+						>
 							{{ $t('cms.sidebar.floors') }}</span
 						>
 					</NuxtLink>
@@ -191,10 +199,18 @@
 					<NuxtLink
 						to="/cms/mapa"
 						class="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-cms-shops-900/30 transition-colors group"
-						:class="{ 'bg-cms-shops-900/40 border-l-2 border-cms-shops-400': $route.path.startsWith('/cms/mapa') }"
+						:class="{
+							'bg-cms-shops-900/40 border-l-2 border-cms-shops-400':
+								$route.path.startsWith('/cms/mapa'),
+						}"
 						@click="sidebarOpen = false"
 					>
-						<svg class="w-5 h-5 text-cms-shops-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<svg
+							class="w-5 h-5 text-cms-shops-400"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
 							<path
 								stroke-linecap="round"
 								stroke-linejoin="round"
@@ -208,8 +224,8 @@
 									? 'text-cms-shops-300'
 									: 'group-hover:text-cms-shops-300'
 							"
-							>
-						{{ $t('cms.sidebar.map') }}</span
+						>
+							{{ $t('cms.sidebar.map') }}</span
 						>
 					</NuxtLink>
 

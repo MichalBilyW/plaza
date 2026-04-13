@@ -2,19 +2,23 @@
 	<section v-if="!pending && contacts && contacts.length > 0" class="py-12">
 		<div class="container-small px-4">
 			<!-- Nadpis -->
-			<h2 class="font-heading font-black text-2xl md:text-4xl text-plaza-dark mb-8 text-center uppercase">
+			<h2
+				class="font-heading font-black text-2xl md:text-4xl text-plaza-dark mb-8 text-center uppercase"
+			>
 				{{ t('aboutPage.contactsSection.title') }}
 			</h2>
 
 			<!-- Skeleton -->
 			<div v-if="pending" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-				<div v-for="i in 3" :key="i" class="h-[130px] skeleton-shimmer rounded-[5px_20px_5px_5px]"></div>
+				<div
+					v-for="i in 3"
+					:key="i"
+					class="h-[130px] skeleton-shimmer rounded-[5px_20px_5px_5px]"
+				></div>
 			</div>
 
 			<!-- Grid kontaktů -->
-			<div
-				class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center"
-			>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
 				<div
 					v-for="(contact, index) in contacts"
 					:key="index"

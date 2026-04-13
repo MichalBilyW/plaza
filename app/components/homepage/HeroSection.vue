@@ -9,6 +9,7 @@
 		<section class="z-10 container relative transparent overflow-hidden" aria-label="Hero">
 			<!-- Border overlay -->
 			<div
+				v-if="showBorder"
 				class="absolute top-0 left-0 w-[calc(100%-16px)] h-[calc(240px-16px)] md:w-[calc(100%-32px)] md:h-[calc(400px-32px)] bg-transparent m-2 md:m-4 border md:border-2 border-white/70 rounded-[5px_20px_5px_5px] z-10 pointer-events-none"
 				aria-hidden="true"
 			></div>
@@ -40,4 +41,5 @@ const props = defineProps<{
 }>()
 
 const heroImage = computed(() => props.homepage?.heroImage || '/images/homepage/default-hero.jpg')
+const showBorder = computed(() => props.homepage?.showHeroBorder ?? true)
 </script>

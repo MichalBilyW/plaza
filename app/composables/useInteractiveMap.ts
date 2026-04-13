@@ -197,11 +197,7 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 		if (!unit?.shop) return
 		if (isUpcoming(unit)) return
 
-		trackMapUnitClick(
-			unit.shop.name,
-			'shop',
-			currentFloor.value?.floorName || 'unknown',
-		)
+		trackMapUnitClick(unit.shop.name, 'shop', currentFloor.value?.floorName || 'unknown')
 
 		navigateTo(`/obchody/${unit.shop.slug}`)
 	}
@@ -219,11 +215,7 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 			// Druhý tap na stejný unit → navigace (ne pro upcoming)
 			if (isUpcoming(unit)) return
 
-			trackMapUnitClick(
-				unit.shop.name,
-				'shop',
-				currentFloor.value?.floorName || 'unknown',
-			)
+			trackMapUnitClick(unit.shop.name, 'shop', currentFloor.value?.floorName || 'unknown')
 			navigateTo(`/obchody/${unit.shop.slug}`)
 		} else {
 			// První tap → zobrazit popup

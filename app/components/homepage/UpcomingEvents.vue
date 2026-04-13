@@ -5,7 +5,10 @@
 	>
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<!-- Desktop: side-by-side layout / Mobile: stacked -->
-			<div class="flex flex-col lg:flex-row lg:items-start lg:gap-10" :class="{ 'lg:justify-center': events.length <= 2 }">
+			<div
+				class="flex flex-col lg:flex-row lg:items-start lg:gap-10"
+				:class="{ 'lg:justify-center': events.length <= 2 }"
+			>
 				<!-- Left side: heading + perex + arrows -->
 				<div class="lg:w-[220px] shrink-0 mb-8 lg:mb-0 lg:pt-4">
 					<h2

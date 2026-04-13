@@ -6,67 +6,67 @@
 name: CI
 
 on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main]
 
 env:
-  NODE_VERSION: '22'
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    NODE_VERSION: '22'
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  # ---------------------------------------------------------------------------
-  # Quality Checks (fast, runs first)
-  # ---------------------------------------------------------------------------
-  quality:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    # ---------------------------------------------------------------------------
+    # Quality Checks (fast, runs first)
+    # ---------------------------------------------------------------------------
+    quality:
+        name: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+            - name: Install dependencies
+              run: npm install
 
-      - name: Lint
-        run: npm run lint
+            - name: Lint
+              run: npm run lint
 
-      # TypeCheck dočasně disabled - projekt má existující TS chyby
-      # které nebrání buildu, ale typecheck je přísný
-      # TODO: opravit TS chyby a povolit typecheck
-      # - name: TypeScript check
-      #   run: npx nuxi typecheck
+            # TypeCheck dočasně disabled - projekt má existující TS chyby
+            # které nebrání buildu, ale typecheck je přísný
+            # TODO: opravit TS chyby a povolit typecheck
+            # - name: TypeScript check
+            #   run: npx nuxi typecheck
 
-  # ---------------------------------------------------------------------------
-  # Tests
-  # ---------------------------------------------------------------------------
-  test:
-    name: Tests
-    runs-on: ubuntu-latest
-    services:
-      mongodb:
-        image: mongo:7
-        ports:
-          - 27017:27017
-    env:
-      NUXT_MONGO_URI: mongodb://localhost:27017/plaza_test
-    steps:
-      - uses: actions/checkout@v4
+    # ---------------------------------------------------------------------------
+    # Tests
+    # ---------------------------------------------------------------------------
+    test:
+        name: Tests
+        runs-on: ubuntu-latest
+        services:
+            mongodb:
+                image: mongo:7
+                ports:
+                    - 27017:27017
+        env:
+            NUXT_MONGO_URI: mongodb://localhost:27017/plaza_test
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+            - name: Install dependencies
+              run: npm install
 
-      - name: Run tests
-        run: npm run test
+            - name: Run tests
+              run: npm run test

@@ -11,6 +11,7 @@ import mongoose, { Schema } from 'mongoose'
 
 export interface IHomepage {
 	heroImage?: string
+	showHeroBorder?: boolean
 }
 
 export interface IHomepageDocument extends IHomepage, Document {
@@ -27,6 +28,10 @@ const homepageSchema = new Schema(
 		heroImage: {
 			type: String,
 			trim: true,
+		},
+		showHeroBorder: {
+			type: Boolean,
+			default: true,
 		},
 	},
 	{

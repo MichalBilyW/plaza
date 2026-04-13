@@ -106,7 +106,10 @@ export function useMapZoom() {
 			e.preventDefault()
 			const direction = e.deltaY < 0 ? 1 : -1
 			const current = panzoomInstance.getScale()
-			const newScale = Math.min(MAX_ZOOM, Math.max(1, current + direction * WHEEL_ZOOM_STEP * current))
+			const newScale = Math.min(
+				MAX_ZOOM,
+				Math.max(1, current + direction * WHEEL_ZOOM_STEP * current),
+			)
 			panzoomInstance.zoomToPoint(newScale, e, { animate: false })
 			if (newScale <= 1) {
 				panzoomInstance.reset({ animate: false })

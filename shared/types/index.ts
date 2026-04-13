@@ -309,6 +309,7 @@ export interface GeneralInfo extends BaseEntity {
 // ==========================================
 export interface Homepage extends BaseEntity {
 	heroImage?: string
+	showHeroBorder?: boolean
 }
 
 // ==========================================

@@ -458,6 +458,7 @@ export type GeneralInfoUpdateInput = z.infer<typeof generalInfoUpdateSchema>
 
 export const homepageUpdateSchema = z.object({
 	heroImage: z.string().optional(),
+	showHeroBorder: z.boolean().optional(),
 })
 
 export type HomepageUpdateInput = z.infer<typeof homepageUpdateSchema>

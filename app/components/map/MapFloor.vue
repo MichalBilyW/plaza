@@ -254,7 +254,10 @@ function rectToPolygon(rect: SVGRectElement): Point[] | null {
 	if (w <= 0 || h <= 0) return null
 
 	const corners: Point[] = [
-		[x, y], [x + w, y], [x + w, y + h], [x, y + h],
+		[x, y],
+		[x + w, y],
+		[x + w, y + h],
+		[x, y + h],
 	]
 
 	// Pokud rect má transform (rotate, translate), převést rohy do parent coordinate space
@@ -263,10 +266,13 @@ function rectToPolygon(rect: SVGRectElement): Point[] | null {
 	if (rectCTM && parentCTM) {
 		try {
 			const toParent = parentCTM.inverse().multiply(rectCTM)
-			return corners.map(([cx, cy]) => [
-				toParent.a * cx + toParent.c * cy + toParent.e,
-				toParent.b * cx + toParent.d * cy + toParent.f,
-			] as Point)
+			return corners.map(
+				([cx, cy]) =>
+					[
+						toParent.a * cx + toParent.c * cy + toParent.e,
+						toParent.b * cx + toParent.d * cy + toParent.f,
+					] as Point,
+			)
 		} catch {
 			// inverse() může selhat pro singulární matici
 		}
@@ -292,7 +298,14 @@ function pointInPolygon(x: number, y: number, polygon: Point[]): boolean {
 }
 
 /** Squared distance from point to line segment */
-function distToSegmentSq(px: number, py: number, ax: number, ay: number, bx: number, by: number): number {
+function distToSegmentSq(
+	px: number,
+	py: number,
+	ax: number,
+	ay: number,
+	bx: number,
+	by: number,
+): number {
 	let dx = bx - ax
 	let dy = by - ay
 	if (dx !== 0 || dy !== 0) {
@@ -320,9 +333,15 @@ function distToPolygonEdge(x: number, y: number, polygon: Point[]): number {
  * Iterativní grid-search s progresivním zjemňováním.
  * Vrací { x, y, r } kde r = poloměr vepsané kružnice v daném bodě.
  */
-function poleOfInaccessibility(polygon: Point[], precision: number = 1): { x: number; y: number; r: number } {
+function poleOfInaccessibility(
+	polygon: Point[],
+	precision: number = 1,
+): { x: number; y: number; r: number } {
 	// Bounding box polygonu
-	let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+	let minX = Infinity,
+		minY = Infinity,
+		maxX = -Infinity,
+		maxY = -Infinity
 	for (const [px, py] of polygon) {
 		if (px < minX) minX = px
 		if (py < minY) minY = py
@@ -338,10 +357,14 @@ function poleOfInaccessibility(polygon: Point[], precision: number = 1): { x: nu
 	// Hrubý grid přes celý bbox
 	let bestX = minX + width / 2
 	let bestY = minY + height / 2
-	let bestDist = pointInPolygon(bestX, bestY, polygon) ? distToPolygonEdge(bestX, bestY, polygon) : 0
+	let bestDist = pointInPolygon(bestX, bestY, polygon)
+		? distToPolygonEdge(bestX, bestY, polygon)
+		: 0
 
 	// Centroid jako kandidát
-	let cx = 0, cy = 0, area = 0
+	let cx = 0,
+		cy = 0,
+		area = 0
 	for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
 		const [ax, ay] = polygon[j]
 		const [bx, by] = polygon[i]

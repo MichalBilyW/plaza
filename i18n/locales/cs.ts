@@ -661,6 +661,8 @@ export default {
 				'Úvodní fotka na hlavní stránce. Doporučený formát: široký obrázek 16:9, min. 1920x1080px',
 			defaultImage: 'Výchozí fotka',
 			defaultImageInfo: 'Pokud není nahrána vlastní fotka, zobrazí se tato výchozí:',
+			showHeroBorder: 'Zobrazit dekorativní rámeček',
+			showHeroBorderHint: 'Zobrazí bílý rámeček přes úvodní fotku',
 		},
 		generalInfo: {
 			title: 'O nás',
@@ -682,9 +684,11 @@ export default {
 			specialOpeningHours: 'Speciální otevírací doba',
 			parkingSection: 'Sekce Parkování',
 			parkingContent: 'Informace o parkování',
-			parkingContentHint: 'Základní informace o parkovišti (povoleno: odražky, číslované odražky, tučné, kurzíva, přeškrtnuté, odkaz)',
+			parkingContentHint:
+				'Základní informace o parkovišti (povoleno: odražky, číslované odražky, tučné, kurzíva, přeškrtnuté, odkaz)',
 			parkingImage: 'Fotka parkoviště',
-			parkingImageHint: 'Doporučená fotka parkoviště. Výchozí obrázek se zobrazí pokud žádná není nahrána.',
+			parkingImageHint:
+				'Doporučená fotka parkoviště. Výchozí obrázek se zobrazí pokud žádná není nahrána.',
 			parkingDefaultImage: 'Výchozí fotka',
 			parkingDefaultImageInfo: 'Pokud není nahrána vlastní fotka, zobrazí se tato výchozí:',
 			parkingOtherInfo: 'Ostatní informace o parkování',

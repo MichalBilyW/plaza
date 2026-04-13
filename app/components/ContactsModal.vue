@@ -8,11 +8,7 @@
 				></div>
 			</div>
 
-			<ONasContactsSection
-				v-else
-				:contacts="generalInfo?.contacts"
-				:pending="false"
-			/>
+			<ONasContactsSection v-else :contacts="generalInfo?.contacts" :pending="false" />
 		</div>
 	</UiModal>
 </template>

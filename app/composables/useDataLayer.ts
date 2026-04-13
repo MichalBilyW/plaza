@@ -67,11 +67,7 @@ export function useDataLayer() {
 	}
 
 	// === Search & Filter ===
-	function trackSearch(
-		query: string,
-		section: 'shops' | 'events' | 'map',
-		resultsCount: number,
-	) {
+	function trackSearch(query: string, section: 'shops' | 'events' | 'map', resultsCount: number) {
 		push({
 			event: 'search',
 			search_term: query,
@@ -124,10 +120,7 @@ export function useDataLayer() {
 	}
 
 	// === Modals ===
-	function trackModalOpen(
-		modalType: 'opening_hours' | 'event' | 'service',
-		modalTitle?: string,
-	) {
+	function trackModalOpen(modalType: 'opening_hours' | 'event' | 'service', modalTitle?: string) {
 		push({
 			event: 'modal_open',
 			modal_type: modalType,
@@ -198,11 +191,7 @@ export function useDataLayer() {
 		})
 	}
 
-	function trackSliderChange(
-		slideIndex: number,
-		slideName: string | undefined,
-		context: string,
-	) {
+	function trackSliderChange(slideIndex: number, slideName: string | undefined, context: string) {
 		push({
 			event: 'slider_change',
 			slide_index: slideIndex,

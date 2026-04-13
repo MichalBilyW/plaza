@@ -320,7 +320,7 @@ NUXT_MONGO_URI="mongodb+srv://..." npm run backup:db
 Výsledek: složka `mongo-backup/YYYY-MM-DD_HH-MM-SS/` s jedním `.json` souborem na kolekci + `_meta.json`.
 Složku pak commitni do Gitu — záloha cestuje s kódem.
 
-> ⚠️  `sessions.json` je součástí zálohy, ale neobsahuje hesla (jen JWT tokeny s omezenou platností).
+> ⚠️ `sessions.json` je součástí zálohy, ale neobsahuje hesla (jen JWT tokeny s omezenou platností).
 
 ### MongoDB záloha na serveru (ruční)
 
@@ -350,6 +350,7 @@ NUXT_MONGO_URI="mongodb+srv://..." npm run restore:db -- mongo-backup/2026-04-10
 Skript smaže obsah každé kolekce a naplní ji daty ze zálohy. Prázdné kolekce přeskočí.
 
 Alternativně přes MongoDB Compass:
+
 - Připoj se k cílové DB
 - V kolekci klikni **Add Data → Import JSON**
 - Vyber soubor z `mongo-backup/<datum>/<kolekce>.json`

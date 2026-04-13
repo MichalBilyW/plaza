@@ -58,6 +58,23 @@
 						preview-class="w-full h-64"
 					/>
 
+					<!-- Dekorativní rámeček -->
+					<label class="flex items-center gap-3 cursor-pointer">
+						<input
+							v-model="form.showHeroBorder"
+							type="checkbox"
+							class="w-5 h-5 rounded border-gray-300 text-cms-shops-600 focus:ring-cms-shops-500"
+						/>
+						<div>
+							<span class="text-sm font-medium text-gray-700">
+								{{ t('cms.homepage.showHeroBorder') }}
+							</span>
+							<p class="text-xs text-gray-500">
+								{{ t('cms.homepage.showHeroBorderHint') }}
+							</p>
+						</div>
+					</label>
+
 					<!-- Výchozí fotka - zobrazit pouze když není nahrána vlastní -->
 					<div
 						v-if="!form.heroImage"
@@ -133,6 +150,7 @@ const flash = useFlashMessages()
 // Form state
 const form = reactive({
 	heroImage: '' as string | undefined,
+	showHeroBorder: true,
 })
 
 const saving = ref(false)
@@ -147,6 +165,7 @@ watch(
 	(newData) => {
 		if (newData) {
 			form.heroImage = newData.heroImage || ''
+			form.showHeroBorder = newData.showHeroBorder ?? true
 		}
 	},
 	{ immediate: true },
@@ -173,6 +192,7 @@ async function handleSubmit() {
 			method: 'PUT',
 			body: {
 				heroImage: form.heroImage?.trim() || '',
+				showHeroBorder: form.showHeroBorder,
 			},
 		})
 
