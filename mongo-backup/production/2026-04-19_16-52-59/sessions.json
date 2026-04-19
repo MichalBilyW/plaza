@@ -817,5 +817,31 @@
     "createdAt": "2026-04-07T09:09:37.804Z",
     "updatedAt": "2026-04-07T09:09:37.804Z",
     "__v": 0
+  },
+  {
+    "_id": "69de060994a872da513df7c2",
+    "userId": "69c6a4fb7033f02233a41827",
+    "refreshToken": "628d132d828030b15785a4530729627776ebe4b4aea477a8bf1e7eb6adca83c5ee9b48c303a4f592d84adc984a12fe352700e163cfa999bc80e0e4e57efa3c9e",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15",
+    "ipAddress": "193.179.119.158",
+    "isValid": true,
+    "expiresAt": "2026-04-21T09:16:57.501Z",
+    "lastActivityAt": "2026-04-14T09:16:57.501Z",
+    "createdAt": "2026-04-14T09:16:57.503Z",
+    "updatedAt": "2026-04-14T09:16:57.503Z",
+    "__v": 0
+  },
+  {
+    "_id": "69e09a6f94a872da513dff55",
+    "userId": "69c6a4297033f02233a41820",
+    "refreshToken": "c8e30c87dbffde5a5a57e9554e7201f4036fd3f524d2e8e69b0a51da74ecb903a880b32644823f98325bdd05e6c6c6ad684364fa1164a89307fdd1562de1e8da",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+    "ipAddress": "78.80.80.63",
+    "isValid": true,
+    "expiresAt": "2026-04-23T08:14:39.218Z",
+    "lastActivityAt": "2026-04-16T08:14:39.218Z",
+    "createdAt": "2026-04-16T08:14:39.219Z",
+    "updatedAt": "2026-04-16T08:14:39.219Z",
+    "__v": 0
   }
 ]

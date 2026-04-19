@@ -93,11 +93,20 @@ export interface Shop extends BaseEntity {
 	}
 
 	// Umístění
+	/** @deprecated Použij floorIds */
 	floorId?: string
+	/** @deprecated Použij floors */
 	floor?: Floor
+	/** Patra, kde se obchod nachází (může být na více patrech) */
+	floorIds?: string[]
+	/** Populovaná patra */
+	floors?: Floor[]
 	categoryIds?: string[]
 	categories?: Category[]
+	/** @deprecated Použij unitCodes */
 	unitCode?: string
+	/** Kódy jednotek na mapě (obchod může zabírat více jednotek) */
+	unitCodes?: string[]
 	mapPosition?: {
 		x: number
 		y: number

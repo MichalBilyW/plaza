@@ -356,6 +356,10 @@ watch(search, (val) => {
 	searchDebounceTimer = setTimeout(() => {
 		debouncedSearch.value = val
 	}, 200)
+	// Automaticky zobrazit našeptávač při psaní
+	if (val.trim()) {
+		showSuggestions.value = true
+	}
 })
 
 // Vyhledávání ve všech patrech - seskupené podle patra (kromě aktuálního)
@@ -367,6 +371,10 @@ interface FloorSearchGroup {
 
 const otherFloorsResults = computed<FloorSearchGroup[]>(() => {
 	const query = search.value.trim().toLowerCase()
+	// Explicitně přistupovat k currentFloorId pro reaktivitu
+	const currentFloorId = state.currentFloorId
+	const allFloors = floors.value
+
 	if (!query) return []
 
 	// Escape regex speciálních znaků (stejně jako na /obchody)
@@ -375,9 +383,9 @@ const otherFloorsResults = computed<FloorSearchGroup[]>(() => {
 
 	const results: FloorSearchGroup[] = []
 
-	for (const floor of floors.value) {
+	for (const floor of allFloors) {
 		// Přeskočit aktuální patro (to se zvýrazňuje přímo v mapě)
-		if (floor.floorId === state.currentFloorId) continue
+		if (floor.floorId === currentFloorId) continue
 
 		const matchedShops: FloorSearchGroup['shops'] = []
 

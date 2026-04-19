@@ -53,7 +53,10 @@ export default defineEventHandler(
 		await shop.save()
 
 		// Vrátit s populací
-		const populated = await Shop.findById(id).populate('floorId', 'name level').lean()
+		const populated = await Shop.findById(id)
+			.populate('floorId', 'name level')
+			.populate('floorIds', 'name level')
+			.lean()
 
 		return populated
 	}),

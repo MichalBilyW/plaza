@@ -1,5 +1,5 @@
 <template>
-	<section ref="sectionRef" class="relative pb-20 -mt-[50px]">
+	<section ref="sectionRef" class="relative pb-20 -mt-[35px] lg:-mt-[50px]">
 		<div class="absolute inset-0"></div>
 
 		<div class="relative z-10 w-full max-w-[840px] mx-auto px-4 sm:px-8 lg:px-12">
@@ -8,7 +8,7 @@
 			>
 				<!-- Left side - Info cards -->
 				<div
-					class="z-20 relative flex flex-col md:text-right md:items-center gap-1.5 md:-mr-2 mt-8 md:-mt-12 max-md:mb-4 shrink-0"
+					class="z-20 relative flex flex-col md:text-right md:items-center gap-1.5 md:-mr-2 mt-8 md:mt-0 max-md:mb-4 shrink-0"
 				>
 					<!-- Počet obchodů -->
 					<NuxtLink
@@ -39,7 +39,7 @@
 
 					<!-- Restaurace a kavárny -->
 					<NuxtLink
-						to="/obchody?kategorie=jidlo-a-obcerstveni"
+						to="/obchody?kategorie=restaurace-a-kavarny"
 						class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]"
 					>
 						<span class="font-bold text-plaza text-xl md:text-2xl lg:text-3xl">{{
@@ -74,7 +74,7 @@
 							animatedParkingCount
 						}}</span>
 						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
-							t('home.infoSection.parkingSpots')
+							t('home.infoSection.parking')
 						}}</span>
 						<svg
 							class="w-4 h-4 absolute right-3 top-3.5 md:top-[25px] inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
@@ -101,6 +101,29 @@
 								@click="openOpeningHoursModal"
 							>
 								{{ t('home.infoSection.openingHours') }}
+								<svg
+									class="w-4 h-4 absolute right-3 top-3.5 md:top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+									aria-hidden="true"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
+									/>
+								</svg>
+							</button>
+
+							<!-- Parkování -->
+							<button
+								type="button"
+								class="md:hidden relative group max-md:justify-center font-heading bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[250px] md:w-[320px] text-plaza-dark md:text-xl lg:text-2xl hover:bg-gray-50 transition-colors"
+								@click="openParkingModal"
+							>
+								{{ t('home.infoSection.parking') }}
 								<svg
 									class="w-4 h-4 absolute right-3 top-3.5 md:top-6 inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
 									fill="none"

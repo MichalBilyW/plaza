@@ -23,8 +23,11 @@
 		"validate": "npm run lint && npm run typecheck && npm run test",
 		"predeploy": "npm run validate && npm run build",
 		"health-check": "node scripts/health-check.mjs",
-		"backup:db": "tsx scripts/backup-db.ts",
-		"restore:db": "tsx scripts/restore-db.ts"
+		"backup:db:local": "npx tsx scripts/backup-db-local.ts",
+		"backup:db:prod": "npx tsx scripts/backup-db-prod.ts",
+		"restore:db": "npx tsx scripts/restore-db.ts",
+		"cleanup:uploads:dry": "npx tsx scripts/cleanup-uploads-prod.ts --dry-run",
+		"cleanup:uploads": "npx tsx scripts/cleanup-uploads-prod.ts"
 	},
 	"dependencies": {
 		"@formkit/icons": "^1.7.2",

@@ -25,12 +25,12 @@
 					class="w-full max-w-[280px] bg-white rounded-[5px_20px_5px_5px] shadow-lg p-5"
 				>
 					<!-- Název kontaktu -->
-					<p v-if="contact.title" class="font-medium text-plaza-dark mb-3">
+					<p v-if="contact.title" class="font-heading font-semibold uppercase font-medium text-plaza-dark mb-3">
 						{{ contact.title }}
 					</p>
 
 					<!-- Jméno -->
-					<p v-if="contact.name" class="text-plaza-dark">
+					<p v-if="contact.name" class="font-heading font-semibold text-plaza-dark">
 						{{ contact.name }}
 					</p>
 

@@ -51,9 +51,15 @@ export interface IShop {
 	email?: string
 	website?: string
 	socialLinks?: ISocialLinks
+	/** @deprecated Použij floorIds - pole pater */
 	floorId?: Types.ObjectId
+	/** Patra, kde se obchod nachází (může být na více patrech) */
+	floorIds?: Types.ObjectId[]
 	categoryIds?: Types.ObjectId[]
+	/** @deprecated Použij unitCodes - pole unit kódů */
 	unitCode?: string
+	/** Kódy jednotek na mapě (obchod může zabírat více jednotek) */
+	unitCodes?: string[]
 	mapPosition?: IMapPosition
 	mapPolygon?: string
 	openingHours?: IOpeningHoursEntry[]
@@ -169,23 +175,40 @@ const shopSchema = new Schema<IShopDocument>(
 		},
 		website: String,
 		socialLinks: socialLinksSchema,
+		/** @deprecated Zachováno pro zpětnou kompatibilitu, použij floorIds */
 		floorId: {
 			type: Schema.Types.ObjectId,
 			ref: 'Floor',
 			index: true,
 		},
+		/** Patra, kde se obchod nachází (může být na více patrech) */
+		floorIds: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Floor',
+			},
+		],
 		categoryIds: [
 			{
 				type: Schema.Types.ObjectId,
 				ref: 'Category',
 			},
 		],
+		/** @deprecated Zachováno pro zpětnou kompatibilitu, použij unitCodes */
 		unitCode: {
 			type: String,
 			trim: true,
 			maxlength: 20,
 			index: true,
 		},
+		/** Kódy jednotek na mapě (obchod může zabírat více jednotek) */
+		unitCodes: [
+			{
+				type: String,
+				trim: true,
+				maxlength: 20,
+			},
+		],
 		mapPosition: {
 			x: Number,
 			y: Number,
@@ -220,6 +243,8 @@ const shopSchema = new Schema<IShopDocument>(
 			transform: (_doc, ret) => {
 				ret._id = ret._id.toString()
 				if (ret.floorId) ret.floorId = ret.floorId.toString()
+				if (ret.floorIds)
+					ret.floorIds = ret.floorIds.map((id: Types.ObjectId) => id.toString())
 				if (ret.categoryIds)
 					ret.categoryIds = ret.categoryIds.map((id: Types.ObjectId) => id.toString())
 				delete ret.__v
@@ -235,7 +260,9 @@ const shopSchema = new Schema<IShopDocument>(
 
 shopSchema.index({ name: 'text', description: 'text' })
 shopSchema.index({ floorId: 1, isActive: 1 })
+shopSchema.index({ floorIds: 1, isActive: 1 })
 shopSchema.index({ categoryIds: 1, isActive: 1 })
+shopSchema.index({ unitCodes: 1 })
 
 // ==========================================
 // MODEL

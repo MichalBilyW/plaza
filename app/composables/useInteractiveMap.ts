@@ -134,6 +134,7 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 
 	/**
 	 * Zobrazit popup nad unitem (desktop hover / mobile tap)
+	 * Pro prázdné jednotky zobrazí malé nevýrazné okénko
 	 */
 	function showUnitPopup(unitCode: string, position: { x: number; y: number }) {
 		// Zrušit případný leave timeout
@@ -143,7 +144,7 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 		}
 
 		const unit = unitsMap.value.get(unitCode)
-		if (!unit?.shop) return
+		if (!unit) return
 
 		state.hoveredUnit = unit
 		state.hoveredUnitCode = unitCode
@@ -205,20 +206,20 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 	/**
 	 * Mobile tap na unit:
 	 * - Pokud popup není vidět nebo je jiný unit → zobrazit popup
-	 * - Pokud tap na stejný unit (popup už viditelný) → navigovat na detail (ne pro upcoming)
+	 * - Pokud tap na stejný unit (popup už viditelný) → navigovat na detail (ne pro upcoming/prázdné)
 	 */
 	function handleUnitTap(unitCode: string, position: { x: number; y: number }) {
 		const unit = unitsMap.value.get(unitCode)
-		if (!unit?.shop) return
+		if (!unit) return
 
 		if (state.hoveredUnit?.unitCode === unitCode) {
-			// Druhý tap na stejný unit → navigace (ne pro upcoming)
-			if (isUpcoming(unit)) return
+			// Druhý tap na stejný unit → navigace (ne pro upcoming/prázdné)
+			if (!unit.shop || isUpcoming(unit)) return
 
 			trackMapUnitClick(unit.shop.name, 'shop', currentFloor.value?.floorName || 'unknown')
 			navigateTo(`/obchody/${unit.shop.slug}`)
 		} else {
-			// První tap → zobrazit popup
+			// První tap → zobrazit popup (i pro prázdné jednotky)
 			showUnitPopup(unitCode, position)
 		}
 	}

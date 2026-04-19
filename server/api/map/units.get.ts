@@ -195,8 +195,15 @@ export default defineEventHandler(async (event) => {
 	const floors = await Floor.find(floorsQuery).sort({ sortOrder: 1, level: 1 }).lean()
 
 	// Získáme všechny obchody s přiřazenou jednotkou
+	// Podporujeme nový formát (unitCodes array) i legacy formát (unitCode string)
 	const shops = await Shop.find(
-		{ unitCode: { $exists: true, $ne: '' }, isActive: true },
+		{
+			isActive: true,
+			$or: [
+				{ unitCodes: { $exists: true, $ne: [] } },
+				{ unitCode: { $exists: true, $ne: '' } },
+			],
+		},
 		{
 			_id: 1,
 			name: 1,
@@ -204,7 +211,9 @@ export default defineEventHandler(async (event) => {
 			logo: 1,
 			isActive: 1,
 			unitCode: 1,
+			unitCodes: 1,
 			floorId: 1,
+			floorIds: 1,
 			openingHours: 1,
 			specialOpeningHours: 1,
 			publishDate: 1,
@@ -212,20 +221,28 @@ export default defineEventHandler(async (event) => {
 	).lean()
 
 	// Vytvoříme mapu unitCode -> shop data s dnešními hodinami
+	// Obchod může mít více unitCodes, takže jedna jednotka může patřit obchodu
 	const shopsByUnitCode = new Map<string, MapShopData>()
 	for (const shop of shops) {
-		if (shop.unitCode) {
-			shopsByUnitCode.set(shop.unitCode, {
-				_id: shop._id.toString(),
-				name: shop.name,
-				slug: shop.slug,
-				logo: shop.logo,
-				isActive: shop.isActive,
-				todayHours: getTodayOpeningHours(shop.openingHours, shop.specialOpeningHours),
-				publishDate: shop.publishDate
-					? new Date(shop.publishDate).toISOString()
-					: undefined,
-			})
+		const shopData: MapShopData = {
+			_id: shop._id.toString(),
+			name: shop.name,
+			slug: shop.slug,
+			logo: shop.logo,
+			isActive: shop.isActive,
+			todayHours: getTodayOpeningHours(shop.openingHours, shop.specialOpeningHours),
+			publishDate: shop.publishDate ? new Date(shop.publishDate).toISOString() : undefined,
+		}
+
+		// Nový formát - unitCodes array
+		if (shop.unitCodes && shop.unitCodes.length > 0) {
+			for (const unitCode of shop.unitCodes) {
+				shopsByUnitCode.set(unitCode, shopData)
+			}
+		}
+		// Legacy formát - unitCode string
+		else if (shop.unitCode) {
+			shopsByUnitCode.set(shop.unitCode, shopData)
 		}
 	}
 

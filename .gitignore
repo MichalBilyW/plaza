@@ -29,4 +29,5 @@ scripts/clone-db.ts
 scripts/*.ts
 
 # MongoDB backup - users (contains sensitive data)
+mongo-backup/local
 mongo-backup/**/users.json

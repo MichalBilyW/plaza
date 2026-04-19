@@ -49,7 +49,7 @@
 						:src="parkingImage"
 						:alt="t('aboutPage.parkingSection.imageAlt')"
 						loading="lazy"
-						class="w-full h-[340px] md:h-[430px] object-cover"
+						class="w-full h-[280px] sm:h-[340px] md:h-[430px] object-cover"
 					/>
 				</div>
 			</div>

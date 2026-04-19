@@ -161,56 +161,129 @@
 						</p>
 					</div>
 
-					<!-- Patro -->
-					<div>
-						<label for="floorId" class="block text-sm font-medium text-gray-700 mb-1">
-							{{ t('cms.shops.floor') }}
+					<!-- Patra (multi-select) -->
+					<div class="lg:col-span-2">
+						<label class="block text-sm font-medium text-gray-700 mb-2">
+							{{ t('cms.shops.floors') }}
 						</label>
-						<select
-							id="floorId"
-							v-model="form.floorId"
-							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent"
+						<div
+							class="flex flex-wrap gap-2 p-3 border border-gray-300 rounded-lg min-h-[42px] bg-white"
 						>
-							<option value="">{{ t('cms.shops.selectFloor') }}</option>
-							<option v-for="floor in floors" :key="floor._id" :value="floor._id">
-								{{ floor.name }}
-							</option>
-						</select>
+							<label
+								v-for="floor in floors"
+								:key="floor._id"
+								class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full cursor-pointer transition-colors"
+								:class="
+									form.floorIds.includes(floor._id)
+										? 'bg-cms-shops-100 text-cms-shops-700 ring-1 ring-cms-shops-300'
+										: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+								"
+							>
+								<input
+									type="checkbox"
+									:value="floor._id"
+									v-model="form.floorIds"
+									class="sr-only"
+								/>
+								<span class="text-sm font-medium">{{ floor.name }}</span>
+								<svg
+									v-if="form.floorIds.includes(floor._id)"
+									class="w-4 h-4"
+									fill="currentColor"
+									viewBox="0 0 20 20"
+								>
+									<path
+										fill-rule="evenodd"
+										d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+							</label>
+							<span
+								v-if="floors.length === 0"
+								class="text-sm text-gray-400 italic"
+							>
+								{{ t('cms.shops.noFloors') }}
+							</span>
+						</div>
+						<p class="mt-1 text-xs text-plaza-dark">
+							{{ t('cms.shops.floorsHint') }}
+						</p>
 					</div>
 
-					<!-- Kód jednotky -->
-					<div>
-						<label for="unitCode" class="block text-sm font-medium text-gray-700 mb-1">
+					<!-- Jednotky (multi-select) -->
+					<div class="lg:col-span-2">
+						<label class="block text-sm font-medium text-gray-700 mb-2">
 							{{ t('cms.shops.units') }}
 						</label>
-						<select
-							id="unitCode"
-							v-model="form.unitCode"
-							:disabled="!form.floorId"
-							class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+						<div
+							v-if="form.floorIds.length === 0"
+							class="p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 text-sm"
 						>
-							<option value="">
-								{{
-									form.floorId
-										? t('cms.shops.selectUnit')
-										: t('cms.shops.selectFloorFirst')
-								}}
-							</option>
-							<option
-								v-for="unit in availableUnits"
-								:key="unit.unitCode"
-								:value="unit.unitCode"
-								:disabled="unit.isOccupied && unit.unitCode !== form.unitCode"
+							{{ t('cms.shops.selectFloorFirst') }}
+						</div>
+						<div
+							v-else
+							class="space-y-3 p-3 border border-gray-300 rounded-lg bg-white"
+						>
+							<div
+								v-for="floorId in form.floorIds"
+								:key="floorId"
+								class="space-y-2"
 							>
-								{{ unit.unitCode
-								}}{{
-									unit.isOccupied && unit.unitCode !== form.unitCode
-										? ` (${unit.shopName})`
-										: ''
-								}}
-							</option>
-						</select>
-						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.shops.unitHint') }}</p>
+								<div class="text-sm font-medium text-gray-700">
+									{{ floors.find((f) => f._id === floorId)?.name }}
+								</div>
+								<div class="flex flex-wrap gap-2">
+									<label
+										v-for="unit in getUnitsForFloor(floorId)"
+										:key="unit.unitCode"
+										class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded cursor-pointer transition-colors text-sm"
+										:class="[
+											form.unitCodes.includes(unit.unitCode)
+												? 'bg-cms-shops-100 text-cms-shops-700 ring-1 ring-cms-shops-300'
+												: unit.isOccupied && !form.unitCodes.includes(unit.unitCode)
+													? 'bg-red-50 text-red-400 cursor-not-allowed'
+													: 'bg-gray-100 text-gray-600 hover:bg-gray-200',
+										]"
+									>
+										<input
+											type="checkbox"
+											:value="unit.unitCode"
+											v-model="form.unitCodes"
+											:disabled="unit.isOccupied && !form.unitCodes.includes(unit.unitCode)"
+											class="sr-only"
+										/>
+										<span>{{ unit.unitCode }}</span>
+										<span
+											v-if="unit.isOccupied && !form.unitCodes.includes(unit.unitCode)"
+											class="text-xs"
+										>
+											({{ unit.shopName }})
+										</span>
+										<svg
+											v-if="form.unitCodes.includes(unit.unitCode)"
+											class="w-3.5 h-3.5"
+											fill="currentColor"
+											viewBox="0 0 20 20"
+										>
+											<path
+												fill-rule="evenodd"
+												d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+												clip-rule="evenodd"
+											/>
+										</svg>
+									</label>
+									<span
+										v-if="getUnitsForFloor(floorId).length === 0"
+										class="text-sm text-gray-400 italic"
+									>
+										{{ t('cms.shops.noUnitsOnFloor') }}
+									</span>
+								</div>
+							</div>
+						</div>
+						<p class="mt-1 text-xs text-plaza-dark">{{ t('cms.shops.unitsHint') }}</p>
 					</div>
 				</div>
 			</div>
@@ -810,9 +883,15 @@ const form = reactive({
 		instagram: '',
 		twitter: '',
 	},
+	/** @deprecated Zachováno pro zpětnou kompatibilitu */
 	floorId: '',
+	/** Patra, kde se obchod nachází (může být na více patrech) */
+	floorIds: [] as string[],
 	categoryIds: [] as string[],
+	/** @deprecated Zachováno pro zpětnou kompatibilitu */
 	unitCode: '',
+	/** Kódy jednotek na mapě (obchod může zabírat více jednotek) */
+	unitCodes: [] as string[],
 	openingHours: [] as OpeningHoursFormEntry[],
 	specialOpeningHours: [] as SpecialOpeningHoursFormEntry[],
 	isActive: true,
@@ -856,18 +935,38 @@ watch(
 			form.socialLinks.facebook = newShop.socialLinks?.facebook || ''
 			form.socialLinks.instagram = newShop.socialLinks?.instagram || ''
 			form.socialLinks.twitter = newShop.socialLinks?.twitter || ''
-			// floorId může být string nebo populovaný objekt
+			// Legacy floorId - pro zpětnou kompatibilitu
 			form.floorId =
 				typeof newShop.floorId === 'object' && newShop.floorId?._id
 					? newShop.floorId._id
 					: newShop.floorId || ''
+			// Nové floorIds pole - preferujeme pokud existuje, jinak z legacy floorId
+			const existingFloorIds = (newShop.floorIds || []).map((f: unknown) =>
+				typeof f === 'object' && f !== null && '_id' in f
+					? (f as { _id: string })._id
+					: (f as string),
+			)
+			form.floorIds =
+				existingFloorIds.length > 0
+					? existingFloorIds
+					: form.floorId
+						? [form.floorId]
+						: []
 			// categoryIds - může být pole stringů nebo populovaných objektů
 			form.categoryIds = (newShop.categoryIds || []).map((cat: unknown) =>
 				typeof cat === 'object' && cat !== null && '_id' in cat
 					? (cat as { _id: string })._id
 					: (cat as string),
 			)
+			// Legacy unitCode
 			form.unitCode = newShop.unitCode || ''
+			// Nové unitCodes pole - preferujeme pokud existuje, jinak z legacy unitCode
+			form.unitCodes =
+				newShop.unitCodes && newShop.unitCodes.length > 0
+					? newShop.unitCodes
+					: form.unitCode
+						? [form.unitCode]
+						: []
 			form.isActive = newShop.isActive ?? true
 			form.publishDate = newShop.publishDate
 				? new Date(newShop.publishDate).toISOString().split('T')[0]
@@ -943,35 +1042,46 @@ const { data: mapData, refresh: _refreshMapData } = await useFetch<{
 	floors: FloorUnitsResponse[]
 }>('/api/map/units')
 
-// Computed: available units for selected floor
-const availableUnits = computed(() => {
-	if (!form.floorId) return []
-
-	// Find floor data from API
-	const floorData = mapData.value?.floors?.find((f) => f.floorId === form.floorId)
+// Funkce pro získání jednotek pro konkrétní patro
+const getUnitsForFloor = (floorId: string) => {
+	const floorData = mapData.value?.floors?.find((f) => f.floorId === floorId)
 	if (!floorData) return []
 
 	return floorData.units.map((unit) => {
-		const isOccupied = !!unit.shop
+		// Jednotka je obsazená, pokud má přiřazený obchod a není to tento obchod
+		const isOccupied = !!unit.shop && !form.unitCodes.includes(unit.unitCode)
 		return {
 			unitCode: unit.unitCode,
 			isOccupied,
 			shopName: unit.shop?.name || '',
 		}
 	})
-})
+}
 
-// Store previous floorId to detect changes
-const previousFloorId = ref(form.floorId)
-
-// Clear unitCode only when floor actually changes (not on initial load)
+// Při odebrání patra z floorIds, odeber související unitCodes
 watch(
-	() => form.floorId,
-	(newFloorId, oldFloorId) => {
-		if (previousFloorId.value && newFloorId !== oldFloorId) {
-			form.unitCode = ''
+	() => form.floorIds,
+	(newFloorIds, oldFloorIds) => {
+		if (!oldFloorIds) return
+
+		// Najdi patra, která byla odebrána
+		const removedFloorIds = oldFloorIds.filter((id) => !newFloorIds.includes(id))
+
+		if (removedFloorIds.length > 0) {
+			// Získej všechny unitCodes pro odebraná patra
+			const unitsToRemove = new Set<string>()
+			for (const floorId of removedFloorIds) {
+				const floorData = mapData.value?.floors?.find((f) => f.floorId === floorId)
+				if (floorData) {
+					for (const unit of floorData.units) {
+						unitsToRemove.add(unit.unitCode)
+					}
+				}
+			}
+
+			// Odeber unitCodes, které patří k odebraným patrům
+			form.unitCodes = form.unitCodes.filter((code) => !unitsToRemove.has(code))
 		}
-		previousFloorId.value = newFloorId
 	},
 )
 
@@ -999,9 +1109,15 @@ const handleSubmit = async () => {
 			phone: form.phone.trim() || undefined,
 			email: form.email.trim() || undefined,
 			website: form.website.trim() || undefined,
-			floorId: form.floorId || null,
+			// Legacy floorId - první patro z pole pro zpětnou kompatibilitu
+			floorId: form.floorIds.length > 0 ? form.floorIds[0] : null,
+			// Nové floorIds pole
+			floorIds: form.floorIds.length > 0 ? form.floorIds : [],
 			categoryIds: form.categoryIds.length > 0 ? form.categoryIds : [],
-			unitCode: form.unitCode.trim() || null,
+			// Legacy unitCode - první jednotka z pole pro zpětnou kompatibilitu
+			unitCode: form.unitCodes.length > 0 ? form.unitCodes[0] : null,
+			// Nové unitCodes pole
+			unitCodes: form.unitCodes.length > 0 ? form.unitCodes : [],
 			isActive: form.isActive,
 			publishDate: form.publishDate ? new Date(form.publishDate).toISOString() : null,
 			seoTitle: form.seoTitle.trim() || undefined,

@@ -31,6 +31,15 @@
 				</div>
 			</div>
 
+			<!-- Shop Events Section (Akce a slevy) -->
+			<div class="my-20">
+				<HomepageUpcomingEvents
+					v-if="shopEvents.length > 0 || eventsPending"
+					:events="shopEvents"
+					:pending="eventsPending"
+				/>
+			</div>
+
 			<!-- Map Section - zobrazit mapu s označeným obchodem -->
 			<div v-if="shop?.floorId" class="my-20">
 				<div class="container">
@@ -44,15 +53,6 @@
 					:locked-floor-id="shop.floorId"
 					:highlight-shop-name="shop.name"
 					hide-full-map-link
-				/>
-			</div>
-
-			<!-- Shop Events Section (Akce a slevy) -->
-			<div class="my-20">
-				<HomepageUpcomingEvents
-					v-if="shopEvents.length > 0 || eventsPending"
-					:events="shopEvents"
-					:pending="eventsPending"
 				/>
 			</div>
 

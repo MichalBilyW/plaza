@@ -170,12 +170,18 @@ export const shopCreateSchema = z.object({
 			twitter: urlSchema,
 		})
 		.optional(),
+	/** @deprecated Použij floorIds */
 	floorId: optionalObjectIdSchema,
+	/** Patra, kde se obchod nachází (může být na více patrech) */
+	floorIds: z.array(objectIdSchema).optional(),
 	categoryIds: z.array(objectIdSchema).optional(),
+	/** @deprecated Použij unitCodes */
 	unitCode: z.preprocess(
 		(val) => (val === '' ? null : val),
 		z.string().max(20).nullable().optional(),
 	),
+	/** Kódy jednotek na mapě (obchod může zabírat více jednotek) */
+	unitCodes: z.array(z.string().max(20)).optional(),
 	mapPosition: z
 		.object({
 			x: z.number(),

@@ -19,6 +19,7 @@ export default defineEventHandler(
 		if (idOrSlug?.match(/^[0-9a-fA-F]{24}$/)) {
 			shop = await Shop.findById(idOrSlug)
 				.populate('floorId', 'name level')
+				.populate('floorIds', 'name level')
 				.populate('categoryIds', 'name slug icon color')
 				.lean()
 		}
@@ -27,6 +28,7 @@ export default defineEventHandler(
 		if (!shop) {
 			shop = await Shop.findOne({ slug: idOrSlug, isActive: true })
 				.populate('floorId', 'name level')
+				.populate('floorIds', 'name level')
 				.populate('categoryIds', 'name slug icon color')
 				.lean()
 		}
@@ -39,12 +41,22 @@ export default defineEventHandler(
 		return {
 			...shop,
 			_id: shop._id.toString(),
+			// Legacy single floor support
 			floor: shop.floorId,
 			floorId: shop.floorId
 				? typeof shop.floorId === 'object'
 					? (shop.floorId as { _id: unknown })._id?.toString()
 					: shop.floorId?.toString()
 				: undefined,
+			// Multi-floor support
+			floors: shop.floorIds,
+			floorIds: shop.floorIds
+				? (shop.floorIds as Array<{ _id: unknown } | unknown>).map((f) =>
+						typeof f === 'object' && f !== null
+							? (f as { _id: unknown })._id?.toString()
+							: f?.toString(),
+					)
+				: [],
 			categories: shop.categoryIds,
 			categoryIds: shop.categoryIds
 				? (shop.categoryIds as Array<{ _id: unknown } | unknown>).map((cat) =>
@@ -53,6 +65,8 @@ export default defineEventHandler(
 							: cat?.toString(),
 					)
 				: [],
+			// Multi-unit support
+			unitCodes: shop.unitCodes || (shop.unitCode ? [shop.unitCode] : []),
 		}
 	}),
 )

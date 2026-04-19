@@ -115,9 +115,12 @@
 			</div>
 
 			<!-- Empty state -->
-			<div v-else-if="allShops.length === 0 && !loadingMore" class="py-16 text-center">
+			<div
+				v-else-if="allShops.length === 0 && !loadingMore"
+				class="flex flex-col items-center justify-center py-16 text-center"
+			>
 				<svg
-					class="mx-auto mb-4 h-16 w-16 text-plaza-light"
+					class="mb-4 h-16 w-16 text-plaza-light"
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"

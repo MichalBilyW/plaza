@@ -59,7 +59,7 @@ const { data: categoriesData } = useFetch<{ data: Category[] }>('/api/categories
 })
 const restaurantsCount = computed(() => {
 	const foodCategory = categoriesData.value?.data?.find(
-		(cat) => cat.name === 'Jídlo a občerstvení',
+		(cat) => cat.name === 'Restaurace & kavárny',
 	)
 	return foodCategory?.shopCount || 0
 })

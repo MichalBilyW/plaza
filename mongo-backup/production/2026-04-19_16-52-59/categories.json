@@ -19,16 +19,6 @@
     "__v": 0
   },
   {
-    "_id": "69a710eb6d08e66a0f657c6c",
-    "name": "Jídlo a občerstvení",
-    "slug": "jidlo-a-obcerstveni",
-    "isActive": true,
-    "sortOrder": 8,
-    "createdAt": "2026-03-03T16:48:43.768Z",
-    "updatedAt": "2026-04-07T07:16:15.277Z",
-    "__v": 0
-  },
-  {
     "_id": "69c5295da7299fefa702e923",
     "name": "Hračky",
     "slug": "hracky",
@@ -81,5 +71,25 @@
     "__v": 0,
     "sortOrder": 2,
     "updatedAt": "2026-04-07T07:16:15.277Z"
+  },
+  {
+    "_id": "69e0c8af94a872da513e03d2",
+    "name": "Restaurace & kavárny",
+    "slug": "restaurace-a-kavarny",
+    "isActive": true,
+    "sortOrder": 10,
+    "createdAt": "2026-04-16T11:31:59.718Z",
+    "updatedAt": "2026-04-16T11:33:36.536Z",
+    "__v": 0
+  },
+  {
+    "_id": "69e0c90694a872da513e03db",
+    "name": "Potraviny & delikatesy",
+    "slug": "potraviny-delikatesy",
+    "isActive": true,
+    "sortOrder": 11,
+    "createdAt": "2026-04-16T11:33:26.256Z",
+    "updatedAt": "2026-04-16T11:33:26.256Z",
+    "__v": 0
   }
 ]

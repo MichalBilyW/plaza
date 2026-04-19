@@ -10,12 +10,29 @@
 				<div
 					v-if="unit && position"
 					ref="popupRef"
-					class="popup-card fixed z-50 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden w-52 md:w-64 pointer-events-auto"
+					:class="[
+						'popup-card fixed z-50 rounded-xl shadow-2xl overflow-hidden pointer-events-auto',
+						isEmpty
+							? 'bg-gray-100/90 backdrop-blur-sm w-36'
+							: 'bg-white/95 backdrop-blur-sm w-52 md:w-64',
+					]"
 					:style="popupStyle"
 					@mouseenter="emit('cancel-hide')"
 					@mouseleave="emit('close')"
 				>
-					<div class="p-3 md:p-5 text-center">
+					<!-- Prázdná jednotka - minimalistický popup -->
+					<div v-if="isEmpty" class="p-2.5 text-center">
+						<p class="text-xs text-gray-500 mb-1.5">{{ t('mapPage.emptyUnitPopup') }}</p>
+						<NuxtLink
+							to="/o-nas"
+							class="text-xs text-gray-400 hover:text-plaza transition-colors underline"
+						>
+							{{ t('mapPage.contactUs') }}
+						</NuxtLink>
+					</div>
+
+					<!-- Obchod - plný popup -->
+					<div v-else class="p-3 md:p-5 text-center">
 						<!-- Logo nebo název obchodu -->
 						<img
 							v-if="unit.shop?.logo && !logoFailed"
@@ -48,9 +65,9 @@
 							{{ upcomingLabel }}
 						</p>
 
-						<!-- Tlačítko více (ne pro upcoming) -->
+						<!-- Tlačítko více (ne pro upcoming, ne když jsme na detailu tohoto obchodu) -->
 						<NuxtLink
-							v-if="unit.shop?.slug && !isUpcoming"
+							v-if="unit.shop?.slug && !isUpcoming && !isOnThisShopDetail"
 							:to="`/obchody/${unit.shop.slug}`"
 							class="mt-1 inline-flex items-center justify-center px-6 py-2 bg-plaza text-white font-sans font-semibold text-base tracking-[0.05em] rounded-[5px_20px_5px_5px] hover:brightness-110 transition-all duration-300"
 						>
@@ -66,6 +83,7 @@
 <script setup lang="ts">
 import type { MapUnit } from '~~/shared/map/units'
 const { t } = useI18n()
+const route = useRoute()
 
 interface Props {
 	/** Vybraná jednotka */
@@ -83,6 +101,15 @@ const emit = defineEmits<{
 
 const popupRef = ref<HTMLElement | null>(null)
 const logoFailed = ref(false)
+
+// Prázdná jednotka (bez obchodu)
+const isEmpty = computed(() => !props.unit?.shop)
+
+// Jsme na detailu tohoto obchodu?
+const isOnThisShopDetail = computed(() => {
+	if (!props.unit?.shop?.slug) return false
+	return route.path === `/obchody/${props.unit.shop.slug}`
+})
 
 // Upcoming shop — publishDate v budoucnosti
 const isUpcoming = computed(
@@ -115,8 +142,10 @@ const popupStyle = computed(() => {
 
 	const { x, y } = props.position
 	const isMobile = window.innerWidth < 768
-	const popupWidth = isMobile ? 208 : 256 // w-52 / w-64
-	const popupHeight = isMobile ? 150 : 180 // přibližná výška
+
+	// Prázdná jednotka má menší popup
+	const popupWidth = isEmpty.value ? 144 : isMobile ? 208 : 256 // w-36 / w-52 / w-64
+	const popupHeight = isEmpty.value ? 50 : isMobile ? 150 : 180 // přibližná výška
 	const gap = isMobile ? 12 : 16 // mezera od kurzoru
 	const margin = 8
 

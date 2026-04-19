@@ -3,7 +3,7 @@
 		<!-- Dark header -->
 		<div
 			v-if="generalInfo?.title || generalInfo?.shortText"
-			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[80px] lg:pt-[160px] pb-[320px]"
+			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[80px] md:pt-[160px] pb-[120px] md:pb-[320px]"
 		>
 			<div class="container mx-auto text-center text-white">
 				<h1
@@ -21,7 +21,7 @@
 		<!-- Galerie -->
 		<section
 			v-if="!pending && generalInfo?.gallery?.length"
-			class="container-small -mt-[280px] px-4 mb-12"
+			class="container-small -mt-[80px] md:-mt-[280px] px-4 md:mb-12"
 		>
 			<div class="relative rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg">
 				<!-- Border overlay -->

@@ -598,24 +598,15 @@ const stats = computed(() => {
 	}
 })
 
-// Obchody bez přiřazené jednotky nebo s jednotkou na jiném patře
+// Obchody dostupné pro přiřazení - všechny aktivní obchody
+// (obchod může mít více jednotek na různých patrech)
 const availableShops = computed(() => {
 	if (allShops.value.length === 0) {
 		return []
 	}
 
-	// ID obchodů které už jsou přiřazené k nějaké jednotce
-	const assignedShopIds = new Set<string>()
-	for (const floor of floors.value) {
-		for (const unit of floor.units) {
-			if (unit.shop) {
-				assignedShopIds.add(unit.shop._id)
-			}
-		}
-	}
-
-	// Vrátíme obchody, které nemají přiřazenou jednotku
-	return allShops.value.filter((shop) => !assignedShopIds.has(shop._id as string))
+	// Vrátíme všechny obchody - obchod může mít více jednotek
+	return allShops.value
 })
 
 // Mapa jednotek pro rychlý přístup
@@ -789,11 +780,29 @@ async function assignShop() {
 
 	assigning.value = true
 	try {
+		// Najít vybraný obchod pro získání jeho aktuálních unitCodes a floorIds
+		const shop = allShops.value.find((s) => s._id === shopToAssign.value)
+		const currentUnitCodes = shop?.unitCodes || []
+		const currentFloorIds = shop?.floorIds || []
+
+		// Přidat nový unitCode pokud tam ještě není
+		const newUnitCodes = currentUnitCodes.includes(selectedUnit.value.unitCode)
+			? currentUnitCodes
+			: [...currentUnitCodes, selectedUnit.value.unitCode]
+
+		// Přidat nové floorId pokud tam ještě není
+		const newFloorIds = currentFloorIds.includes(selectedUnit.value.floorId)
+			? currentFloorIds
+			: [...currentFloorIds, selectedUnit.value.floorId]
+
 		await secureFetch(`/api/shops/${shopToAssign.value}`, {
 			method: 'PUT',
 			body: {
-				unitCode: selectedUnit.value.unitCode,
-				floorId: selectedUnit.value.floorId,
+				unitCodes: newUnitCodes,
+				floorIds: newFloorIds,
+				// Legacy pole pro zpětnou kompatibilitu
+				unitCode: newUnitCodes[0] || null,
+				floorId: newFloorIds[0] || null,
 			},
 		})
 		flash.success(t('cms.flash.mapShopAssigned'))
@@ -814,9 +823,39 @@ async function removeShop() {
 
 	removing.value = true
 	try {
-		await secureFetch(`/api/shops/${selectedUnit.value.shop._id}`, {
+		const shopId = selectedUnit.value.shop._id
+		const unitCodeToRemove = selectedUnit.value.unitCode
+		const floorIdToRemove = selectedUnit.value.floorId
+
+		// Najít obchod pro získání jeho aktuálních unitCodes a floorIds
+		const shop = allShops.value.find((s) => s._id === shopId)
+		const currentUnitCodes = shop?.unitCodes || []
+		const currentFloorIds = shop?.floorIds || []
+
+		// Odebrat unitCode
+		const newUnitCodes = currentUnitCodes.filter((code) => code !== unitCodeToRemove)
+
+		// Zjistit, jestli má obchod ještě nějaké jednotky na tomto patře
+		// Pokud ne, odebrat i floorId
+		const hasOtherUnitsOnFloor = mapData.value?.floors
+			?.find((f) => f.floorId === floorIdToRemove)
+			?.units.some(
+				(u) => u.unitCode !== unitCodeToRemove && newUnitCodes.includes(u.unitCode),
+			)
+
+		const newFloorIds = hasOtherUnitsOnFloor
+			? currentFloorIds
+			: currentFloorIds.filter((id) => id !== floorIdToRemove)
+
+		await secureFetch(`/api/shops/${shopId}`, {
 			method: 'PUT',
-			body: { unitCode: '' },
+			body: {
+				unitCodes: newUnitCodes,
+				floorIds: newFloorIds,
+				// Legacy pole pro zpětnou kompatibilitu
+				unitCode: newUnitCodes[0] || null,
+				floorId: newFloorIds[0] || null,
+			},
 		})
 		flash.success(t('cms.flash.mapShopRemoved'))
 		await Promise.all([refresh(), loadShops()])

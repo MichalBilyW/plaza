@@ -13,7 +13,7 @@
 		<div
 			v-for="overlay in logoOverlays"
 			:key="overlay.unitCode"
-			class="absolute z-[5] pointer-events-none flex items-center justify-center transition-opacity duration-300"
+			class="logo-overlay absolute z-[5] pointer-events-none flex items-center justify-center transition-opacity duration-300"
 			:class="isReady ? 'opacity-100' : 'opacity-0'"
 			:style="{
 				left: `${overlay.centerXPct}%`,
@@ -26,7 +26,7 @@
 			<!-- Upcoming badge -->
 			<span
 				v-if="overlay.upcomingLabel"
-				class="absolute -top-1 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-[3px_8px_3px_3px] bg-plaza px-1.5 py-0.5 text-[0.45vw] font-semibold text-white shadow leading-none"
+				class="upcoming-badge absolute -top-1 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap rounded-[3px_8px_3px_3px] bg-plaza px-1.5 py-0.5 text-[0.45vw] font-semibold text-white shadow leading-none"
 			>
 				{{ overlay.upcomingLabel }}
 			</span>
@@ -549,9 +549,8 @@ function setupEventListeners() {
 
 	unitElements.forEach((element) => {
 		const unitCode = element.getAttribute('data-unit')
-		const hasShop = element.getAttribute('data-has-shop') === 'true'
 
-		if (!unitCode || !hasShop) return
+		if (!unitCode) return
 
 		if (isTouchDevice) {
 			// Mobile: tap emituje 'unit-tap', composable rozhodne popup/navigate
@@ -701,7 +700,8 @@ function updateLogoOverlays() {
 		const side = g.r * LOGO_SCALE
 		const sizePct = (side / vbWidth) * 100
 		// Font size: poměrný k velikosti kontejneru, v vw pro škálování se zoomem
-		const fontSizeVw = Math.max(0.55, (side / vbWidth) * 55)
+		// Min 0.55vw, max 2vw aby nepřetékaly na velkých rozlišeních
+		const fontSizeVw = Math.min(2, Math.max(0.55, (side / vbWidth) * 55))
 		overlays.push({
 			unitCode: g.unitCode,
 			shopName: g.unit.shop!.name,
@@ -728,6 +728,28 @@ onBeforeUnmount(() => {
 .map-floor {
 	will-change: opacity;
 	transform: translateZ(0);
+}
+
+/* Loga a badge - lepší kvalita při zoomu */
+.logo-overlay {
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	transform-style: preserve-3d;
+}
+
+.logo-overlay img {
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: crisp-edges;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+}
+
+.upcoming-badge {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
 }
 
 .map-floor :deep(svg) {
@@ -780,7 +802,11 @@ onBeforeUnmount(() => {
 .map-floor :deep(.map-unit--empty) {
 	opacity: 0.08;
 	filter: grayscale(1) brightness(0.8);
-	pointer-events: none;
+	cursor: pointer;
+}
+
+.map-floor :deep(.map-unit--empty:hover) {
+	opacity: 0.25;
 }
 
 .map-floor :deep(.map-unit--empty path) {
