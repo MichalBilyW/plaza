@@ -23,9 +23,9 @@ export default defineNuxtConfig({
 		// Public (exposed to client) - z ENV
 		public: {
 			siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-			siteName: 'OC Plaza Liberec',
+			siteName: 'Obchodní centrum Plaza Liberec',
 			siteDescription:
-				'Obchodní centrum Plaza Liberec - nakupování, zábava a služby na jednom místě',
+				'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 			defaultLocale: process.env.NUXT_PUBLIC_DEFAULT_LOCALE || 'cs',
 			gtmId: process.env.NUXT_PUBLIC_GTM_ID || 'GTM-WB3N3SCX',
 		},
@@ -153,7 +153,7 @@ export default defineNuxtConfig({
 				{
 					name: 'description',
 					content:
-						'Prohlédněte si obchody a služby v OC Plaza Liberec, mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
+						'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 				},
 				{ name: 'format-detection', content: 'telephone=no' },
 				{ name: 'theme-color', content: '#ffffff' },

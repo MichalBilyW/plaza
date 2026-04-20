@@ -63,7 +63,7 @@ export default {
 		hero: {
 			title: 'Obchodní centrum Plaza Liberec',
 			subtitle:
-				'Vaše oblíbené nákupní centrum v srdci Liberce. Objevte přes 100 obchodů, restaurací a služeb pod jednou střechou.',
+				'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 			cta: {
 				shops: 'Prohlédnout obchody',
 				events: 'Aktuální akce',

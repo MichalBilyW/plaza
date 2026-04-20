@@ -16,7 +16,7 @@ export const usePlazaSeo = (config: SeoConfig) => {
 	const route = useRoute()
 
 	const baseUrl = runtimeConfig.public.siteUrl || 'https://ocplazaliberec.cz'
-	const siteName = 'OC Plaza Liberec'
+	const siteName = 'Obchodní centrum Plaza Liberec'
 
 	const fullTitle = config.title === siteName ? siteName : `${config.title} | ${siteName}`
 
@@ -26,15 +26,15 @@ export const usePlazaSeo = (config: SeoConfig) => {
 	useSeoMeta({
 		title: fullTitle,
 		ogTitle: fullTitle,
-		description: config.description || 'Nákupní centrum v srdci Liberce',
-		ogDescription: config.description || 'Nákupní centrum v srdci Liberce',
+		description: config.description || 'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
+		ogDescription: config.description || 'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 		ogImage: config.image || `${baseUrl}/images/og.jpg`,
 		ogUrl: fullUrl,
 		ogType: config.type || 'website',
 		ogSiteName: siteName,
 		twitterCard: 'summary_large_image',
 		twitterTitle: fullTitle,
-		twitterDescription: config.description || 'Nákupní centrum v srdci Liberce',
+		twitterDescription: config.description || 'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 		twitterImage: config.image || `${baseUrl}/images/og.jpg`,
 		robots: config.noIndex ? 'noindex, nofollow' : 'index, follow',
 	})
