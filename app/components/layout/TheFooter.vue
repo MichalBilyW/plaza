@@ -7,7 +7,7 @@
 					<NuxtLink to="/" class="block mb-4">
 						<img
 							src="/images/logo_plaza.png"
-							alt="OC Plaza Liberec"
+							alt="Obchodní centrum Plaza Liberec"
 							class="h-16 w-auto"
 						/>
 					</NuxtLink>

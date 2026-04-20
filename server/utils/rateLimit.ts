@@ -1,16 +1,13 @@
 /**
  * Rate Limiting Utility
- * In-memory rate limiter pro ochranu proti brute-force útokům
+ * MongoDB-based rate limiter pro ochranu proti brute-force útokům.
+ * Persists přes restarty aplikace, funguje při více instancích.
  */
 
 import type { H3Event } from 'h3'
 import { getRequestIP } from 'h3'
-
-interface RateLimitEntry {
-	count: number
-	resetAt: number
-	blockedUntil?: number
-}
+import { connectToDatabase } from '@/server/utils/db'
+import { RateLimit } from '@/server/models'
 
 interface RateLimitConfig {
 	windowMs: number // Časové okno v ms
@@ -18,47 +15,35 @@ interface RateLimitConfig {
 	blockDurationMs: number // Délka blokace po překročení
 }
 
-const rateLimitStore = new Map<string, RateLimitEntry>()
-
-// Čištění starých záznamů každých 5 minut
-setInterval(
-	() => {
-		const now = Date.now()
-		for (const [key, entry] of rateLimitStore.entries()) {
-			if (entry.resetAt < now && (!entry.blockedUntil || entry.blockedUntil < now)) {
-				rateLimitStore.delete(key)
-			}
-		}
-	},
-	5 * 60 * 1000,
-)
-
 /**
  * Kontrola rate limitu
- * @returns true pokud je request povolen, false pokud je zablokován
  */
-export function checkRateLimit(
+export async function checkRateLimit(
 	key: string,
 	config: RateLimitConfig,
-): { allowed: boolean; retryAfter?: number; remaining: number } {
-	const now = Date.now()
-	const entry = rateLimitStore.get(key)
+): Promise<{ allowed: boolean; retryAfter?: number; remaining: number }> {
+	await connectToDatabase()
+
+	const now = new Date()
+	const entry = await RateLimit.findOne({ key })
 
 	// Pokud je zablokovaný
 	if (entry?.blockedUntil && entry.blockedUntil > now) {
 		return {
 			allowed: false,
-			retryAfter: Math.ceil((entry.blockedUntil - now) / 1000),
+			retryAfter: Math.ceil((entry.blockedUntil.getTime() - now.getTime()) / 1000),
 			remaining: 0,
 		}
 	}
 
 	// Pokud není záznam nebo vypršelo okno
 	if (!entry || entry.resetAt < now) {
-		rateLimitStore.set(key, {
-			count: 1,
-			resetAt: now + config.windowMs,
-		})
+		const resetAt = new Date(now.getTime() + config.windowMs)
+		await RateLimit.findOneAndUpdate(
+			{ key },
+			{ count: 1, resetAt, blockedUntil: null, expiresAt: resetAt },
+			{ upsert: true },
+		)
 		return {
 			allowed: true,
 			remaining: config.maxAttempts - 1,
@@ -66,11 +51,12 @@ export function checkRateLimit(
 	}
 
 	// Inkrementace počtu
-	entry.count++
+	const newCount = entry.count + 1
 
 	// Překročen limit
-	if (entry.count > config.maxAttempts) {
-		entry.blockedUntil = now + config.blockDurationMs
+	if (newCount > config.maxAttempts) {
+		const blockedUntil = new Date(now.getTime() + config.blockDurationMs)
+		await RateLimit.updateOne({ key }, { count: newCount, blockedUntil, expiresAt: blockedUntil })
 		return {
 			allowed: false,
 			retryAfter: Math.ceil(config.blockDurationMs / 1000),
@@ -78,17 +64,19 @@ export function checkRateLimit(
 		}
 	}
 
+	await RateLimit.updateOne({ key }, { count: newCount })
 	return {
 		allowed: true,
-		remaining: config.maxAttempts - entry.count,
+		remaining: config.maxAttempts - newCount,
 	}
 }
 
 /**
  * Reset rate limitu pro klíč (po úspěšném přihlášení)
  */
-export function resetRateLimit(key: string): void {
-	rateLimitStore.delete(key)
+export async function resetRateLimit(key: string): Promise<void> {
+	await connectToDatabase()
+	await RateLimit.deleteOne({ key })
 }
 
 /**

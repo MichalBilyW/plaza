@@ -100,8 +100,8 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 						return
 					}
 				}
-				// Jinak preferovat 1. patro (level: 1)
-				const defaultFloor = newFloors.find((f) => f.level === 1) ?? newFloors[0]
+				// Jinak preferovat přízemí (level: 0)
+				const defaultFloor = newFloors.find((f) => f.level === 0) ?? newFloors[0]
 				if (defaultFloor) {
 					state.currentFloorId = defaultFloor.floorId
 					// Zavolat callback pro centrování po prvním načtení

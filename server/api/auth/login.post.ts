@@ -36,9 +36,9 @@ import {
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
-		// Rate limiting check
+		// Rate limiting check (connectToDatabase je idempotentní – bezpečné volat před vlastní logikou)
 		const rateLimitKey = getRateLimitKey(event, 'login')
-		const rateLimit = checkRateLimit(rateLimitKey, RATE_LIMIT_CONFIGS.login)
+		const rateLimit = await checkRateLimit(rateLimitKey, RATE_LIMIT_CONFIGS.login)
 
 		if (!rateLimit.allowed) {
 			throw new ApiError(
@@ -78,7 +78,7 @@ export default defineEventHandler(
 		}
 
 		// Reset rate limitu po úspěšném přihlášení
-		resetRateLimit(rateLimitKey)
+		await resetRateLimit(rateLimitKey)
 
 		// Získat info o session
 		const sessionInfo = getSessionInfo(event)

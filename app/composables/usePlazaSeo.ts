@@ -28,14 +28,14 @@ export const usePlazaSeo = (config: SeoConfig) => {
 		ogTitle: fullTitle,
 		description: config.description || 'Nákupní centrum v srdci Liberce',
 		ogDescription: config.description || 'Nákupní centrum v srdci Liberce',
-		ogImage: config.image || `${baseUrl}/og-image.jpg`,
+		ogImage: config.image || `${baseUrl}/images/og.jpg`,
 		ogUrl: fullUrl,
 		ogType: config.type || 'website',
 		ogSiteName: siteName,
 		twitterCard: 'summary_large_image',
 		twitterTitle: fullTitle,
 		twitterDescription: config.description || 'Nákupní centrum v srdci Liberce',
-		twitterImage: config.image || `${baseUrl}/og-image.jpg`,
+		twitterImage: config.image || `${baseUrl}/images/og.jpg`,
 		robots: config.noIndex ? 'noindex, nofollow' : 'index, follow',
 	})
 

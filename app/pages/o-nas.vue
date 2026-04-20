@@ -249,7 +249,7 @@
 										class="max-w-full max-h-full object-contain"
 									/>
 								</div>
-								<p class="text-sm text-plaza-dark text-xl">
+								<p class="text-base leading-[19px] text-plaza-dark">
 									{{ service.shortDescription }}
 								</p>
 							</div>

@@ -50,12 +50,19 @@ export default defineNuxtConfig({
 		// Dynamické URL z API
 		sources: ['/api/__sitemap__/urls'],
 		// Vyloučit CMS stránky
-		exclude: ['/cms/**', '/cms'],
+		exclude: ['/cms/**', '/cms', '/cookies'],
 		// Statické stránky s prioritou
 		defaults: {
 			changefreq: 'weekly',
 			priority: 0.5,
 		},
+		urls: [
+			{ loc: '/', priority: 1.0, changefreq: 'daily' },
+			{ loc: '/obchody', priority: 0.9, changefreq: 'daily' },
+			{ loc: '/akce', priority: 0.8, changefreq: 'daily' },
+			{ loc: '/o-nas', priority: 0.7, changefreq: 'monthly' },
+			{ loc: '/mapa', priority: 0.7, changefreq: 'monthly' },
+		],
 		// Automatická cache - 1 den (sitemap se obnoví při každém požadavku po vypršení)
 		cacheMaxAgeSeconds: 86400,
 	},
@@ -139,22 +146,48 @@ export default defineNuxtConfig({
 			htmlAttrs: {
 				lang: 'cs',
 			},
-			title: 'OC Plaza Liberec',
+			title: 'Obchodní centrum Plaza Liberec',
 			meta: [
 				{ charset: 'utf-8' },
 				{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 				{
 					name: 'description',
 					content:
-						'Obchodní centrum Plaza Liberec - nakupování, zábava a služby na jednom místě',
+						'Prohlédněte si obchody a služby v OC Plaza Liberec, mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 				},
 				{ name: 'format-detection', content: 'telephone=no' },
-				{ name: 'theme-color', content: '#E20B1B' },
+				{ name: 'theme-color', content: '#ffffff' },
+				{ name: 'msapplication-TileColor', content: '#ffffff' },
+				{ name: 'msapplication-TileImage', content: '/favicon/ms-icon-144x144.png' },
 				{ name: 'author', content: 'MichalBily.cz' },
-				{ property: 'og:site_name', content: 'OC Plaza Liberec' },
+				{ property: 'og:type', content: 'website' },
+				{ property: 'og:site_name', content: 'Obchodní centrum Plaza Liberec' },
 				{ property: 'og:locale', content: 'cs_CZ' },
+				{ property: 'og:image', content: '/images/og.jpg' },
+				{ property: 'og:image:type', content: 'image/jpeg' },
+				{ property: 'og:image:width', content: '1200' },
+				{ property: 'og:image:height', content: '630' },
+				{ property: 'og:image:alt', content: 'Obchodní centrum Plaza Liberec' },
+				{ name: 'twitter:card', content: 'summary_large_image' },
+				{ name: 'twitter:image', content: '/images/og.jpg' },
 			],
-			link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+			link: [
+				{ rel: 'apple-touch-icon', sizes: '57x57', href: '/favicon/apple-icon-57x57.png' },
+				{ rel: 'apple-touch-icon', sizes: '60x60', href: '/favicon/apple-icon-60x60.png' },
+				{ rel: 'apple-touch-icon', sizes: '72x72', href: '/favicon/apple-icon-72x72.png' },
+				{ rel: 'apple-touch-icon', sizes: '76x76', href: '/favicon/apple-icon-76x76.png' },
+				{ rel: 'apple-touch-icon', sizes: '114x114', href: '/favicon/apple-icon-114x114.png' },
+				{ rel: 'apple-touch-icon', sizes: '120x120', href: '/favicon/apple-icon-120x120.png' },
+				{ rel: 'apple-touch-icon', sizes: '144x144', href: '/favicon/apple-icon-144x144.png' },
+				{ rel: 'apple-touch-icon', sizes: '152x152', href: '/favicon/apple-icon-152x152.png' },
+				{ rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon/apple-icon-180x180.png' },
+				{ rel: 'icon', type: 'image/png', sizes: '192x192', href: '/favicon/android-icon-192x192.png' },
+				{ rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon/favicon-32x32.png' },
+				{ rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon/favicon-96x96.png' },
+				{ rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon/favicon-16x16.png' },
+				{ rel: 'icon', type: 'image/x-icon', href: '/favicon/favicon.ico' },
+				{ rel: 'manifest', href: '/favicon/manifest.json' },
+			],
 			noscript: [
 				{
 					innerHTML: `<iframe src="https://www.googletagmanager.com/ns.html?id=${process.env.NUXT_PUBLIC_GTM_ID || 'GTM-WB3N3SCX'}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
