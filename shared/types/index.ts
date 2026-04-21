@@ -89,7 +89,6 @@ export interface Shop extends BaseEntity {
 	socialLinks?: {
 		facebook?: string
 		instagram?: string
-		twitter?: string
 	}
 
 	// Umístění

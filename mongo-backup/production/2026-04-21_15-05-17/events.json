@@ -1,0 +1,50 @@
+[
+  {
+    "_id": "69b10e0afb2321123b767b5a",
+    "name": "50 hitů, 50 novinek, polovina ceny",
+    "image": "/api/uploads/90106739-7b58-40ec-a9fb-154d2fd39124.png",
+    "shopId": "69c52c14066b0f2f2116f192",
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-03-11T06:39:06.367Z",
+    "updatedAt": "2026-04-08T08:03:29.270Z",
+    "__v": 0,
+    "content": "<p>V <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-plaza-600 underline hover:text-plaza-800\" href=\"https://www.knihydobrovsky.cz/\"><u>Knihy Dobrovský</u></a>&nbsp;mají slevu na oblíbené tituly loňského roku, tak neváhejte a navštivte své oblíbené knihkupectví v našem obchodním centru, kde vás čeká 50 hitů s 50 % slevou. Slevy se nesčítají.</p>"
+  },
+  {
+    "_id": "69e523411c6170f0102829b4",
+    "name": "KD voucher 100kč",
+    "image": "/api/uploads/06fb4024-0a79-4832-83cb-f6eb49879aab.png",
+    "content": "<p>V <a target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-plaza-600 underline hover:text-plaza-800\" href=\"https://www.knihydobrovsky.cz/\"><u>KNIHY DOBROVSKÝ</u></a>&nbsp;není dárků nikdy dost. Nakupte na prodejně a získejte slevičku na příští nákup v krásném a luxusním provedení. Kartičky se budou rozdávat jen do <strong>konce května</strong>&nbsp;nebo do vyčerpání zásob. </p>",
+    "shopId": "69c52c14066b0f2f2116f192",
+    "sortOrder": 3,
+    "isActive": true,
+    "createdAt": "2026-04-19T18:47:29.334Z",
+    "updatedAt": "2026-04-19T18:47:29.334Z",
+    "__v": 0
+  },
+  {
+    "_id": "69e5238f1c6170f0102829c5",
+    "name": "Korejská kosmetika",
+    "image": "/api/uploads/32330d85-3e98-49a6-b914-27f5986b99a4.jpg",
+    "content": "<p>Korejská kosmetika je téma posledních měsíců po celém světě. Mnoho žen si jí oblíbila pro její inovativní přístup.  V&nbsp;drogerii Teta na vás čeká mnoho značek korejské kosmetiky nyní se slevou min. <strong>30 %</strong>. Přijďte si vybrat ze značek jako COSRX, Beauty of Joseon, Dr. Althea, Haruharu, Round lab a další. Akce platí do 4. 5. 2026.</p>",
+    "shopId": "69c52c14066b0f2f2116f1d2",
+    "sortOrder": 4,
+    "isActive": true,
+    "createdAt": "2026-04-19T18:48:47.747Z",
+    "updatedAt": "2026-04-19T18:48:47.747Z",
+    "__v": 0
+  },
+  {
+    "_id": "69e523f71c6170f0102829d6",
+    "name": "Teta Nivea & Labello",
+    "image": "/api/uploads/f3257952-c6ef-4105-8c3a-e5f98c437242.jpg",
+    "content": "<p>V&nbsp;drogerii Teta si pro vás připravili slevu 150 korun na všechny produkty Nivea a Labello. Stačí nakoupit tyto produkty nad 399 Kč a sleva je vaše! Platí na vše: krémy, mléka, sprchové gely, deodoranty i na péči o vlasy, na kosmetiku pro děti a také na Nivea men. Akce platí do 4. 5. 2026.</p>",
+    "shopId": "69c52c14066b0f2f2116f1d2",
+    "sortOrder": 5,
+    "isActive": true,
+    "createdAt": "2026-04-19T18:50:31.284Z",
+    "updatedAt": "2026-04-19T18:50:31.284Z",
+    "__v": 0
+  }
+]

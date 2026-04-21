@@ -167,7 +167,6 @@ export const shopCreateSchema = z.object({
 		.object({
 			facebook: urlSchema,
 			instagram: urlSchema,
-			twitter: urlSchema,
 		})
 		.optional(),
 	/** @deprecated Použij floorIds */

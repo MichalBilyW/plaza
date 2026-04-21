@@ -370,18 +370,7 @@
 								placeholder="https://instagram.com/..."
 							/>
 						</div>
-						<div>
-							<label for="twitter" class="block text-xs text-plaza-dark mb-1"
-								>Twitter / X</label
-							>
-							<input
-								id="twitter"
-								v-model="form.socialLinks.twitter"
-								type="url"
-								class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-shops-500 focus:border-transparent text-sm"
-								placeholder="https://twitter.com/..."
-							/>
-						</div>
+
 					</div>
 				</div>
 			</div>
@@ -881,7 +870,6 @@ const form = reactive({
 	socialLinks: {
 		facebook: '',
 		instagram: '',
-		twitter: '',
 	},
 	/** @deprecated Zachováno pro zpětnou kompatibilitu */
 	floorId: '',
@@ -934,7 +922,6 @@ watch(
 			form.website = newShop.website || ''
 			form.socialLinks.facebook = newShop.socialLinks?.facebook || ''
 			form.socialLinks.instagram = newShop.socialLinks?.instagram || ''
-			form.socialLinks.twitter = newShop.socialLinks?.twitter || ''
 			// Legacy floorId - pro zpětnou kompatibilitu
 			form.floorId =
 				typeof newShop.floorId === 'object' && newShop.floorId?._id
@@ -1128,7 +1115,6 @@ const handleSubmit = async () => {
 		const socialLinks: Record<string, string> = {}
 		if (form.socialLinks.facebook.trim()) socialLinks.facebook = form.socialLinks.facebook.trim()
 		if (form.socialLinks.instagram.trim()) socialLinks.instagram = form.socialLinks.instagram.trim()
-		if (form.socialLinks.twitter.trim()) socialLinks.twitter = form.socialLinks.twitter.trim()
 		data.socialLinks = socialLinks
 
 		// Opening hours - vždy posíláme (i prázdné pole, aby server věděl, že má pole vymazat)

@@ -18,17 +18,14 @@ export default defineEventHandler(
 
 		const id = getRouterParam(event, 'id')
 
-		// Najít obchod
 		const shop = await Shop.findById(id)
 		if (!shop) {
 			throw createNotFoundError('Obchod')
 		}
 
-		// Validace vstupu
 		const body = await readBody(event)
 		const data = shopUpdateSchema.parse(body)
 
-		// Pokud se mění název a není explicitně zadán slug, vygenerovat nový
 		if (data.name && data.name !== shop.name && !data.slug) {
 			data.slug = await generateUniqueSlug(data.name, async (s) => {
 				const existing = await Shop.findOne({ slug: s, _id: { $ne: id } })
@@ -36,7 +33,6 @@ export default defineEventHandler(
 			})
 		}
 
-		// Pokud je explicitně zadán slug, zkontrolovat unikátnost
 		if (data.slug && data.slug !== shop.slug) {
 			const existing = await Shop.findOne({ slug: data.slug, _id: { $ne: id } })
 			if (existing) {
@@ -44,14 +40,9 @@ export default defineEventHandler(
 			}
 		}
 
-		// Aktualizovat jen pole, která byla v requestu (ne Zod defaults)
 		for (const key of Object.keys(data)) {
 			if (key in body) {
-				;(shop as Record<string, unknown>)[key] = data[key as keyof typeof data]
-				// Mongoose nedetekuje změny vnořených objektů automaticky
-				if (typeof data[key as keyof typeof data] === 'object') {
-					shop.markModified(key)
-				}
+				shop.set(key, data[key as keyof typeof data])
 			}
 		}
 		await shop.save()

@@ -30,7 +30,6 @@ export interface ISpecialOpeningHours {
 export interface ISocialLinks {
 	facebook?: string
 	instagram?: string
-	twitter?: string
 }
 
 export interface IMapPosition {
@@ -133,7 +132,6 @@ const socialLinksSchema = new Schema(
 	{
 		facebook: String,
 		instagram: String,
-		twitter: String,
 	},
 	{ _id: false },
 )

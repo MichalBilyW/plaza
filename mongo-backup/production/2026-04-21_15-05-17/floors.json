@@ -1,0 +1,47 @@
+[
+  {
+    "_id": "69c951a621981f2fc7a5ea1f",
+    "name": "-2 patro",
+    "level": -2,
+    "svgMap": "/api/uploads/1c21a506-e5c9-4bc9-8445-3b4f7c6c2ca1.svg",
+    "isActive": true,
+    "sortOrder": 0,
+    "createdAt": "2026-03-29T16:21:58.756Z",
+    "updatedAt": "2026-04-20T20:03:16.830Z",
+    "__v": 0
+  },
+  {
+    "_id": "6998e15a93a13d0796eaa812",
+    "name": "Přízemí",
+    "level": 0,
+    "mapImage": "/api/uploads/2ec4553c-302e-4e1b-aab3-fe962cab8b26.svg",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2026-02-20T22:34:02.841Z",
+    "updatedAt": "2026-04-20T20:03:16.830Z",
+    "__v": 0,
+    "svgMap": "/api/uploads/9559cd11-b219-404a-8705-9c01009573c5.svg"
+  },
+  {
+    "_id": "69c9522f21981f2fc7a5ea4a",
+    "name": "2. patro",
+    "level": 2,
+    "svgMap": "/api/uploads/806d0138-4c8b-41da-b7ad-26ef2384e74a.svg",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2026-03-29T16:24:15.881Z",
+    "updatedAt": "2026-04-20T20:03:16.830Z",
+    "__v": 0
+  },
+  {
+    "_id": "69c9520a21981f2fc7a5ea3f",
+    "name": "1. patro",
+    "level": 1,
+    "svgMap": "/api/uploads/c958ea9a-4e07-4245-8060-e51da1f97b47.svg",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2026-03-29T16:23:38.345Z",
+    "updatedAt": "2026-04-20T20:03:16.830Z",
+    "__v": 0
+  }
+]
