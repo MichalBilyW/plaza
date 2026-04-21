@@ -79,6 +79,28 @@
 						>
 							{{ t('common.more') }}
 						</NuxtLink>
+						<button
+							v-else-if="unit.shop?.slug && !isUpcoming && isOnThisShopDetail"
+							type="button"
+							class="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-[5px_18px_5px_5px] bg-plaza text-white hover:brightness-110 transition-all duration-300"
+							aria-label="Zpět nahoru"
+							title="Zpět nahoru"
+							@click="scrollToTop"
+						>
+							<svg
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.4"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M12 19V5" />
+								<path d="m5 12 7-7 7 7" />
+							</svg>
+						</button>
 					</div>
 				</div>
 			</Transition>
@@ -151,6 +173,12 @@ function handlePopupWheel(e: WheelEvent) {
 function handlePopupTouchMove(e: TouchEvent) {
 	if (e.touches.length < 2) return
 	preventPopupBrowserZoom(e)
+}
+
+function scrollToTop() {
+	if (!import.meta.client) return
+	emit('close')
+	window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 /**

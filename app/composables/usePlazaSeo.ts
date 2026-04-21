@@ -11,6 +11,8 @@ interface SeoConfig {
 	noIndex?: boolean
 }
 
+const NOINDEX_ROBOTS = 'noindex, nofollow, noarchive, nosnippet, noimageindex'
+
 export const usePlazaSeo = (config: SeoConfig) => {
 	const runtimeConfig = useRuntimeConfig()
 	const route = useRoute()
@@ -21,6 +23,8 @@ export const usePlazaSeo = (config: SeoConfig) => {
 	const fullTitle = config.title === siteName ? siteName : `${config.title} | ${siteName}`
 
 	const fullUrl = config.url || `${baseUrl}${route.path}`
+	const isCmsRoute = route.path === '/cms' || route.path.startsWith('/cms/')
+	const noIndex = config.noIndex || isCmsRoute
 
 	// Nastavit SEO meta tagy
 	useSeoMeta({
@@ -29,18 +33,19 @@ export const usePlazaSeo = (config: SeoConfig) => {
 		description: config.description || 'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 		ogDescription: config.description || 'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 		ogImage: config.image || `${baseUrl}/images/og.jpg`,
-		ogUrl: fullUrl,
+		ogUrl: noIndex ? undefined : fullUrl,
 		ogType: config.type || 'website',
 		ogSiteName: siteName,
 		twitterCard: 'summary_large_image',
 		twitterTitle: fullTitle,
 		twitterDescription: config.description || 'Prohlédněte si obchody a služby v OC Plaza Liberec, interaktivní mapu centra, možnosti parkování, aktuální akce a novinky i další informace o centru.',
 		twitterImage: config.image || `${baseUrl}/images/og.jpg`,
-		robots: config.noIndex ? 'noindex, nofollow' : 'index, follow',
+		robots: noIndex ? NOINDEX_ROBOTS : 'index, follow',
 	})
 
 	// Nastavit canonical URL
 	useHead({
-		link: [{ rel: 'canonical', href: fullUrl }],
+		link: noIndex ? [] : [{ rel: 'canonical', href: fullUrl }],
+		meta: noIndex ? [{ name: 'googlebot', content: NOINDEX_ROBOTS }] : [],
 	})
 }

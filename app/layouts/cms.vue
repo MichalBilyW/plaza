@@ -447,6 +447,7 @@
 <script setup lang="ts">
 const { user, isAdmin, logout } = useCmsAuth()
 const sidebarOpen = ref(false)
+const robotsContent = 'noindex, nofollow, noarchive, nosnippet, noimageindex'
 
 const roleLabel = computed(() => {
 	if (user.value?.role === 'superadmin') return 'cms.roles.superadmin'
@@ -456,7 +457,10 @@ const roleLabel = computed(() => {
 
 // Prevent indexing of CMS pages
 useHead({
-	meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+	meta: [
+		{ name: 'robots', content: robotsContent },
+		{ name: 'googlebot', content: robotsContent },
+	],
 })
 
 // Zavřít sidebar při změně route

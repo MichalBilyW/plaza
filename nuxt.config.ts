@@ -3,6 +3,7 @@ import { dirname, resolve } from 'node:path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+const NOINDEX_ROBOTS = 'noindex, nofollow, noarchive, nosnippet, noimageindex'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -50,7 +51,7 @@ export default defineNuxtConfig({
 		// Dynamické URL z API
 		sources: ['/api/__sitemap__/urls'],
 		// Vyloučit CMS stránky
-		exclude: ['/cms/**', '/cms', '/cookies'],
+		exclude: ['/cms', '/cms/**', '/api/**', '/cookies'],
 		// Statické stránky s prioritou
 		defaults: {
 			changefreq: 'weekly',
@@ -214,8 +215,19 @@ export default defineNuxtConfig({
 		'/o-nas': { ssr: true },
 		'/mapa': { ssr: true },
 
-		// CMS routes - no cache, auth required
-		'/cms/**': { ssr: true },
+		// CMS routes - private, never index
+		'/cms': {
+			ssr: true,
+			headers: {
+				'X-Robots-Tag': NOINDEX_ROBOTS,
+			},
+		},
+		'/cms/**': {
+			ssr: true,
+			headers: {
+				'X-Robots-Tag': NOINDEX_ROBOTS,
+			},
+		},
 
 		// API routes
 		'/api/**': { cors: true },

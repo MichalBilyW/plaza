@@ -10,6 +10,15 @@ import { connectToDatabase } from '@/server/utils/db'
 import { Shop } from '@/server/models'
 import { asSitemapUrl, defineSitemapEventHandler } from '#imports'
 
+function isPublicSitemapPath(path: string) {
+	return !(
+		path === '/cms' ||
+		path.startsWith('/cms/') ||
+		path === '/api' ||
+		path.startsWith('/api/')
+	)
+}
+
 export default defineSitemapEventHandler(async () => {
 	await connectToDatabase()
 
@@ -28,5 +37,5 @@ export default defineSitemapEventHandler(async () => {
 		)
 	}
 
-	return urls
+	return urls.filter((url) => isPublicSitemapPath(url.loc))
 })

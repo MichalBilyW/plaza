@@ -26,6 +26,7 @@ Disallow: /
 
 	// Produkce - normální pravidla
 	return `User-Agent: *
+Disallow: /cms
 Disallow: /cms/
 Disallow: /api/
 

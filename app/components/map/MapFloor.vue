@@ -514,9 +514,13 @@ function updateDynamicClasses() {
 	}
 }
 
+function scheduleDynamicClassUpdate() {
+	nextTick(updateDynamicClasses)
+}
+
 // Reagovat na hover/search změny přes DOM manipulaci (ne SVG re-render)
-watch(() => props.hoveredUnitCode, updateDynamicClasses)
-watch(matchedUnitCodes, updateDynamicClasses)
+watch(() => props.hoveredUnitCode, scheduleDynamicClassUpdate)
+watch(matchedUnitCodes, scheduleDynamicClassUpdate)
 
 // Nastavení event listenerů po renderování SVG
 watch(svgWrapperRef, (wrapper) => {
@@ -524,6 +528,7 @@ watch(svgWrapperRef, (wrapper) => {
 		nextTick(() => {
 			setupEventListeners()
 			setupResizeObserver()
+			updateDynamicClasses()
 		})
 	}
 })
@@ -532,6 +537,7 @@ watch(svgWrapperRef, (wrapper) => {
 watch(processedSvg, () => {
 	nextTick(() => {
 		setupEventListeners()
+		updateDynamicClasses()
 	})
 })
 
@@ -815,7 +821,13 @@ onBeforeUnmount(() => {
 /* Zvýrazněná jednotka (odpovídá vyhledávání) */
 .map-floor :deep(.map-unit--highlighted) {
 	filter: brightness(1.15) saturate(1.3);
+}
+
+.map-floor :deep(.map-unit--highlighted path[data-name='outline']) {
+	fill: theme('colors.plaza.DEFAULT');
+	fill-opacity: 0.5;
 	stroke: theme('colors.plaza.DEFAULT');
+	stroke-opacity: 0.65;
 	stroke-width: 1;
 }
 
