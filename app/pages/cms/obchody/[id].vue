@@ -1131,8 +1131,8 @@ const handleSubmit = async () => {
 		if (form.socialLinks.twitter.trim()) socialLinks.twitter = form.socialLinks.twitter.trim()
 		data.socialLinks = socialLinks
 
-		// Opening hours
-		const openingHours = form.openingHours
+		// Opening hours - vždy posíláme (i prázdné pole, aby server věděl, že má pole vymazat)
+		data.openingHours = form.openingHours
 			.filter((entry) => !entry.closed && entry.open && entry.close)
 			.map((entry) => ({
 				day: entry.day,
@@ -1140,12 +1140,9 @@ const handleSubmit = async () => {
 				close: entry.close,
 				closed: false,
 			}))
-		if (openingHours.length) {
-			data.openingHours = openingHours
-		}
 
 		// Special opening hours
-		const specialOpeningHours = form.specialOpeningHours
+		data.specialOpeningHours = form.specialOpeningHours
 			.filter((entry) =>
 				entry.type === 'single' ? entry.date : entry.dateFrom && entry.dateTo,
 			)
@@ -1158,9 +1155,6 @@ const handleSubmit = async () => {
 				closed: entry.closed,
 				note: entry.note || undefined,
 			}))
-		if (specialOpeningHours.length) {
-			data.specialOpeningHours = specialOpeningHours
-		}
 
 		await secureFetch(`/api/shops/${shopId}`, {
 			method: 'PUT',
