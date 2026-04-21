@@ -122,7 +122,10 @@
 						</div>
 
 						<!-- Separator -->
-						<div class="border-t border-gray-200 my-3 max-w-[290px] mx-auto"></div>
+						<div
+							v-if="todaySpecialHours || shop.openingHours?.length || shop.website || shop.email || shop.phone"
+							class="border-t border-gray-200 my-3 max-w-[290px] mx-auto"
+						></div>
 
 						<!-- Contact info -->
 						<div class="px-1 space-y-1 text-sm">
@@ -161,12 +164,15 @@
 						</div>
 
 						<!-- Separator -->
-						<div class="border-t border-gray-200 my-3 max-w-[290px] mx-auto"></div>
+						<div
+							v-if="shop.socialLinks?.facebook || shop.socialLinks?.instagram"
+							class="border-t border-gray-200 my-3 max-w-[290px] mx-auto"
+						></div>
 
 						<!-- Sociální sítě -->
 						<div
 							v-if="shop.socialLinks?.facebook || shop.socialLinks?.instagram"
-							class="flex justify-end gap-3 px-1"
+							class="flex justify-center gap-3 px-1"
 						>
 							<a
 								v-if="shop.socialLinks?.facebook"

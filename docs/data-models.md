@@ -82,7 +82,6 @@ Heslo a `__v` jsou automaticky odstraněny z JSON výstupu.
 | `website` | String | Ne | – | Web |
 | `socialLinks.facebook` | String | Ne | – | URL |
 | `socialLinks.instagram` | String | Ne | – | URL |
-| `socialLinks.twitter` | String | Ne | – | URL |
 | `floorId` | ObjectId (ref: Floor) | Ne | index | **@deprecated** Použij `floorIds` |
 | `floorIds` | [ObjectId (ref: Floor)] | Ne | – | Patra obchodu (může být na více) |
 | `categoryIds` | [ObjectId (ref: Category)] | Ne | – | Kategorie obchodu |
