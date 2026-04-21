@@ -74,7 +74,7 @@
 							animatedParkingCount
 						}}</span>
 						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
-							t('home.infoSection.parking')
+							t('home.infoSection.parkingSpots')
 						}}</span>
 						<svg
 							class="w-4 h-4 absolute right-3 top-3.5 md:top-[25px] inline-block -mt-0.5 ml-1 w-5 h-5 opacity-0 md:group-hover:opacity-30 touch:!opacity-30 transition-opacity ease-in-out"
