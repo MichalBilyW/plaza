@@ -726,30 +726,17 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .map-floor {
-	will-change: opacity;
-	transform: translateZ(0);
-}
-
-/* Loga a badge - lepší kvalita při zoomu */
-.logo-overlay {
-	backface-visibility: hidden;
-	-webkit-backface-visibility: hidden;
-	transform-style: preserve-3d;
+	-webkit-tap-highlight-color: transparent;
 }
 
 .logo-overlay img {
-	image-rendering: -webkit-optimize-contrast;
-	image-rendering: crisp-edges;
-	backface-visibility: hidden;
-	-webkit-backface-visibility: hidden;
+	image-rendering: auto;
 }
 
 .upcoming-badge {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-rendering: optimizeLegibility;
-	backface-visibility: hidden;
-	-webkit-backface-visibility: hidden;
 }
 
 .map-floor :deep(svg) {
@@ -758,6 +745,15 @@ onBeforeUnmount(() => {
 	display: block;
 	/* Průhledné pozadí pro vrstvení nad MapStaticAround */
 	background: transparent;
+	shape-rendering: geometricPrecision;
+	text-rendering: geometricPrecision;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.map-floor :deep(text) {
+	text-rendering: geometricPrecision;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 /* Skrýt bílé pozadí v SVG */
@@ -780,15 +776,6 @@ onBeforeUnmount(() => {
 	fill-opacity: 0.12;
 }
 
-.map-floor :deep(.map-unit--occupied:hover) {
-	filter: brightness(1.1);
-}
-
-.map-floor :deep(.map-unit--occupied:hover path[data-name='outline']) {
-	fill: theme('colors.plaza.DEFAULT');
-	fill-opacity: 0.6;
-}
-
 .map-floor :deep(.map-unit--selected) {
 	filter: brightness(1.1);
 }
@@ -805,12 +792,24 @@ onBeforeUnmount(() => {
 	cursor: pointer;
 }
 
-.map-floor :deep(.map-unit--empty:hover) {
-	opacity: 0.25;
-}
-
 .map-floor :deep(.map-unit--empty path) {
 	stroke-opacity: 0.33;
+}
+
+/* Hover pouze pro přesná hover zařízení. iOS/Android jinak drží sticky :hover outline. */
+@media (hover: hover) and (pointer: fine) {
+	.map-floor :deep(.map-unit--occupied:hover) {
+		filter: brightness(1.1);
+	}
+
+	.map-floor :deep(.map-unit--occupied:hover path[data-name='outline']) {
+		fill: theme('colors.plaza.DEFAULT');
+		fill-opacity: 0.6;
+	}
+
+	.map-floor :deep(.map-unit--empty:hover) {
+		opacity: 0.25;
+	}
 }
 
 /* Zvýrazněná jednotka (odpovídá vyhledávání) */

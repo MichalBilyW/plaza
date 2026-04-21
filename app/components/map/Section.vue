@@ -29,6 +29,7 @@
 				</svg>
 				<input
 					id="shop-search"
+					ref="searchInputRef"
 					v-model="search"
 					type="search"
 					autocomplete="off"
@@ -69,7 +70,7 @@
 								:key="shop.unitCode"
 								type="button"
 								class="w-full px-3 py-2.5 flex items-center gap-3 hover:bg-plaza-light/30 transition-colors text-left"
-								@mousedown.prevent="selectSuggestion(floorGroup.floorId, shop.name)"
+								@pointerdown.prevent="selectSuggestion(floorGroup.floorId, shop.name)"
 							>
 								<img
 									v-if="shop.logo"
@@ -118,7 +119,7 @@
 			</ClientOnly>
 		</div>
 
-		<div class="relative w-full min-h-[600px] mb-8 md:mb-16">
+		<div class="map-section-frame relative w-full mb-8 md:mb-16">
 			<h2 class="absolute -left-[9990px] -top-[9990px] opacity-0 visibility-hidden">
 				{{ t('mapPage.title') }}
 			</h2>
@@ -144,7 +145,7 @@
 					>
 						<div
 							v-if="pending || isLoading"
-							class="absolute inset-0 z-40 flex items-center justify-center min-h-[600px] bg-white"
+							class="map-loading-overlay absolute inset-0 z-40 flex items-center justify-center bg-white"
 						>
 							<div class="flex flex-col items-center gap-4">
 								<div class="map-spinner"></div>
@@ -156,7 +157,7 @@
 					<!-- Interaktivní mapa — renderuje se vždy (i pod spinnerem) -->
 					<div
 						ref="mapContainerRef"
-						class="map-container relative overflow-hidden max-w-full min-h-[600px]"
+						class="map-container relative overflow-hidden max-w-full"
 						:class="isZoomed && !isTouch ? 'cursor-grab active:cursor-grabbing' : ''"
 					>
 						<!-- Zoom ovládání -->
@@ -289,7 +290,7 @@
 				</template>
 
 				<template #fallback>
-					<div class="flex items-center justify-center min-h-[600px]">
+					<div class="map-fallback flex items-center justify-center">
 						<div class="flex flex-col items-center gap-4">
 							<div class="map-spinner"></div>
 							<p class="text-gray-500 text-sm">{{ t('common.loading') }}</p>
@@ -347,6 +348,7 @@ const isLoading = ref(true)
 const mapReady = ref(false)
 const search = ref(props.highlightShopName ?? '')
 const showSuggestions = ref(false)
+const searchInputRef = ref<HTMLInputElement | null>(null)
 
 // Debounced search pro MapFloor — nespouští SVG class update na každý keystroke
 let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null
@@ -418,18 +420,36 @@ function hideSuggestionsDelayed() {
 	}, 150)
 }
 
+function blurSearchInput() {
+	if (!import.meta.client) return
+	searchInputRef.value?.blur()
+	const activeElement = document.activeElement
+	if (activeElement instanceof HTMLElement) {
+		activeElement.blur()
+	}
+}
+
+function runOnNextFrame(callback: () => void) {
+	if (!import.meta.client || typeof window.requestAnimationFrame !== 'function') return
+	window.requestAnimationFrame(callback)
+}
+
 // Vybrat položku z našeptávače - přepnout patro, zachovat search
 function selectSuggestion(floorId: string, shopName?: string) {
 	showSuggestions.value = false
+	blurSearchInput()
 	selectFloor(floorId)
 	// Track map search with selected unit
 	trackMapSearch(search.value, shopName)
 	// search zůstává - obchod se zvýrazní v novém patře
+	runOnNextFrame(blurSearchInput)
 }
 
 // Zoom
 const {
 	currentScale,
+	currentPanX,
+	currentPanY,
 	canZoomIn,
 	canZoomOut,
 	mapContainerRef,
@@ -450,7 +470,7 @@ onMounted(() => {
 	const container = mapContainerRef.value
 	if (container) {
 		container.addEventListener('touchstart', handleTouchStart, { passive: true })
-		container.addEventListener('touchmove', handleTouchMove, { passive: true })
+		container.addEventListener('touchmove', handleTouchMove, { passive: false })
 	}
 })
 
@@ -464,13 +484,19 @@ function handleTouchStart(e: TouchEvent) {
 	closePopup()
 }
 
-// Touch: jakýkoli pan/scroll → zavřít popup
-function handleTouchMove() {
+// Touch: jakýkoli pan/scroll → zavřít popup; nad mapou nesmí prohlížeč scrollovat/zoomovat stránku
+function handleTouchMove(e: TouchEvent) {
+	e.preventDefault()
 	if (state.hoveredUnit) closePopup()
 }
 
 // Zoom změna → zavřít popup (pinch zoom, tlačítka, wheel)
 watch(currentScale, () => {
+	if (state.hoveredUnit) closePopup()
+})
+
+// Pan změna → zavřít popup při přesunu zazoomované mapy
+watch([currentPanX, currentPanY], () => {
 	if (state.hoveredUnit) closePopup()
 })
 
@@ -503,11 +529,25 @@ onUnmounted(() => {
 	if (loadingTimeout) {
 		clearTimeout(loadingTimeout)
 	}
+	const container = mapContainerRef.value
+	if (container) {
+		container.removeEventListener('touchstart', handleTouchStart)
+		container.removeEventListener('touchmove', handleTouchMove)
+	}
 })
+
+function centerMapSoon() {
+	if (!import.meta.client) return
+	nextTick(() => {
+		runOnNextFrame(() => {
+			resetAndCenter()
+		})
+	})
+}
 
 // Centrovat mapu při změně patra
 onFloorChange(() => {
-	resetAndCenter()
+	centerMapSoon()
 })
 
 // Handler pro změnu patra s plynulou animací
@@ -541,7 +581,7 @@ function handleStaticAroundLoaded() {
 // Handler pro dokončení animace SVG okolí
 function handleAnimationComplete() {
 	mapReady.value = true
-	resetAndCenter()
+	centerMapSoon()
 }
 
 // Sledovat stav načítání - pokud není staticAroundMap nebo data jsou načtená bez SVG
@@ -563,6 +603,7 @@ watch(currentFloor, (floor) => {
 		// Mapa patra je načtená a není SVG okolí - zobrazit
 		isLoading.value = false
 		mapReady.value = true
+		centerMapSoon()
 	}
 })
 </script>
@@ -591,6 +632,31 @@ watch(currentFloor, (floor) => {
 	}
 }
 
+.map-section-frame,
+.map-container,
+.map-loading-overlay,
+.map-fallback {
+	min-height: 600px;
+}
+
+/* Mobilní mapa má vlastní viewport, aby pevný min-height nevyráběl prázdné místo. */
+@media (max-width: 767px) {
+	.map-section-frame,
+	.map-container,
+	.map-loading-overlay,
+	.map-fallback {
+		height: min(72svh, 720px);
+		min-height: 420px;
+	}
+}
+
+.map-container,
+.map-layers {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
 /* Skrytí scrollbaru v přepínači pater */
 .scrollbar-none {
 	-ms-overflow-style: none;
@@ -600,9 +666,7 @@ watch(currentFloor, (floor) => {
 	display: none;
 }
 
-/* GPU akcelerace pro plynulé animace */
 .map-layers {
-	will-change: transform;
-	transform: translateZ(0);
+	touch-action: none;
 }
 </style>

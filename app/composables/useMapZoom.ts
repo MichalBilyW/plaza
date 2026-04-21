@@ -5,7 +5,7 @@
  * - Plynulý zoom přes +/− tlačítka (krok 0.5×)
  * - Double click/tap zoom
  * - Pan pouze při přiblížení
- * - Touch: 1 prst = scroll stránky, 2 prsty = pinch zoom + pan mapy
+ * - Touch nad mapou ovládá mapu, ne scroll/zoom stránky
  * - Desktop: Ctrl/Cmd + wheel zoom, drag při přiblížení
  */
 
@@ -15,6 +15,7 @@ type PanzoomObject = ReturnType<typeof Panzoom>
 const MAX_ZOOM = 5
 const ZOOM_STEP = 0.5
 const MOBILE_BREAKPOINT = 768 // md breakpoint
+const MIN_ZOOM = 1
 
 export function useMapZoom() {
 	const mapContainerRef = ref<HTMLElement | null>(null)
@@ -22,8 +23,14 @@ export function useMapZoom() {
 	const isTouch = ref(false)
 	const isMobile = ref(false)
 	const currentScale = ref(1)
+	const currentPanX = ref(0)
+	const currentPanY = ref(0)
+	const minScale = ref(MIN_ZOOM)
 
 	let panzoomInstance: PanzoomObject | null = null
+	let activeContainer: HTMLElement | null = null
+	let activeContent: HTMLElement | null = null
+	let lastViewportWidth = 0
 
 	// Detekce touch zařízení
 	function checkTouch() {
@@ -36,32 +43,136 @@ export function useMapZoom() {
 	}
 
 	// Je přiblíženo? (pro cursor logic)
-	const isZoomed = computed(() => currentScale.value > 1.1)
+	const isZoomed = computed(() => currentScale.value > minScale.value + 0.1)
 
 	// Může zoom in/out?
 	const canZoomIn = computed(() => currentScale.value < MAX_ZOOM - 0.01)
-	const canZoomOut = computed(() => currentScale.value > 1.01)
+	const canZoomOut = computed(() => currentScale.value > minScale.value + 0.01)
+
+	function getBaseContentSize() {
+		const content = mapContentRef.value
+		if (!content) return null
+
+		const scale = panzoomInstance?.getScale() || currentScale.value || 1
+		const rect = content.getBoundingClientRect()
+		let width = rect.width / scale
+		let height = rect.height / scale
+
+		if (width > 1 && height > 1) return { width, height }
+
+		const svg = content.querySelector('svg') as SVGSVGElement | null
+		const viewBox = svg?.viewBox.baseVal
+		if (svg && viewBox && viewBox.width > 0 && viewBox.height > 0) {
+			width = content.clientWidth || mapContainerRef.value?.clientWidth || viewBox.width
+			height = width * (viewBox.height / viewBox.width)
+			return { width, height }
+		}
+
+		if (content.offsetWidth > 1 && content.offsetHeight > 1) {
+			return { width: content.offsetWidth, height: content.offsetHeight }
+		}
+
+		return null
+	}
+
+	function getMobileDefaultTransform() {
+		const container = mapContainerRef.value
+		const size = getBaseContentSize()
+		if (!container || !size) return { scale: MIN_ZOOM, x: 0, y: 0 }
+
+		const containerWidth = container.clientWidth
+		const containerHeight = container.clientHeight
+		if (containerWidth <= 0 || containerHeight <= 0) return { scale: MIN_ZOOM, x: 0, y: 0 }
+
+		const scale = Math.min(
+			MAX_ZOOM,
+			Math.max(
+				MIN_ZOOM,
+				containerWidth / size.width,
+				containerHeight / size.height,
+			),
+		)
+
+		return {
+			scale,
+			x: (containerWidth - size.width) / (2 * scale),
+			y: (containerHeight - size.height) / (2 * scale),
+		}
+	}
+
+	function runOnNextFrame(callback: () => void) {
+		if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+			window.requestAnimationFrame(callback)
+		} else {
+			callback()
+		}
+	}
+
+	function applyMobileDefault(animate = false) {
+		if (!panzoomInstance) return
+
+		const transform = getMobileDefaultTransform()
+		minScale.value = transform.scale
+		panzoomInstance.setOptions({
+			contain: 'outside',
+			minScale: transform.scale,
+			startScale: MIN_ZOOM,
+		})
+		panzoomInstance.zoom(transform.scale, { animate, force: true })
+		runOnNextFrame(() => {
+			panzoomInstance?.pan(transform.x, transform.y, { animate, force: true })
+			currentScale.value = transform.scale
+		})
+	}
+
+	function applyDesktopDefault() {
+		if (!panzoomInstance) return
+		minScale.value = MIN_ZOOM
+		panzoomInstance.setOptions({
+			contain: undefined,
+			minScale: MIN_ZOOM,
+			startScale: MIN_ZOOM,
+		})
+		panzoomInstance.reset({ animate: false })
+		currentScale.value = MIN_ZOOM
+		currentPanX.value = 0
+		currentPanY.value = 0
+	}
+
+	function removeDomListeners() {
+		if (activeContainer) {
+			activeContainer.removeEventListener('dblclick', handleDoubleClick)
+			activeContainer.removeEventListener('wheel', handleWheel)
+			activeContainer.removeEventListener('gesturestart', preventGesture)
+			activeContainer.removeEventListener('gesturechange', preventGesture)
+			activeContainer.removeEventListener('gestureend', preventGesture)
+		}
+		if (activeContent) {
+			activeContent.removeEventListener('panzoomchange', handlePanzoomChange)
+		}
+		activeContainer = null
+		activeContent = null
+	}
 
 	// Inicializace panzoom
 	function initPanzoom() {
 		const content = mapContentRef.value
 		const container = mapContainerRef.value
 		if (!content || !container) return
+		checkTouch()
+		checkMobile()
 
 		// Zrušit předchozí instanci
+		removeDomListeners()
 		if (panzoomInstance) {
 			panzoomInstance.destroy()
 			panzoomInstance = null
 		}
 
-		// Na mobile (< md) výchozí zoom 2×
-		checkMobile()
-		const initialScale = isMobile.value ? 2 : 1
-
 		panzoomInstance = Panzoom(content, {
 			maxScale: MAX_ZOOM,
-			minScale: 1,
-			startScale: initialScale,
+			minScale: MIN_ZOOM,
+			startScale: MIN_ZOOM,
 			startX: 0,
 			startY: 0,
 			cursor: 'default',
@@ -71,12 +182,11 @@ export function useMapZoom() {
 			easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
 			// Citlivost pinch zoomu na touch zařízeních (default 0.3)
 			step: isTouch.value ? 1.2 : 0.3,
-			// Touch: pan-y = 1 prst scrolluje stránku, 2 prsty = pinch zoom + pan mapy
-			touchAction: 'pan-y',
+			// Nad mapou musí mít prioritu panzoom; jinak mobil při pohybu scrolluje stránku.
+			touchAction: 'none',
 		})
 
-		// Nastavit aktuální scale
-		currentScale.value = initialScale
+		currentScale.value = MIN_ZOOM
 
 		// Double click/tap zoom
 		container.addEventListener('dblclick', handleDoubleClick)
@@ -90,10 +200,24 @@ export function useMapZoom() {
 		container.addEventListener('gestureend', preventGesture)
 
 		// Aktualizovat currentScale při změně
-		content.addEventListener('panzoomchange', (e: Event) => {
-			const detail = (e as CustomEvent).detail
-			currentScale.value = detail.scale
+		content.addEventListener('panzoomchange', handlePanzoomChange)
+		activeContainer = container
+		activeContent = content
+
+		nextTick(() => {
+			if (isMobile.value) {
+				applyMobileDefault(false)
+			} else {
+				applyDesktopDefault()
+			}
 		})
+	}
+
+	function handlePanzoomChange(e: Event) {
+		const detail = (e as CustomEvent).detail
+		currentScale.value = detail.scale
+		currentPanX.value = detail.x
+		currentPanY.value = detail.y
 	}
 
 	// Wheel zoom: jen s Ctrl/Cmd klávesou, jemný krok
@@ -108,11 +232,11 @@ export function useMapZoom() {
 			const current = panzoomInstance.getScale()
 			const newScale = Math.min(
 				MAX_ZOOM,
-				Math.max(1, current + direction * WHEEL_ZOOM_STEP * current),
+				Math.max(minScale.value, current + direction * WHEEL_ZOOM_STEP * current),
 			)
 			panzoomInstance.zoomToPoint(newScale, e, { animate: false })
-			if (newScale <= 1) {
-				panzoomInstance.reset({ animate: false })
+			if (newScale <= minScale.value + 0.01) {
+				resetAndCenter()
 			}
 		}
 		// Bez modifikátoru - nechat prohlížeč scrollovat stránku
@@ -126,10 +250,12 @@ export function useMapZoom() {
 	// Double click/tap zoom
 	function handleDoubleClick(e: MouseEvent) {
 		if (!panzoomInstance) return
+		e.preventDefault()
 
 		const current = panzoomInstance.getScale()
 		// Plynulý skok o 1× při double-click, reset na 1× pokud jsme na max
-		const newScale = current >= MAX_ZOOM - 0.5 ? 1 : Math.min(current + 1, MAX_ZOOM)
+		const newScale =
+			current >= MAX_ZOOM - 0.5 ? minScale.value : Math.min(current + 1, MAX_ZOOM)
 
 		// Na touch zařízeních zoomovat do středu, ne k pozici kliknutí
 		if (isTouch.value) {
@@ -139,8 +265,8 @@ export function useMapZoom() {
 		}
 
 		// Pokud se vrací na 1×, resetovat pozici
-		if (newScale === 1) {
-			panzoomInstance.reset({ animate: true })
+		if (newScale <= minScale.value + 0.01) {
+			resetAndCenter(true)
 		}
 	}
 
@@ -154,25 +280,22 @@ export function useMapZoom() {
 	// Zoom out o ZOOM_STEP
 	function zoomOut() {
 		if (!panzoomInstance) return
-		const newScale = Math.max(currentScale.value - ZOOM_STEP, 1)
+		const newScale = Math.max(currentScale.value - ZOOM_STEP, minScale.value)
 		panzoomInstance.zoom(newScale, { animate: true })
-		if (newScale <= 1) {
-			panzoomInstance.reset({ animate: true })
+		if (newScale <= minScale.value + 0.01) {
+			resetAndCenter(true)
 		}
 	}
 
 	// Reset a vystředit mapu (při změně patra)
-	function resetAndCenter() {
+	function resetAndCenter(animate = false) {
 		if (!panzoomInstance) return
 
-		// Na mobile (< md) výchozí zoom je 2×
 		checkMobile()
 		if (isMobile.value) {
-			panzoomInstance.zoom(2, { animate: false })
-			currentScale.value = 2
+			applyMobileDefault(animate)
 		} else {
-			panzoomInstance.reset({ animate: false })
-			currentScale.value = 1
+			applyDesktopDefault()
 		}
 	}
 
@@ -193,20 +316,13 @@ export function useMapZoom() {
 	onMounted(() => {
 		checkTouch()
 		checkMobile()
+		lastViewportWidth = window.innerWidth
 		window.addEventListener('resize', handleWindowResize)
 	})
 
 	onUnmounted(() => {
 		window.removeEventListener('resize', handleWindowResize)
-
-		const container = mapContainerRef.value
-		if (container) {
-			container.removeEventListener('dblclick', handleDoubleClick)
-			container.removeEventListener('wheel', handleWheel)
-			container.removeEventListener('gesturestart', preventGesture)
-			container.removeEventListener('gesturechange', preventGesture)
-			container.removeEventListener('gestureend', preventGesture)
-		}
+		removeDomListeners()
 
 		if (panzoomInstance) {
 			panzoomInstance.destroy()
@@ -217,31 +333,43 @@ export function useMapZoom() {
 	// Window resize handler
 	let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 	function handleWindowResize() {
+		const previousWidth = lastViewportWidth
 		checkTouch()
 		checkMobile()
+		lastViewportWidth = window.innerWidth
 
 		if (resizeTimeout) clearTimeout(resizeTimeout)
 		resizeTimeout = setTimeout(() => {
-			// Na mobile nikdy neresetovat zoom při resize
-			if (!isMobile.value) {
+			if (isMobile.value) {
+				const activeElement = document.activeElement
+				const isEditingText =
+					activeElement instanceof HTMLInputElement ||
+					activeElement instanceof HTMLTextAreaElement
+
+				if (!isEditingText && Math.abs(window.innerWidth - previousWidth) > 40) {
+					resetAndCenter()
+				}
+			} else {
 				resetAndCenter()
 			}
 		}, 150)
 	}
 
-	return {
-		// Refs pro template
-		mapContainerRef,
-		mapContentRef,
-		// Stav
-		currentScale,
-		canZoomIn,
-		canZoomOut,
-		isZoomed,
-		isTouch,
-		// Akce
-		zoomIn,
-		zoomOut,
-		resetAndCenter,
-	}
+		return {
+			// Refs pro template
+			mapContainerRef,
+			mapContentRef,
+			// Stav
+			currentScale,
+			currentPanX,
+			currentPanY,
+			canZoomIn,
+			canZoomOut,
+			isZoomed,
+			isTouch,
+			// Akce
+			zoomIn,
+			zoomOut,
+			resetAndCenter,
+		}
 }

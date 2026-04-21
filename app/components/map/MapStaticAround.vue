@@ -138,8 +138,6 @@ defineExpose({ startAnimation })
 .svg-wrapper {
 	line-height: 0;
 	transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-	will-change: opacity;
-	transform: translateZ(0);
 }
 
 /* Plynulé animace pro SVG skupiny */
