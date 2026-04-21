@@ -4,12 +4,8 @@
 			<div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
 				<!-- Logo + adresa -->
 				<div class="flex flex-col items-center md:items-start">
-					<NuxtLink to="/" class="block mb-4">
-						<img
-							src="/images/logo_plaza.png"
-							alt="Obchodní centrum Plaza Liberec"
-							class="h-16 w-auto"
-						/>
+					<NuxtLink to="/" class="block mb-4" aria-label="Obchodní centrum Plaza Liberec">
+						<PlazaLogo class="h-16 w-auto text-white" aria-hidden="true" />
 					</NuxtLink>
 					<NuxtLink
 						to="https://www.google.com/maps?q=OC+Plaza+Liberec,+Palachova+1404,+460+01+Liberec"

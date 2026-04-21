@@ -1,5 +1,9 @@
 <template>
-	<div ref="containerRef" class="map-floor relative w-full">
+	<div
+		ref="containerRef"
+		class="map-floor relative w-full"
+		:class="{ 'map-floor--android-chrome': isAndroidChrome }"
+	>
 		<!-- SVG obsah -->
 		<div
 			v-if="svgContent"
@@ -102,6 +106,7 @@ const svgContent = ref<string | null>(props.svgContent ?? null)
 const pending = ref(!props.svgContent)
 const error = ref<Error | null>(null)
 const isReady = ref(false)
+const isAndroidChrome = ref(false)
 
 // Načíst SVG přes fetch (fallback)
 const loadSvg = async () => {
@@ -128,6 +133,8 @@ const loadSvg = async () => {
 }
 
 onMounted(() => {
+	isAndroidChrome.value = /Android/i.test(navigator.userAgent) && /Chrome/i.test(navigator.userAgent)
+
 	if (props.svgContent) {
 		// Obsah je předán inline — rovnou zobrazit bez fetch
 		pending.value = false
@@ -474,7 +481,7 @@ const baseSvg = computed(() => {
 		if (hasShop) {
 			svg = svg.replace(
 				regex,
-				`id="${elementId}" class="map-unit map-unit--occupied cursor-pointer transition-all duration-300" data-unit="${unit.unitCode}" data-has-shop="true"`,
+				`id="${elementId}" class="map-unit map-unit--occupied cursor-pointer" data-unit="${unit.unitCode}" data-has-shop="true"`,
 			)
 		} else {
 			svg = svg.replace(
@@ -787,6 +794,8 @@ onBeforeUnmount(() => {
 }
 
 .map-floor :deep(.map-unit--selected path[data-name='outline']) {
+	fill: theme('colors.plaza.DEFAULT');
+	fill-opacity: 0.45;
 	stroke: theme('colors.plaza.DEFAULT');
 	stroke-opacity: 0.5;
 	stroke-width: 1;
@@ -845,5 +854,31 @@ onBeforeUnmount(() => {
 	opacity: 0.15;
 	filter: grayscale(0.8) brightness(0.9);
 	pointer-events: none;
+}
+
+/* Android Chrome má na velkém inline SVG slabý výkon s filtry a geometricPrecision při transform panu. */
+.map-floor--android-chrome :deep(svg) {
+	shape-rendering: auto;
+	text-rendering: optimizeSpeed;
+}
+
+.map-floor--android-chrome :deep(text) {
+	text-rendering: optimizeSpeed;
+}
+
+.map-floor--android-chrome :deep(.map-unit) {
+	transition: none !important;
+}
+
+.map-floor--android-chrome :deep(.map-unit--occupied),
+.map-floor--android-chrome :deep(.map-unit--selected),
+.map-floor--android-chrome :deep(.map-unit--highlighted),
+.map-floor--android-chrome :deep(.map-unit--dimmed),
+.map-floor--android-chrome :deep(.map-unit--empty),
+.map-floor--android-chrome :deep(#parking),
+.map-floor--android-chrome :deep(#security),
+.map-floor--android-chrome :deep(#security-2),
+.map-floor--android-chrome :deep(#wc) {
+	filter: none !important;
 }
 </style>

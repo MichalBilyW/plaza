@@ -192,9 +192,16 @@
 							</button>
 						</div>
 
-						<div ref="mapContentRef" class="relative map-layers">
+						<div
+							ref="mapContentRef"
+							class="relative map-layers"
+							:class="{
+								'map-layers--android-chrome': isAndroidChrome,
+								'map-layers--lite': isAndroidChrome && isMapInteracting,
+							}"
+						>
 							<!-- Spodní vrstva: SVG okolí -->
-							<div class="absolute inset-0 z-0">
+							<div class="map-static-layer absolute inset-0 z-0">
 								<MapStaticAround
 									v-if="staticAroundMap"
 									ref="staticAroundRef"
@@ -448,8 +455,9 @@ function selectSuggestion(floorId: string, shopName?: string) {
 // Zoom
 const {
 	currentScale,
-	currentPanX,
-	currentPanY,
+	panInteractionKey,
+	isAndroidChrome,
+	isMapInteracting,
 	canZoomIn,
 	canZoomOut,
 	mapContainerRef,
@@ -496,7 +504,7 @@ watch(currentScale, () => {
 })
 
 // Pan změna → zavřít popup při přesunu zazoomované mapy
-watch([currentPanX, currentPanY], () => {
+watch(panInteractionKey, () => {
 	if (state.hoveredUnit) closePopup()
 })
 
@@ -668,5 +676,27 @@ watch(currentFloor, (floor) => {
 
 .map-layers {
 	touch-action: none;
+}
+
+.map-layers--android-chrome {
+	contain: paint;
+}
+
+.map-layers--android-chrome.map-layers--lite {
+	will-change: transform;
+}
+
+/* Android Chrome nestíhá velké inline SVG při transformaci.
+   Během samotného pan/zoom gesta necháme jen důležité interaktivní prvky. */
+.map-layers--lite .map-static-layer,
+.map-layers--lite :deep(.logo-overlay),
+.map-layers--lite :deep(svg text),
+.map-layers--lite :deep(svg image),
+.map-layers--lite :deep(.map-unit--empty),
+.map-layers--lite :deep(#parking),
+.map-layers--lite :deep(#security),
+.map-layers--lite :deep(#security-2),
+.map-layers--lite :deep(#wc) {
+	display: none !important;
 }
 </style>

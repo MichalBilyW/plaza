@@ -22,15 +22,18 @@ export function useMapZoom() {
 	const mapContentRef = ref<HTMLElement | null>(null)
 	const isTouch = ref(false)
 	const isMobile = ref(false)
+	const isAndroidChrome = ref(false)
+	const isMapInteracting = ref(false)
 	const currentScale = ref(1)
-	const currentPanX = ref(0)
-	const currentPanY = ref(0)
+	const panInteractionKey = ref(0)
 	const minScale = ref(MIN_ZOOM)
 
 	let panzoomInstance: PanzoomObject | null = null
 	let activeContainer: HTMLElement | null = null
 	let activeContent: HTMLElement | null = null
 	let lastViewportWidth = 0
+	let panChangedDuringInteraction = false
+	let interactionEndTimeout: ReturnType<typeof setTimeout> | null = null
 
 	// Detekce touch zařízení
 	function checkTouch() {
@@ -40,6 +43,14 @@ export function useMapZoom() {
 	// Detekce mobile (< md breakpoint)
 	function checkMobile() {
 		isMobile.value = window.innerWidth < MOBILE_BREAKPOINT
+	}
+
+	function checkAndroidChrome() {
+		const ua = navigator.userAgent
+		isAndroidChrome.value =
+			/Android/i.test(ua) &&
+			/(Chrome|CriOS)/i.test(ua) &&
+			!/(EdgA|OPR|SamsungBrowser)/i.test(ua)
 	}
 
 	// Je přiblíženo? (pro cursor logic)
@@ -108,6 +119,24 @@ export function useMapZoom() {
 		}
 	}
 
+	function startLightweightInteraction() {
+		if (!isAndroidChrome.value) return
+		if (interactionEndTimeout) {
+			clearTimeout(interactionEndTimeout)
+			interactionEndTimeout = null
+		}
+		isMapInteracting.value = true
+	}
+
+	function scheduleLightweightInteractionEnd(delay = 140) {
+		if (!isAndroidChrome.value) return
+		if (interactionEndTimeout) clearTimeout(interactionEndTimeout)
+		interactionEndTimeout = setTimeout(() => {
+			isMapInteracting.value = false
+			interactionEndTimeout = null
+		}, delay)
+	}
+
 	function applyMobileDefault(animate = false) {
 		if (!panzoomInstance) return
 
@@ -135,8 +164,6 @@ export function useMapZoom() {
 		})
 		panzoomInstance.reset({ animate: false })
 		currentScale.value = MIN_ZOOM
-		currentPanX.value = 0
-		currentPanY.value = 0
 	}
 
 	function removeDomListeners() {
@@ -148,6 +175,9 @@ export function useMapZoom() {
 			activeContainer.removeEventListener('gestureend', preventGesture)
 		}
 		if (activeContent) {
+			activeContent.removeEventListener('panzoomstart', handlePanzoomStart)
+			activeContent.removeEventListener('panzoompan', handlePanzoomPan)
+			activeContent.removeEventListener('panzoomend', handlePanzoomEnd)
 			activeContent.removeEventListener('panzoomchange', handlePanzoomChange)
 		}
 		activeContainer = null
@@ -161,6 +191,7 @@ export function useMapZoom() {
 		if (!content || !container) return
 		checkTouch()
 		checkMobile()
+		checkAndroidChrome()
 
 		// Zrušit předchozí instanci
 		removeDomListeners()
@@ -199,7 +230,10 @@ export function useMapZoom() {
 		container.addEventListener('gesturechange', preventGesture)
 		container.addEventListener('gestureend', preventGesture)
 
-		// Aktualizovat currentScale při změně
+		// Aktualizovat scale a signalizovat první pan v interakci bez reaktivních update na každý frame
+		content.addEventListener('panzoomstart', handlePanzoomStart)
+		content.addEventListener('panzoompan', handlePanzoomPan)
+		content.addEventListener('panzoomend', handlePanzoomEnd)
 		content.addEventListener('panzoomchange', handlePanzoomChange)
 		activeContainer = container
 		activeContent = content
@@ -215,9 +249,28 @@ export function useMapZoom() {
 
 	function handlePanzoomChange(e: Event) {
 		const detail = (e as CustomEvent).detail
-		currentScale.value = detail.scale
-		currentPanX.value = detail.x
-		currentPanY.value = detail.y
+		if (Math.abs(currentScale.value - detail.scale) > 0.001) {
+			startLightweightInteraction()
+			currentScale.value = detail.scale
+			scheduleLightweightInteractionEnd()
+		}
+	}
+
+	function handlePanzoomStart() {
+		panChangedDuringInteraction = false
+		startLightweightInteraction()
+	}
+
+	function handlePanzoomPan() {
+		startLightweightInteraction()
+		scheduleLightweightInteractionEnd()
+		if (panChangedDuringInteraction) return
+		panChangedDuringInteraction = true
+		panInteractionKey.value += 1
+	}
+
+	function handlePanzoomEnd() {
+		scheduleLightweightInteractionEnd(80)
 	}
 
 	// Wheel zoom: jen s Ctrl/Cmd klávesou, jemný krok
@@ -234,7 +287,9 @@ export function useMapZoom() {
 				MAX_ZOOM,
 				Math.max(minScale.value, current + direction * WHEEL_ZOOM_STEP * current),
 			)
+			startLightweightInteraction()
 			panzoomInstance.zoomToPoint(newScale, e, { animate: false })
+			scheduleLightweightInteractionEnd()
 			if (newScale <= minScale.value + 0.01) {
 				resetAndCenter()
 			}
@@ -257,12 +312,14 @@ export function useMapZoom() {
 		const newScale =
 			current >= MAX_ZOOM - 0.5 ? minScale.value : Math.min(current + 1, MAX_ZOOM)
 
+		startLightweightInteraction()
 		// Na touch zařízeních zoomovat do středu, ne k pozici kliknutí
 		if (isTouch.value) {
 			panzoomInstance.zoom(newScale, { animate: true })
 		} else {
 			panzoomInstance.zoomToPoint(newScale, e, { animate: true })
 		}
+		scheduleLightweightInteractionEnd(350)
 
 		// Pokud se vrací na 1×, resetovat pozici
 		if (newScale <= minScale.value + 0.01) {
@@ -274,14 +331,18 @@ export function useMapZoom() {
 	function zoomIn() {
 		if (!panzoomInstance) return
 		const newScale = Math.min(currentScale.value + ZOOM_STEP, MAX_ZOOM)
+		startLightweightInteraction()
 		panzoomInstance.zoom(newScale, { animate: true })
+		scheduleLightweightInteractionEnd(350)
 	}
 
 	// Zoom out o ZOOM_STEP
 	function zoomOut() {
 		if (!panzoomInstance) return
 		const newScale = Math.max(currentScale.value - ZOOM_STEP, minScale.value)
+		startLightweightInteraction()
 		panzoomInstance.zoom(newScale, { animate: true })
+		scheduleLightweightInteractionEnd(350)
 		if (newScale <= minScale.value + 0.01) {
 			resetAndCenter(true)
 		}
@@ -316,6 +377,7 @@ export function useMapZoom() {
 	onMounted(() => {
 		checkTouch()
 		checkMobile()
+		checkAndroidChrome()
 		lastViewportWidth = window.innerWidth
 		window.addEventListener('resize', handleWindowResize)
 	})
@@ -323,6 +385,7 @@ export function useMapZoom() {
 	onUnmounted(() => {
 		window.removeEventListener('resize', handleWindowResize)
 		removeDomListeners()
+		if (interactionEndTimeout) clearTimeout(interactionEndTimeout)
 
 		if (panzoomInstance) {
 			panzoomInstance.destroy()
@@ -336,6 +399,7 @@ export function useMapZoom() {
 		const previousWidth = lastViewportWidth
 		checkTouch()
 		checkMobile()
+		checkAndroidChrome()
 		lastViewportWidth = window.innerWidth
 
 		if (resizeTimeout) clearTimeout(resizeTimeout)
@@ -355,21 +419,22 @@ export function useMapZoom() {
 		}, 150)
 	}
 
-		return {
-			// Refs pro template
-			mapContainerRef,
-			mapContentRef,
-			// Stav
-			currentScale,
-			currentPanX,
-			currentPanY,
-			canZoomIn,
-			canZoomOut,
-			isZoomed,
-			isTouch,
-			// Akce
-			zoomIn,
-			zoomOut,
-			resetAndCenter,
-		}
+	return {
+		// Refs pro template
+		mapContainerRef,
+		mapContentRef,
+		// Stav
+		currentScale,
+		panInteractionKey,
+		isAndroidChrome,
+		isMapInteracting,
+		canZoomIn,
+		canZoomOut,
+		isZoomed,
+		isTouch,
+		// Akce
+		zoomIn,
+		zoomOut,
+		resetAndCenter,
+	}
 }

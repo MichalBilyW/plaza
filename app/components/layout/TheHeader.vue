@@ -9,12 +9,13 @@
 			class="container bg-white shadow-[0px_4px_4px_rgba(0,0,0,0.25)] 2xl:rounded-[5px_20px_0px_0px] h-[71px] flex items-center justify-between px-6"
 		>
 			<!-- Logo -->
-			<a href="/" class="flex-shrink-0" @click.prevent="handleLogoClick">
-				<img
-					src="/images/logo_plaza_transparent.png"
-					:alt="t('common.altLogo')"
-					class="h-[42px] w-auto"
-				/>
+			<a
+				href="/"
+				class="flex-shrink-0"
+				:aria-label="t('common.altLogo')"
+				@click.prevent="handleLogoClick"
+			>
+				<PlazaLogo class="h-[42px] w-auto text-black" aria-hidden="true" />
 			</a>
 
 			<!-- Navigation links -->
@@ -158,12 +159,13 @@
 		:aria-hidden="!isHeaderVisible && !isMobileMenuOpen"
 	>
 		<!-- Logo -->
-		<a href="/" class="flex-shrink-0" @click.prevent="handleLogoClick">
-			<img
-				src="/images/logo_plaza_transparent.png"
-				:alt="t('common.altLogo')"
-				class="h-[40px] w-auto"
-			/>
+		<a
+			href="/"
+			class="flex-shrink-0"
+			:aria-label="t('common.altLogo')"
+			@click.prevent="handleLogoClick"
+		>
+			<PlazaLogo class="h-[40px] w-auto text-black" aria-hidden="true" />
 		</a>
 
 		<!-- Hamburger / Close button -->
