@@ -698,8 +698,7 @@ watch(currentFloor, (floor) => {
 	transition: opacity 0.3s ease-in;
 }
 
-/* Při aktivním pan/zoom gestu: rychlé skrytí (loga zůstávají viditelná) */
-.map-layers--android-chrome.map-layers--lite .map-static-layer,
+/* Při aktivním pan/zoom gestu: rychlé skrytí (loga + SVG pozadí zůstávají viditelná) */
 .map-layers--android-chrome.map-layers--lite :deep(svg text),
 .map-layers--android-chrome.map-layers--lite :deep(svg image),
 .map-layers--android-chrome.map-layers--lite :deep(.map-unit--empty),
