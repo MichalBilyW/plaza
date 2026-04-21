@@ -686,17 +686,29 @@ watch(currentFloor, (floor) => {
 	will-change: transform;
 }
 
-/* Android Chrome nestíhá velké inline SVG při transformaci.
-   Během samotného pan/zoom gesta necháme jen důležité interaktivní prvky. */
-.map-layers--lite .map-static-layer,
-.map-layers--lite :deep(.logo-overlay),
-.map-layers--lite :deep(svg text),
-.map-layers--lite :deep(svg image),
-.map-layers--lite :deep(.map-unit--empty),
-.map-layers--lite :deep(#parking),
-.map-layers--lite :deep(#security),
-.map-layers--lite :deep(#security-2),
-.map-layers--lite :deep(#wc) {
-	display: none !important;
+/* Android Chrome: prvky které se skrývají při interakci dostávají plynulý přechod (fade-in po gestu) */
+.map-layers--android-chrome .map-static-layer,
+.map-layers--android-chrome :deep(svg text),
+.map-layers--android-chrome :deep(svg image),
+.map-layers--android-chrome :deep(.map-unit--empty),
+.map-layers--android-chrome :deep(#parking),
+.map-layers--android-chrome :deep(#security),
+.map-layers--android-chrome :deep(#security-2),
+.map-layers--android-chrome :deep(#wc) {
+	transition: opacity 0.3s ease-in;
+}
+
+/* Při aktivním pan/zoom gestu: rychlé skrytí (loga zůstávají viditelná) */
+.map-layers--android-chrome.map-layers--lite .map-static-layer,
+.map-layers--android-chrome.map-layers--lite :deep(svg text),
+.map-layers--android-chrome.map-layers--lite :deep(svg image),
+.map-layers--android-chrome.map-layers--lite :deep(.map-unit--empty),
+.map-layers--android-chrome.map-layers--lite :deep(#parking),
+.map-layers--android-chrome.map-layers--lite :deep(#security),
+.map-layers--android-chrome.map-layers--lite :deep(#security-2),
+.map-layers--android-chrome.map-layers--lite :deep(#wc) {
+	opacity: 0 !important;
+	transition: opacity 0.12s ease-out !important;
+	pointer-events: none;
 }
 </style>
