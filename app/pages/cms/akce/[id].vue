@@ -242,7 +242,7 @@ const handleSubmit = async () => {
 			body: {
 				name: form.name.trim(),
 				image: form.image,
-				content: form.content || undefined,
+			content: form.content || '',
 				shopId: form.shopId,
 				isActive: form.isActive,
 			},

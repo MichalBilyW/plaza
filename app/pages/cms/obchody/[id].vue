@@ -1106,9 +1106,9 @@ const handleSubmit = async () => {
 			shortDescription: form.shortDescription.trim() || undefined,
 			logo: form.logo.trim() || '',
 			gallery: form.gallery,
-			phone: form.phone.trim() || undefined,
-			email: form.email.trim() || undefined,
-			website: form.website.trim() || undefined,
+			phone: form.phone.trim() || '',
+			email: form.email.trim() || '',
+			website: form.website.trim() || '',
 			// Legacy floorId - první patro z pole pro zpětnou kompatibilitu
 			floorId: form.floorIds.length > 0 ? form.floorIds[0] : null,
 			// Nové floorIds pole
@@ -1124,14 +1124,12 @@ const handleSubmit = async () => {
 			seoDescription: form.seoDescription.trim() || undefined,
 		}
 
-		// Social links
+		// Social links - vždy posíláme, i prázdné (aby se mohly smazat)
 		const socialLinks: Record<string, string> = {}
-		if (form.socialLinks.facebook) socialLinks.facebook = form.socialLinks.facebook.trim()
-		if (form.socialLinks.instagram) socialLinks.instagram = form.socialLinks.instagram.trim()
-		if (form.socialLinks.twitter) socialLinks.twitter = form.socialLinks.twitter.trim()
-		if (Object.keys(socialLinks).length) {
-			data.socialLinks = socialLinks
-		}
+		if (form.socialLinks.facebook.trim()) socialLinks.facebook = form.socialLinks.facebook.trim()
+		if (form.socialLinks.instagram.trim()) socialLinks.instagram = form.socialLinks.instagram.trim()
+		if (form.socialLinks.twitter.trim()) socialLinks.twitter = form.socialLinks.twitter.trim()
+		data.socialLinks = socialLinks
 
 		// Opening hours
 		const openingHours = form.openingHours

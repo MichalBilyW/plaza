@@ -213,7 +213,7 @@ const handleSubmit = async () => {
 			body: {
 				icon: form.icon,
 				shortDescription: form.shortDescription.trim(),
-				description: form.description.trim() || undefined,
+			description: form.description.trim() || '',
 				isActive: form.isActive,
 			},
 		})

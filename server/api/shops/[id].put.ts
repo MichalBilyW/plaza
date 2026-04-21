@@ -48,6 +48,10 @@ export default defineEventHandler(
 		for (const key of Object.keys(data)) {
 			if (key in body) {
 				;(shop as Record<string, unknown>)[key] = data[key as keyof typeof data]
+				// Mongoose nedetekuje změny vnořených objektů automaticky
+				if (typeof data[key as keyof typeof data] === 'object') {
+					shop.markModified(key)
+				}
 			}
 		}
 		await shop.save()

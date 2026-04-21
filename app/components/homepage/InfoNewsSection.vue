@@ -322,7 +322,7 @@ const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
 const { openModal: openParkingModal } = useParkingModal()
 const { sanitize } = useSanitizeHtml()
 
-const PARKING_SPOTS = 500
+const PARKING_SPOTS = 490
 const AUTOPLAY_INTERVAL = 4000
 
 // === Refs ===
