@@ -62,11 +62,11 @@ textarea:focus-visible {
 }
 
 .container {
-	@apply !max-w-[1330px] mx-auto;
+	@apply !max-w-[1480px] mx-auto;
 }
 
 .container-small {
-	@apply !max-w-5xl mx-auto;
+	@apply !max-w-[1330px] mx-auto;
 }
 
 /**

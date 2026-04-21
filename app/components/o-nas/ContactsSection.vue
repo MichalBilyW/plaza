@@ -18,11 +18,11 @@
 			</div>
 
 			<!-- Grid kontaktů -->
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+			<div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center items-center">
 				<div
 					v-for="(contact, index) in contacts"
 					:key="index"
-					class="w-full max-w-[280px] bg-white rounded-[5px_20px_5px_5px] shadow-lg p-5"
+					class="mx-auto w-full max-w-[280px] bg-white rounded-[5px_20px_5px_5px] shadow-lg p-5"
 				>
 					<!-- Název kontaktu -->
 					<p v-if="contact.title" class="font-heading font-semibold uppercase font-medium text-plaza-dark mb-3">

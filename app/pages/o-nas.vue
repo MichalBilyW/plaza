@@ -26,7 +26,7 @@
 			<div class="relative rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg">
 				<!-- Border overlay -->
 				<div
-					class="absolute top-0 left-0 w-[calc(100%-16px)] h-[calc(100%-16px)] md:w-[calc(100%-32px)] md:h-[calc(100%-32px)] bg-transparent m-2 md:m-4 border md:border-2 border-white/70 rounded-[5px_20px_5px_5px] z-10 pointer-events-none"
+					class="absolute top-0 left-0 h-[calc(100%-16px)] max-h-[600px] w-[calc(100%-16px)] md:w-[calc(100%-32px)] md:h-[calc(100%-32px)] bg-transparent m-2 md:m-4 border md:border-2 border-white/70 rounded-[5px_20px_5px_5px] z-10 pointer-events-none"
 					aria-hidden="true"
 				></div>
 
@@ -39,14 +39,14 @@
 					:loop="true"
 					:grab-cursor="true"
 					:autoplay="{ delay: 3000, disableOnInteraction: false }"
-					class="w-full aspect-[16/9]"
+					class="w-full aspect-[16/9] max-h-[600px]"
 					@swiper="onSwiperInit"
 				>
 					<SwiperSlide v-for="(image, index) in generalInfo.gallery" :key="index">
 						<img
 							:src="image"
 							:alt="`${t('aboutPage.galleryImage')} ${index + 1}`"
-							class="w-full h-full object-cover"
+							class="w-full h-full max-h-[600px] object-cover"
 						/>
 					</SwiperSlide>
 				</Swiper>
@@ -56,7 +56,7 @@
 					v-else
 					:src="generalInfo.gallery[0]"
 					:alt="`${t('aboutPage.galleryImage')} 1`"
-					class="w-full aspect-[16/9] object-cover"
+					class="w-full aspect-[16/9] h-full max-h-[600px] object-cover"
 				/>
 
 				<!-- Navigation arrow -->
@@ -104,7 +104,7 @@
 
 			<div v-else class="space-y-12">
 				<!-- Text / Ostatní informace -->
-				<section v-if="generalInfo?.text" class="prose prose-lg max-w-none">
+				<section v-if="generalInfo?.text || generalInfo?.text !== ''" class="prose prose-lg max-w-none">
 					<div v-html="sanitize(generalInfo.text)"></div>
 				</section>
 			</div>
