@@ -1,5 +1,5 @@
 import type { DayOfWeek, OpeningHoursEntry, SpecialOpeningHours } from '@/shared/types'
-import { getPragueDateKey, getPragueDateParts } from '../../shared/utils/pragueTime'
+import { getPragueDateKey, getPragueDateParts } from '#shared/utils/pragueTime'
 
 const DAY_MAPPING: DayOfWeek[] = [
 	'sunday',

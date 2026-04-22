@@ -20,7 +20,7 @@ import {
 	type TodayOpeningHours,
 } from '@/shared/map/units'
 import type { DayOfWeek } from '@/shared/types'
-import { getPragueDateKey, getPragueDateParts } from '../../../shared/utils/pragueTime'
+import { getPragueDateKey, getPragueDateParts } from '#shared/utils/pragueTime'
 
 const DAYS_MAP: DayOfWeek[] = [
 	'sunday',
