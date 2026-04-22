@@ -132,7 +132,7 @@
 								:key="entry.day"
 								class="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
 								:class="{
-									'bg-plaza-light/40 rounded-[5px_14px_5px_5px] px-3 -mx-3 font-black':
+									'bg-white rounded-[5px_14px_5px_5px] font-black':
 										isToday(entry.day),
 								}"
 							>
