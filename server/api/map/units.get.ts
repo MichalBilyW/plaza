@@ -20,6 +20,7 @@ import {
 	type TodayOpeningHours,
 } from '@/shared/map/units'
 import type { DayOfWeek } from '@/shared/types'
+import { getPragueDateKey, getPragueDateParts } from '../../../shared/utils/pragueTime'
 
 const DAYS_MAP: DayOfWeek[] = [
 	'sunday',
@@ -35,14 +36,18 @@ const DAYS_MAP: DayOfWeek[] = [
  * Kontroluje, zda je právě otevřeno na základě aktuálního času
  */
 function isCurrentlyOpen(openTime: string, closeTime: string): boolean {
-	const now = new Date()
-	const currentMinutes = now.getHours() * 60 + now.getMinutes()
+	const now = getPragueDateParts()
+	const currentMinutes = now.hour * 60 + now.minute
 
 	const [openH, openM] = openTime.split(':').map(Number)
 	const [closeH, closeM] = closeTime.split(':').map(Number)
 
 	const openMinutes = (openH ?? 0) * 60 + (openM ?? 0)
 	const closeMinutes = (closeH ?? 0) * 60 + (closeM ?? 0)
+
+	if (closeMinutes <= openMinutes) {
+		return currentMinutes >= openMinutes || currentMinutes < closeMinutes
+	}
 
 	return currentMinutes >= openMinutes && currentMinutes < closeMinutes
 }
@@ -61,22 +66,16 @@ function getTodayOpeningHours(
 		closed?: boolean
 	}>,
 ): TodayOpeningHours {
-	const today = new Date()
-	const todayDayOfWeek = DAYS_MAP[today.getDay()]
-	const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+	const today = getPragueDateParts()
+	const todayDayOfWeek = DAYS_MAP[today.weekdayIndex] as DayOfWeek
+	const todayDateKey = today.dateKey
 
 	// Kontrola speciálních otevíracích hodin
 	if (specialOpeningHours) {
 		for (const special of specialOpeningHours) {
 			// Jednotlivý den
 			if (special.date) {
-				const specialDate = new Date(special.date)
-				const specialDateOnly = new Date(
-					specialDate.getFullYear(),
-					specialDate.getMonth(),
-					specialDate.getDate(),
-				)
-				if (specialDateOnly.getTime() === todayDateOnly.getTime()) {
+				if (getPragueDateKey(special.date) === todayDateKey) {
 					if (special.closed) {
 						return { isOpen: false, formatted: 'Zavřeno' }
 					}
@@ -92,9 +91,9 @@ function getTodayOpeningHours(
 			}
 			// Období od-do
 			if (special.dateFrom && special.dateTo) {
-				const fromDate = new Date(special.dateFrom)
-				const toDate = new Date(special.dateTo)
-				if (todayDateOnly >= fromDate && todayDateOnly <= toDate) {
+				const fromDateKey = getPragueDateKey(special.dateFrom)
+				const toDateKey = getPragueDateKey(special.dateTo)
+				if (todayDateKey >= fromDateKey && todayDateKey <= toDateKey) {
 					if (special.closed) {
 						return { isOpen: false, formatted: 'Zavřeno' }
 					}

@@ -131,6 +131,10 @@
 								v-for="entry in generalInfo.openingHours"
 								:key="entry.day"
 								class="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
+								:class="{
+									'bg-plaza-light/40 rounded-[5px_14px_5px_5px] px-3 -mx-3 font-black':
+										isToday(entry.day),
+								}"
 							>
 								<span class="font-medium text-plaza-dark">
 									{{ t(`aboutPage.days.${entry.day}`) }}
@@ -158,6 +162,10 @@
 								v-for="(entry, index) in activeSpecialHours"
 								:key="index"
 								class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 last:border-0"
+								:class="{
+									'bg-white rounded-[5px_14px_5px_5px] px-3 -mx-3 font-black':
+										isSpecialHoursActive(entry),
+								}"
 							>
 								<div
 									class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3"
@@ -392,9 +400,6 @@ const { t } = useI18n()
 const { sanitize } = useSanitizeHtml()
 const { openModal: openServiceModal } = useServiceModal()
 
-// SSR-safe timestamp for hydration
-const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
-
 usePlazaSeo({
 	title: t('seo.about.title'),
 	description: t('seo.about.description'),
@@ -416,6 +421,11 @@ const { data: generalInfo, pending } = useFetch<GeneralInfo>('/api/general-info'
 	key: 'about-general-info',
 })
 
+const { isToday, isSpecialHoursActive, isSpecialHoursCurrentOrFuture } = useOpeningHoursStatus(
+	() => generalInfo.value?.openingHours,
+	() => generalInfo.value?.specialOpeningHours,
+)
+
 // Fetch services
 const { data: servicesData } = useFetch<{ data: Service[] }>('/api/services', {
 	key: 'about-services',
@@ -428,21 +438,9 @@ const services = computed(() => servicesData.value?.data || [])
 const activeSpecialHours = computed(() => {
 	if (!generalInfo.value?.specialOpeningHours) return []
 
-	const today = new Date(serverTimestamp.value)
-	today.setHours(0, 0, 0, 0)
-
-	return generalInfo.value.specialOpeningHours.filter((entry) => {
-		if (entry.date) {
-			return new Date(entry.date) >= today
-		}
-		if (entry.dateTo) {
-			return new Date(entry.dateTo) >= today
-		}
-		if (entry.dateFrom) {
-			return new Date(entry.dateFrom) >= today
-		}
-		return false
-	})
+	return generalInfo.value.specialOpeningHours.filter((entry) =>
+		isSpecialHoursCurrentOrFuture(entry),
+	)
 })
 
 // Format special date for display

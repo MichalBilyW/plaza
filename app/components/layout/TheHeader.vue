@@ -383,7 +383,7 @@
 </template>
 
 <script setup lang="ts">
-import type { OpeningHoursEntry, SpecialOpeningHours, DayOfWeek } from '@/shared/types'
+import type { OpeningHoursEntry, SpecialOpeningHours } from '@/shared/types'
 
 const props = defineProps<{
 	openingHours?: OpeningHoursEntry[]
@@ -396,124 +396,25 @@ const router = useRouter()
 const { openModal: openOpeningHoursModal } = useOpeningHoursModal()
 const { trackNavClick, trackCtaClick } = useDataLayer()
 
-// SSR-safe timestamp for hydration
-const serverTimestamp = useState<number>('serverTimestamp', () => Date.now())
-
 const isMobileMenuOpen = ref(false)
 const isHeaderVisible = ref(true)
 const lastScrollY = ref(0)
 const scrollThreshold = 5
 
 // === Opening hours logic ===
-const dayMapping: DayOfWeek[] = [
-	'sunday',
-	'monday',
-	'tuesday',
-	'wednesday',
-	'thursday',
-	'friday',
-	'saturday',
-]
-
-const dayShortNames: Record<DayOfWeek, string> = {
-	monday: 'Po',
-	tuesday: 'Út',
-	wednesday: 'St',
-	thursday: 'Čt',
-	friday: 'Pá',
-	saturday: 'So',
-	sunday: 'Ne',
-}
-
-const todaySpecialHours = computed(() => {
-	if (!props.specialOpeningHours?.length) return null
-
-	const today = new Date(serverTimestamp.value)
-	today.setHours(0, 0, 0, 0)
-	const todayTime = today.getTime()
-
-	for (const special of props.specialOpeningHours) {
-		if (special.date) {
-			const specialDate = new Date(special.date)
-			specialDate.setHours(0, 0, 0, 0)
-			if (specialDate.getTime() === todayTime) {
-				return special
-			}
-		} else if (special.dateFrom && special.dateTo) {
-			const from = new Date(special.dateFrom)
-			from.setHours(0, 0, 0, 0)
-			const to = new Date(special.dateTo)
-			to.setHours(23, 59, 59, 999)
-			if (todayTime >= from.getTime() && todayTime <= to.getTime()) {
-				return special
-			}
-		}
-	}
-
-	return null
-})
-
-const todayOpeningHours = computed(() => {
-	const todayIndex = new Date(serverTimestamp.value).getDay()
-	const today = dayMapping[todayIndex] as DayOfWeek
-	const dayName = dayShortNames[today]
-
-	if (todaySpecialHours.value) {
-		return {
-			day: dayName,
-			open: todaySpecialHours.value.open ?? '09:00',
-			close: todaySpecialHours.value.close ?? '21:00',
-			closed: todaySpecialHours.value.closed ?? false,
-			note: todaySpecialHours.value.note,
-			isSpecial: true,
-		}
-	}
-
-	const hours = props.openingHours?.find((h) => h.day === today)
-	if (!hours) return null
-
-	return {
-		day: dayName,
-		open: hours.open,
-		close: hours.close,
-		closed: hours.closed,
-		isSpecial: false,
-	}
-})
+const { todayOpeningHours, isOpen, specialNote } = useOpeningHoursStatus(
+	() => props.openingHours,
+	() => props.specialOpeningHours,
+	{ dayLabelFormat: 'short' },
+)
 
 const openingHoursText = computed(() => {
-	if (!todayOpeningHours.value) return t('nav.openingHoursValue')
-	if (todayOpeningHours.value.closed) {
-		return `${todayOpeningHours.value.day} | ${t('common.closed')}`
+	const hours = todayOpeningHours.value
+	if (!hours) return t('nav.openingHoursValue')
+	if (hours.closed) {
+		return `${hours.dayLabel} | ${t('common.closed')}`
 	}
-	return `${todayOpeningHours.value.day} ${todayOpeningHours.value.open} - ${todayOpeningHours.value.close}`
-})
-
-const specialNote = computed(() => {
-	if (todayOpeningHours.value?.isSpecial && todayOpeningHours.value?.note) {
-		return todayOpeningHours.value.note
-	}
-	return null
-})
-
-const isOpen = computed(() => {
-	if (!todayOpeningHours.value || todayOpeningHours.value.closed) return false
-
-	const now = new Date(serverTimestamp.value)
-	const currentMinutes = now.getHours() * 60 + now.getMinutes()
-
-	const openParts = todayOpeningHours.value.open.split(':').map(Number)
-	const closeParts = todayOpeningHours.value.close.split(':').map(Number)
-
-	const openH = openParts[0] ?? 0
-	const openM = openParts[1] ?? 0
-	const closeH = closeParts[0] ?? 0
-	const closeM = closeParts[1] ?? 0
-
-	const openMinutes = openH * 60 + openM
-	const closeMinutes = closeH * 60 + closeM
-
-	return currentMinutes >= openMinutes && currentMinutes < closeMinutes
+	return `${hours.dayLabel} ${hours.open} - ${hours.close}`
 })
 
 // === Menu toggle ===
