@@ -97,7 +97,7 @@
 							<!-- Otevírací doba -->
 							<button
 								type="button"
-								class="relative group max-md:justify-center font-heading bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-max md:w-[320px] text-plaza-dark md:text-xl lg:text-2xl hover:bg-gray-50 transition-colors"
+								class="relative group max-md:justify-center font-heading bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[290px] md:w-[320px] text-plaza-dark md:text-xl lg:text-2xl hover:bg-gray-50 transition-colors"
 								@click="openOpeningHoursModal"
 							>
 								{{ t('home.infoSection.openingHours') }}
@@ -120,7 +120,7 @@
 							<!-- Parkování -->
 							<button
 								type="button"
-								class="md:hidden relative group max-md:justify-center font-heading bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-max md:w-[320px] text-plaza-dark md:text-xl lg:text-2xl hover:bg-gray-50 transition-colors"
+								class="md:hidden relative group max-md:justify-center font-heading bg-white max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[290px] md:w-[320px] text-plaza-dark md:text-xl lg:text-2xl hover:bg-gray-50 transition-colors"
 								@click="openParkingModal"
 							>
 								{{ t('home.infoSection.parking') }}
@@ -143,7 +143,7 @@
 							<!-- Mapa centra button -->
 							<NuxtLink
 								to="/mapa"
-								class="relative group max-md:justify-center font-heading bg-plaza max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-max md:w-[320px] text-white md:text-xl lg:text-2xl transition-all hover:brightness-110"
+								class="relative group max-md:justify-center font-heading bg-plaza max-md:rounded-[5px_20px_5px_5px] md:rounded-xl shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 max-md:text-center md:text-right h-auto w-[290px] md:w-[320px] text-white md:text-xl lg:text-2xl transition-all hover:brightness-110"
 							>
 								{{ t('home.infoSection.mapCenter') }}
 								<svg

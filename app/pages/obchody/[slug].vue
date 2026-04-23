@@ -42,14 +42,17 @@
 
 			<!-- Map Section - zobrazit mapu s označeným obchodem -->
 			<div v-if="shop?.floorId" class="my-20">
-				<div class="container">
-					<h2
-						class="font-heading text-2xl md:text-3xl font-bold text-plaza-dark uppercase mb-8 text-center"
-					>
-						{{ t('shopDetail.findOnMap') }}
-					</h2>
+				<div v-if="mapFloorName" class="z-20 relative container flex justify-end transform translate-y-20 -translate-x-4 md:-translate-x-16">
+					<div class="flex items-center gap-2 md:gap-3">
+						<span
+							class="px-4 md:px-5 py-2 md:py-2.5 rounded-[5px_20px_5px_5px] md:text-xl whitespace-nowrap transition-all duration-300 ease-out bg-primary-600 bg-plaza !text-white md:scale-105 shadow-lg"
+						>
+							{{ mapFloorName }}
+						</span>
+					</div>
 				</div>
 				<MapSection
+					class="z-10 relative"
 					:locked-floor-id="shop.floorId"
 					:highlight-shop-name="shop.name"
 					hide-full-map-link
@@ -94,6 +97,10 @@ const hasDescription = computed(() => {
 	// Strip HTML tags and check if there's actual text
 	const textContent = desc.replace(/<[^>]*>/g, '').trim()
 	return textContent.length > 0
+})
+
+const mapFloorName = computed(() => {
+	return shop.value?.floor?.name || shop.value?.floors?.[0]?.name || ''
 })
 
 // === SEO ===

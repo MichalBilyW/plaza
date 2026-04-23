@@ -1,5 +1,5 @@
 <template>
-	<section class="relative container py-8">
+	<section class="relative container py-6">
 		<!-- Gradient overlay (skrytý když je zamčené patro) -->
 		<div
 			v-if="!props.lockedFloorId"
