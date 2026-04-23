@@ -12,7 +12,7 @@
 					ref="popupRef"
 					:class="[
 						'popup-card fixed z-50 rounded-xl shadow-2xl overflow-hidden pointer-events-auto',
-						isEmpty
+						isCompact
 							? 'bg-gray-100/90 backdrop-blur-sm w-36'
 							: 'bg-white/95 backdrop-blur-sm w-52 md:w-64',
 					]"
@@ -35,6 +35,11 @@
 						>
 							{{ t('mapPage.contactUs') }}
 						</NuxtLink>
+					</div>
+
+					<!-- Soukromě obsazená jednotka -->
+					<div v-else-if="isPrivate" class="p-2.5 text-center">
+						<p class="text-xs text-gray-500">{{ t('mapPage.privateOccupiedPopup') }}</p>
 					</div>
 
 					<!-- Obchod - plný popup -->
@@ -130,8 +135,10 @@ const emit = defineEmits<{
 const popupRef = ref<HTMLElement | null>(null)
 const logoFailed = ref(false)
 
-// Prázdná jednotka (bez obchodu)
-const isEmpty = computed(() => !props.unit?.shop)
+const occupancyType = computed(() => props.unit?.occupancyType ?? 'empty')
+const isEmpty = computed(() => occupancyType.value === 'empty')
+const isPrivate = computed(() => occupancyType.value === 'private')
+const isCompact = computed(() => isEmpty.value || isPrivate.value)
 
 // Jsme na detailu tohoto obchodu?
 const isOnThisShopDetail = computed(() => {
@@ -192,9 +199,9 @@ const popupStyle = computed(() => {
 	const { x, y } = props.position
 	const isMobile = window.innerWidth < 768
 
-	// Prázdná jednotka má menší popup
-	const popupWidth = isEmpty.value ? 144 : isMobile ? 208 : 256 // w-36 / w-52 / w-64
-	const popupHeight = isEmpty.value ? 50 : isMobile ? 150 : 180 // přibližná výška
+	// Kompaktní popup pro volné a soukromě obsazené jednotky
+	const popupWidth = isCompact.value ? 144 : isMobile ? 208 : 256 // w-36 / w-52 / w-64
+	const popupHeight = isCompact.value ? 50 : isMobile ? 150 : 180 // přibližná výška
 	const gap = isMobile ? 12 : 16 // mezera od kurzoru
 	const margin = 8
 

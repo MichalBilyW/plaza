@@ -35,13 +35,18 @@ export interface MapShopData {
 	publishDate?: string
 }
 
+/** Typ obsazenosti jednotky na mapě */
+export type MapUnitOccupancyType = 'shop' | 'private' | 'empty'
+
 /** Jednotka mapy s přiřazeným obchodem */
 export interface MapUnit {
 	/** Kód jednotky (např. "S11", "134") - odpovídá SVG id "unit_S11" */
 	unitCode: string
 	/** ID patra (MongoDB _id) */
 	floorId: string
-	/** Přiřazený obchod (null pokud jednotka není obsazená) */
+	/** Typ obsazenosti jednotky */
+	occupancyType: MapUnitOccupancyType
+	/** Přiřazený obchod (null pro volné a soukromě obsazené jednotky) */
 	shop: MapShopData | null
 }
 
@@ -57,6 +62,8 @@ export interface FloorUnitsResponse {
 	svgMap?: string
 	/** Inline obsah SVG souboru (bez nutnosti dalšího fetch na klientovi) */
 	svgContent?: string | null
+	/** Kódy jednotek obsazených soukromými nájemci */
+	privateOccupiedUnitCodes?: string[]
 	/** Seznam jednotek s přiřazenými obchody */
 	units: MapUnit[]
 }

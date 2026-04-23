@@ -17,6 +17,7 @@ import {
 	type FloorUnitsResponse,
 	type MapShopData,
 	type MapUnit,
+	type MapUnitOccupancyType,
 	type TodayOpeningHours,
 } from '@/shared/map/units'
 import type { DayOfWeek } from '@/shared/types'
@@ -252,12 +253,24 @@ export default defineEventHandler(async (event) => {
 			const { unitCodes, svgContent } = floor.svgMap
 				? await loadSvgFile(floor.svgMap)
 				: { unitCodes: [], svgContent: null }
+			const privateOccupiedUnitCodes = floor.privateOccupiedUnitCodes ?? []
+			const privateOccupiedUnits = new Set(privateOccupiedUnitCodes)
 
-			const units: MapUnit[] = unitCodes.map((unitCode) => ({
-				unitCode,
-				floorId,
-				shop: shopsByUnitCode.get(unitCode) ?? null,
-			}))
+			const units: MapUnit[] = unitCodes.map((unitCode) => {
+				const shop = shopsByUnitCode.get(unitCode) ?? null
+				const occupancyType: MapUnitOccupancyType = shop
+					? 'shop'
+					: privateOccupiedUnits.has(unitCode)
+						? 'private'
+						: 'empty'
+
+				return {
+					unitCode,
+					floorId,
+					occupancyType,
+					shop,
+				}
+			})
 
 			return {
 				floorId,
@@ -265,6 +278,7 @@ export default defineEventHandler(async (event) => {
 				level: floor.level,
 				svgMap: floor.svgMap,
 				svgContent,
+				privateOccupiedUnitCodes,
 				units,
 			}
 		}),
@@ -278,7 +292,7 @@ export default defineEventHandler(async (event) => {
 	// Statistiky
 	const totalUnits = floorsResponse.reduce((sum, f) => sum + f.units.length, 0)
 	const occupiedUnits = floorsResponse.reduce(
-		(sum, f) => sum + f.units.filter((u) => u.shop !== null).length,
+		(sum, f) => sum + f.units.filter((u) => u.occupancyType !== 'empty').length,
 		0,
 	)
 

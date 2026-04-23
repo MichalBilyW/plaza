@@ -314,6 +314,7 @@ export const floorCreateSchema = z.object({
 	level: z.number().int(),
 	mapImage: z.string().optional(),
 	svgMap: z.string().optional(),
+	privateOccupiedUnitCodes: z.array(z.string().max(20)).optional(),
 	isActive: z.boolean().default(true),
 	sortOrder: z.number().int().default(0),
 })

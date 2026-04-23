@@ -186,6 +186,7 @@ export interface Floor extends BaseEntity {
 	level: number // číselné pořadí (-1 = podzemí, 0 = přízemí, 1 = 1. patro)
 	mapImage?: string // obrázek mapy patra (náhled)
 	svgMap?: string // SVG mapa patra pro interaktivní zobrazení
+	privateOccupiedUnitCodes?: string[] // jednotky obsazené soukromými nájemci
 	isActive: boolean
 	sortOrder: number
 }

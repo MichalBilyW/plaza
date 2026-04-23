@@ -145,6 +145,10 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 
 		const unit = unitsMap.value.get(unitCode)
 		if (!unit) return
+		if (isPrivateOccupied(unit)) {
+			closePopup()
+			return
+		}
 
 		state.hoveredUnit = unit
 		state.hoveredUnitCode = unitCode
@@ -183,6 +187,10 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 		state.hoveredUnitCode = null
 	}
 
+	function isPrivateOccupied(unit: MapUnit): boolean {
+		return unit.occupancyType === 'private'
+	}
+
 	// ─── Click/Tap logika ───
 
 	/** Upcoming shop — publishDate v budoucnosti → neklikatelný */
@@ -211,6 +219,10 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 	function handleUnitTap(unitCode: string, position: { x: number; y: number }) {
 		const unit = unitsMap.value.get(unitCode)
 		if (!unit) return
+		if (isPrivateOccupied(unit)) {
+			closePopup()
+			return
+		}
 
 		if (state.hoveredUnit?.unitCode === unitCode) {
 			// Druhý tap na stejný unit → navigace (ne pro upcoming/prázdné)
@@ -241,9 +253,15 @@ export function useInteractiveMap(options?: { initialFloorId?: string }) {
 
 		const classes: string[] = ['map-unit', 'transition-all', 'duration-300']
 
-		if (!unit?.shop) {
+		if (!unit || unit.occupancyType === 'empty') {
 			// Neobsazená jednotka - ztmavit, žádná interakce
 			classes.push('map-unit--empty', 'opacity-40', 'pointer-events-none')
+		} else if (unit.occupancyType === 'private') {
+			// Soukromě obsazená jednotka - bez navigace, ale ne jako volná
+			classes.push('map-unit--private')
+			if (isHovered) {
+				classes.push('map-unit--selected')
+			}
 		} else {
 			// Obsazená jednotka - interaktivní
 			classes.push('map-unit--occupied', 'cursor-pointer')

@@ -15,6 +15,8 @@ export interface IFloor {
 	mapImage?: string
 	/** SVG mapa patra - cesta k souboru */
 	svgMap?: string
+	/** Kódy jednotek obsazených soukromými nájemci */
+	privateOccupiedUnitCodes?: string[]
 	isActive: boolean
 	sortOrder: number
 }
@@ -44,6 +46,13 @@ const floorSchema = new Schema<IFloorDocument>(
 		mapImage: String,
 		/** SVG mapa patra */
 		svgMap: String,
+		privateOccupiedUnitCodes: [
+			{
+				type: String,
+				trim: true,
+				maxlength: 20,
+			},
+		],
 		isActive: {
 			type: Boolean,
 			default: true,

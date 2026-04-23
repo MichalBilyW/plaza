@@ -761,11 +761,13 @@ const availableUnits = computed(() => {
 	if (!floorData) return []
 
 	return floorData.units.map((unit) => {
-		const isOccupied = !!unit.shop
+		const isOccupied = unit.occupancyType !== 'empty'
 		return {
 			unitCode: unit.unitCode,
 			isOccupied,
-			shopName: unit.shop?.name || '',
+			shopName:
+				unit.shop?.name ||
+				(unit.occupancyType === 'private' ? t('cms.map.privateOccupied') : ''),
 		}
 	})
 })

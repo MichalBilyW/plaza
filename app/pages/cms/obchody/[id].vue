@@ -1035,12 +1035,15 @@ const getUnitsForFloor = (floorId: string) => {
 	if (!floorData) return []
 
 	return floorData.units.map((unit) => {
-		// Jednotka je obsazená, pokud má přiřazený obchod a není to tento obchod
-		const isOccupied = !!unit.shop && !form.unitCodes.includes(unit.unitCode)
+		// Jednotka je obsazená, pokud patří obchodu nebo je soukromě blokovaná,
+		// a zároveň není už přiřazená tomuto obchodu.
+		const isOccupied = unit.occupancyType !== 'empty' && !form.unitCodes.includes(unit.unitCode)
 		return {
 			unitCode: unit.unitCode,
 			isOccupied,
-			shopName: unit.shop?.name || '',
+			shopName:
+				unit.shop?.name ||
+				(unit.occupancyType === 'private' ? t('cms.map.privateOccupied') : ''),
 		}
 	})
 }

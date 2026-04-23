@@ -475,20 +475,19 @@ const baseSvg = computed(() => {
 	// Pro každou jednotku přidat statické data atributy
 	for (const unit of props.units) {
 		const elementId = createUnitElementId(unit.unitCode)
-		const hasShop = !!unit.shop
+		const hasShop = unit.occupancyType === 'shop'
 		const regex = new RegExp(`id=["']${elementId}["']`, 'g')
+		const unitClass =
+			unit.occupancyType === 'shop'
+				? 'map-unit map-unit--occupied cursor-pointer'
+				: unit.occupancyType === 'private'
+					? 'map-unit map-unit--private'
+					: 'map-unit map-unit--empty opacity-20'
 
-		if (hasShop) {
-			svg = svg.replace(
-				regex,
-				`id="${elementId}" class="map-unit map-unit--occupied cursor-pointer" data-unit="${unit.unitCode}" data-has-shop="true"`,
-			)
-		} else {
-			svg = svg.replace(
-				regex,
-				`id="${elementId}" class="map-unit map-unit--empty opacity-20" data-unit="${unit.unitCode}" data-has-shop="false"`,
-			)
-		}
+		svg = svg.replace(
+			regex,
+			`id="${elementId}" class="${unitClass}" data-unit="${unit.unitCode}" data-has-shop="${hasShop}" data-occupancy="${unit.occupancyType}"`,
+		)
 	}
 
 	return svg
@@ -504,20 +503,22 @@ function updateDynamicClasses() {
 	const wrapper = svgWrapperRef.value
 	if (!wrapper) return
 
-	const unitElements = wrapper.querySelectorAll<SVGGElement>('[data-unit][data-has-shop="true"]')
+	const unitElements = wrapper.querySelectorAll<SVGGElement>('[data-unit]')
 	const hovered = props.hoveredUnitCode
 	const matched = matchedUnitCodes.value
 	const hasSearch = matched.size > 0
 
 	for (const el of unitElements) {
 		const unitCode = el.getAttribute('data-unit')!
+		const hasShop = el.getAttribute('data-has-shop') === 'true'
+		const occupancy = el.getAttribute('data-occupancy')
 		const isSelected = unitCode === hovered
 		const isHighlighted = hasSearch && matched.has(unitCode)
 		const isDimmed = hasSearch && !isHighlighted
 
-		el.classList.toggle('map-unit--selected', isSelected)
-		el.classList.toggle('map-unit--highlighted', isHighlighted)
-		el.classList.toggle('map-unit--dimmed', isDimmed)
+		el.classList.toggle('map-unit--selected', occupancy !== 'empty' && isSelected)
+		el.classList.toggle('map-unit--highlighted', hasShop && isHighlighted)
+		el.classList.toggle('map-unit--dimmed', hasShop && isDimmed)
 	}
 }
 
@@ -811,6 +812,18 @@ onBeforeUnmount(() => {
 	stroke-opacity: 0.33;
 }
 
+.map-floor :deep(.map-unit--private) {
+	opacity: 0.22;
+	filter: grayscale(0.75) brightness(0.86);
+	cursor: default;
+	transition: filter 0.2s ease-out, opacity 0.2s ease-out;
+}
+
+.map-floor :deep(.map-unit--private path[data-name='outline']) {
+	fill-opacity: 0.18;
+	stroke-opacity: 0.2;
+}
+
 /* Hover pouze pro přesná hover zařízení. iOS/Android jinak drží sticky :hover outline. */
 @media (hover: hover) and (pointer: fine) {
 	.map-floor :deep(.map-unit--occupied:hover) {
@@ -824,6 +837,10 @@ onBeforeUnmount(() => {
 
 	.map-floor :deep(.map-unit--empty:hover) {
 		opacity: 0.25;
+	}
+
+	.map-floor :deep(.map-unit--private:hover) {
+		opacity: 0.3;
 	}
 }
 
@@ -871,6 +888,7 @@ onBeforeUnmount(() => {
 }
 
 .map-floor--android-chrome :deep(.map-unit--occupied),
+.map-floor--android-chrome :deep(.map-unit--private),
 .map-floor--android-chrome :deep(.map-unit--selected),
 .map-floor--android-chrome :deep(.map-unit--highlighted),
 .map-floor--android-chrome :deep(.map-unit--dimmed),

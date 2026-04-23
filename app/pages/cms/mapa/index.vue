@@ -100,6 +100,10 @@
 							{{ t('cms.map.occupied') }}
 						</span>
 						<span class="flex items-center gap-2">
+							<span class="w-4 h-4 rounded bg-amber-400"></span>
+							{{ t('cms.map.privateOccupied') }}
+						</span>
+						<span class="flex items-center gap-2">
 							<span class="w-4 h-4 rounded bg-gray-300"></span>
 							{{ t('cms.map.emptyUnit') }}
 						</span>
@@ -150,7 +154,7 @@
 							</div>
 							<div v-else class="text-gray-500">
 								<span class="font-mono">{{ hoveredUnit.unitCode }}</span>
-								<span class="ml-1">({{ t('cms.map.emptyUnit') }})</span>
+								<span class="ml-1">({{ getUnitStatusLabel(hoveredUnit) }})</span>
 							</div>
 						</div>
 					</Transition>
@@ -219,7 +223,11 @@
 							:key="unit.unitCode"
 							:class="[
 								'hover:bg-gray-50 transition-colors cursor-pointer',
-								unit.shop ? '' : 'bg-gray-50/50',
+								unit.shop
+									? ''
+									: isPrivateUnit(unit)
+										? 'bg-amber-50/40'
+										: 'bg-gray-50/50',
 							]"
 							@click="selectUnit(unit)"
 						>
@@ -250,39 +258,30 @@
 									</div>
 									<span class="text-sm text-gray-900">{{ unit.shop.name }}</span>
 								</div>
-								<span v-else class="text-sm text-gray-400 italic">
-									{{ t('cms.map.empty') }}
+								<span
+									v-else
+									:class="
+										isPrivateUnit(unit)
+											? 'text-sm text-amber-700'
+											: 'text-sm text-gray-400 italic'
+									"
+								>
+									{{ getUnitDisplayName(unit) }}
 								</span>
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap">
 								<span
-									v-if="unit.shop"
 									:class="[
 										'inline-flex px-2 py-1 text-xs font-medium rounded-full',
-										unit.shop.isActive
-											? 'bg-green-100 text-green-800'
-											: 'bg-orange-100 text-orange-800',
+										...getUnitStatusClasses(unit),
 									]"
 								>
-									{{
-										unit.shop.isActive
-											? t('cms.shops.active')
-											: t('cms.shops.inactive')
-									}}
-								</span>
-								<span
-									v-else
-									class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600"
-								>
-									{{ t('cms.map.emptyUnit') }}
+									{{ getUnitStatusLabel(unit) }}
 								</span>
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap text-right">
-								<span v-if="unit.shop" class="text-sm text-indigo-600">
-									{{ t('common.edit') }}
-								</span>
-								<span v-else class="text-sm text-indigo-600">
-									{{ t('cms.map.assign') }}
+								<span class="text-sm text-indigo-600">
+									{{ getUnitActionLabel(unit) }}
 								</span>
 							</td>
 						</tr>
@@ -393,6 +392,28 @@
 
 							<!-- Přiřazení obchodu -->
 							<div v-else>
+								<div
+									:class="[
+										'p-3 rounded-lg border',
+										isPrivateUnit(selectedUnit)
+											? 'bg-amber-50 border-amber-200'
+											: 'bg-gray-50 border-gray-200',
+									]"
+								>
+									<p class="text-sm font-medium text-gray-900">
+										{{ t('cms.map.status') }}: {{ getUnitStatusLabel(selectedUnit) }}
+									</p>
+									<p
+										:class="
+											isPrivateUnit(selectedUnit)
+												? 'text-sm text-amber-700 mt-1'
+												: 'text-sm text-gray-500 mt-1'
+										"
+									>
+										{{ getUnitDisplayName(selectedUnit) }}
+									</p>
+								</div>
+
 								<label class="block text-sm font-medium text-gray-700 mb-1">
 									{{ t('cms.map.assignShop') }}
 								</label>
@@ -448,6 +469,33 @@
 										{{ assigning ? t('common.loading') : t('cms.map.assign') }}
 									</button>
 								</template>
+
+								<div class="pt-4 border-t">
+									<button
+										v-if="isPrivateUnit(selectedUnit)"
+										@click="updatePrivateOccupancy(false)"
+										:disabled="updatingPrivateOccupancy"
+										class="w-full px-4 py-2 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors disabled:opacity-50"
+									>
+										{{
+											updatingPrivateOccupancy
+												? t('common.loading')
+												: t('cms.map.markEmpty')
+										}}
+									</button>
+									<button
+										v-else
+										@click="updatePrivateOccupancy(true)"
+										:disabled="updatingPrivateOccupancy"
+										class="w-full px-4 py-2 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors disabled:opacity-50"
+									>
+										{{
+											updatingPrivateOccupancy
+												? t('common.loading')
+												: t('cms.map.markPrivate')
+										}}
+									</button>
+								</div>
 							</div>
 
 							<!-- Odebrat obchod -->
@@ -509,6 +557,7 @@ const selectedUnit = ref<MapUnit | null>(null)
 const shopToAssign = ref('')
 const assigning = ref(false)
 const removing = ref(false)
+const updatingPrivateOccupancy = ref(false)
 
 // SVG state
 const svgContainerRef = ref<HTMLElement | null>(null)
@@ -584,6 +633,46 @@ const currentFloorUnits = computed<MapUnit[]>(() => {
 	return currentFloor.value?.units ?? []
 })
 
+function isPrivateUnit(unit: MapUnit | null | undefined): boolean {
+	return unit?.occupancyType === 'private'
+}
+
+function getPrivateOccupiedUnitCodes(floorId: string): string[] {
+	return floors.value.find((floor) => floor.floorId === floorId)?.privateOccupiedUnitCodes ?? []
+}
+
+function getUnitStatusLabel(unit: MapUnit | null | undefined): string {
+	if (!unit) return ''
+	if (unit.shop) {
+		return unit.shop.isActive ? t('cms.shops.active') : t('cms.shops.inactive')
+	}
+	return isPrivateUnit(unit) ? t('cms.map.privateOccupied') : t('cms.map.emptyUnit')
+}
+
+function getUnitStatusClasses(unit: MapUnit | null | undefined): string[] {
+	if (!unit) return ['bg-gray-100', 'text-gray-600']
+	if (unit.shop) {
+		return unit.shop.isActive
+			? ['bg-green-100', 'text-green-800']
+			: ['bg-orange-100', 'text-orange-800']
+	}
+	return isPrivateUnit(unit)
+		? ['bg-amber-100', 'text-amber-800']
+		: ['bg-gray-100', 'text-gray-600']
+}
+
+function getUnitDisplayName(unit: MapUnit | null | undefined): string {
+	if (!unit) return ''
+	if (unit.shop) return unit.shop.name
+	return isPrivateUnit(unit) ? t('cms.map.privateTenant') : t('cms.map.empty')
+}
+
+function getUnitActionLabel(unit: MapUnit | null | undefined): string {
+	if (!unit) return ''
+	if (unit.shop) return t('common.edit')
+	return isPrivateUnit(unit) ? t('cms.map.updateStatus') : t('cms.map.assign')
+}
+
 const stats = computed(() => {
 	const total = mapData.value?.totalUnits ?? 0
 	const occupied = mapData.value?.occupiedUnits ?? 0
@@ -640,15 +729,21 @@ const processedSvg = computed(() => {
 	// Pro každou jednotku přidat data atributy
 	for (const unit of currentFloorUnits.value) {
 		const elementId = createUnitElementId(unit.unitCode)
-		const hasShop = !!unit.shop
+		const hasShop = unit.occupancyType === 'shop'
 		const isSelected = selectedUnit.value?.unitCode === unit.unitCode
 
 		const regex = new RegExp(`id=["']${elementId}["']`, 'g')
+		const occupancyClass =
+			unit.occupancyType === 'shop'
+				? 'cms-unit--occupied'
+				: unit.occupancyType === 'private'
+					? 'cms-unit--private'
+					: 'cms-unit--empty'
 
 		// V CMS jsou všechny jednotky klikací
 		const classes = [
 			'cms-unit',
-			hasShop ? 'cms-unit--occupied' : 'cms-unit--empty',
+			occupancyClass,
 			'cursor-pointer',
 			'transition-all',
 			'duration-300',
@@ -780,20 +875,21 @@ async function assignShop() {
 
 	assigning.value = true
 	try {
+		const currentSelectedUnit = selectedUnit.value
 		// Najít vybraný obchod pro získání jeho aktuálních unitCodes a floorIds
 		const shop = allShops.value.find((s) => s._id === shopToAssign.value)
 		const currentUnitCodes = shop?.unitCodes || []
 		const currentFloorIds = shop?.floorIds || []
 
 		// Přidat nový unitCode pokud tam ještě není
-		const newUnitCodes = currentUnitCodes.includes(selectedUnit.value.unitCode)
+		const newUnitCodes = currentUnitCodes.includes(currentSelectedUnit.unitCode)
 			? currentUnitCodes
-			: [...currentUnitCodes, selectedUnit.value.unitCode]
+			: [...currentUnitCodes, currentSelectedUnit.unitCode]
 
 		// Přidat nové floorId pokud tam ještě není
-		const newFloorIds = currentFloorIds.includes(selectedUnit.value.floorId)
+		const newFloorIds = currentFloorIds.includes(currentSelectedUnit.floorId)
 			? currentFloorIds
-			: [...currentFloorIds, selectedUnit.value.floorId]
+			: [...currentFloorIds, currentSelectedUnit.floorId]
 
 		await secureFetch(`/api/shops/${shopToAssign.value}`, {
 			method: 'PUT',
@@ -805,6 +901,20 @@ async function assignShop() {
 				floorId: newFloorIds[0] || null,
 			},
 		})
+
+		if (currentSelectedUnit.occupancyType === 'private') {
+			const updatedPrivateUnitCodes = getPrivateOccupiedUnitCodes(
+				currentSelectedUnit.floorId,
+			).filter((code) => code !== currentSelectedUnit.unitCode)
+
+			await secureFetch(`/api/floors/${currentSelectedUnit.floorId}`, {
+				method: 'PUT',
+				body: {
+					privateOccupiedUnitCodes: updatedPrivateUnitCodes,
+				},
+			})
+		}
+
 		flash.success(t('cms.flash.mapShopAssigned'))
 		await Promise.all([refresh(), loadShops()])
 		// Znovu načíst SVG aby se aktualizovaly barvy
@@ -815,6 +925,38 @@ async function assignShop() {
 		console.error('Failed to assign shop:', err)
 	} finally {
 		assigning.value = false
+	}
+}
+
+async function updatePrivateOccupancy(occupied: boolean) {
+	if (!selectedUnit.value) return
+
+	updatingPrivateOccupancy.value = true
+	try {
+		const currentSelectedUnit = selectedUnit.value
+		const currentUnitCodes = getPrivateOccupiedUnitCodes(currentSelectedUnit.floorId)
+		const updatedPrivateUnitCodes = occupied
+			? Array.from(new Set([...currentUnitCodes, currentSelectedUnit.unitCode]))
+			: currentUnitCodes.filter((code) => code !== currentSelectedUnit.unitCode)
+
+		await secureFetch(`/api/floors/${currentSelectedUnit.floorId}`, {
+			method: 'PUT',
+			body: {
+				privateOccupiedUnitCodes: updatedPrivateUnitCodes,
+			},
+		})
+
+		flash.success(
+			occupied ? t('cms.flash.mapUnitMarkedPrivate') : t('cms.flash.mapUnitMarkedEmpty'),
+		)
+		await refresh()
+		await loadSvg()
+		selectedUnit.value = null
+	} catch (err) {
+		flash.error(t('cms.flash.mapPrivateUpdateError'))
+		console.error('Failed to update private occupancy:', err)
+	} finally {
+		updatingPrivateOccupancy.value = false
 	}
 }
 
@@ -883,6 +1025,14 @@ async function removeShop() {
 
 :deep(.cms-unit--occupied:hover) {
 	fill: rgb(79 70 229) !important; /* indigo-600 */
+}
+
+:deep(.cms-unit--private) {
+	fill: rgb(251 191 36) !important; /* amber-400 */
+}
+
+:deep(.cms-unit--private:hover) {
+	fill: rgb(245 158 11) !important; /* amber-500 */
 }
 
 :deep(.cms-unit--empty) {
