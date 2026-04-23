@@ -4,11 +4,24 @@
  */
 
 import { connectToDatabase } from '@/server/utils/db'
-import { Shop } from '@/server/models'
+import { Category, Shop } from '@/server/models'
 import { shopFilterQuerySchema } from '@/shared/schemas'
 import { defineApiHandler } from '@/server/utils/errors'
 import type { FilterQuery } from 'mongoose'
 import type { IShopDocument } from '@/server/models/Shop'
+
+const categoryIdsContainsExpr = (categoryId: string) => ({
+	$in: [
+		categoryId,
+		{
+			$map: {
+				input: { $ifNull: ['$categoryIds', []] },
+				as: 'item',
+				in: { $toString: '$$item' },
+			},
+		},
+	],
+})
 
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
@@ -18,7 +31,8 @@ export default defineEventHandler(
 		const query = getQuery(event)
 		const validatedQuery = shopFilterQuerySchema.parse(query)
 
-		const { page, limit, sort, order, floorId, categoryId, search, isActive } = validatedQuery
+		const { page, limit, sort, order, floorId, categoryId, categorySlug, search, isActive } =
+			validatedQuery
 
 		// Sestavení filtru
 		const filter: FilterQuery<IShopDocument> = {}
@@ -27,9 +41,35 @@ export default defineEventHandler(
 			filter.floorId = floorId
 		}
 
-		if (categoryId) {
-			// Filtrovat obchody, které mají tuto kategorii v poli categoryIds
-			filter.categoryIds = categoryId
+		let resolvedCategoryId = categoryId
+
+		if (!resolvedCategoryId && categorySlug) {
+			const category = await Category.findOne({
+				slug: categorySlug,
+				isActive: true,
+			})
+				.select('_id')
+				.lean()
+
+			if (!category) {
+				return {
+					data: [],
+					pagination: {
+						page,
+						limit,
+						total: 0,
+						totalPages: 0,
+					},
+				}
+			}
+
+			resolvedCategoryId = category._id.toString()
+		}
+
+		if (resolvedCategoryId) {
+			// categoryIds jsou v DB historicky uložené i jako stringy, proto porovnáváme
+			// přes normalizaci na string místo běžného mongoose castu na ObjectId.
+			filter.$expr = categoryIdsContainsExpr(resolvedCategoryId)
 		}
 
 		if (typeof isActive === 'boolean') {

@@ -92,7 +92,7 @@
 		<ONasContactsSection :contacts="generalInfo?.contacts" :pending="pending" />
 
 		<!-- Content area -->
-		<div class="container-small px-4 py-12">
+		<div v-if="hasGeneralInfoText || pending" class="container-small px-4 py-12">
 			<!-- Loading skeleton -->
 			<div v-if="pending" class="space-y-8">
 				<div class="animate-pulse">
@@ -104,7 +104,7 @@
 
 			<div v-else class="space-y-12">
 				<!-- Text / Ostatní informace -->
-				<section v-if="generalInfo?.text" class="prose prose-lg max-w-none">
+				<section v-if="hasGeneralInfoText" class="prose prose-lg max-w-none">
 					<div v-html="sanitize(generalInfo.text)"></div>
 				</section>
 			</div>
@@ -419,6 +419,19 @@ const slideNext = () => {
 // Fetch general info
 const { data: generalInfo, pending } = useFetch<GeneralInfo>('/api/general-info', {
 	key: 'about-general-info',
+})
+
+const hasGeneralInfoText = computed(() => {
+	const text = generalInfo.value?.text
+	if (!text) return false
+
+	const plainText = text
+		.replace(/<[^>]*>/g, '')
+		.replace(/&nbsp;/gi, ' ')
+		.replace(/\u00A0/g, ' ')
+		.trim()
+
+	return plainText.length > 0
 })
 
 const { isToday, isSpecialHoursActive, isSpecialHoursCurrentOrFuture } = useOpeningHoursStatus(

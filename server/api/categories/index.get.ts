@@ -11,6 +11,14 @@ import { defineApiHandler } from '@/server/utils/errors'
 import type { FilterQuery } from 'mongoose'
 import type { ICategoryDocument } from '@/server/models/Category'
 
+const normalizedCategoryIdsExpr = {
+	$map: {
+		input: { $ifNull: ['$categoryIds', []] },
+		as: 'item',
+		in: { $toString: '$$item' },
+	},
+}
+
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
 		await connectToDatabase()
@@ -44,7 +52,7 @@ export default defineEventHandler(
 			const categoryIdsWithShops = await Shop.aggregate([
 				{ $match: { isActive: true, categoryIds: { $exists: true, $ne: [] } } },
 				{ $unwind: '$categoryIds' },
-				{ $group: { _id: '$categoryIds' } },
+				{ $group: { _id: { $toString: '$categoryIds' } } },
 			])
 			filter._id = { $in: categoryIdsWithShops.map((c) => c._id) }
 		}
@@ -65,12 +73,17 @@ export default defineEventHandler(
 			.lean()
 
 		// Získat počet obchodů pro každou kategorii
-		const categoryIds = categories.map((c) => c._id)
+		const categoryIds = categories.map((c) => c._id.toString())
 		const shopCounts = await Shop.aggregate([
-			{ $match: { categoryIds: { $in: categoryIds }, isActive: true } },
-			{ $unwind: '$categoryIds' },
-			{ $match: { categoryIds: { $in: categoryIds } } },
-			{ $group: { _id: '$categoryIds', count: { $sum: 1 } } },
+			{ $match: { isActive: true, categoryIds: { $exists: true, $ne: [] } } },
+			{
+				$project: {
+					normalizedCategoryIds: normalizedCategoryIdsExpr,
+				},
+			},
+			{ $unwind: '$normalizedCategoryIds' },
+			{ $match: { normalizedCategoryIds: { $in: categoryIds } } },
+			{ $group: { _id: '$normalizedCategoryIds', count: { $sum: 1 } } },
 		])
 		const shopCountMap = new Map(shopCounts.map((s) => [s._id.toString(), s.count]))
 

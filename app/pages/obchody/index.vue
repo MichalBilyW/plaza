@@ -251,11 +251,9 @@ const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/cate
 })
 const categories = computed(() => categoriesData.value?.data || [])
 
-// Překlad slug → _id pro API
-const selectedCategoryId = computed(() => {
-	if (!selectedCategory.value) return undefined
-	return categories.value.find((c) => c.slug === selectedCategory.value)?._id || undefined
-})
+const shopsFetchKey = computed(
+	() => `shops-${selectedCategory.value || 'all'}-${debouncedSearch.value || ''}`,
+)
 
 // Build query for current filters
 const buildQuery = (page: number) => ({
@@ -263,21 +261,36 @@ const buildQuery = (page: number) => ({
 	limit: ITEMS_PER_PAGE,
 	isActive: true,
 	search: debouncedSearch.value || undefined,
-	categoryId: selectedCategoryId.value || undefined,
+	categorySlug: selectedCategory.value || undefined,
 })
 
 // Initial fetch
-const { data: shopsData, refresh } = await useFetch<ShopsResponse>('/api/shops', {
-	query: computed(() => buildQuery(1)),
-	watch: false,
-})
+const { data: shopsData } = await useAsyncData<ShopsResponse>(
+	shopsFetchKey,
+	() => $fetch('/api/shops', { query: buildQuery(1) }),
+	{
+		default: () => ({
+			data: [],
+			pagination: {
+				page: 1,
+				limit: ITEMS_PER_PAGE,
+				total: 0,
+				totalPages: 0,
+			},
+		}),
+		watch: [debouncedSearch, selectedCategory],
+	},
+)
 
-// Populate initial data
-if (shopsData.value) {
-	allShops.value = shopsData.value.data || []
-	totalShops.value = shopsData.value.pagination?.total || 0
-}
-initialLoading.value = false
+watch(
+	shopsData,
+	(newData) => {
+		allShops.value = newData?.data || []
+		totalShops.value = newData?.pagination?.total || 0
+		initialLoading.value = false
+	},
+	{ immediate: true },
+)
 
 // Load more shops
 const loadMore = async () => {
@@ -298,13 +311,9 @@ const loadMore = async () => {
 }
 
 // Reset when filters change
-watch([debouncedSearch, selectedCategory], async () => {
+watch([debouncedSearch, selectedCategory], () => {
 	currentPage.value = 1
 	initialLoading.value = true
-	await refresh()
-	allShops.value = shopsData.value?.data || []
-	totalShops.value = shopsData.value?.pagination?.total || 0
-	initialLoading.value = false
 })
 
 // Track search after debounce settles

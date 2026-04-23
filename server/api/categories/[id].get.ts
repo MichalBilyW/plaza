@@ -7,6 +7,19 @@ import { connectToDatabase } from '@/server/utils/db'
 import { Category, Shop } from '@/server/models'
 import { defineApiHandler, createNotFoundError } from '@/server/utils/errors'
 
+const categoryIdsContainsExpr = (categoryId: string) => ({
+	$in: [
+		categoryId,
+		{
+			$map: {
+				input: { $ifNull: ['$categoryIds', []] },
+				as: 'item',
+				in: { $toString: '$$item' },
+			},
+		},
+	],
+})
+
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
 		await connectToDatabase()
@@ -20,7 +33,10 @@ export default defineEventHandler(
 		}
 
 		// Získat počet obchodů v kategorii (obchody, které mají tuto kategorii v categoryIds)
-		const shopCount = await Shop.countDocuments({ categoryIds: id, isActive: true })
+		const shopCount = await Shop.countDocuments({
+			isActive: true,
+			$expr: categoryIdsContainsExpr(id || ''),
+		})
 
 		return {
 			...category,

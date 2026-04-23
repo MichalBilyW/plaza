@@ -268,6 +268,7 @@ export interface PaginationQuery {
 export interface ShopFilterQuery extends PaginationQuery {
 	floorId?: string
 	categoryId?: string
+	categorySlug?: string
 	search?: string
 	isActive?: boolean
 }

@@ -60,11 +60,11 @@
 			</div>
 
 			<!-- Related Shops Section -->
-			<div v-if="shopCategories.length" class="px-4 my-20">
+			<div v-if="availableCategories.length" class="px-4 my-20">
 				<ShopRelatedShops
-					v-if="shopCategories.length > 0"
+					v-if="availableCategories.length > 0"
 					:shops="relatedShops"
-					:categories="categoriesData?.data ?? []"
+					:categories="availableCategories"
 					:category-id="selectedCategoryId"
 					:pending="relatedPending"
 					@category-change="onCategoryChange"
@@ -114,13 +114,19 @@ usePlazaSeo({
 // === Fetch all categories ===
 const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/categories', {
 	key: 'all-categories',
+	query: {
+		limit: 100,
+		isActive: 'true',
+		withShopsOnly: 'true',
+	},
 })
+
+const availableCategories = computed(() => categoriesData.value?.data ?? [])
 
 // Get only the categories this shop belongs to
 const shopCategories = computed(() => {
-	const allCategories = categoriesData.value?.data ?? []
 	const shopCategoryIds = shop.value?.categoryIds ?? []
-	return allCategories.filter((c) => shopCategoryIds.includes(c._id))
+	return availableCategories.value.filter((c) => shopCategoryIds.includes(c._id))
 })
 
 // === Fetch shop events ===
@@ -143,39 +149,54 @@ const shopEvents = computed(() => eventsData.value?.data ?? [])
 // === Related shops with category switching ===
 const selectedCategoryId = ref(shop.value?.categoryIds?.[0] ?? '')
 
-// Watch for shop changes to update selected category (use first category)
+// Keep the selected category aligned with the categories available for this shop.
 watch(
-	() => shop.value?.categoryIds,
-	(newCategoryIds) => {
-		if (newCategoryIds && newCategoryIds.length > 0) {
-			selectedCategoryId.value = newCategoryIds[0]
+	[availableCategories, shopCategories],
+	([newAvailableCategories, newShopCategories]) => {
+		if (newAvailableCategories.length === 0) {
+			selectedCategoryId.value = ''
+			return
+		}
+
+		if (!newAvailableCategories.some((category) => category._id === selectedCategoryId.value)) {
+			selectedCategoryId.value =
+				newShopCategories[0]?._id || newAvailableCategories[0]?._id || ''
 		}
 	},
 	{ immediate: true },
 )
 
 const onCategoryChange = (categoryId: string) => {
-	selectedCategoryId.value = categoryId
+	if (availableCategories.value.some((category) => category._id === categoryId)) {
+		selectedCategoryId.value = categoryId
+	}
 }
 
 // === Fetch related shops (selected category) ===
-const {
-	data: relatedData,
-	pending: relatedPending,
-	refresh: refreshRelatedShops,
-} = await useFetch<{ data: Shop[] }>('/api/shops', {
-	key: `related-shops-${route.params.slug}`,
-	query: computed(() => ({
-		categoryId: selectedCategoryId.value,
-		isActive: true,
-		limit: 20,
-	})),
-	immediate: !!selectedCategoryId.value,
-})
+const relatedShopsKey = computed(
+	() => `related-shops-${String(route.params.slug)}-${selectedCategoryId.value || 'none'}`,
+)
 
-watch(selectedCategoryId, (newId) => {
-	if (newId) refreshRelatedShops()
-})
+const { data: relatedData, pending: relatedPending } = await useAsyncData<{ data: Shop[] }>(
+	relatedShopsKey,
+	() => {
+		if (!selectedCategoryId.value) {
+			return Promise.resolve({ data: [] })
+		}
+
+		return $fetch('/api/shops', {
+			query: {
+				categoryId: selectedCategoryId.value,
+				isActive: true,
+				limit: 20,
+			},
+		})
+	},
+	{
+		default: () => ({ data: [] }),
+		watch: [selectedCategoryId],
+	},
+)
 
 // Filter out current shop from related shops
 const relatedShops = computed(() => {

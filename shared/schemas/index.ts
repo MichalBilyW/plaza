@@ -203,6 +203,7 @@ export const shopUpdateSchema = shopCreateSchema.partial()
 export const shopFilterQuerySchema = paginationQuerySchema.extend({
 	floorId: objectIdSchema.optional(),
 	categoryId: objectIdSchema.optional(), // Filtr pro jednu kategorii (obchody obsahující tuto kategorii)
+	categorySlug: optionalSlugSchema, // Filtr pro jednu kategorii podle slugu
 	search: z.string().max(100).optional(),
 	isActive: z.preprocess((val) => {
 		if (val === '' || val === undefined || val === null) return undefined

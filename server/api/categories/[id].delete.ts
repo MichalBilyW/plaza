@@ -8,6 +8,19 @@ import { Category, Shop } from '@/server/models'
 import { requireAdmin } from '@/server/utils/auth'
 import { defineApiHandler, createNotFoundError, createValidationError } from '@/server/utils/errors'
 
+const categoryIdsContainsExpr = (categoryId: string) => ({
+	$in: [
+		categoryId,
+		{
+			$map: {
+				input: { $ifNull: ['$categoryIds', []] },
+				as: 'item',
+				in: { $toString: '$$item' },
+			},
+		},
+	],
+})
+
 export default defineEventHandler(
 	defineApiHandler(async (event) => {
 		// Mazání pouze pro adminy
@@ -23,7 +36,9 @@ export default defineEventHandler(
 		}
 
 		// Zkontrolovat, zda kategorie neobsahuje obchody
-		const shopsCount = await Shop.countDocuments({ categoryIds: id })
+		const shopsCount = await Shop.countDocuments({
+			$expr: categoryIdsContainsExpr(id || ''),
+		})
 		if (shopsCount > 0) {
 			throw createValidationError(
 				`Nelze smazat kategorii obsahující ${shopsCount} obchodů. Nejprve odeberte kategorii z obchodů.`,
