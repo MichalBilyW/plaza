@@ -1,0 +1,46 @@
+[
+  {
+    "_id": "69bbae3cab4cdd1d2ca08264",
+    "name": "Pouzak do Kytky od Pepy",
+    "image": "/api/uploads/3f3d8645-d56a-42d2-95ef-d65549260680.png",
+    "sortOrder": 1,
+    "isActive": false,
+    "createdAt": "2026-03-19T08:05:16.163Z",
+    "updatedAt": "2026-04-14T14:35:52.033Z",
+    "__v": 0,
+    "content": "<p style=\"text-align: center;\"><img class=\"max-w-full h-auto rounded-lg\" src=\"/api/uploads/4a0b5e81-f6a6-47a8-801a-d8f5ab70291d.png\" style=\"display: inline-block; vertical-align: top; max-width: 25%; margin: 0.25rem;\"></p><p style=\"text-align: left;\"></p><p style=\"text-align: left;\">Taky už se nemůžete dočkat tepla a barev? 🌸 Přiveďte si jaro k sobě domů už dnes! V našem květinářství Kytky od Pepy v OC Plaza na vás čekají ty nejčerstvější kousky. 🩷</p>"
+  },
+  {
+    "_id": "69bbae56ab4cdd1d2ca0826c",
+    "name": "Kriminálka iQLANDIA v OC Plaza",
+    "image": "/api/uploads/8fee16ce-8a43-402a-8434-907a55985b15.png",
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-03-19T08:05:42.699Z",
+    "updatedAt": "2026-04-14T10:40:58.799Z",
+    "__v": 0,
+    "content": "<p>V OC Plaza se právě teď dějí věci! <img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t5/2/16/1f575_1f3fb.png\" alt=\"🕵🏻\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> Ve spolupráci s iQLANDIÍ jsme proměnili naše prostory v moderní detektivní centrálu. Pokud hledáte program, který děti odtrhne od obrazovek a naučí je něco fascinujícího, Interaktivní výstava kriminalistiky je trefa do černého! <img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t4f/2/16/1f3af.png\" alt=\"🎯\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"></p><p>Co všechno si u nás vyzkoušíte?</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/te1/2/16/1f50e.png\" alt=\"🔎\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> Pátrání na vlastní pěst.</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/te1/2/16/1f50e.png\" alt=\"🔎\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\">Forenzní metody v praxi.</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/te1/2/16/1f50e.png\" alt=\"🔎\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\">Věda v boji proti zločinu.</p><p>A protože víme, že detektivové potřebují pořádný trénink, zapište si do kalendáře tyto víkendy:</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t1d/2/16/1f4c5.png\" alt=\"📅\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> 18. 4. – 19. 4.</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t1d/2/16/1f4c5.png\" alt=\"📅\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> 25. 4. – 26. 4.</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/tcc/2/16/1f4cd.png\" alt=\"📍\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> Vstupné je zdarma.</p><p>Výstava trvá jen do 26. dubna, tak ji nepropásněte!</p>"
+  },
+  {
+    "_id": "69bbaeaeab4cdd1d2ca08279",
+    "name": "Mani",
+    "image": "/uploads/e91e8281-885d-4bf0-830d-227dc3901bf3.jpg",
+    "sortOrder": 3,
+    "isActive": false,
+    "createdAt": "2026-03-19T08:07:10.834Z",
+    "updatedAt": "2026-04-07T11:42:15.232Z",
+    "__v": 0,
+    "content": ""
+  },
+  {
+    "_id": "69d4ed8f007d6bdc2e616047",
+    "name": "DinoPark",
+    "image": "/api/uploads/b9024908-41dc-47cb-aaf2-1dc0c7b0c8e2.png",
+    "content": "<p style=\"text-align: center;\"><img class=\"max-w-full h-auto rounded-lg\" src=\"/api/uploads/ad65686e-7c5c-4d5d-bfd6-351997a509f3.png\" style=\"display: inline-block; vertical-align: top; max-width: 25%; margin: 0.25rem;\"></p><p>Venku prší? 🌧️ U nás v OC Plaza svítí slunce už miliony let! ☀️ Vydejte se na dobrodružnou výpravu do jediného krytého DinoParku v ČR. Potkejte se tváří v tvář s druhohorními obry, prozkoumejte paleontologické hřiště a užijte si den plný zábavy, aniž byste vytáhli deštník. 🦖✨</p>",
+    "sortOrder": 0,
+    "isActive": false,
+    "createdAt": "2026-04-07T11:42:07.816Z",
+    "updatedAt": "2026-04-08T11:20:40.323Z",
+    "__v": 0
+  }
+]

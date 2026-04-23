@@ -1,0 +1,95 @@
+[
+  {
+    "_id": "69a710cb6d08e66a0f657c64",
+    "name": "Móda",
+    "slug": "moda",
+    "isActive": true,
+    "sortOrder": 9,
+    "createdAt": "2026-03-03T16:48:11.636Z",
+    "updatedAt": "2026-04-07T07:16:15.277Z",
+    "__v": 0
+  },
+  {
+    "_id": "69c5295ca7299fefa702e913",
+    "name": "Zdraví a krása",
+    "slug": "zdravi-a-krasa",
+    "isActive": true,
+    "__v": 0,
+    "sortOrder": 2,
+    "updatedAt": "2026-04-07T07:16:15.277Z"
+  },
+  {
+    "_id": "69c5295ca7299fefa702e916",
+    "name": "Elektronika",
+    "slug": "elektronika",
+    "isActive": true,
+    "__v": 0,
+    "sortOrder": 4,
+    "updatedAt": "2026-04-07T07:16:15.277Z"
+  },
+  {
+    "_id": "69c5295ca7299fefa702e91a",
+    "name": "Domácnost",
+    "slug": "domacnost",
+    "isActive": true,
+    "__v": 0,
+    "sortOrder": 5,
+    "updatedAt": "2026-04-07T07:16:15.277Z"
+  },
+  {
+    "_id": "69c5295ca7299fefa702e91d",
+    "name": "Služby",
+    "slug": "sluzby",
+    "isActive": true,
+    "__v": 0,
+    "sortOrder": 6,
+    "updatedAt": "2026-04-07T07:16:15.277Z"
+  },
+  {
+    "_id": "69c5295da7299fefa702e920",
+    "name": "Zábava",
+    "slug": "zabava",
+    "isActive": true,
+    "__v": 0,
+    "sortOrder": 0,
+    "updatedAt": "2026-04-07T07:16:15.277Z"
+  },
+  {
+    "_id": "69c5295da7299fefa702e923",
+    "name": "Hračky",
+    "slug": "hracky",
+    "isActive": true,
+    "__v": 0,
+    "sortOrder": 1,
+    "updatedAt": "2026-04-07T07:16:15.277Z"
+  },
+  {
+    "_id": "69c5295da7299fefa702e929",
+    "name": "Knihy",
+    "slug": "knihy",
+    "isActive": true,
+    "__v": 0,
+    "sortOrder": 3,
+    "updatedAt": "2026-04-07T07:16:15.277Z"
+  },
+  {
+    "_id": "69e0c8af94a872da513e03d2",
+    "name": "Restaurace & kavárny",
+    "slug": "restaurace-a-kavarny",
+    "isActive": true,
+    "sortOrder": 10,
+    "createdAt": "2026-04-16T11:31:59.718Z",
+    "updatedAt": "2026-04-16T11:33:36.536Z",
+    "__v": 0
+  },
+  {
+    "_id": "69e0c90694a872da513e03db",
+    "name": "Potraviny & delikatesy",
+    "slug": "potraviny-delikatesy",
+    "isActive": true,
+    "sortOrder": 11,
+    "createdAt": "2026-04-16T11:33:26.256Z",
+    "updatedAt": "2026-04-16T11:33:26.256Z",
+    "__v": 0
+  }
+]

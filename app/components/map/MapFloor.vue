@@ -114,6 +114,7 @@ const loadSvg = async () => {
 		pending.value = true
 		error.value = null
 		isReady.value = false
+		geometryCache.clear()
 		const response = await fetch(props.svgPath)
 		if (!response.ok) {
 			throw new Error(`Failed to load SVG: ${response.status}`)
@@ -200,12 +201,34 @@ interface LogoOverlay {
 
 const logoOverlays = ref<LogoOverlay[]>([])
 
-// ─── Geometry cache: pole-of-inaccessibility je drahý → cachujeme per unitCode ───
-const geometryCache = new Map<string, { cx: number; cy: number; r: number }>()
+// ─── Geometry cache: výpočet umístění overlaye je drahý → cachujeme per unitCode ───
+const geometryCache = new Map<string, { cx: number; cy: number; r: number; side: number }>()
 
-// ─── Geometry helpers: Pole of Inaccessibility ───
+// ─── Geometry helpers ───
 
 type Point = [number, number]
+
+function isExplicitFillElement(element: Element): boolean {
+	const id = element.getAttribute('id') ?? ''
+	const dataName = element.getAttribute('data-name') ?? ''
+	return id === 'fill' || dataName === 'fill' || id.startsWith('fill')
+}
+
+function isExplicitOutlineElement(element: Element): boolean {
+	const id = element.getAttribute('id') ?? ''
+	const dataName = element.getAttribute('data-name') ?? ''
+	return id === 'outline' || dataName === 'outline' || id.startsWith('outline')
+}
+
+function sampleShapeElement(element: Element): Point[] | null {
+	if (element instanceof SVGPathElement) {
+		return samplePathPoints(element)
+	}
+	if (element instanceof SVGRectElement) {
+		return rectToPolygon(element)
+	}
+	return null
+}
 
 /**
  * Získat polygon fill oblasti SVG unit elementu.
@@ -213,27 +236,33 @@ type Point = [number, number]
  * Outline path (donut shape) jsou bezpečně ignorovány.
  */
 function samplePolygonFromFill(element: Element): Point[] | null {
-	// 1. Hledat <path> s fill id/data-name
-	const paths = element.querySelectorAll('path')
-	for (const p of paths) {
-		const id = p.getAttribute('id') ?? ''
-		const dataName = p.getAttribute('data-name') ?? ''
-		if (id === 'fill' || dataName === 'fill' || id.startsWith('fill')) {
-			return samplePathPoints(p)
+	const directShapes = Array.from(element.children).filter((child) => {
+		return child instanceof SVGPathElement || child instanceof SVGRectElement
+	})
+
+	// 1. Preferovat explicitně označený fill
+	for (const shape of directShapes) {
+		if (isExplicitFillElement(shape)) {
+			return sampleShapeElement(shape)
 		}
 	}
 
-	// 2. Hledat <rect> s fill id/data-name (běžné pro jednoduché obdélníkové unity)
-	const rects = element.querySelectorAll('rect')
-	for (const r of rects) {
-		const id = r.getAttribute('id') ?? ''
-		const dataName = r.getAttribute('data-name') ?? ''
-		if (id === 'fill' || dataName === 'fill' || id.startsWith('fill')) {
-			return rectToPolygon(r)
+	// 2. Fallback pro SVG, kde fill není označený, ale je první geometrický child
+	for (const shape of directShapes) {
+		if (!isExplicitOutlineElement(shape)) {
+			return sampleShapeElement(shape)
 		}
 	}
 
-	// 3. Žádný fill element — NEPOUŽÍVAT outline path (je to donut shape)
+	// 3. Poslední fallback pro nečekanou strukturu
+	const nestedShapes = element.querySelectorAll('path, rect')
+	for (const shape of nestedShapes) {
+		if (isExplicitFillElement(shape)) {
+			return sampleShapeElement(shape)
+		}
+	}
+
+	// 4. Žádný fill element — NEPOUŽÍVAT outline path (je to donut shape)
 	return null
 }
 
@@ -250,6 +279,29 @@ function samplePathPoints(path: SVGPathElement): Point[] | null {
 		points.push([pt.x, pt.y])
 	}
 	return points
+}
+
+function getPolygonBounds(polygon: Point[]) {
+	let minX = Infinity,
+		minY = Infinity,
+		maxX = -Infinity,
+		maxY = -Infinity
+
+	for (const [px, py] of polygon) {
+		if (px < minX) minX = px
+		if (py < minY) minY = py
+		if (px > maxX) maxX = px
+		if (py > maxY) maxY = py
+	}
+
+	return {
+		minX,
+		minY,
+		maxX,
+		maxY,
+		width: maxX - minX,
+		height: maxY - minY,
+	}
 }
 
 /** Převést <rect> na polygon (4 rohy), s transformem pokud existuje */
@@ -335,6 +387,15 @@ function distToPolygonEdge(x: number, y: number, polygon: Point[]): number {
 	return Math.sqrt(minDistSq)
 }
 
+function pointInPolygonOrNearEdge(
+	x: number,
+	y: number,
+	polygon: Point[],
+	edgeTolerance: number = 1.5,
+): boolean {
+	return pointInPolygon(x, y, polygon) || distToPolygonEdge(x, y, polygon) <= edgeTolerance
+}
+
 /**
  * Pole of Inaccessibility — najde bod uvnitř polygonu nejdále od hrany.
  * Iterativní grid-search s progresivním zjemňováním.
@@ -344,20 +405,9 @@ function poleOfInaccessibility(
 	polygon: Point[],
 	precision: number = 1,
 ): { x: number; y: number; r: number } {
-	// Bounding box polygonu
-	let minX = Infinity,
-		minY = Infinity,
-		maxX = -Infinity,
-		maxY = -Infinity
-	for (const [px, py] of polygon) {
-		if (px < minX) minX = px
-		if (py < minY) minY = py
-		if (px > maxX) maxX = px
-		if (py > maxY) maxY = py
-	}
-
-	const width = maxX - minX
-	const height = maxY - minY
+	const bounds = getPolygonBounds(polygon)
+	let { minX, minY, maxX, maxY } = bounds
+	const { width, height } = bounds
 	let cellSize = Math.max(width, height)
 	if (cellSize === 0) return { x: minX, y: minY, r: 0 }
 
@@ -417,6 +467,44 @@ function poleOfInaccessibility(
 	}
 
 	return { x: bestX, y: bestY, r: bestDist }
+}
+
+function squareFitsInPolygon(cx: number, cy: number, halfSide: number, polygon: Point[]): boolean {
+	if (halfSide <= 0) return pointInPolygonOrNearEdge(cx, cy, polygon)
+
+	const samplesPerEdge = Math.max(4, Math.ceil((halfSide * 2) / 8))
+	for (let i = 0; i <= samplesPerEdge; i++) {
+		const t = i / samplesPerEdge
+		const offset = -halfSide + t * halfSide * 2
+
+		if (!pointInPolygonOrNearEdge(cx + offset, cy - halfSide, polygon)) return false
+		if (!pointInPolygonOrNearEdge(cx + offset, cy + halfSide, polygon)) return false
+		if (!pointInPolygonOrNearEdge(cx - halfSide, cy + offset, polygon)) return false
+		if (!pointInPolygonOrNearEdge(cx + halfSide, cy + offset, polygon)) return false
+	}
+
+	return true
+}
+
+function maxSquareHalfSideAtPoint(cx: number, cy: number, polygon: Point[]): number {
+	if (!pointInPolygonOrNearEdge(cx, cy, polygon)) return 0
+
+	const bounds = getPolygonBounds(polygon)
+	let low = 0
+	let high = Math.min(cx - bounds.minX, bounds.maxX - cx, cy - bounds.minY, bounds.maxY - cy)
+
+	if (high <= 0) return 0
+
+	for (let i = 0; i < 12; i++) {
+		const mid = (low + high) / 2
+		if (squareFitsInPolygon(cx, cy, mid, polygon)) {
+			low = mid
+		} else {
+			high = mid
+		}
+	}
+
+	return low
 }
 
 /** Vrátit iniciály z názvu obchodu (max 2 znaky) */
@@ -615,6 +703,7 @@ function updateLogoOverlays() {
 	if (vbWidth <= 0 || vbHeight <= 0) return
 
 	const unitElements = wrapper.querySelectorAll('[data-unit][data-has-shop="true"]')
+	const LOGO_SCALE = 1.8
 
 	// Fáze 1: Spočítat vizuální střed a poloměr pro každý unit
 	interface UnitGeometry {
@@ -623,6 +712,7 @@ function updateLogoOverlays() {
 		cx: number
 		cy: number
 		r: number
+		side: number
 		hasLogo: boolean
 	}
 
@@ -644,6 +734,7 @@ function updateLogoOverlays() {
 				cx: cached.cx,
 				cy: cached.cy,
 				r: cached.r,
+				side: cached.side,
 				hasLogo: !!unit.shop.logo,
 			})
 			return
@@ -654,10 +745,12 @@ function updateLogoOverlays() {
 			// Fallback na getBBox střed
 			const bbox = (element as SVGGraphicsElement).getBBox()
 			if (bbox.width > 0 && bbox.height > 0) {
+				const r = Math.min(bbox.width, bbox.height) / 2
 				const geo = {
 					cx: bbox.x + bbox.width / 2,
 					cy: bbox.y + bbox.height / 2,
-					r: Math.min(bbox.width, bbox.height) / 2,
+					r,
+					side: r * LOGO_SCALE,
 				}
 				geometryCache.set(unitCode, geo)
 				geometries.push({
@@ -671,7 +764,18 @@ function updateLogoOverlays() {
 		}
 
 		const poi = poleOfInaccessibility(polygon, 2)
-		const geo = { cx: poi.x, cy: poi.y, r: poi.r }
+		const originalSide = poi.r * LOGO_SCALE
+		let side = originalSide
+
+		const maxHalfSide = maxSquareHalfSideAtPoint(poi.x, poi.y, polygon)
+		if (maxHalfSide > 0) {
+			const safeSide = maxHalfSide * 2 * 0.92
+			if (unitCode === '111' || originalSide > safeSide * 1.35) {
+				side = safeSide
+			}
+		}
+
+		const geo = { cx: poi.x, cy: poi.y, r: poi.r, side }
 		geometryCache.set(unitCode, geo)
 		geometries.push({
 			unitCode,
@@ -682,20 +786,16 @@ function updateLogoOverlays() {
 	})
 
 	// Fáze 2: Rozdělit na logo vs iniciály skupinu
-	// Zvýšený threshold: logo se zobrazí jen ve větších unitech → budou výrazně větší
+	// Zachovat původní chování logo vs iniciály a jen bezpečně omezit extrémní přetečení.
 	const LOGO_THRESHOLD = vbWidth * 0.025
 	const logoGeometries = geometries.filter((g) => g.hasLogo && g.r >= LOGO_THRESHOLD)
 	const initialsGeometries = geometries.filter((g) => !g.hasLogo || g.r < LOGO_THRESHOLD)
-
-	// Každé logo vyplní svoji vepsanou kružnici (ne uniformní velikost)
-	const LOGO_SCALE = 1.8
 
 	// Fáze 3: Sestavit overlays
 	const overlays: LogoOverlay[] = []
 
 	for (const g of logoGeometries) {
-		const side = g.r * LOGO_SCALE
-		const sizePct = (side / vbWidth) * 100
+		const sizePct = (g.side / vbWidth) * 100
 		overlays.push({
 			unitCode: g.unitCode,
 			shopName: g.unit.shop!.name,
@@ -711,11 +811,10 @@ function updateLogoOverlays() {
 	}
 
 	for (const g of initialsGeometries) {
-		const side = g.r * LOGO_SCALE
-		const sizePct = (side / vbWidth) * 100
+		const sizePct = (g.side / vbWidth) * 100
 		// Font size: poměrný k velikosti kontejneru, v vw pro škálování se zoomem
 		// Min 0.55vw, max 2vw aby nepřetékaly na velkých rozlišeních
-		const fontSizeVw = Math.min(2, Math.max(0.55, (side / vbWidth) * 55))
+		const fontSizeVw = Math.min(2, Math.max(0.55, (g.side / vbWidth) * 55))
 		overlays.push({
 			unitCode: g.unitCode,
 			shopName: g.unit.shop!.name,

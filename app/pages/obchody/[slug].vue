@@ -64,7 +64,7 @@
 				<ShopRelatedShops
 					v-if="shopCategories.length > 0"
 					:shops="relatedShops"
-					:categories="shopCategories"
+					:categories="categoriesData?.data ?? []"
 					:category-id="selectedCategoryId"
 					:pending="relatedPending"
 					@category-change="onCategoryChange"
@@ -159,19 +159,23 @@ const onCategoryChange = (categoryId: string) => {
 }
 
 // === Fetch related shops (selected category) ===
-const { data: relatedData, pending: relatedPending } = await useFetch<{ data: Shop[] }>(
-	'/api/shops',
-	{
-		key: `related-shops-${route.params.slug}`,
-		query: computed(() => ({
-			categoryId: selectedCategoryId.value,
-			isActive: true,
-			limit: 20,
-		})),
-		watch: [selectedCategoryId],
-		immediate: !!selectedCategoryId.value,
-	},
-)
+const {
+	data: relatedData,
+	pending: relatedPending,
+	refresh: refreshRelatedShops,
+} = await useFetch<{ data: Shop[] }>('/api/shops', {
+	key: `related-shops-${route.params.slug}`,
+	query: computed(() => ({
+		categoryId: selectedCategoryId.value,
+		isActive: true,
+		limit: 20,
+	})),
+	immediate: !!selectedCategoryId.value,
+})
+
+watch(selectedCategoryId, (newId) => {
+	if (newId) refreshRelatedShops()
+})
 
 // Filter out current shop from related shops
 const relatedShops = computed(() => {

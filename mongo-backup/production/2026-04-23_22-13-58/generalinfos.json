@@ -1,0 +1,111 @@
+[
+  {
+    "_id": "699971a6735ab9ada9b9aacd",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "gallery": [
+      "/api/uploads/c49819f6-a015-423b-9847-c8e229239216.jpg",
+      "/api/uploads/4ceea942-db13-4ca9-820f-54b266dcf9ba.jpg"
+    ],
+    "specialOpeningHours": [
+      {
+        "dateFrom": "2026-04-06T00:00:00.000Z",
+        "dateTo": "2026-04-09T00:00:00.000Z",
+        "closed": true,
+        "note": "TEST OBDOBÍ Voluptate quos atque libero omnis fugiat odit commodi autem sit veniam reprehenderit minus"
+      },
+      {
+        "date": "1993-06-27T00:00:00.000Z",
+        "closed": true,
+        "note": "Et est labore dolore unde dolores sit veniam eos adipisicing ea quos"
+      },
+      {
+        "date": "2017-10-15T00:00:00.000Z",
+        "open": "15:33",
+        "close": "21:10",
+        "closed": false,
+        "note": "Rem ut in est quo voluptas sed voluptatem sed voluptatem Optio"
+      }
+    ],
+    "createdAt": "2026-02-21T08:49:42.621Z",
+    "updatedAt": "2026-04-22T10:44:39.655Z",
+    "__v": 28,
+    "facebook": "https://www.pijovaverehy.co.uk",
+    "instagram": "https://www.cowexavak.org.uk",
+    "shortText": "VAŠE CESTA K ZÁŽITKŮM",
+    "text": "<p style=\"text-align: left;\"></p>",
+    "title": "Plaza spojuje",
+    "staticAroundMap": "/api/uploads/01cedaba-1a0e-48f4-bfd8-2b604fa7167a.svg",
+    "parkingContent": "<ul><li><p><strong>490</strong> Parkovacích míst</p></li><li><p><strong>3</strong> Patra podzemního parkoviště</p></li><li><p>Dobíjecí místa pro elektromobily</p></li><li><p>Vyhrazená místa pro invalidy</p></li><li><p>Maximální výška automobilu 2m</p></li><li><p><strong>Otevřeno 24/7</strong></p></li></ul>",
+    "parkingImage": "/api/uploads/d5634417-d6de-41ab-9229-dbb58e558315.jpg",
+    "parkingOtherInfo": "<p><strong>Ceník parkovného</strong></p><ul><li><p>1.&nbsp;hodina zdarma</p></li><li><p>Každá další započatá hodina je zpoplatněna částkou 60&nbsp;Kč/hodina.</p></li><li><p>O víkendech a státních svátcích je parkování prvních 5 hodin&nbsp;ZDARMA.</p></li><li><p>Při opakovaném vjezdu&nbsp;do 1. hodiny od výjezdu z parkoviště se celková parkovací doba sčítá!</p></li></ul>",
+    "contacts": [
+      {
+        "title": "Krátkodobé pronájmy a stánkový prodej",
+        "name": "Ivona Valentová",
+        "email": "valentova@ocplazaliberec.cz"
+      },
+      {
+        "title": "Vedení centra a rozvoj nájemní sítě",
+        "name": "Eva Háž Svobodová",
+        "email": "svobodova@ocplazaliberec.cz"
+      },
+      {
+        "title": "Technický provoz a správa budovy",
+        "name": "Martin Erlebach",
+        "email": "erlebach@ocplazaliberec.cz"
+      },
+      {
+        "title": "Marketing a PR",
+        "name": "Veronika Randýsková",
+        "email": "randyskova@ocplazaliberec.cz"
+      },
+      {
+        "title": "ZTRÁTY A NÁLEZY",
+        "phone": "+420 724 036 133"
+      }
+    ]
+  }
+]
