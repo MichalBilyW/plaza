@@ -834,7 +834,7 @@ export default {
 		home: {
 			title: 'OC Plaza Liberec',
 			description:
-				'Nákupní centrum v srdci Liberce. Objevte přes 100 obchodů, restaurací a služeb pod jednou střechou.',
+				'Nakupujte v OC Plaza Liberec – přes 30 obchodů, restaurací a služeb v centru Liberce. Parkování zdarma, otevřeno každý den v otevírací době kterou naleznete na našich stránkách.',
 		},
 		shops: {
 			title: 'Obchody a služby',

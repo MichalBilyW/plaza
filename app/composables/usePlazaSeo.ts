@@ -16,8 +16,9 @@ const NOINDEX_ROBOTS = 'noindex, nofollow, noarchive, nosnippet, noimageindex'
 export const usePlazaSeo = (config: SeoConfig) => {
 	const runtimeConfig = useRuntimeConfig()
 	const route = useRoute()
+	const requestUrl = useRequestURL()
 
-	const baseUrl = runtimeConfig.public.siteUrl || 'https://ocplazaliberec.cz'
+	const baseUrl = requestUrl.origin || runtimeConfig.public.siteUrl || 'https://ocplazaliberec.cz'
 	const siteName = 'Obchodní centrum Plaza Liberec'
 
 	const fullTitle = config.title === siteName ? siteName : `${config.title} | ${siteName}`
