@@ -553,6 +553,9 @@ const baseSvg = computed(() => {
 
 	let svg = svgContent.value
 
+	// Odstranit <title> elementy (způsobují browser tooltip s názvem souboru)
+	svg = svg.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, '')
+
 	// Odstranit bílé pozadí z SVG
 	svg = svg.replace(/<rect[^>]*fill=["'](#fff|#ffffff|white|#FFFFFF|#FFF)["'][^>]*\/>/gi, '')
 	svg = svg.replace(
