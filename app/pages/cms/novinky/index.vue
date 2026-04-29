@@ -134,6 +134,46 @@
 								class="inline-flex w-8 h-8 rounded-full"
 							></span>
 						</div>
+
+						<!-- Display until badge -->
+						<div
+							v-if="item.displayUntil"
+							class="absolute bottom-2 left-2 right-2 flex justify-center"
+							:title="
+								isExpired(item.displayUntil)
+									? t('cms.news.expiredOn', { date: formatShortDate(item.displayUntil) })
+									: t('cms.news.displayUntilOn', {
+											date: formatShortDate(item.displayUntil),
+										})
+							"
+						>
+							<span
+								class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full shadow-sm"
+								:class="
+									isExpired(item.displayUntil)
+										? 'bg-red-100 text-red-700'
+										: 'bg-white/95 text-gray-700'
+								"
+							>
+								<svg
+									class="w-3.5 h-3.5"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+									/>
+								</svg>
+								<span>
+									{{ isExpired(item.displayUntil) ? t('cms.news.expired') : t('cms.news.until') }}
+									{{ formatShortDate(item.displayUntil) }}
+								</span>
+							</span>
+						</div>
 					</div>
 
 					<!-- Content -->
@@ -230,6 +270,20 @@ usePlazaSeo({
 const { t } = useI18n()
 const { secureFetch } = useCmsAuth()
 const flash = useFlashMessages()
+
+// Display until helpers
+const formatShortDate = (iso: string | null | undefined) => {
+	if (!iso) return ''
+	return new Date(iso).toLocaleDateString('cs-CZ', {
+		day: 'numeric',
+		month: 'numeric',
+		year: 'numeric',
+	})
+}
+const isExpired = (iso: string | null | undefined) => {
+	if (!iso) return false
+	return new Date(iso).getTime() < Date.now()
+}
 
 // Filters
 const search = ref('')

@@ -144,6 +144,8 @@ export interface Event extends BaseEntity {
 	sortOrder: number
 	/** Je akce aktivní */
 	isActive: boolean
+	/** Datum, do kterého se akce zobrazuje na webu (ISO string). */
+	displayUntil?: string | null
 }
 
 // ==========================================
@@ -160,6 +162,8 @@ export interface News extends BaseEntity {
 	sortOrder: number
 	/** Je novinka aktivní */
 	isActive: boolean
+	/** Datum, do kterého se novinka zobrazuje na webu (ISO string). */
+	displayUntil?: string | null
 }
 
 // ==========================================

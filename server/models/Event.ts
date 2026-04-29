@@ -23,6 +23,8 @@ export interface IEvent {
 	sortOrder: number
 	/** Je akce aktivní */
 	isActive: boolean
+	/** Datum, do kterého se akce zobrazuje na webu (včetně). Po tomto datu se na webu skryje. */
+	displayUntil?: Date | null
 }
 
 export interface IEventDocument extends IEvent, Document {
@@ -63,6 +65,11 @@ const eventSchema = new Schema<IEventDocument>(
 		isActive: {
 			type: Boolean,
 			default: true,
+			index: true,
+		},
+		displayUntil: {
+			type: Date,
+			default: null,
 			index: true,
 		},
 	},

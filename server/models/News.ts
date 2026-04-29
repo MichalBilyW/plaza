@@ -21,6 +21,8 @@ export interface INews {
 	sortOrder: number
 	/** Je novinka aktivní */
 	isActive: boolean
+	/** Datum, do kterého se novinka zobrazuje na webu (včetně). Po tomto datu se na webu skryje. */
+	displayUntil?: Date | null
 }
 
 export interface INewsDocument extends INews, Document {
@@ -55,6 +57,11 @@ const newsSchema = new Schema<INewsDocument>(
 		isActive: {
 			type: Boolean,
 			default: true,
+			index: true,
+		},
+		displayUntil: {
+			type: Date,
+			default: null,
 			index: true,
 		},
 	},

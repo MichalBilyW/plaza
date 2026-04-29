@@ -228,6 +228,7 @@ export const eventCreateSchema = z.object({
 	shopId: objectIdSchema,
 	sortOrder: z.number().int().default(0),
 	isActive: z.boolean().default(true),
+	displayUntil: z.string().datetime().nullable().optional(),
 })
 
 export const eventUpdateSchema = eventCreateSchema.partial()
@@ -236,6 +237,13 @@ export const eventFilterQuerySchema = paginationQuerySchema.extend({
 	shopId: objectIdSchema.optional(),
 	search: z.string().max(100).optional(),
 	isActive: z.preprocess((val) => {
+		if (val === '' || val === undefined || val === null) return undefined
+		if (val === 'true' || val === true) return true
+		if (val === 'false' || val === false) return false
+		return undefined
+	}, z.boolean().optional()),
+	/** Pokud true, vrátí jen položky, kterým ještě nevypršel `displayUntil` (nebo není nastaven). */
+	notExpired: z.preprocess((val) => {
 		if (val === '' || val === undefined || val === null) return undefined
 		if (val === 'true' || val === true) return true
 		if (val === 'false' || val === false) return false
@@ -257,6 +265,7 @@ export const newsCreateSchema = z.object({
 	content: z.string().max(50000).optional(),
 	sortOrder: z.number().int().default(0),
 	isActive: z.boolean().default(true),
+	displayUntil: z.string().datetime().nullable().optional(),
 })
 
 export const newsUpdateSchema = newsCreateSchema.partial()
@@ -264,6 +273,13 @@ export const newsUpdateSchema = newsCreateSchema.partial()
 export const newsFilterQuerySchema = paginationQuerySchema.extend({
 	search: z.string().max(100).optional(),
 	isActive: z.preprocess((val) => {
+		if (val === '' || val === undefined || val === null) return undefined
+		if (val === 'true' || val === true) return true
+		if (val === 'false' || val === false) return false
+		return undefined
+	}, z.boolean().optional()),
+	/** Pokud true, vrátí jen položky, kterým ještě nevypršel `displayUntil` (nebo není nastaven). */
+	notExpired: z.preprocess((val) => {
 		if (val === '' || val === undefined || val === null) return undefined
 		if (val === 'true' || val === true) return true
 		if (val === 'false' || val === false) return false

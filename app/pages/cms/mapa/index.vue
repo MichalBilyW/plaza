@@ -1,5 +1,5 @@
 <template>
-	<div class="p-4 sm:p-6 lg:p-8">
+	<div class="p-3 sm:p-6 lg:p-8">
 		<div class="mb-6 sm:mb-8">
 			<h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ t('cms.map.title') }}</h1>
 			<p class="text-plaza-dark mt-1 text-sm sm:text-base">{{ t('cms.map.subtitle') }}</p>
@@ -27,25 +27,27 @@
 
 		<!-- Výběr patra -->
 		<div class="bg-white rounded-xl shadow-sm p-4 mb-6">
-			<div class="flex flex-wrap items-center gap-2">
-				<button
-					v-for="floor in floors"
-					:key="floor.floorId"
-					@click="selectedFloorId = floor.floorId"
-					:class="[
-						'px-4 py-2 rounded-lg font-medium transition-colors',
-						selectedFloorId === floor.floorId
-							? 'bg-indigo-600 text-white'
-							: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
-					]"
-				>
-					{{ floor.floorName }}
-				</button>
+			<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2">
+				<div class="flex flex-wrap gap-2">
+					<button
+						v-for="floor in floors"
+						:key="floor.floorId"
+						@click="selectedFloorId = floor.floorId"
+						:class="[
+							'flex-1 sm:flex-none px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base',
+							selectedFloorId === floor.floorId
+								? 'bg-indigo-600 text-white'
+								: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+						]"
+					>
+						{{ floor.floorName }}
+					</button>
+				</div>
 
 				<button
 					v-if="currentFloor?.svgContent"
 					type="button"
-					class="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors"
+					class="sm:ml-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors"
 					@click="exportModalOpen = true"
 				>
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,11 +109,11 @@
 		<!-- Interaktivní SVG mapa -->
 		<ClientOnly>
 			<div v-if="currentFloor?.svgMap" class="bg-white rounded-xl shadow-sm p-4 mb-6">
-				<div class="flex items-center justify-between mb-4">
-					<h2 class="text-lg font-semibold text-gray-900">
+				<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+					<h2 class="text-base sm:text-lg font-semibold text-gray-900">
 						{{ t('cms.map.interactiveMap') }}
 					</h2>
-					<div class="flex items-center gap-4 text-sm flex-wrap">
+					<div class="flex items-center gap-x-4 gap-y-2 text-xs sm:text-sm flex-wrap">
 						<span class="flex items-center gap-2">
 							<span class="w-4 h-4 rounded bg-indigo-500"></span>
 							{{ t('cms.map.occupied') }}
@@ -186,8 +188,10 @@
 
 		<!-- Tabulka jednotek -->
 		<div class="bg-white rounded-xl shadow-sm overflow-hidden">
-			<div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-				<h2 class="text-lg font-semibold text-gray-900">
+			<div
+				class="px-4 sm:px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1"
+			>
+				<h2 class="text-base sm:text-lg font-semibold text-gray-900">
 					{{ t('cms.map.unitsTable') }}
 				</h2>
 				<span class="text-sm text-plaza-dark">
@@ -212,8 +216,77 @@
 			</div>
 
 			<!-- Tabulka -->
-			<div v-else class="overflow-x-auto">
-				<table class="w-full">
+			<div v-else>
+				<!-- Mobile: card list -->
+				<ul class="sm:hidden divide-y divide-gray-200">
+					<li
+						v-for="unit in currentFloorUnits"
+						:key="unit.unitCode"
+						:class="[
+							'p-4 cursor-pointer hover:bg-gray-50 transition-colors',
+							unit.shop
+								? ''
+								: isPrivateUnit(unit)
+									? 'bg-amber-50/40'
+									: 'bg-gray-50/50',
+						]"
+						@click="selectUnit(unit)"
+					>
+						<div class="flex items-center justify-between gap-3 mb-2">
+							<span class="font-mono text-sm font-medium text-gray-900">
+								{{ unit.unitCode }}
+							</span>
+							<span
+								:class="[
+									'inline-flex px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap',
+									...getUnitStatusClasses(unit),
+								]"
+							>
+								{{ getUnitStatusLabel(unit) }}
+							</span>
+						</div>
+						<div v-if="unit.shop" class="flex items-center gap-3">
+							<div
+								v-if="unit.shop.logo"
+								class="w-10 h-10 rounded bg-white border flex-shrink-0 overflow-hidden"
+							>
+								<img
+									:src="unit.shop.logo"
+									:alt="unit.shop.name"
+									class="w-full h-full object-contain"
+								/>
+							</div>
+							<div
+								v-else
+								class="w-10 h-10 rounded bg-gray-200 flex-shrink-0 flex items-center justify-center"
+							>
+								<span class="text-xs font-bold text-gray-500">
+									{{ unit.shop.name.charAt(0) }}
+								</span>
+							</div>
+							<span class="text-sm text-gray-900 truncate">
+								{{ unit.shop.name }}
+							</span>
+						</div>
+						<span
+							v-else
+							:class="
+								isPrivateUnit(unit)
+									? 'text-sm text-amber-700'
+									: 'text-sm text-gray-400 italic'
+							"
+						>
+							{{ getUnitDisplayName(unit) }}
+						</span>
+						<div class="mt-2 text-right text-sm text-indigo-600">
+							{{ getUnitActionLabel(unit) }}
+						</div>
+					</li>
+				</ul>
+
+				<!-- Desktop: table -->
+				<div class="hidden sm:block overflow-x-auto">
+					<table class="w-full">
 					<thead class="bg-gray-50">
 						<tr>
 							<th
@@ -308,6 +381,7 @@
 						</tr>
 					</tbody>
 				</table>
+				</div>
 			</div>
 		</div>
 

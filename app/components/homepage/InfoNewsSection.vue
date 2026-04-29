@@ -1,5 +1,11 @@
 <template>
-	<section ref="sectionRef" class="relative pb-20 -mt-[35px] lg:-mt-[50px]">
+	<section
+		ref="sectionRef"
+		class="relative pb-16 lg:-mt-[50px]"
+		:class="
+			!newsPending && news.length === 0 ? 'max-md:mt-3' : 'max-md:-mt-[35px]'
+		"
+	>
 		<div class="absolute inset-0"></div>
 
 		<div class="relative z-10 w-full max-w-[840px] mx-auto px-4 sm:px-8 lg:px-12">
@@ -168,6 +174,7 @@
 				<!-- Right side - News slider -->
 				<div
 					class="z-10 relative flex-1 md:-ml-2 flex flex-col w-[290px] xs:w-[400px] lg:w-[500px]"
+					:class="{ 'max-md:hidden': !newsPending && news.length === 0 }"
 				>
 					<div
 						class="group relative w-[290px] xs:w-[400px] h-[290px] xs:h-[400px] lg:w-[500px] lg:h-[500px] rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg touch-pan-y"
@@ -188,22 +195,22 @@
 						<!-- Skeleton loader -->
 						<div v-if="newsPending" class="absolute inset-0 skeleton-shimmer"></div>
 
-						<!-- News images with crossfade -->
-						<img
-							v-for="(item, index) in news"
-							:key="item._id"
-							:src="item.image"
-							:alt="item.name || t('home.infoSection.newsAlt')"
-							loading="lazy"
-							class="absolute inset-0 w-full h-full object-contain transition-all duration-300 ease-in-out"
-							:class="[
-								index === currentNewsIndex ? 'opacity-100' : 'opacity-0',
-								currentNews?.content
-									? 'group-hover:scale-105 transition-transform ease-in-out'
-									: '',
-							]"
-							:aria-hidden="index !== currentNewsIndex"
-						/>
+						<!-- News images with crossfade + slide -->
+						<Transition :name="slideDirection">
+							<img
+								v-if="currentNews"
+								:key="currentNews._id"
+								:src="currentNews.image"
+								:alt="currentNews.name || t('home.infoSection.newsAlt')"
+								loading="lazy"
+								class="news-slide absolute inset-0 w-full h-full object-contain"
+								:class="
+									currentNews.content
+										? 'group-hover:scale-105 transition-transform ease-in-out'
+										: ''
+								"
+							/>
+						</Transition>
 
 						<!-- Fallback when no news -->
 						<img
@@ -336,6 +343,7 @@ const animatedParkingCount = ref(0)
 
 // === News slider ===
 const currentNewsIndex = ref(0)
+const slideDirection = ref<'slide-next' | 'slide-prev'>('slide-next')
 let autoplayInterval: ReturnType<typeof setInterval> | null = null
 
 // === News modal ===
@@ -402,6 +410,7 @@ const resetAutoplay = () => {
 	if (autoplayInterval) clearInterval(autoplayInterval)
 	autoplayInterval = setInterval(() => {
 		if (props.news.length > 1) {
+			slideDirection.value = 'slide-next'
 			currentNewsIndex.value = (currentNewsIndex.value + 1) % props.news.length
 		}
 	}, AUTOPLAY_INTERVAL)
@@ -420,12 +429,14 @@ const resumeAutoplay = () => {
 
 const nextNews = () => {
 	if (props.news.length === 0) return
+	slideDirection.value = 'slide-next'
 	currentNewsIndex.value = (currentNewsIndex.value + 1) % props.news.length
 	resetAutoplay()
 }
 
 const prevNews = () => {
 	if (props.news.length === 0) return
+	slideDirection.value = 'slide-prev'
 	currentNewsIndex.value =
 		currentNewsIndex.value === 0 ? props.news.length - 1 : currentNewsIndex.value - 1
 	resetAutoplay()
@@ -478,3 +489,38 @@ watch(
 	},
 )
 </script>
+
+<style scoped>
+.news-slide {
+	will-change: transform, opacity;
+}
+
+/* Slide vpřed (next / autoplay) */
+.slide-next-enter-active,
+.slide-next-leave-active,
+.slide-prev-enter-active,
+.slide-prev-leave-active {
+	transition:
+		opacity 500ms ease,
+		transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slide-next-enter-from {
+	opacity: 0;
+	transform: translateX(8%);
+}
+.slide-next-leave-to {
+	opacity: 0;
+	transform: translateX(-8%);
+}
+
+/* Slide vzad (prev) */
+.slide-prev-enter-from {
+	opacity: 0;
+	transform: translateX(-8%);
+}
+.slide-prev-leave-to {
+	opacity: 0;
+	transform: translateX(8%);
+}
+</style>

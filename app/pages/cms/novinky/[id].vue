@@ -89,7 +89,7 @@
 						{{ t('cms.news.settings') }}
 					</h2>
 
-					<div class="flex flex-wrap items-center justify-between gap-6">
+					<div class="flex flex-wrap items-start justify-between gap-6">
 						<!-- Aktivní -->
 						<div class="flex items-end pb-1">
 							<label class="inline-flex items-center gap-3 cursor-pointer">
@@ -102,6 +102,55 @@
 									t('cms.news.isActive')
 								}}</span>
 							</label>
+						</div>
+
+						<!-- Zobrazovat do -->
+						<div class="flex-1 min-w-[260px]">
+							<label
+								for="displayUntil"
+								class="block text-sm font-medium text-gray-700 mb-1"
+							>
+								{{ t('cms.news.displayUntil') }}
+							</label>
+							<div class="relative">
+								<input
+									id="displayUntil"
+									v-model="form.displayUntil"
+									type="date"
+									class="peer w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cms-news-500 focus:border-transparent focus:text-gray-900"
+									:class="{ 'text-transparent': !form.displayUntil }"
+								/>
+								<span
+									v-if="!form.displayUntil"
+									class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none peer-focus:hidden"
+								>
+									{{ t('cms.news.displayUntilEmpty') }}
+								</span>
+							</div>
+							<p class="mt-1 text-xs text-plaza-dark">
+								{{ t('cms.news.displayUntilHint') }}
+							</p>
+							<button
+								v-if="form.displayUntil"
+								type="button"
+								@click="form.displayUntil = ''"
+								class="mt-2 inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-800 transition-colors"
+							>
+								<svg
+									class="w-4 h-4"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M6 18L18 6M6 6l12 12"
+									/>
+								</svg>
+								{{ t('cms.news.clearDisplayUntil') }}
+							</button>
 						</div>
 					</div>
 				</div>
@@ -155,6 +204,7 @@ const form = reactive({
 	image: '',
 	content: '',
 	isActive: true,
+	displayUntil: '',
 })
 
 // Fetch news item
@@ -170,6 +220,9 @@ watch(
 			form.image = n.image || ''
 			form.content = n.content || ''
 			form.isActive = n.isActive ?? true
+			form.displayUntil = n.displayUntil
+				? (new Date(n.displayUntil).toISOString().split('T')[0] ?? '')
+				: ''
 		}
 	},
 	{ immediate: true },
@@ -203,6 +256,9 @@ const handleSubmit = async () => {
 				image: form.image,
 				content: form.content,
 				isActive: form.isActive,
+				displayUntil: form.displayUntil
+					? new Date(form.displayUntil).toISOString()
+					: null,
 			},
 		})
 

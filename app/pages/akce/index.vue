@@ -241,6 +241,7 @@ const buildQuery = (page: number) => ({
 	page,
 	limit: ITEMS_PER_PAGE,
 	isActive: true,
+	notExpired: true,
 	search: debouncedSearch.value || undefined,
 })
 

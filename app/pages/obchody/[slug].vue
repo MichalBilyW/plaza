@@ -188,6 +188,7 @@ const { data: eventsData, pending: eventsPending } = await useFetch<{ data: Even
 		query: {
 			shopId: shop.value?._id,
 			isActive: true,
+			notExpired: true,
 			limit: 10,
 		},
 		watch: [() => shop.value?._id],

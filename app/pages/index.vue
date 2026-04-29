@@ -96,13 +96,13 @@ const restaurantsCount = computed(() => {
 
 const { data: newsData, pending: newsPending } = useFetch<{ data: News[] }>('/api/news', {
 	key: 'homepage-news',
-	query: { isActive: true, limit: 10 },
+	query: { isActive: true, notExpired: true, limit: 10 },
 })
 const news = computed(() => newsData.value?.data || [])
 
 const { data: eventsData, pending: eventsPending } = useFetch<{ data: Event[] }>('/api/events', {
 	key: 'homepage-events',
-	query: { limit: 100, isActive: true },
+	query: { limit: 100, isActive: true, notExpired: true },
 })
 const events = computed(() => eventsData.value?.data || [])
 </script>

@@ -32,6 +32,11 @@ export default defineEventHandler(
 			filter.name = { $regex: filters.search, $options: 'i' }
 		}
 
+		// Filtrovat položky, kterým ještě nevypršel `displayUntil`
+		if (filters.notExpired) {
+			filter.$or = [{ displayUntil: null }, { displayUntil: { $gte: new Date() } }]
+		}
+
 		// Stránkování
 		const page = filters.page || 1
 		const limit = filters.limit || 20
