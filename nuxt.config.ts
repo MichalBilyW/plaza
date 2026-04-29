@@ -45,6 +45,7 @@ export default defineNuxtConfig({
 	// Sitemap configuration
 	site: {
 		url: process.env.NUXT_PUBLIC_SITE_URL || 'https://ocplazaliberec.cz',
+		name: 'OC Plaza Liberec',
 	},
 
 	sitemap: {

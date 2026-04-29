@@ -52,6 +52,7 @@
 		"bcryptjs": "^3.0.3",
 		"dompurify": "^3.3.3",
 		"jsonwebtoken": "^9.0.3",
+		"jspdf": "^4.2.1",
 		"mongoose": "^9.1.5",
 		"nuxt": "^4.3.0",
 		"swiper": "^12.1.2",

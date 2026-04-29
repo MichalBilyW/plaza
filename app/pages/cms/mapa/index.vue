@@ -27,7 +27,7 @@
 
 		<!-- Výběr patra -->
 		<div class="bg-white rounded-xl shadow-sm p-4 mb-6">
-			<div class="flex flex-wrap gap-2">
+			<div class="flex flex-wrap items-center gap-2">
 				<button
 					v-for="floor in floors"
 					:key="floor.floorId"
@@ -40,6 +40,23 @@
 					]"
 				>
 					{{ floor.floorName }}
+				</button>
+
+				<button
+					v-if="currentFloor?.svgContent"
+					type="button"
+					class="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors"
+					@click="exportModalOpen = true"
+				>
+					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
+						/>
+					</svg>
+					{{ t('cms.map.export.button') }}
 				</button>
 			</div>
 		</div>
@@ -94,7 +111,7 @@
 					<h2 class="text-lg font-semibold text-gray-900">
 						{{ t('cms.map.interactiveMap') }}
 					</h2>
-					<div class="flex items-center gap-4 text-sm">
+					<div class="flex items-center gap-4 text-sm flex-wrap">
 						<span class="flex items-center gap-2">
 							<span class="w-4 h-4 rounded bg-indigo-500"></span>
 							{{ t('cms.map.occupied') }}
@@ -102,6 +119,10 @@
 						<span class="flex items-center gap-2">
 							<span class="w-4 h-4 rounded bg-amber-400"></span>
 							{{ t('cms.map.privateOccupied') }}
+						</span>
+						<span class="flex items-center gap-2">
+							<span class="w-4 h-4 rounded bg-green-600"></span>
+							{{ t('cms.map.upcomingUnit') }}
 						</span>
 						<span class="flex items-center gap-2">
 							<span class="w-4 h-4 rounded bg-gray-300"></span>
@@ -513,6 +534,14 @@
 				</div>
 			</Teleport>
 		</ClientOnly>
+
+		<!-- Modal pro export mapy -->
+		<CmsMapExportModal
+			:open="exportModalOpen"
+			:floor="currentFloor"
+			:static-around-map-content="mapData?.staticAroundMapContent ?? null"
+			@close="exportModalOpen = false"
+		/>
 	</div>
 </template>
 
@@ -520,11 +549,14 @@
 import type { FloorUnitsResponse, MapUnit } from '~~/shared/map/units'
 import { createUnitElementId } from '~~/shared/map/units'
 import type { Shop } from '~~/shared/types'
+import { getUpcomingLabel } from '~/composables/useMapLogoGeometry'
 
 interface MapUnitsResponse {
 	floors: FloorUnitsResponse[]
 	totalUnits: number
 	occupiedUnits: number
+	staticAroundMap?: string | null
+	staticAroundMapContent?: string | null
 }
 
 interface ShopsListResponse {
@@ -553,6 +585,7 @@ usePlazaSeo({
 
 // State
 const selectedFloorId = ref<string | null>(null)
+const exportModalOpen = ref(false)
 const selectedUnit = ref<MapUnit | null>(null)
 const shopToAssign = ref('')
 const assigning = ref(false)
@@ -731,10 +764,13 @@ const processedSvg = computed(() => {
 		const elementId = createUnitElementId(unit.unitCode)
 		const hasShop = unit.occupancyType === 'shop'
 		const isSelected = selectedUnit.value?.unitCode === unit.unitCode
+		const isUpcoming =
+			hasShop && !!getUpcomingLabel(unit.shop?.publishDate ?? undefined)
 
 		const regex = new RegExp(`id=["']${elementId}["']`, 'g')
-		const occupancyClass =
-			unit.occupancyType === 'shop'
+		const occupancyClass = isUpcoming
+			? 'cms-unit--upcoming'
+			: unit.occupancyType === 'shop'
 				? 'cms-unit--occupied'
 				: unit.occupancyType === 'private'
 					? 'cms-unit--private'
@@ -1041,6 +1077,14 @@ async function removeShop() {
 
 :deep(.cms-unit--empty:hover) {
 	fill: rgb(156 163 175) !important; /* gray-400 */
+}
+
+:deep(.cms-unit--upcoming) {
+	fill: rgb(22 163 74) !important; /* green-600 */
+}
+
+:deep(.cms-unit--upcoming:hover) {
+	fill: rgb(21 128 61) !important; /* green-700 */
 }
 
 :deep(.cms-unit--selected) {

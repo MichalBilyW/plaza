@@ -111,6 +111,57 @@ usePlazaSeo({
 	image: shop.value?.gallery?.[0] || shop.value?.logo,
 })
 
+// === JSON-LD: Store + BreadcrumbList ===
+const runtimeConfig = useRuntimeConfig()
+const baseUrl = runtimeConfig.public.siteUrl || 'https://ocplazaliberec.cz'
+
+if (shop.value) {
+	const s = shop.value
+	const shopUrl = `${baseUrl}/obchody/${s.slug}`
+	const openingSpec = openingHoursToSchemaSpec(s.openingHours)
+
+	const storeJsonLd: Record<string, unknown> = {
+		'@context': 'https://schema.org',
+		'@type': 'Store',
+		'@id': shopUrl,
+		name: s.name,
+		url: shopUrl,
+		description: s.shortDescription || s.seoDescription,
+	}
+	if (s.logo) storeJsonLd.logo = s.logo.startsWith('http') ? s.logo : `${baseUrl}${s.logo}`
+	if (s.gallery?.length) {
+		storeJsonLd.image = s.gallery.map((img) =>
+			img.startsWith('http') ? img : `${baseUrl}${img}`,
+		)
+	}
+	if (s.phone) storeJsonLd.telephone = s.phone
+	if (s.email) storeJsonLd.email = s.email
+	if (s.website) storeJsonLd.sameAs = [s.website]
+	if (openingSpec) storeJsonLd.openingHours = openingSpec
+
+	storeJsonLd.containedInPlace = {
+		'@type': 'ShoppingCenter',
+		name: 'OC Plaza Liberec',
+		url: baseUrl,
+		address: {
+			'@type': 'PostalAddress',
+			streetAddress: 'Palachova 1404/2',
+			addressLocality: 'Liberec',
+			postalCode: '460 01',
+			addressCountry: 'CZ',
+		},
+	}
+
+	useJsonLd([
+		storeJsonLd,
+		buildBreadcrumbList([
+			{ name: 'Domů', url: baseUrl },
+			{ name: t('shops.title'), url: `${baseUrl}/obchody` },
+			{ name: s.name, url: shopUrl },
+		]),
+	])
+}
+
 // === Fetch all categories ===
 const { data: categoriesData } = await useFetch<{ data: Category[] }>('/api/categories', {
 	key: 'all-categories',

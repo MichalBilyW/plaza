@@ -18,12 +18,16 @@
 			<div v-if="pending" class="w-full h-[240px] sm:h-[320px] md:h-[400px] skeleton-shimmer"></div>
 
 			<!-- Hero image -->
+			<!-- Pozn.: nepoužíváme NuxtImg, protože URL `/api/uploads/*` se servíruje
+			     z persistent volume (runtime upload) a IPX ji neumí optimalizovat. -->
 			<img
 				v-else
 				:src="heroImage"
 				:alt="t('home.heroImageAlt')"
 				loading="eager"
 				fetchpriority="high"
+				width="1536"
+				height="400"
 				class="w-full h-[240px] sm:h-[320px] md:h-[400px] object-cover"
 			/>
 		</section>

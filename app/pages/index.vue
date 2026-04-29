@@ -38,6 +38,36 @@ usePlazaSeo({
 	description: t('seo.home.description'),
 })
 
+// JSON-LD: ShoppingCenter (homepage je hlavní entita)
+const runtimeConfig = useRuntimeConfig()
+const baseUrl = runtimeConfig.public.siteUrl || 'https://ocplazaliberec.cz'
+useJsonLd({
+	'@context': 'https://schema.org',
+	'@type': 'ShoppingCenter',
+	name: 'OC Plaza Liberec',
+	alternateName: 'Obchodní centrum Plaza Liberec',
+	url: baseUrl,
+	logo: `${baseUrl}/svgs/logo.svg`,
+	image: `${baseUrl}/images/og.jpg`,
+	description: t('seo.home.description'),
+	address: {
+		'@type': 'PostalAddress',
+		streetAddress: 'Palachova 1404/2',
+		addressLocality: 'Liberec',
+		postalCode: '460 01',
+		addressCountry: 'CZ',
+	},
+	geo: {
+		'@type': 'GeoCoordinates',
+		latitude: 50.7659,
+		longitude: 15.0596,
+	},
+	sameAs: [
+		'https://www.facebook.com/PlazaLiberec',
+		'https://www.instagram.com/ocplazaliberec/',
+	],
+})
+
 // === Data fetching - vše paralelně ===
 const { data: homepage, pending: homepagePending } = useFetch<Homepage>('/api/homepage', {
 	key: 'homepage',

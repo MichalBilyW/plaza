@@ -49,6 +49,19 @@ const props = defineProps<{
 	error: NuxtError
 }>()
 
+// Nastavit správný HTTP status code pro SSR (kritické pro SEO — Google nesmí indexovat 404 jako 200)
+if (import.meta.server) {
+	const event = useRequestEvent()
+	if (event) {
+		setResponseStatus(event, props.error?.statusCode || 500)
+	}
+}
+
+// Pokud je to 404, doplnit noindex + canonical zákaz pro tuto chybovou stránku
+useHead({
+	meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+})
+
 // Načtení obecných informací (otevírací doba pro header)
 const { data: generalInfo } = useFetch<{
 	openingHours?: OpeningHoursEntry[]
