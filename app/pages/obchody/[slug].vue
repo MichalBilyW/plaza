@@ -41,20 +41,34 @@
 			</div>
 
 			<!-- Map Section - zobrazit mapu s označeným obchodem -->
-			<div v-if="shop?.floorId" class="my-20">
-				<div v-if="mapFloorName" class="z-20 relative container flex justify-end transform translate-y-20 -translate-x-4 md:-translate-x-16">
-					<div class="flex items-center gap-2 md:gap-3">
-						<span
-							class="px-4 md:px-5 py-2 md:py-2.5 rounded-[5px_20px_5px_5px] md:text-xl whitespace-nowrap transition-all duration-300 ease-out bg-primary-600 bg-plaza !text-white md:scale-105 shadow-lg"
+			<div v-if="shopFloors.length > 0" class="my-20">
+				<div
+					v-if="shopFloors.length"
+					class="z-20 relative container flex justify-end transform translate-y-20 -translate-x-4 md:-translate-x-16"
+				>
+					<div class="flex items-center gap-2 md:gap-3 flex-wrap justify-end">
+						<button
+							v-for="floor in shopFloors"
+							:key="floor._id"
+							type="button"
+							:disabled="shopFloors.length === 1"
+							@click="activeFloorId = floor._id"
+							class="px-4 md:px-5 py-2 md:py-2.5 rounded-[5px_20px_5px_5px] md:text-xl whitespace-nowrap transition-all duration-300 ease-out shadow-lg"
+							:class="
+								activeFloorId === floor._id
+									? 'bg-plaza !text-white md:scale-105'
+									: 'bg-white text-plaza-dark hover:bg-gray-100'
+							"
 						>
-							{{ mapFloorName }}
-						</span>
+							{{ floor.name }}
+						</button>
 					</div>
 				</div>
 				<MapSection
+					v-if="activeFloorId"
 					class="z-10 relative"
-					:locked-floor-id="shop.floorId"
-					:highlight-shop-name="shop.name"
+					:locked-floor-id="activeFloorId"
+					:highlight-shop-name="shop?.name"
 					hide-full-map-link
 				/>
 			</div>
@@ -99,9 +113,26 @@ const hasDescription = computed(() => {
 	return textContent.length > 0
 })
 
-const mapFloorName = computed(() => {
-	return shop.value?.floor?.name || shop.value?.floors?.[0]?.name || ''
+/** Všechna patra, na kterých se obchod nachází (preferuje `floors`, fallback na legacy `floor`). */
+const shopFloors = computed(() => {
+	const list = shop.value?.floors?.length
+		? shop.value.floors
+		: shop.value?.floor
+			? [shop.value.floor]
+			: []
+	return [...list].sort((a, b) => (a.level ?? 0) - (b.level ?? 0))
 })
+
+const activeFloorId = ref<string | null>(null)
+watch(
+	shopFloors,
+	(list) => {
+		if (list.length && !list.some((f) => f._id === activeFloorId.value)) {
+			activeFloorId.value = list[0]?._id ?? null
+		}
+	},
+	{ immediate: true },
+)
 
 // === SEO ===
 const seoTitle = computed(() => shop.value?.seoTitle || shop.value?.name || t('shops.title'))

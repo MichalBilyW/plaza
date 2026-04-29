@@ -347,6 +347,16 @@ const {
 	onFloorChange,
 } = useInteractiveMap({ initialFloorId: props.lockedFloorId })
 
+// Reaktivní změna zamknutého patra (např. při přepínání pater v detailu obchodu)
+watch(
+	() => props.lockedFloorId,
+	(newId, oldId) => {
+		if (newId && newId !== oldId && newId !== currentFloor.value?.floorId) {
+			selectFloor(newId)
+		}
+	},
+)
+
 // Reference na MapStaticAround pro volání animace
 const staticAroundRef = ref<InstanceType<typeof MapStaticAround> | null>(null)
 
