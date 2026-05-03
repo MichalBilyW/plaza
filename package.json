@@ -26,6 +26,7 @@
 		"backup:db:local": "npx tsx scripts/backup-db-local.ts",
 		"backup:db:prod": "npx tsx scripts/backup-db-prod.ts",
 		"restore:db": "npx tsx scripts/restore-db.ts",
+		"sync:prod-to-local": "npx tsx scripts/sync-prod-to-local.ts",
 		"cleanup:uploads:dry": "npx tsx scripts/cleanup-uploads-prod.ts --dry-run",
 		"cleanup:uploads": "npx tsx scripts/cleanup-uploads-prod.ts"
 	},

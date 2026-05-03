@@ -480,7 +480,7 @@ export function computeLogoOverlays(opts: ComputeLogoOverlaysOptions): LogoOverl
 		initialsGeometries = geometries.filter((g) => !g.hasLogo)
 	} else {
 		// Web mode: zachovat původní chování s LOGO_THRESHOLD.
-		const LOGO_THRESHOLD = vbWidth * 0.025
+		const LOGO_THRESHOLD = vbWidth * 0.02
 		logoGeometries = geometries.filter((g) => g.hasLogo && g.r >= LOGO_THRESHOLD)
 		initialsGeometries = geometries.filter((g) => !g.hasLogo || g.r < LOGO_THRESHOLD)
 	}

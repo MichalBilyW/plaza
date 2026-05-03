@@ -1,0 +1,25 @@
+[
+  {
+    "_id": "69bbae56ab4cdd1d2ca0826c",
+    "name": "Kriminálka iQLANDIA v OC Plaza",
+    "image": "/api/uploads/8fee16ce-8a43-402a-8434-907a55985b15.png",
+    "sortOrder": 2,
+    "isActive": false,
+    "createdAt": "2026-03-19T08:05:42.699Z",
+    "updatedAt": "2026-04-30T06:34:08.697Z",
+    "__v": 0,
+    "content": "<p>V OC Plaza se právě teď dějí věci! <img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t5/2/16/1f575_1f3fb.png\" alt=\"🕵🏻\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> Ve spolupráci s iQLANDIÍ jsme proměnili naše prostory v moderní detektivní centrálu. Pokud hledáte program, který děti odtrhne od obrazovek a naučí je něco fascinujícího, Interaktivní výstava kriminalistiky je trefa do černého! <img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t4f/2/16/1f3af.png\" alt=\"🎯\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"></p><p>Co všechno si u nás vyzkoušíte?</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/te1/2/16/1f50e.png\" alt=\"🔎\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> Pátrání na vlastní pěst.</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/te1/2/16/1f50e.png\" alt=\"🔎\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\">Forenzní metody v praxi.</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/te1/2/16/1f50e.png\" alt=\"🔎\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\">Věda v boji proti zločinu.</p><p>A protože víme, že detektivové potřebují pořádný trénink, zapište si do kalendáře tyto víkendy:</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t1d/2/16/1f4c5.png\" alt=\"📅\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> 18. 4. – 19. 4.</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t1d/2/16/1f4c5.png\" alt=\"📅\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> 25. 4. – 26. 4.</p><p><img class=\"max-w-full h-auto rounded-lg\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/tcc/2/16/1f4cd.png\" alt=\"📍\" width=\"16\" height=\"16\" style=\"border: 0px; border-start-start-radius: 0px; border-end-end-radius: 0px; border-start-end-radius: 0px; border-end-start-radius: 0px; object-fit: fill;\"> Vstupné je zdarma.</p><p>Výstava trvá jen do 26. dubna, tak ji nepropásněte!</p>"
+  },
+  {
+    "_id": "69f2f7b6e1d81b4511432f9d",
+    "name": "ALL YOU CAN EAT",
+    "image": "/api/uploads/6bd2df30-57e3-4cdd-b07f-a3666c7bd369.png",
+    "content": "<p><strong>POZOR, OTEVÍRÁME!</strong> 🔥</p><p>Už v pondělí <strong>4. 5.</strong> startuje v OC Plaza Liberec nové <strong>Sakura's All You Can Eat</strong>! 🍱 Vyberte si na co máte chuť přes <strong>tablet</strong> a nechte se obsloužit přímo u stolu. ✨</p><p>👉 <strong>BONUS:</strong> Do 31. 5. jíte o <strong>15 % LEVNĚJI</strong>! </p><p>Vezměte rodinu nebo kolegy a přijďte otestovat nejmodernější způsob stolování v Liberci. Budeme se těšit! 👋🥢</p>",
+    "sortOrder": 3,
+    "isActive": true,
+    "displayUntil": null,
+    "createdAt": "2026-04-30T06:33:26.735Z",
+    "updatedAt": "2026-04-30T06:41:07.305Z",
+    "__v": 0
+  }
+]

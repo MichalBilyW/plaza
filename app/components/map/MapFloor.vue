@@ -56,6 +56,7 @@
 <script setup lang="ts">
 import type { MapUnit } from '~~/shared/map/units'
 import { createUnitElementId } from '~~/shared/map/units'
+import { normalizeMapUnitsSvg } from '~~/shared/map/normalizeSvg'
 import {
 	computeLogoOverlays,
 	type LogoOverlay,
@@ -294,6 +295,10 @@ function setupEventListeners() {
 
 	const svg = wrapper.querySelector('svg') as SVGSVGElement | null
 	if (!svg) return
+
+	// Normalizace: doplní `data-name="fill"` / `"outline"` u jednotek z Illustratoru,
+	// které neměly pojmenované vrstvy a tak Illustrator nevyexportoval id/data-name.
+	normalizeMapUnitsSvg(svg)
 
 	const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
 

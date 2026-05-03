@@ -25,6 +25,7 @@ import {
 	type FloorUnitsResponse,
 	type MapUnit,
 } from '~~/shared/map/units'
+import { normalizeMapUnitsSvg } from '~~/shared/map/normalizeSvg'
 
 // ────────────────────────────────────────────────────────────────────
 // Types
@@ -121,6 +122,11 @@ export function useMapExport() {
 				throw new Error('SVG patra nemá platný viewBox.')
 			}
 
+			// Normalizace v `mountOffscreen` doplnila chybějící `data-name` v DOMu.
+			// Pro finální export potřebujeme tento už normalizovaný markup.
+			const normalizedFloorSvg =
+				offscreen.querySelector('svg')?.outerHTML ?? processedFloorSvg
+
 			// 3) Inline všechna loga jako data URI (paralelně)
 			const logoOverlays = overlays.filter((o) => !o.isInitials && o.logo)
 			const dataUris = await Promise.all(
@@ -139,7 +145,7 @@ export function useMapExport() {
 
 			// 5) Sestavit finální SVG
 			return buildFinalSvg({
-				processedFloorSvg,
+				processedFloorSvg: normalizedFloorSvg,
 				floorViewBox,
 				staticAroundSvg: staticAroundMapContent ?? null,
 				overlays,
@@ -426,6 +432,8 @@ function mountOffscreen(svgString: string): HTMLDivElement {
 	div.style.pointerEvents = 'none'
 	div.innerHTML = svgString
 	document.body.appendChild(div)
+	// Normalizace map-units (doplnění data-name pro SVG bez pojmenovaných vrstev z Illustratoru)
+	normalizeMapUnitsSvg(div)
 	return div
 }
 
