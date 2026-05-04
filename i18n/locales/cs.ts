@@ -871,7 +871,7 @@ export default {
 
 	seo: {
 		home: {
-			title: 'OC Plaza Liberec',
+			title: 'Obchodní centrum Plaza Liberec',
 			description:
 				'Nakupujte v OC Plaza Liberec – přes 30 obchodů, restaurací a služeb v centru Liberce. Parkování zdarma, otevřeno každý den v otevírací době kterou naleznete na našich stránkách.',
 		},

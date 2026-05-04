@@ -165,6 +165,10 @@ export default defineNuxtConfig({
 				{ name: 'msapplication-TileColor', content: '#ffffff' },
 				{ name: 'msapplication-TileImage', content: '/favicon/ms-icon-144x144.png' },
 				{ name: 'author', content: 'MichalBily.cz' },
+				{
+					name: 'google-site-verification',
+					content: '97Bewc0cGPXZE89j7Eg1kqjy3acJ8y8xK2N0aLyfvyU',
+				},
 				{ property: 'og:type', content: 'website' },
 				{ property: 'og:site_name', content: 'Obchodní centrum Plaza Liberec' },
 				{ property: 'og:locale', content: 'cs_CZ' },
