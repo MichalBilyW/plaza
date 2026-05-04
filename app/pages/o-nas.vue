@@ -2,66 +2,79 @@
 	<div class="min-h-screen">
 		<!-- Dark header -->
 		<div
-			v-if="generalInfo?.title || generalInfo?.shortText"
+			v-if="pending || generalInfo?.title || generalInfo?.shortText"
 			class="bg-gradient-to-b from-[#131313] to-[#1A1A1A] pt-[80px] md:pt-[160px] pb-[120px] md:pb-[320px]"
 		>
 			<div class="container mx-auto text-center text-white">
-				<h1
-					v-if="generalInfo?.title"
-					class="font-heading font-bold text-3xl md:text-4xl uppercase"
-				>
-					{{ generalInfo.title }}
-				</h1>
-				<h2 v-if="generalInfo?.shortText" class="text-2xl md:text-3xl">
-					{{ generalInfo.shortText }}
-				</h2>
+				<template v-if="pending">
+					<div class="h-9 md:h-10 w-2/3 max-w-md mx-auto skeleton-shimmer rounded mb-4"></div>
+					<div class="h-7 md:h-9 w-1/2 max-w-sm mx-auto skeleton-shimmer rounded"></div>
+				</template>
+				<template v-else>
+					<h1
+						v-if="generalInfo?.title"
+						class="font-heading font-bold text-3xl md:text-4xl uppercase"
+					>
+						{{ generalInfo.title }}
+					</h1>
+					<h2 v-if="generalInfo?.shortText" class="text-2xl md:text-3xl">
+						{{ generalInfo.shortText }}
+					</h2>
+				</template>
 			</div>
 		</div>
 
 		<!-- Galerie -->
 		<section
-			v-if="!pending && generalInfo?.gallery?.length"
+			v-if="pending || generalInfo?.gallery?.length"
 			class="container-small -mt-[80px] md:-mt-[280px] px-4 md:mb-12"
 		>
 			<div class="relative rounded-[5px_20px_5px_5px] overflow-hidden shadow-lg">
-				<!-- Border overlay -->
-				<div
-					class="absolute top-0 left-0 w-[calc(100%-16px)] h-[calc(100%-16px)] md:w-[calc(100%-32px)] md:h-[calc(100%-32px)] bg-transparent m-2 md:m-4 border md:border-2 border-white/70 rounded-[5px_20px_5px_5px] z-10 pointer-events-none"
-					aria-hidden="true"
-				></div>
+				<!-- Skeleton při načítání -->
+				<div v-if="pending" class="w-full aspect-[16/9] skeleton-shimmer"></div>
 
-				<!-- Gallery Swiper -->
-				<Swiper
-					v-if="generalInfo.gallery.length > 1"
-					:modules="[SwiperAutoplay]"
-					:slides-per-view="1"
-					:space-between="0"
-					:loop="true"
-					:grab-cursor="true"
-					:autoplay="{ delay: 3000, disableOnInteraction: false }"
-					class="w-full aspect-[16/9]"
-					@swiper="onSwiperInit"
-				>
-					<SwiperSlide v-for="(image, index) in generalInfo.gallery" :key="index">
-						<img
-							:src="image"
-							:alt="`${t('aboutPage.galleryImage')} ${index + 1}`"
-							class="w-full h-full object-cover"
-						/>
-					</SwiperSlide>
-				</Swiper>
+				<template v-else>
+					<!-- Border overlay -->
+					<div
+						class="absolute top-0 left-0 w-[calc(100%-16px)] h-[calc(100%-16px)] md:w-[calc(100%-32px)] md:h-[calc(100%-32px)] bg-transparent m-2 md:m-4 border md:border-2 border-white/70 rounded-[5px_20px_5px_5px] z-10 pointer-events-none"
+						aria-hidden="true"
+					></div>
 
-				<!-- Single image -->
-				<img
-					v-else
-					:src="generalInfo.gallery[0]"
-					:alt="`${t('aboutPage.galleryImage')} 1`"
-					class="w-full aspect-[16/9] object-cover"
-				/>
+					<!-- Gallery Swiper -->
+					<Swiper
+						v-if="generalInfo && generalInfo.gallery.length > 1"
+						:modules="[SwiperAutoplay]"
+						:slides-per-view="1"
+						:space-between="0"
+						:loop="true"
+						:grab-cursor="true"
+						:autoplay="{ delay: 3000, disableOnInteraction: false }"
+						class="w-full aspect-[16/9]"
+						@swiper="onSwiperInit"
+					>
+						<SwiperSlide v-for="(image, index) in generalInfo.gallery" :key="index">
+							<img
+								:src="image"
+								:alt="`${t('aboutPage.galleryImage')} ${index + 1}`"
+								loading="eager"
+								class="w-full h-full object-cover"
+							/>
+						</SwiperSlide>
+					</Swiper>
+
+					<!-- Single image -->
+					<img
+						v-else-if="generalInfo"
+						:src="generalInfo.gallery[0]"
+						:alt="`${t('aboutPage.galleryImage')} 1`"
+						loading="eager"
+						class="w-full aspect-[16/9] object-cover"
+					/>
+				</template>
 
 				<!-- Navigation arrow -->
 				<button
-					v-if="generalInfo.gallery.length > 1"
+					v-if="!pending && generalInfo && generalInfo.gallery.length > 1"
 					type="button"
 					class="absolute right-4 md:right-6 bottom-4 md:bottom-6 z-20 w-10 h-10 rounded-full border-2 border-white/50 bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors"
 					:aria-label="t('aboutPage.nextImage')"

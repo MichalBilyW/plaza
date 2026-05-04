@@ -46,4 +46,9 @@ const props = defineProps<{
 
 const heroImage = computed(() => props.homepage?.heroImage || '/images/homepage/default-hero.jpg')
 const showBorder = computed(() => props.homepage?.showHeroBorder ?? true)
+
+// Preload hero image čím dřív to jde — browser se o URL dozví dřív než zparsuje <img> tag
+useHead(computed(() => ({
+	link: [{ rel: 'preload', as: 'image', href: heroImage.value }],
+})))
 </script>

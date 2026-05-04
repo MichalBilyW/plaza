@@ -47,6 +47,7 @@
 				v-else
 				:src="overlay.logo"
 				:alt="overlay.shopName"
+				loading="lazy"
 				class="object-contain w-full h-full"
 			/>
 		</div>

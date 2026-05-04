@@ -7,6 +7,7 @@
 					v-if="selectedEvent.shop.logo"
 					:src="selectedEvent.shop.logo"
 					:alt="selectedEvent.shop.name"
+					loading="lazy"
 					class="h-10 w-auto object-contain"
 				/>
 				<!-- <span class="font-heading font-bold text-lg text-plaza-dark">

@@ -255,6 +255,8 @@
 									<img
 										:src="image"
 										:alt="`${shop.name} - obrázek ${index + 1}`"
+									loading="eager"
+										:fetchpriority="index === 0 ? 'high' : 'auto'"
 										class="w-full h-full object-cover"
 									/>
 								</SwiperSlide>
@@ -289,6 +291,8 @@
 							v-else-if="galleryImages.length === 1"
 							:src="galleryImages[0]"
 							:alt="shop.name"
+							loading="eager"
+							fetchpriority="high"
 							class="w-full h-full object-cover"
 						/>
 

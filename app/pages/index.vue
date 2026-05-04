@@ -27,9 +27,23 @@
 
 <script setup lang="ts">
 import type { Shop, Event, News, Category, Homepage } from '@/shared/types'
+import type { FloorUnitsResponse } from '@/shared/map/units'
 
 // Prefetch map dat na serveru — data přijdou v SSR payload, MapSection je ihned zobrazí
-await useFetch('/api/map/units', { key: 'map-units' })
+const { data: mapUnits } = await useFetch<FloorUnitsResponse[]>('/api/map/units', { key: 'map-units' })
+
+// Preload log obchodů defaultního patra (přízemí / první patro v odpovědi).
+// Data jsou dostupná v SSR → browser dostane <link rel="preload"> v <head>
+// ještě před tím, než JS spočítá geometrii mapy, čímž se eliminuje pozdní načítání log.
+const mapLogoPreloads = computed(() => {
+	const firstFloor = mapUnits.value?.[0]
+	if (!firstFloor) return []
+	return firstFloor.units
+		.filter((u) => u.shop?.logo)
+		.map((u) => ({ rel: 'preload' as const, as: 'image' as const, href: u.shop!.logo! }))
+})
+
+useHead(computed(() => ({ link: mapLogoPreloads.value })))
 
 const { t } = useI18n()
 

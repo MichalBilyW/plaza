@@ -48,8 +48,7 @@
 						<img
 							v-if="unit.shop?.logo && !logoFailed"
 							:src="unit.shop.logo"
-							:alt="unit.shop.name"
-							class="mx-auto mb-2 object-contain max-h-12 md:max-h-[80px]"
+							:alt="unit.shop.name"						loading="lazy"							class="mx-auto mb-2 object-contain max-h-12 md:max-h-[80px]"
 							style="max-width: 140px"
 							@error="logoFailed = true"
 						/>

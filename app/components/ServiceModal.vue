@@ -6,6 +6,7 @@
 				<img
 					:src="selectedService.icon"
 					:alt="selectedService.shortDescription"
+					loading="lazy"
 					class="max-w-full max-h-full object-contain"
 				/>
 			</div>

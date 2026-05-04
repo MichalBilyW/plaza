@@ -152,6 +152,7 @@
 				v-if="shop.gallery?.[0]"
 				:src="shop.gallery[0]"
 				:alt="shop.name"
+				loading="lazy"
 				class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
 			/>
 			<span
@@ -172,6 +173,7 @@
 					v-if="shop.logo"
 					:src="shop.logo"
 					:alt="shop.name"
+					loading="lazy"
 					class="max-h-[60px] max-w-[70px] object-contain"
 				/>
 				<span v-else class="text-2xl font-bold text-plaza-gray">
