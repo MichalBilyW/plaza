@@ -372,6 +372,21 @@ interface ComputeLogoOverlaysOptions {
 
 const LOGO_SCALE = 1.8
 
+/**
+ * Manuální override pozice loga pro atypické tvary jednotek (L-shape, food court atd.),
+ * kde "pole of inaccessibility" vychází vizuálně nepřirozeně.
+ *
+ * Souřadnice jsou v absolutním viewBox prostoru SVG patra (ne procenta).
+ * Velikost loga (`side`) se dopočítá automaticky z největšího čtverce, který se
+ * v daném bodě vejde dovnitř polygonu jednotky.
+ *
+ * Pokud je override mimo polygon, použije se fallback na vypočítaný pole-of-inaccessibility.
+ */
+const UNIT_LOGO_OVERRIDES: Record<string, { x: number; y: number }> = {
+	// unit_120 (jídelna / food court) — L-shape, automatický střed by vyšel v horní části
+	'120': { x: 430, y: 590 },
+}
+
 export function computeLogoOverlays(opts: ComputeLogoOverlaysOptions): LogoOverlay[] {
 	const { svgWrapper, units, mode } = opts
 	const cache = opts.cache ?? new Map<string, UnitGeometryCacheEntry>()
@@ -450,17 +465,31 @@ export function computeLogoOverlays(opts: ComputeLogoOverlaysOptions): LogoOverl
 
 		const poi = poleOfInaccessibility(polygon, 2)
 		const originalSide = poi.r * LOGO_SCALE
+		let cx = poi.x
+		let cy = poi.y
+		let r = poi.r
 		let side = originalSide
 
-		const maxHalfSide = maxSquareHalfSideAtPoint(poi.x, poi.y, polygon)
-		if (maxHalfSide > 0) {
-			const safeSide = maxHalfSide * 2 * 0.92
-			if (unitCode === '111' || originalSide > safeSide * 1.35) {
-				side = safeSide
+		const override = UNIT_LOGO_OVERRIDES[unitCode]
+		if (override && pointInPolygon(override.x, override.y, polygon)) {
+			const overrideHalf = maxSquareHalfSideAtPoint(override.x, override.y, polygon)
+			if (overrideHalf > 0) {
+				cx = override.x
+				cy = override.y
+				r = distToPolygonEdge(override.x, override.y, polygon)
+				side = overrideHalf * 2 * 0.92
+			}
+		} else {
+			const maxHalfSide = maxSquareHalfSideAtPoint(poi.x, poi.y, polygon)
+			if (maxHalfSide > 0) {
+				const safeSide = maxHalfSide * 2 * 0.92
+				if (unitCode === '111' || originalSide > safeSide * 1.35) {
+					side = safeSide
+				}
 			}
 		}
 
-		const geo = { cx: poi.x, cy: poi.y, r: poi.r, side }
+		const geo = { cx, cy, r, side }
 		cache.set(unitCode, geo)
 		geometries.push({
 			unitCode,
