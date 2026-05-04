@@ -263,6 +263,19 @@ export default defineNuxtConfig({
 		'/o-nas': { ssr: true },
 		'/mapa': { ssr: true },
 
+		// Legacy URL redirects (starý web ocplazaliberec.cz → nový web)
+		// 301 redirecty pro zachování SEO hodnoty zaindexovaných URL
+		'/obchody-s2': { redirect: { to: '/obchody', statusCode: 301 } },
+		'/parking-s5': { redirect: { to: '/o-nas#parkovani', statusCode: 301 } },
+		'/map': { redirect: { to: '/mapa', statusCode: 301 } },
+		'/restaurace-a-kavarny-c6': {
+			redirect: { to: '/obchody?kategorie=restaurace-a-kavarny', statusCode: 301 },
+		},
+		'/zabava-a-sluzby-c3': { redirect: { to: '/obchody', statusCode: 301 } },
+		'/oteviraci-doba-pasaze-oc-plaza-liberec-n158': {
+			redirect: { to: '/o-nas#oteviraci-doba', statusCode: 301 },
+		},
+
 		// CMS routes - private, never index
 		'/cms': {
 			ssr: true,
