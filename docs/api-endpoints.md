@@ -1,431 +1,25 @@
-# API Endpointy
+# API endpointy
 
-Všechny endpointy jsou pod prefixem `/api/`. Formát chyb je konzistentní – viz sekci [Formát chyb](#formát-chyb).
+API běží pod prefixem `/api/`. Implementace je ve složce `server/api/`, registry endpointů je v `shared/api/endpoints.ts`.
 
----
-
-## Autentizace a session
-
-### `POST /api/auth/login`
-Přihlášení do CMS.
-
-- **Auth:** Ne
-- **Rate limit:** 5 pokusů / 15 min per IP, blokace 15 min
-- **CSRF:** Ne (login endpoint CSRF nechrání)
-- **Request body:**
-  ```json
-  { "email": "admin@ocplaza.cz", "password": "heslo123" }
-  ```
-- **Response `200`:**
-  ```json
-  { "user": { "_id": "...", "email": "...", "name": "...", "role": "admin" }, "csrfToken": "..." }
-  ```
-- **Vedlejší efekty:** Nastaví cookies `access_token`, `refresh_token`, `csrf_token`. Vytvoří Session v DB. Aktualizuje `user.lastLoginAt`.
+Nuxt route rule má pro `/api/**` zapnuté `cors: true`.
 
 ---
 
-### `POST /api/auth/logout`
-Odhlášení – zneplatnění aktuální session.
-
-- **Auth:** Ano
-- **CSRF:** Ne
-- **Response `200`:** `{ "success": true }`
-- **Vedlejší efekty:** Smaže cookies, nastaví `session.isValid = false`.
-
----
-
-### `GET /api/auth/me`
-Profil přihlášeného uživatele.
-
-- **Auth:** Ano
-- **Response `200`:**
-  ```json
-  { "_id": "...", "email": "...", "name": "...", "role": "admin", "isActive": true }
-  ```
-- **Poznámka:** Pokud se role v DB liší od role v JWT, automaticky obnoví access token.
-
----
-
-### `POST /api/auth/refresh`
-Obnovení access tokenu (token rotation).
-
-- **Auth:** Ne (čte refresh_token z cookie)
-- **Response `200`:** `{ "user": {...}, "csrfToken": "..." }`
-- **Vedlejší efekty:** Vygeneruje nový refresh token, aktualizuje Session v DB, nastaví nové cookies.
-- **Bezpečnost:** Detekuje token theft – při opakovaném použití starého refresh tokenu invaliduje VŠECHNY sessions uživatele.
-
----
-
-### `POST /api/auth/change-password`
-Změna hesla přihlášeného uživatele.
-
-- **Auth:** Ano
-- **CSRF:** Ano (`X-CSRF-Token` header)
-- **Request body:**
-  ```json
-  { "currentPassword": "...", "newPassword": "...", "confirmPassword": "..." }
-  ```
-- **Validace:** `newPassword` min. 8 znaků, shoda s `confirmPassword`
-- **Response `200`:** `{ "success": true, "message": "Heslo bylo úspěšně změněno" }`
-
----
-
-### `GET /api/auth/sessions`
-Seznam aktivních sessions přihlášeného uživatele.
-
-- **Auth:** Ano
-- **Response `200`:**
-  ```json
-  {
-    "sessions": [
-      { "id": "...", "userAgent": "...", "ipAddress": "...", "lastActivityAt": "...", "createdAt": "...", "isCurrent": true }
-    ],
-    "currentSessionId": "..."
-  }
-  ```
-
----
-
-### `DELETE /api/auth/sessions`
-Odhlášení ze všech ostatních sessions.
-
-- **Auth:** Ano
-- **CSRF:** Ne
-- **Response `200`:** `{ "success": true, "revokedCount": 2 }`
-
----
-
-### `DELETE /api/auth/sessions/:id`
-Odhlášení konkrétní session.
-
-- **Auth:** Ano
-- **Response `200`:** `{ "success": true }`
-
----
-
-## Obchody (`/api/shops`)
-
-### `GET /api/shops`
-Seznam obchodů s filtrováním a stránkováním.
-
-- **Auth:** Ne (veřejný endpoint)
-- **Query parametry:**
-
-| Parametr | Typ | Popis |
-|---|---|---|
-| `page` | number | Stránka (default: 1) |
-| `limit` | number | Počet záznamů, max 100 (default: 20) |
-| `sort` | string | Pole pro řazení (default: `name`) |
-| `order` | `asc` / `desc` | Směr řazení (default: `asc`) |
-| `floorId` | ObjectId | Filtr podle patra |
-| `categoryId` | ObjectId | Filtr podle kategorie |
-| `search` | string | Fulltextové vyhledávání v názvu (regex) |
-| `isActive` | boolean | Filtr podle stavu (pokud neuvedeno, vrátí vše) |
-
-- **Response `200`:**
-  ```json
-  {
-    "data": [{ "_id": "...", "name": "...", "slug": "...", "floors": [...], "categories": [...], ... }],
-    "pagination": { "page": 1, "limit": 20, "total": 45, "totalPages": 3 }
-  }
-  ```
-- **Populace:** `floorId` → `name, level`, `floorIds` → `name, level`, `categoryIds` → `name, slug, icon, color`
-
----
-
-### `GET /api/shops/:id`
-Detail obchodu.
-
-- **Auth:** Ne
-- **Response `200`:** Objekt obchodu s populovanými `floorId`, `floorIds`, `categoryIds`
-
----
-
-### `POST /api/shops`
-Vytvoření nového obchodu.
-
-- **Auth:** Ano – role `editor` nebo vyšší
-- **CSRF:** Interně nevolá `requireCsrf` – CSRF ochrana je zajištěna přes cookie-based auth
-- **Request body:** Dle `shopCreateSchema` (viz `shared/schemas/index.ts`)
-- **Slug:** Automaticky generován z `name` pokud není zadán
-- **Response `200`:** Vytvořený obchod s populovanými poli
-
----
-
-### `PUT /api/shops/:id`
-Úprava obchodu.
-
-- **Auth:** Ano – role `editor` nebo vyšší
-- **Request body:** Dle `shopUpdateSchema` (parciální `shopCreateSchema`)
-- **Response `200`:** Aktualizovaný obchod
-
----
-
-### `DELETE /api/shops/:id`
-Smazání obchodu.
-
-- **Auth:** Ano – role `admin` nebo vyšší
-- **Response `200`:** `{ "success": true, "message": "Obchod byl smazán" }`
-
----
-
-## Akce (`/api/events`)
-
-### `GET /api/events`
-Seznam akcí.
-
-- **Auth:** Ne
-- **Query parametry:** `page`, `limit`, `sort` (default: `sortOrder`), `order`, `isActive`, `shopId`, `search`
-- **Populace:** `shopId` → `name, logo, slug`
-- **Response:** `{ "data": [...], "meta": { "total", "page", "limit", "totalPages" } }`
-
----
-
-### `GET /api/events/:id`
-Detail akce.
-
-- **Auth:** Ne
-
----
-
-### `POST /api/events`
-Vytvoření akce.
-
-- **Auth:** Ano – role `editor` nebo vyšší
-- **Request body:** `{ "name", "image", "shopId", "content"?, "isActive"?, "sortOrder"? }`
-
----
-
-### `PUT /api/events/:id`
-Úprava akce.
-
-- **Auth:** Ano – role `editor` nebo vyšší
-
----
-
-### `DELETE /api/events/:id`
-Smazání akce.
-
-- **Auth:** Ano – role `editor` nebo vyšší
-
----
-
-### `PUT /api/events/reorder`
-Hromadná změna pořadí akcí (drag & drop).
-
-- **Auth:** Ano – role `editor` nebo vyšší
-- **Request body:** `{ "ids": ["id1", "id2", "id3"] }` – pořadí v poli = nový `sortOrder`
-- **Implementace:** MongoDB `bulkWrite` s `updateOne` per záznam
-
----
-
-## Novinky (`/api/news`)
-
-Stejná struktura jako `/api/events` s výjimkou:
-
-- Novinky nemají vazbu na obchod (`shopId`)
-- Mají pole `sortOrder` pro řazení
-- Reorder endpoint: `PUT /api/news/reorder`
-
-### Endpointy:
-- `GET /api/news` – veřejný, filtr: `isActive`, `search`
-- `GET /api/news/:id` – veřejný
-- `POST /api/news` – `editor+`
-- `PUT /api/news/:id` – `editor+`
-- `DELETE /api/news/:id` – `editor+`
-- `PUT /api/news/reorder` – `editor+`
-
----
-
-## Služby (`/api/services`)
-
-Stejná struktura jako `/api/news`.
-
-### Endpointy:
-- `GET /api/services` – veřejný
-- `GET /api/services/:id` – veřejný
-- `POST /api/services` – `editor+`
-- `PUT /api/services/:id` – `editor+`
-- `DELETE /api/services/:id` – `editor+`
-- `PUT /api/services/reorder` – `editor+`
-
----
-
-## Kategorie (`/api/categories`)
-
-### Endpointy:
-- `GET /api/categories` – veřejný, query: `page`, `limit`, `sort`, `order`, `search`, `isActive`
-- `GET /api/categories/:id` – veřejný
-- `POST /api/categories` – `editor+`, auto-generuje slug
-- `PUT /api/categories/:id` – `editor+`
-- `DELETE /api/categories/:id` – `editor+`
-- `PUT /api/categories/reorder` – `editor+`
-
----
-
-## Patra (`/api/floors`)
-
-### Endpointy:
-- `GET /api/floors` – veřejný
-- `GET /api/floors/:id` – veřejný
-- `POST /api/floors` – `editor+`
-- `PUT /api/floors/:id` – `editor+`
-- `DELETE /api/floors/:id` – `editor+`
-- `PUT /api/floors/reorder` – `editor+`
-
----
-
-## Obecné informace (`/api/general-info`)
-
-Singleton – vždy jeden záznam v DB (`GeneralInfo.getOrCreate()`).
-
-### `GET /api/general-info`
-- **Auth:** Ne
-- **Response:** Celý objekt GeneralInfo
-
-### `PUT /api/general-info`
-- **Auth:**
-  - `editor+` pro běžné úpravy
-  - `superadmin` pokud body obsahuje `staticAroundMap`
-- **Request body:** Dle `generalInfoUpdateSchema`
-- **Vedlejší efekty:** Upsert – vytvoří záznam pokud neexistuje
-
----
-
-## Hlavní stránka (`/api/homepage`)
-
-Singleton.
-
-### `GET /api/homepage`
-- **Auth:** Ne
-
-### `PUT /api/homepage`
-- **Auth:** `editor+`
-- **Request body:** `{ "heroImage"?: string, "showHeroBorder"?: boolean }`
-
----
-
-## Mapa (`/api/map`)
-
-### `GET /api/map/units`
-Vrací jednotky všech pater s informací o obsazenosti a dnešních otevíracích hodinách.
-
-- **Auth:** Ne
-- **Query:** `floorId` (volitelný filtr)
-- **Zdroj dat:** SVG soubory uložené u pater (`Floor.svgMap`) – jednotky jsou extrahovány dynamicky ze SVG
-- **Response:**
-  ```json
-  {
-    "floors": [
-      {
-        "floorId": "...",
-        "name": "Přízemí",
-        "level": 0,
-        "units": [
-          {
-            "unitCode": "A01",
-            "isOccupied": true,
-            "shop": { "name": "H&M", "slug": "hm", "logo": "..." },
-            "todayOpeningHours": { "open": "09:00", "close": "21:00", "isOpen": true }
-          }
-        ]
-      }
-    ],
-    "totalUnits": 120,
-    "occupiedUnits": 95,
-    "staticAroundMap": "/api/uploads/uuid.svg",
-    "staticAroundMapContent": "<svg>...</svg>"
-  }
-  ```
-
----
-
-## Správci (`/api/users`)
-
-### `GET /api/users`
-- **Auth:** Ano – role `admin` nebo vyšší
-- **Query:** `page`, `limit`, `sort` (default: `createdAt`), `order`
-- **Response:** `{ "data": [...], "pagination": {...} }` – heslo nikdy nevráceno
-
-### `POST /api/users`
-- **Auth:** Ano – role `admin` nebo vyšší
-- **Request body:** `{ "email", "name", "password", "role"?, "isActive"? }`
-- **Validace:** `name` 2–100 znaků, `password` min. 8 znaků, unikátní email
-- **Vedlejší efekty:** Heslo hashováno bcrypt (SALT_ROUNDS=12)
-
-### `GET /api/users/:id`
-- **Auth:** Ano – role `admin` nebo vyšší
-
-### `PUT /api/users/:id`
-- **Auth:** Ano – role `admin` nebo vyšší
-- **Poznámka:** Pokud je zadáno `password`, bude přehashováno
-
-### `DELETE /api/users/:id`
-- **Auth:** Ano – role `admin` nebo vyšší
-- **Ochrana:** Nelze smazat sám sebe
-- **Vedlejší efekty:** Invaliduje všechny sessions smazaného uživatele
-
----
-
-## Upload souborů (`/api/upload`)
-
-### `POST /api/upload`
-Nahrání obrázku.
-
-- **Auth:** Ano – role `editor` nebo vyšší
-- **Content-Type:** `multipart/form-data`
-- **Field:** `file`
-- **Povolené typy:** `image/jpeg`, `image/png`, `image/webp`, `image/gif`, `image/svg+xml`
-- **Max velikost:** 3 MB
-- **Ukládání:**
-  - Development: `public/uploads/<uuid>.<ext>`
-  - Production: `.output/public/uploads/<uuid>.<ext>`
-- **Response `200`:**
-  ```json
-  { "url": "/api/uploads/<uuid>.jpg", "filename": "<uuid>.jpg", "size": 102400 }
-  ```
-
----
-
-## Servírování souborů (`/api/uploads`)
-
-### `GET /api/uploads/:filename`
-Servírování nahraných souborů.
-
-- **Auth:** Ne (veřejný přístup)
-- **Bezpečnostní kontroly:**
-  1. Path traversal ochrana (`..`, `/`, `\` v názvu → 400)
-  2. Whitelist přípon (`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.svg`)
-  3. UUID formát souboru (regex validace)
-- **Cache:** `Cache-Control: public, max-age=31536000, immutable` (UUID = immutable)
-- **Podporuje:** Range requests, ETag, Last-Modified (přes Nitro `serveStatic`)
-
----
-
-## Sitemap (`/api/__sitemap__`)
-
-### `GET /api/__sitemap__/urls`
-Dynamické URL pro sitemap generátor (`@nuxtjs/sitemap`).
-
-- **Auth:** Ne
-- **Vrací:** URL pro všechny aktivní obchody (`/obchody/:slug`)
-- **Poznámka:** Akce a novinky nemají vlastní stránky (zobrazují se v modálech), proto nejsou v sitemapě.
-
----
-
-## Health check
-
-### `GET /api/health`
-Kontrola stavu aplikace.
-
-- **Auth:** Ne
-- **Použití:** Docker HEALTHCHECK, monitoring
+## Konvence
+
+| Oblast | Konvence |
+|---|---|
+| Chyby | jednotný JSON formát přes `server/utils/errors.ts` |
+| Validace | Zod schémata ve `shared/schemas/index.ts` |
+| Auth | JWT access token v cookie `access_token` nebo `Authorization: Bearer` fallback |
+| Refresh | `refresh_token` HTTP-only cookie |
+| CSRF | explicitně pouze na vybraných write endpointech |
+| Role | `editor`, `admin`, `superadmin` |
 
 ---
 
 ## Formát chyb
-
-Všechny chyby jsou ve formátu:
 
 ```json
 {
@@ -433,23 +27,694 @@ Všechny chyby jsou ve formátu:
   "message": "Popis chyby",
   "statusCode": 400,
   "fields": {
-    "email": "Neplatný email",
-    "password": "Heslo je příliš krátké"
+    "email": "Neplatný email"
   }
 }
 ```
 
-Kódy chyb (`ErrorCodes` v `server/utils/errors.ts`):
+Kódy:
 
-| Kód | HTTP Status | Popis |
-|---|---|---|
+| Kód | HTTP | Význam |
+|---|---:|---|
 | `VALIDATION_ERROR` | 400 | Neplatný vstup |
+| `INVALID_INPUT` | 400 | Neplatný vstup |
 | `UNAUTHORIZED` | 401 | Nepřihlášen |
 | `FORBIDDEN` | 403 | Nedostatečná oprávnění |
 | `INVALID_CREDENTIALS` | 401 | Neplatné přihlašovací údaje |
 | `TOKEN_EXPIRED` | 401 | Token expiroval |
+| `TOKEN_INVALID` | 401 | Token je neplatný |
 | `NOT_FOUND` | 404 | Záznam nenalezen |
-| `ALREADY_EXISTS` | 409 | Záznam již existuje |
-| `RATE_LIMIT_EXCEEDED` | 429 | Příliš mnoho requestů |
-| `INTERNAL_ERROR` | 500 | Serverová chyba |
+| `ALREADY_EXISTS` | 409 | Záznam existuje |
+| `CONFLICT` | 409 | Konflikt |
+| `RATE_LIMITED` | 429 | Rate limit |
+| `RATE_LIMIT_EXCEEDED` | 429 | Překročen rate limit |
+| `INTERNAL_ERROR` | 500 | Interní chyba |
 | `DATABASE_ERROR` | 500 | Chyba databáze |
+
+---
+
+## CSRF přehled
+
+Server explicitně volá `requireCsrf` na:
+
+- `POST /api/auth/change-password`
+- `POST /api/users`
+- `PUT /api/users/:id`
+- `DELETE /api/users/:id`
+
+Ostatní write endpointy CSRF přímo nevyžadují a spoléhají na HTTP-only cookies, role check a `sameSite: lax`.
+
+---
+
+## Auth endpointy
+
+### `POST /api/auth/login`
+
+Přihlášení do CMS.
+
+- Auth: ne
+- CSRF: ne
+- Rate limit: 5 pokusů / 15 minut / IP, blokace 30 minut
+- Body:
+
+```json
+{ "email": "admin@ocplaza.cz", "password": "heslo" }
+```
+
+Vedlejší efekty:
+
+- vytvoří `Session`,
+- nastaví `access_token`,
+- nastaví `refresh_token`,
+- nastaví `csrf_token`,
+- uloží `lastLoginAt`,
+- po úspěchu resetuje login rate limit.
+
+Response:
+
+```json
+{
+  "user": {
+    "_id": "...",
+    "email": "...",
+    "name": "...",
+    "role": "admin",
+    "isActive": true
+  },
+  "csrfToken": "..."
+}
+```
+
+### `POST /api/auth/logout`
+
+Odhlášení aktuální session.
+
+- Auth: ano
+- CSRF: ne
+- Vedlejší efekty: invaliduje aktuální session podle refresh tokenu a smaže auth cookies
+
+### `GET /api/auth/me`
+
+Profil přihlášeného uživatele.
+
+- Auth: ano
+- Pokud se role v DB liší od role v JWT a existuje refresh token, nastaví nový access token.
+
+Response:
+
+```json
+{
+  "_id": "...",
+  "email": "...",
+  "name": "...",
+  "role": "admin",
+  "isActive": true
+}
+```
+
+### `POST /api/auth/refresh`
+
+Rotace refresh tokenu a obnovení access tokenu.
+
+- Auth: ne, čte `refresh_token` cookie
+- CSRF: ne
+- Při detekci použitého/starého refresh tokenu invaliduje všechny sessions daného uživatele.
+
+### `POST /api/auth/change-password`
+
+Změna hesla přihlášeného uživatele.
+
+- Auth: ano
+- CSRF: ano
+- Body:
+
+```json
+{
+  "currentPassword": "...",
+  "newPassword": "...",
+  "confirmPassword": "..."
+}
+```
+
+Poznámka: aktuální implementace neinvaliduje ostatní sessions po změně hesla.
+
+### `GET /api/auth/sessions`
+
+Seznam aktivních sessions aktuálního uživatele.
+
+- Auth: ano
+- CSRF: ne
+
+### `DELETE /api/auth/sessions`
+
+Odhlášení všech ostatních sessions uživatele.
+
+- Auth: ano
+- CSRF: ne
+
+### `DELETE /api/auth/sessions/:id`
+
+Odhlášení konkrétní session.
+
+- Auth: ano
+- CSRF: ne
+- Pokud se ruší aktuální session, smaže auth cookies.
+
+---
+
+## Obchody `/api/shops`
+
+### `GET /api/shops`
+
+Seznam obchodů.
+
+- Auth: ne
+- Query:
+
+| Parametr | Typ | Poznámka |
+|---|---|---|
+| `page` | number | default 1 |
+| `limit` | number | default 20, max 100 |
+| `sort` | string | default `name` |
+| `order` | `asc`/`desc` | default `asc` |
+| `floorId` | ObjectId | filtruje legacy `floorId` |
+| `categoryId` | ObjectId | filtr přes `categoryIds` |
+| `categorySlug` | string | nejprve dohledá aktivní kategorii |
+| `search` | string | regex nad `name` |
+| `isActive` | boolean | pokud chybí, vrací vše |
+
+Response používá `pagination`.
+
+### `GET /api/shops/:id`
+
+Detail obchodu podle MongoDB ID nebo slugu.
+
+- Auth: ne
+- Pokud parametr není ObjectId, hledá podle `slug` a `isActive=true`.
+- Populuje `floorId`, `floorIds`, `categoryIds`.
+
+### `POST /api/shops`
+
+Vytvoření obchodu.
+
+- Auth: `editor+`
+- CSRF: ne
+- Body: `shopCreateSchema`
+- Slug se vygeneruje z názvu, pokud není zadán.
+
+### `PUT /api/shops/:id`
+
+Úprava obchodu.
+
+- Auth: `editor+`
+- CSRF: ne
+- Body: `shopUpdateSchema`
+- Při změně názvu bez ručního slugu se vygeneruje unikátní slug.
+
+### `DELETE /api/shops/:id`
+
+Smazání obchodu.
+
+- Auth: `admin+`
+- CSRF: ne
+
+---
+
+## Kategorie `/api/categories`
+
+### `GET /api/categories`
+
+Seznam kategorií.
+
+- Auth: ne
+- Query: `page`, `limit`, `sort`, `order`, `search`, `isActive`
+- Navíc podporuje raw query `withShopsOnly=true`, která vrátí pouze kategorie s alespoň jedním aktivním obchodem.
+- Response používá `pagination`.
+- API dopočítává `shopCount`.
+
+### `GET /api/categories/:id`
+
+Detail kategorie.
+
+- Auth: ne
+
+### `POST /api/categories`
+
+Vytvoření kategorie.
+
+- Auth: `editor+`
+- CSRF: ne
+- Slug se vygeneruje, pokud není zadán.
+
+### `PUT /api/categories/:id`
+
+Úprava kategorie.
+
+- Auth: `editor+`
+- CSRF: ne
+
+### `DELETE /api/categories/:id`
+
+Smazání kategorie.
+
+- Auth: `admin+`
+- CSRF: ne
+- API zabrání smazání, pokud je kategorie přiřazená k obchodům.
+
+### `PUT /api/categories/reorder`
+
+Změna pořadí kategorií.
+
+- Auth: `editor+`
+- CSRF: ne
+- Body:
+
+```json
+{ "ids": ["..."] }
+```
+
+---
+
+## Patra `/api/floors`
+
+### `GET /api/floors`
+
+Seznam pater.
+
+- Auth: ne
+- Query: `page`, `limit`, `sort`, `order`, `isActive`
+- Default sort: `level`
+- Response používá `pagination`
+- API dopočítává `shopCount` přes legacy `floorId`.
+
+### `GET /api/floors/:id`
+
+Detail patra.
+
+- Auth: ne
+
+### `POST /api/floors`
+
+Vytvoření patra.
+
+- Auth: `editor+`
+- Pokud body obsahuje `svgMap`, vyžaduje `superadmin`
+- CSRF: ne
+
+### `PUT /api/floors/:id`
+
+Úprava patra.
+
+- Auth: `editor+`
+- Pokud body obsahuje `svgMap`, vyžaduje `superadmin`
+- CSRF: ne
+
+### `DELETE /api/floors/:id`
+
+Smazání patra.
+
+- Auth: `admin+`
+- CSRF: ne
+- Kontrola vazeb obchodů aktuálně používá legacy `floorId`.
+
+### `PUT /api/floors/reorder`
+
+Změna pořadí pater.
+
+- Auth: `editor+`
+- CSRF: ne
+- Body:
+
+```json
+{ "ids": ["..."] }
+```
+
+---
+
+## Mapa `/api/map`
+
+### `GET /api/map/units`
+
+Vrací jednotky mapy pro aktivní patra.
+
+- Auth: ne
+- Query: `floorId` volitelně
+- Zdroj jednotek: SVG soubory z `Floor.svgMap`
+- Obchody: aktivní obchody s `unitCodes` nebo legacy `unitCode`
+- Soukromá obsazenost: `Floor.privateOccupiedUnitCodes`
+
+Bez `floorId` vrací:
+
+```json
+{
+  "floors": [],
+  "totalUnits": 0,
+  "occupiedUnits": 0,
+  "staticAroundMap": null,
+  "staticAroundMapContent": null
+}
+```
+
+S `floorId` a jedním nalezeným patrem vrací přímo objekt patra.
+
+---
+
+## Akce `/api/events`
+
+### `GET /api/events`
+
+Seznam akcí.
+
+- Auth: ne
+- Query: `page`, `limit`, `sort`, `order`, `shopId`, `search`, `isActive`, `notExpired`
+- Default sort: `sortOrder`
+- Response používá `meta`, ne `pagination`
+- Populuje `shopId` jako `shop`.
+
+`notExpired=true` přidá filtr:
+
+```js
+displayUntil === null || displayUntil >= now
+```
+
+### `GET /api/events/:id`
+
+Detail akce.
+
+- Auth: ne
+
+### `POST /api/events`
+
+Vytvoření akce.
+
+- Auth: `editor+`
+- CSRF: ne
+- Body: `eventCreateSchema`
+
+### `PUT /api/events/:id`
+
+Úprava akce.
+
+- Auth: `editor+`
+- CSRF: ne
+
+### `DELETE /api/events/:id`
+
+Smazání akce.
+
+- Auth: `admin+`
+- CSRF: ne
+
+### `PUT /api/events/reorder`
+
+Změna pořadí akcí.
+
+- Auth: `editor+`
+- CSRF: ne
+
+### `POST /api/events/:id/publish`
+
+Legacy endpoint.
+
+- Auth: `editor+`
+- Aktuální model `Event` nemá definované pole `published`; UI používá `isActive`.
+- Nepoužívat jako primární publikační mechanismus.
+
+### `POST /api/events/:id/unpublish`
+
+Legacy endpoint se stejným omezením jako `publish`.
+
+---
+
+## Novinky `/api/news`
+
+### `GET /api/news`
+
+Seznam novinek.
+
+- Auth: ne
+- Query: `page`, `limit`, `sort`, `order`, `search`, `isActive`, `notExpired`
+- Default sort: `sortOrder`
+- Response používá `meta`
+
+### `GET /api/news/:id`
+
+Detail novinky.
+
+- Auth: ne
+
+### `POST /api/news`
+
+Vytvoření novinky.
+
+- Auth: `editor+`
+- CSRF: ne
+
+### `PUT /api/news/:id`
+
+Úprava novinky.
+
+- Auth: `editor+`
+- CSRF: ne
+
+### `DELETE /api/news/:id`
+
+Smazání novinky.
+
+- Auth: `admin+`
+- CSRF: ne
+
+### `PUT /api/news/reorder`
+
+Změna pořadí novinek.
+
+- Auth: `editor+`
+- CSRF: ne
+
+---
+
+## Služby `/api/services`
+
+### `GET /api/services`
+
+Seznam služeb.
+
+- Auth: ne
+- Query: `page`, `limit`, `sort`, `order`, `search`, `isActive`
+- Default sort: `sortOrder`
+- Response používá `meta`
+
+### `GET /api/services/:id`
+
+Detail služby.
+
+- Auth: ne
+
+### `POST /api/services`
+
+Vytvoření služby.
+
+- Auth: `editor+`
+- CSRF: ne
+
+### `PUT /api/services/:id`
+
+Úprava služby.
+
+- Auth: `editor+`
+- CSRF: ne
+
+### `DELETE /api/services/:id`
+
+Smazání služby.
+
+- Auth: `admin+`
+- CSRF: ne
+
+### `PUT /api/services/reorder`
+
+Změna pořadí služeb.
+
+- Auth: `editor+`
+- CSRF: ne
+
+---
+
+## General info `/api/general-info`
+
+### `GET /api/general-info`
+
+Vrací singleton `GeneralInfo`. Pokud neexistuje, vytvoří se přes `getOrCreate()`.
+
+- Auth: ne
+
+### `PUT /api/general-info`
+
+Úprava singletonu.
+
+- Auth: `editor+`
+- Pokud body obsahuje `staticAroundMap`, vyžaduje `superadmin`
+- CSRF: ne
+- Body: `generalInfoUpdateSchema`
+
+---
+
+## Homepage `/api/homepage`
+
+### `GET /api/homepage`
+
+Vrací singleton `Homepage`.
+
+- Auth: ne
+
+### `PUT /api/homepage`
+
+Úprava singletonu.
+
+- Auth: `editor+`
+- CSRF: ne
+- Body:
+
+```json
+{
+  "heroImage": "/api/uploads/...",
+  "showHeroBorder": true
+}
+```
+
+---
+
+## Správci `/api/users`
+
+### `GET /api/users`
+
+Seznam CMS uživatelů.
+
+- Auth: `admin+`
+- CSRF: ne
+- Query: `page`, `limit`, `sort`, `order`
+
+### `GET /api/users/:id`
+
+Detail uživatele.
+
+- Auth: `admin+`
+- CSRF: ne
+
+### `POST /api/users`
+
+Vytvoření uživatele.
+
+- Auth: `admin+`
+- CSRF: ano
+- Superadmin roli může vytvořit pouze superadmin.
+
+### `PUT /api/users/:id`
+
+Úprava uživatele.
+
+- Auth: `admin+`
+- CSRF: ano
+- Superadmin účet může upravit pouze superadmin.
+- Superadmin roli může přiřadit pouze superadmin.
+
+### `DELETE /api/users/:id`
+
+Smazání uživatele.
+
+- Auth: `admin+`
+- CSRF: ano
+- Nelze smazat vlastní účet.
+- Admin nemůže smazat superadmin účet.
+- Při smazání se invalidují sessions uživatele.
+
+---
+
+## Upload `/api/upload`
+
+### `POST /api/upload`
+
+Nahrání obrázku.
+
+- Auth: `editor+`
+- CSRF: ne
+- Content-Type: `multipart/form-data`
+- Field: `file`
+- Povolené typy: JPEG, PNG, WebP, GIF, SVG
+- Max velikost: 3 MB
+- Název: UUID
+
+Response:
+
+```json
+{
+  "url": "/api/uploads/<uuid>.jpg",
+  "filename": "<uuid>.jpg",
+  "size": 102400,
+  "type": "image/jpeg"
+}
+```
+
+---
+
+## Upload serving `/api/uploads`
+
+### `GET /api/uploads/:filename`
+
+Servírování nahraného souboru.
+
+- Auth: ne
+- Kontroly:
+  - zákaz `..`, `/`, `\`
+  - whitelist přípon `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.svg`
+  - UUID formát názvu
+- Cache: `public, max-age=31536000, immutable`
+- Používá `serveStatic`, podporuje metadata pro cache/range.
+
+### `GET /uploads/:filename`
+
+Server route mimo `/api`, která provádí 301 redirect na `/api/uploads/:filename`.
+
+---
+
+## Sitemap
+
+### `GET /api/__sitemap__/urls`
+
+Dynamické URL pro `@nuxtjs/sitemap`.
+
+- Auth: ne
+- Vrací aktivní obchody jako `/obchody/:slug`
+- Akce a novinky nejsou v sitemapě, protože nemají vlastní detailní URL.
+
+---
+
+## Health check
+
+### `GET /api/health`
+
+Kontrola aplikace a databáze.
+
+- Auth: ne
+- Při úspěchu:
+
+```json
+{
+  "status": "ok",
+  "timestamp": "...",
+  "uptime": 123
+}
+```
+
+- Při selhání DB vrací 503.
+
+---
+
+## Endpointy mimo registry
+
+`tests/endpoints-registry.test.ts` záměrně ignoruje:
+
+- `/api/__sitemap__/urls`
+- `/api/uploads/:filename`
+
+Tyto endpointy existují, ale jsou považované za interní/infrastrukturní pro účely registry testu.

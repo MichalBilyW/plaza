@@ -1,321 +1,585 @@
-# OC Plaza Liberec – Dokumentace webového systému
+# OC Plaza Liberec - klientská dokumentace webového systému
 
-*Verze dokumentu: duben 2026*
-
----
-
-## 1. Úvod
-
-Tento dokument popisuje webový systém OC Plaza Liberec. Je určen pro provozovatele webu, správce obsahu a osoby odpovědné za každodenní chod webu.
-
-Cílem webu je prezentovat obchodní centrum návštěvníkům: informovat je o nabídce obchodů, aktuálních akcích, otevírací době a umožnit jim orientaci v centru prostřednictvím interaktivní mapy.
-
-Systém se skládá ze dvou propojených částí:
-
-- **Veřejný web** – stránky pro návštěvníky obchodního centra
-- **Administrace (CMS)** – uzavřené prostředí pro správu veškerého obsahu
+*Verze dokumentu: květen 2026*
 
 ---
 
-## 2. Přehled řešení
+## 1. Účel dokumentu
 
-### Veřejný web
+Tento dokument popisuje webový systém OC Plaza Liberec z pohledu provozovatele a běžného správce obsahu. Je určen pro předání klientovi po spuštění webu, aby bylo jasné:
 
-Veřejný web obsahuje tyto hlavní stránky:
+- co web návštěvníkům nabízí,
+- co lze upravovat v administraci,
+- jaké role a odpovědnosti mají správci,
+- jak funguje publikace obsahu,
+- co je potřeba hlídat při běžném provozu,
+- co je potřeba řešit s technickým správcem.
 
-| Stránka | Adresa | Obsah |
+Dokument je psaný provozně a businessově. Technické detaily jsou záměrně omezené na informace důležité pro správu webu.
+
+---
+
+## 2. Přehled systému
+
+Web se skládá ze dvou částí:
+
+| Část | Adresa | Popis |
 |---|---|---|
-| Úvodní stránka | `/` | Hero obrázek, novinky, nadcházející akce, vybrané obchody, interaktivní mapa |
-| Přehled obchodů | `/obchody` | Úplný seznam obchodů s filtrováním |
-| Detail obchodu | `/obchody/nazev-obchodu` | Stránka konkrétního obchodu s popisem, otevírací dobou, galerií |
-| Interaktivní mapa | `/mapa` | Grafická mapa pater centra s obchody |
-| Akce | `/akce` | Nadcházející a probíhající akce |
-| O nás | `/o-nas` | Informace o centru, otevírací doba, galerie |
-| Cookies | `/cookies` | Informace o cookies |
+| Veřejný web | `https://ocplazaliberec.cz` | Web pro návštěvníky centra |
+| Administrace CMS | `https://ocplazaliberec.cz/cms` | Interní správa obsahu |
 
-### Administrace (CMS)
+Veřejný web zobrazuje návštěvníkům obchody, akce, novinky, otevírací dobu, mapu centra, parkování, kontakty a služby.
 
-Administrace je přístupná na adrese `/cms`. Přihlásit se mohou pouze oprávnění uživatelé. Po přihlášení mohou spravovat veškerý obsah webu.
+Administrace slouží k průběžné správě obsahu bez zásahu vývojáře. Přístup mají pouze oprávnění uživatelé s vlastním účtem.
 
 ---
 
-## 3. Co systém umožňuje
+## 3. Veřejný web
 
-### Návštěvník webu
+### Hlavní stránka `/`
 
-- Prohlížet seznam obchodů a filtrovat je podle kategorie, patra nebo vyhledávat podle názvu
-- Zobrazit detail každého obchodu: popis, otevírací dobu, kontakty, galerii, sociální sítě
-- Orientovat se na interaktivní mapě pater – po kliknutí na libovolnou oblast mapy se zobrazí informace o obchodu a přímý odkaz na jeho detail
-- Zobrazit aktuální akce obchodního centra
-- Zjistit obecné informace o centru (otevírací dobu, kontakty, parkování)
-- Spravovat svůj souhlas s cookies
+Hlavní stránka je vstupní rozcestník webu. Obsahuje:
 
-### Správce obsahu (editor, administrátor)
+- hlavní hero obrázek,
+- základní přehled informací o centru,
+- novinky centra,
+- nadcházející akce obchodů,
+- vybrané obchody,
+- interaktivní mapu centra.
 
-- Přidávat, upravovat a deaktivovat obchody
-- Přidávat, upravovat a deaktivovat akce
-- Přidávat, upravovat a deaktivovat novinky
-- Spravovat nabízené služby centra
-- Upravovat obecné informace, otevírací dobu, kontakty, parkování
-- Spravovat úvodní stránku
-- Nahrávat obrázky a přiřazovat je k obchodům, akcím a novinám
+Obsah hlavní stránky se skládá z dat spravovaných v CMS: obchody, akce, novinky, služby, otevírací doba a nastavení hero obrázku.
 
-### Administrátor
+### Obchody `/obchody`
 
-- Vše výše uvedené
-- Navíc: přidávat, upravovat a deaktivovat uživatelské účty správců
+Stránka obchodů zobrazuje aktivní obchody v přehledových kartách. Návštěvník může:
 
----
+- vyhledávat obchod podle názvu,
+- filtrovat obchody podle kategorie,
+- otevřít detail konkrétního obchodu,
+- přejít na interaktivní mapu.
 
-## 4. Struktura obsahu a správy
+Na veřejném webu se zobrazují pouze aktivní obchody. Obchod s budoucím datem otevření se v přehledu zobrazuje jako "Otevíráme" a karta není běžně proklikávací.
 
-### Obchody
+### Detail obchodu `/obchody/nazev-obchodu`
 
-Obchod je základní jednotka obsahu. Každý obchod má:
+Detail obchodu obsahuje:
 
-- **Název a popis** – textový obsah s možností formátování (tučné, kurzíva, nadpisy, odrážky, tabulky, odkazy)
-- **Krátký popis** – max. 120 znaků, zobrazuje se v přehledech (např. na mapě)
-- **Logo a galerie** – nahrané obrázky
-- **Kontakty** – telefon, e-mail, webová stránka, sociální sítě (Facebook, Instagram, Twitter)
-- **Umístění** – přiřazení k patru (nebo více patrům, pokud obchod zabírá více pater), propojení s jednotkou na mapě
-- **Kategorie** – zařazení do jedné nebo více kategorií
-- **Otevírací doba** – pro každý den v týdnu zvlášť, s možností označit den jako zavřeno
-- **Speciální otevírací doba** – výjimky pro svátky nebo konkrétní dny
-- **SEO nastavení** – vlastní název a popis stránky pro vyhledávače
-- **Stav** – aktivní / neaktivní
+- logo obchodu,
+- fotogalerii,
+- stav otevřeno/zavřeno podle aktuální otevírací doby,
+- běžnou otevírací dobu,
+- dnešní speciální otevírací dobu, pokud je nastavena,
+- web, e-mail a telefon,
+- odkazy na Facebook a Instagram, pokud jsou vyplněné,
+- textový popis,
+- akce navázané na daný obchod,
+- mapu s vyznačením jednotky nebo jednotek obchodu,
+- související obchody podle kategorie.
 
-Neaktivní obchod se na veřejném webu nezobrazuje a nevystupuje v mapě.
+### Interaktivní mapa `/mapa`
 
-Obchod lze přiřadit k více patrům najednou (pokud zabírá např. přízemí i první patro).
+Mapa zobrazuje jednotlivá patra centra. Návštěvník může:
 
-### Akce
+- přepínat patra,
+- přibližovat a posouvat mapu,
+- vyhledávat obchod v mapě,
+- kliknout na obsazenou jednotku a přejít na detail obchodu,
+- vidět prázdné, obsazené a připravované jednotky.
 
-Každá akce je vázána na konkrétní obchod. Obsahuje:
+Mapa vychází z SVG podkladů jednotlivých pater. Tyto SVG podklady jsou technická část webu. Správce v CMS může přiřazovat obchody k jednotkám a označovat soukromě obsazené jednotky, ale samotnou grafiku SVG mapy upravuje pouze technický správce nebo superadministrátor.
 
-- Název a podrobný popis
-- Datum konání (od–do)
-- Obrázek
-- Odkaz na přidružený obchod
-- Stav (aktivní / neaktivní)
+### Akce `/akce`
 
-Akce bez přiřazeného obchodu nelze vytvořit.
+Stránka akcí zobrazuje aktivní a neexpirované akce. Akce jsou navázané na konkrétní obchod. Pokud má akce vyplněný detailní obsah, otevře se po kliknutí v modálním okně. Pokud detailní obsah nemá, zobrazuje se pouze jako karta s obrázkem a obchodem.
 
-### Novinky
+Akce může mít nastavené datum "zobrazovat do". Po uplynutí tohoto data se na veřejném webu automaticky skryje, ale v CMS zůstává pro další úpravy nebo opětovné použití.
 
-Novinky jsou nezávislé na obchodech – jde o obecné zprávy centra. Obsahují název, popis, obrázek a stav.
+### O nás `/o-nas`
 
-### Služby
+Stránka O nás sdružuje obecné informace o centru:
 
-Přehled služeb, které centrum nabízí návštěvníkům (např. dětský koutek, úschovna, bankomaty apod.). Každá služba má ikonu, krátký popis a podrobný text.
+- název a krátký úvodní text,
+- fotogalerii,
+- sekci parkování,
+- kontaktní osoby,
+- hlavní text o centru,
+- otevírací dobu centra,
+- speciální otevírací dobu,
+- odkazy na sociální sítě,
+- služby centra,
+- mapu a informace, jak se do centra dostat.
 
-### Kategorie
+### Cookies `/cookies`
 
-Slouží k třídění obchodů. Každá kategorie má název. Ke kategorii je automaticky počítáno, kolik aktivních obchodů do ní patří.
+Stránka popisuje používání cookies a umožňuje návštěvníkovi znovu otevřít nastavení cookies.
 
-### Obecné informace (O nás, Kontakty, Parkování)
-
-Jde o jednu společnou sadu dat, která se projevuje na několika místech webu:
-
-- **O nás** – název centra, popisný text, galerie fotek, otevírací doba centra, speciální otevírací doba, sociální sítě
-- **Kontakty** – seznam kontaktních osob (název/funkce, jméno, telefon, e-mail); maximálně 30 kontaktů
-- **Parkování** – text s informacemi o parkování, fotka parkoviště, doplňující informace
-
-Tyto sekce jsou společné – existuje vždy jeden záznam, který se edituje (nelze přidávat více verzí).
-
-### Úvodní stránka
-
-Správa hero obrázku v záhlaví úvodní stránky a přepínač dekorativního rámečku kolem obrázku.
-
-### Interaktivní mapa
-
-Mapa obchodního centra je zobrazena jako SVG grafika (vektorový soubor) pro každé patro. Správce v CMS vidí přehled obsazenosti – celkový počet jednotek, obsazené jednotky, prázdné jednotky a procentuální obsazenost. Samotné SVG soubory a propojení s mapou zajišťuje technický správce.
+Na webu je použita cookie lišta Silktide Cookie Manager. Google Tag Manager je načítán s Google Consent Mode v2. Před souhlasem jsou analytické a reklamní souhlasy nastavené jako zamítnuté.
 
 ---
 
-## 5. Uživatelské role a oprávnění
+## 4. Administrace CMS
 
-Systém rozlišuje tři úrovně přístupu:
+Administrace je dostupná na adrese:
+
+```text
+https://ocplazaliberec.cz/cms/login
+```
+
+Přihlašuje se e-mailem a heslem. Každý správce má mít vlastní účet. Sdílení jednoho účtu mezi více lidmi se nedoporučuje.
+
+Po přihlášení správce vidí CMS menu:
+
+- Dashboard,
+- Hlavní stránka,
+- Kategorie,
+- Obchody,
+- Patra,
+- Mapa,
+- Akce,
+- Novinky,
+- Služby,
+- O nás,
+- Parkování,
+- Kontakty,
+- Správci,
+- Můj účet,
+- Odhlášení.
+
+Položka Správci se zobrazuje pouze uživatelům s rolí administrátor nebo superadministrátor.
+
+---
+
+## 5. Role a oprávnění
+
+Systém používá tři role.
+
+| Role | Určení | Hlavní oprávnění |
+|---|---|---|
+| Editor | Běžný správce obsahu | Správa obsahu bez správy uživatelů |
+| Administrátor | Vedoucí správy webu | Správa obsahu a správa běžných správců |
+| Superadministrátor | Technický nebo hlavní správce | Plný přístup včetně technických mapových podkladů |
 
 ### Editor
 
-Základní role pro správu obsahu. Editor může:
+Editor může spravovat obsah webu:
 
-- Spravovat obchody, akce, novinky, služby, kategorie, patra
-- Upravovat obecné informace (O nás, kontakty, parkování)
-- Spravovat úvodní stránku
-- Nahrávat obrázky
+- obchody,
+- akce,
+- novinky,
+- služby,
+- kategorie,
+- patra,
+- hlavní stránku,
+- O nás,
+- parkování,
+- kontakty,
+- přiřazení obchodů v mapě,
+- nahrávání obrázků.
 
-Editor **nemůže** spravovat uživatelské účty ostatních správců.
+Editor nemůže spravovat uživatelské účty. Editor také nemůže mazat vybrané typy obsahu, pokud je mazání omezené na administrátora.
 
 ### Administrátor
 
-Obsahuje vše jako editor a navíc:
+Administrátor může spravovat obsah stejně jako editor a navíc:
 
-- Spravovat uživatelské účty (přidávat, upravovat, deaktivovat editory i další administrátory)
+- vytvářet účty editorů a administrátorů,
+- upravovat účty editorů a administrátorů,
+- mazat účty kromě vlastního účtu,
+- mazat obsah, kde je mazání omezené na administrátora.
 
-Administrátor **nemůže** spravovat účty jiných administrátorů a superadministrátorů.
+Administrátor nemůže vytvořit, upravit ani smazat superadministrátora.
 
 ### Superadministrátor
 
-Nejvyšší úroveň přístupu. Superadministrátor může vše výše zmíněné a navíc:
+Superadministrátor má nejvyšší oprávnění. Navíc může:
 
-- Spravovat uživatelské účty na všech úrovních
-- Upravovat speciální část dat (statická mapa okolí)
+- vytvářet a spravovat superadministrátory,
+- nahrávat a měnit SVG mapové podklady pater,
+- nahrávat a měnit statickou mapu okolí centra.
 
-Roli superadministrátora přiřazuje pouze technický správce systému.
-
----
-
-## 6. Přihlášení a zabezpečení
-
-### Přihlášení do administrace
-
-Administrace je dostupná na adrese `/cms/login`. Pro přihlášení je potřeba e-mail a heslo.
-
-Po přihlášení zůstane uživatel přihlášen po dobu **7 dní**. Pokud v té době aktivně pracuje se systémem, přihlášení se automaticky obnovuje.
-
-### Souběžné přihlášení na více zařízeních
-
-Systém umožňuje být přihlášen na více zařízeních zároveň (například na pracovním počítači a telefonu). Každé zařízení má vlastní nezávislé přihlášení.
-
-### Odhlášení a zneplatnění přístupu
-
-- Ruční odhlášení okamžitě zneplatní přihlášení pouze na daném zařízení.
-- Změna hesla zneplatní **všechna aktivní přihlášení** na všech zařízeních. Tím je zajištěno, že i v případě odcizeného přístupu se neautorizovaná osoba nemůže dál přihlásit.
-
-### Ochrana před opakovanými pokusy o přihlášení
-
-Po 5 neúspěšných pokusech o přihlášení z jedné adresy je přihlášení zablokováno na 30 minut. Toto opatření chrání systém před automatickými útoky.
-
-### Bezpečnost dat
-
-- Hesla jsou uložena v zašifrované podobě – nikdo (včetně technického správce) nemůže zobrazit heslo v původní podobě.
-- Přihlašovací tokeny jsou uloženy v bezpečných cookies, které nejsou přístupné z webových skriptů.
-- Veškerá komunikace se systémem probíhá šifrovaně (HTTPS).
+Tato role by měla být svěřena pouze technicky odpovědné osobě.
 
 ---
 
-## 7. Běžná správa obsahu
+## 6. Správa obsahu
 
-### Přidání nového obchodu
+### Obchody
 
-1. V administraci přejít do sekce **Obchody**
-2. Kliknout na **Přidat obchod**
-3. Vyplnit: název, popis, logo, galerii, kontaktní informace, patro, kategorii, otevírací dobu
-4. Uložit – obchod se zobrazí jako aktivní na webu
+Obchod je základní položka webu. V CMS se u obchodu spravuje:
 
-### Deaktivace obchodu
+- název,
+- URL slug,
+- krátký popis,
+- dlouhý formátovaný popis,
+- logo,
+- fotogalerie,
+- telefon,
+- e-mail,
+- web,
+- Facebook a Instagram,
+- kategorie,
+- patro nebo více pater,
+- jednotka nebo více jednotek na mapě,
+- běžná otevírací doba,
+- speciální otevírací doba,
+- stav aktivní/neaktivní,
+- datum budoucího otevření,
+- SEO titulek a SEO popis.
 
-Obchod lze přepnout do stavu „neaktivní". Takový obchod se okamžitě přestane zobrazovat na veřejném webu, zůstane však v systému a lze ho kdykoli znovu aktivovat.
+Neaktivní obchod se nezobrazuje na veřejném webu ani v mapě jako veřejný obchod.
 
-### Správa akcí
+Datum budoucího otevření slouží k označení připravovaného obchodu. Takový obchod může být aktivní, ale na kartách a v mapě se zobrazuje jako připravovaný nebo "Otevíráme".
 
-Každá akce musí být přiřazena k existujícímu obchodu. Akci lze deaktivovat bez smazání – vhodné pro opakující se akce.
+Obchod může být přiřazen k více patrům a více jednotkám. To je důležité pro velké prodejny nebo provozy zasahující do více částí centra.
 
-### Speciální otevírací doba
+### Kategorie
 
-Jak u obchodů, tak u celého centra lze nastavit výjimky z běžné otevírací doby pro konkrétní datum nebo rozsah dat (například svátky). Tyto výjimky mají přednost před standardní otevírací dobou.
+Kategorie slouží k třídění obchodů. Kategorie mají vlastní pořadí, aktivní/neaktivní stav a automaticky počítaný počet aktivních obchodů.
 
-### Správa kontaktů
+Na veřejném webu se ve filtrech běžně zobrazují aktivní kategorie, které mají alespoň jeden aktivní obchod.
 
-V sekci **Kontakty** lze spravovat seznam kontaktních osob zobrazovaných na webu. Maximální počet kontaktů je **30**. Pokud je tento limit dosažen, tlačítko pro přidání dalšího kontaktu se nezobrazí.
+### Akce
 
-### Nahrávání obrázků
+Akce jsou navázané na konkrétní obchod. Každá akce obsahuje:
 
-- Povolené formáty: JPG, PNG, WEBP, GIF, SVG
-- Maximální velikost jednoho souboru: **3 MB**
-- Obrázky jsou po nahrání dostupné ihned
+- interní název,
+- obrázek,
+- obchod,
+- volitelný detailní obsah,
+- stav aktivní/neaktivní,
+- pořadí,
+- datum "zobrazovat do".
 
-### Pořadí obsahu
+Datum "zobrazovat do" určuje, kdy se akce automaticky přestane zobrazovat na veřejném webu. V CMS však zůstane.
 
-Akce v přehledu lze přeuspořádat přetažením (drag & drop) přímo v administraci. Toto pořadí se projeví na veřejném webu.
+### Novinky
 
-### Úprava formátovaného textu
+Novinky jsou obecné zprávy centra bez vazby na konkrétní obchod. Obsahují:
 
-Popisy obchodů, novinky a další delší texty se editují pomocí vizuálního textového editoru (WYSIWYG), který umožňuje formátovat text bez znalosti HTML. Dostupné možnosti: tučné, kurzíva, podtržení, přeškrtnutí, nadpisy, odrážky, číslované seznamy, tabulky, hypertextové odkazy, vložení obrázku.
+- interní název,
+- obrázek,
+- volitelný detailní obsah,
+- stav aktivní/neaktivní,
+- pořadí,
+- datum "zobrazovat do".
+
+Na hlavní stránce se zobrazují aktivní a neexpirované novinky.
+
+### Služby
+
+Služby popisují vybavení a služby centra pro návštěvníky. Každá služba má:
+
+- ikonu,
+- krátký popisek,
+- volitelný detailní popis,
+- stav aktivní/neaktivní,
+- pořadí.
+
+Služby se zobrazují na stránce O nás. Pokud mají detailní popis, lze je otevřít v modálním okně.
+
+### Hlavní stránka
+
+V CMS se pro hlavní stránku spravuje:
+
+- hero obrázek,
+- přepínač dekorativního rámečku okolo hero obrázku.
+
+Další části hlavní stránky se skládají automaticky z obchodů, akcí, novinek, mapy a obecných informací.
+
+### O nás
+
+Sekce O nás je součástí společných obecných informací. Spravuje se:
+
+- nadpis,
+- krátký úvodní text,
+- hlavní formátovaný text,
+- galerie obrázků,
+- sociální sítě centra.
+
+### Kontakty
+
+V kontaktech lze spravovat kontaktní osoby. Jeden kontakt může obsahovat:
+
+- název nebo funkci,
+- jméno,
+- telefon,
+- e-mail.
+
+Maximum je 30 kontaktů z důvodu přehlednosti, rychlosti webu a responzivity.
+
+### Parkování
+
+Sekce parkování obsahuje:
+
+- hlavní text o parkování,
+- obrázek parkování,
+- doplňující formátované informace, například ceník.
+
+Pokud není obrázek parkování vyplněn, web použije výchozí obrázek.
+
+### Patra
+
+Patra slouží pro členění mapy. U patra se spravuje:
+
+- název,
+- číselná úroveň patra,
+- aktivní/neaktivní stav,
+- pořadí,
+- SVG mapa patra,
+- soukromě obsazené jednotky.
+
+Nahrávání nebo mazání SVG mapy patra je dostupné pouze SuperAdministrátorovi.
+
+### Mapa
+
+Sekce mapa v CMS umožňuje:
+
+- vidět počet všech jednotek,
+- vidět obsazené a prázdné jednotky,
+- vidět procento obsazenosti,
+- přepínat patra,
+- kliknout na jednotku,
+- přiřadit jednotku obchodu,
+- odebrat obchod z jednotky,
+- označit jednotku jako soukromě obsazenou,
+- označit jednotku zpět jako prázdnou,
+- exportovat mapu patra jako samostatné SVG.
+
+Mapa rozlišuje běžně obsazené jednotky, soukromě obsazené jednotky, připravované obchody a prázdné jednotky.
 
 ---
 
-## 8. Provozní informace
+## 7. Nahrávání obrázků a souborů
 
-### Kde systém běží
+V CMS lze nahrávat obrázky pro obchody, galerie, akce, novinky, služby a mapové podklady.
 
-Systém je provozován na dedikovaném serveru (Hetzner) pomocí kontejnerizovaného prostředí (Docker), spravovaného přes platformu Coolify. Data jsou uložena v databázi MongoDB.
+| Vlastnost | Hodnota |
+|---|---|
+| Povolené formáty | JPG, JPEG, PNG, WEBP, GIF, SVG |
+| Maximální velikost jednoho souboru | 3 MB |
+| Výsledná URL | `/api/uploads/<nazev-souboru>` |
+| Ukládání v produkci | serverová složka pro uploads |
+
+Doporučení:
+
+- fotografie používat ideálně ve formátu WEBP nebo optimalizovaném JPG,
+- loga a ikony používat jako SVG nebo optimalizované PNG,
+- nenahrávat zbytečně velké obrázky.
+
+---
+
+## 8. Formátovaný text
+
+Dlouhé texty se upravují přes vizuální editor. Správce nemusí znát HTML.
+
+Editor podporuje běžné formátování:
+
+- odstavce,
+- nadpisy,
+- tučné a kurzívu,
+- podtržení,
+- odrážky a číslované seznamy,
+- odkazy,
+- obrázky,
+- zarovnání textu,
+- tabulky.
+
+Texty z editoru se na veřejném webu čistí proti nebezpečnému kódu. Přesto doporučujeme vkládat pouze obsah z důvěryhodných zdrojů a nekopírovat do CMS neznámé skripty nebo embed kódy.
+
+---
+
+## 9. Přihlášení a bezpečnost
+
+### Přihlášení
+
+Přihlášení probíhá e-mailem a heslem. Po přihlášení systém nastaví bezpečné cookies. Běžná platnost přihlášení je 7 dní.
+
+### Více zařízení
+
+Jeden uživatel může být přihlášen na více zařízeních současně. Každé přihlášení je evidováno jako samostatná session v databázi.
+
+### Odhlášení
+
+Ruční odhlášení odhlásí aktuální zařízení. Systém obsahuje API pro správu více sessions, ale v běžném CMS rozhraní není samostatná stránka pro přehled aktivních zařízení.
+
+### Změna hesla
+
+Každý přihlášený uživatel si může změnit heslo v sekci Můj účet. Změna hesla vyžaduje znalost aktuálního hesla.
+
+Důležité: změna hesla v aktuální implementaci automaticky neodhlašuje ostatní aktivní zařízení. Pokud vznikne podezření na kompromitovaný účet, doporučuje se účet deaktivovat nebo požádat technického správce o zneplatnění sessions.
+
+### Ochrana proti opakovaným pokusům o přihlášení
+
+Přihlášení je chráněno rate limitem:
+
+- 5 pokusů za 15 minut z jedné IP adresy,
+- při překročení následuje blokace na 30 minut.
+
+Po úspěšném přihlášení se počítadlo pokusů resetuje.
+
+### Hesla
+
+Hesla se v systému neukládají v čitelné podobě. Ukládá se pouze bezpečný hash hesla. Ani technický správce nemůže zobrazit původní heslo.
+
+---
+
+## 10. Cookies a měření
+
+Web používá:
+
+- Google Tag Manager,
+- Google Consent Mode v2,
+- Silktide Cookie Manager,
+- Google Maps embed na stránce O nás,
+- lokální uložení volby cookies v prohlížeči návštěvníka.
+
+Google Tag Manager se nenačítá na CMS stránkách. CMS není určeno pro měření návštěvnosti.
+
+Ve výchozím stavu jsou analytické a reklamní souhlasy zamítnuté. Návštěvník je může povolit v cookie liště.
+
+V kódu je aktuálně nastaven Google Tag Manager ID:
+
+```text
+GTM-WB3N3SCX
+```
+
+Pokud se používá Google Analytics, Hotjar nebo jiné měřicí nástroje, typicky se spravují uvnitř Google Tag Manageru. Přístupy k těmto službám je potřeba předat zvlášť v dokumentu `klient-pristupy.md`.
+
+---
+
+## 11. Provozní informace
+
+### Hosting a infrastruktura
+
+Systém je připraven pro běh na serveru v kontejneru. Podle projektové konfigurace se počítá s provozem na Hetzner serveru přes Coolify. Databáze je MongoDB.
+
+Klíčové části provozu:
+
+- webová aplikace běžící v Node.js/Nuxt,
+- MongoDB databáze,
+- persistentní složka pro nahrané soubory,
+- doména a DNS,
+- HTTPS certifikát,
+- Google Tag Manager a případné navázané měřicí služby.
 
 ### Nahrané soubory
 
-Nahrané obrázky jsou ukládány na serveru mimo zálohu repozitáře. Je nezbytné, aby provozovatel zajistil jejich **pravidelnou zálohu**. Při obnovení systému nebo přesunu na nový server musí být obrázky přeneseny zvlášť.
+Nahrané obrázky nejsou součástí Git repozitáře ani běžného Docker obrazu. V produkci musí být uložené v persistentní složce serveru.
+
+Při přesunu webu na jiný server je nutné přenést:
+
+- databázi,
+- nahrané obrázky,
+- environment proměnné,
+- doménu/DNS,
+- konfiguraci deploye.
 
 ### Záloha databáze
 
-Systém obsahuje skripty pro zálohu databáze. Záloha vytvoří složku s daty ke konkrétnímu datu a času. Zálohu je nutné provádět manuálně nebo naplánovat automaticky – záloha neběží sama od sebe, pokud to technický správce nenastavil.
+V repozitáři existují historické zálohy databáze a dokumentace zmiňuje zálohovací skripty. Aktuální `package.json` obsahuje příkazy pro zálohu a obnovu databáze. Samotné TypeScript skripty pro backup/restore v aktuálním pracovním adresáři existují, ale nejsou verzované Gitem, protože `scripts/*.ts` je ignorováno.
 
-### Závislosti systému
+To znamená, že při čistém klonu repozitáře nemusí být tyto skripty k dispozici. Automatickou nebo ruční zálohu je proto potřeba ověřit přímo na produkčním serveru/Coolify/Hetzneru.
 
-Systém vyžaduje:
+### Health check
 
-- Funkční MongoDB databázi – bez ní web nefunguje
-- Přístup k internetu pro načítání externích služeb (Google Analytics, cookie lišta)
+Aplikace obsahuje endpoint:
 
----
+```text
+/api/health
+```
 
-## 9. Doporučení pro klienta
-
-1. **Pravidelná záloha** – Domluvte s technickým správcem automatickou zálohu databáze i nahraných obrázků, ideálně denně.
-
-2. **Správa hesel** – Každý správce by měl mít vlastní přihlašovací údaje. Nikdy nesdílejte heslo mezi více osobami. Po odchodu zaměstnance okamžitě deaktivujte jeho účet.
-
-3. **Silná hesla** – Používejte hesla minimálně 12 znaků, kombinaci písmen, číslic a speciálních znaků.
-
-4. **Aktuálnost obsahu** – Pravidelně kontrolujte, zda jsou otevírací doby obchodů aktuální, zejména před svátky. Neaktuální otevírací doba může způsobit stížnosti od návštěvníků.
-
-5. **Deaktivace místo mazání** – Pokud obchod nebo akce dočasně neplatí, doporučujeme je deaktivovat, nikoli smazat. Data lze kdykoli obnovit.
-
-6. **Nahrávání obrázků** – Nahrávejte obrázky v přiměřené velikosti (do 3 MB). Příliš velké soubory zpomalují web. Doporučujeme formát WEBP pro fotografie a SVG pro loga.
-
-7. **Testování po změnách** – Po větších úpravách obsahu si vždy prohlédněte, jak se změna projevila na veřejném webu, ideálně ve více různých prohlížečích.
-
-8. **Správci s minimálními oprávněními** – Přidělujte roli editor těm, kteří nepotřebují spravovat uživatele. Roli administrátor svěřte pouze odpovědným osobám.
+Ten kontroluje dostupnost aplikace a databáze. Používá se pro Docker health check a může se použít i pro externí monitoring.
 
 ---
 
-## 10. Omezení a důležité poznámky
+## 12. Doporučený provozní režim
 
-- **Mapu nelze editovat přímo v administraci** – Grafická mapa pater (SVG soubory) je technický prvek, který vyžaduje ruční úpravu od vývojáře. Propojení obchodů s mapou (přiřazení kódu jednotky) lze spravovat v CMS, ale grafiku mapy samotné nikoli.
+### Pravidelně kontrolovat
 
-- **Akce musí mít obchod** – Nelze vytvořit akci bez přiřazení ke konkrétnímu obchodu. Pokud jde o akci celého centra (ne jednoho obchodu), je třeba s vývojářem domluvit rozšíření.
+- správnost otevíracích dob centra a obchodů,
+- speciální otevírací dobu před svátky,
+- aktuálnost kontaktů,
+- aktivní/neaktivní stav obchodů,
+- datum "zobrazovat do" u akcí a novinek,
+- správnost mapového přiřazení obchodů,
+- funkčnost kontaktních odkazů,
+- načítání obrázků.
 
-- **Maximálně 30 kontaktů** – Sekce kontaktů je omezena na 30 záznamů. Pokud je limit nevyhovující, je potřeba úprava systému.
+### Po větších změnách v CMS
 
-- **Jazyk webu** – Web je pouze v češtině. Vícejazyčný provoz není v aktuální verzi podporován.
+Po každé větší změně doporučujeme zkontrolovat veřejný web:
 
-- **Role superadministrátor** – Tuto roli přiděluje pouze technický správce přímo v databázi nebo systémovém nastavení. Nelze ji nastavit přes administraci.
+- hlavní stránku,
+- stránku obchodů,
+- detail upraveného obchodu,
+- mapu,
+- akce,
+- O nás.
 
-- **Nahrané soubory nejsou automaticky zálohovány** – Systém sám nezálohuje nahrané obrázky. Je nutné zajistit zálohu externě.
+### Při odchodu zaměstnance
+
+Pokud osoba s přístupem do CMS již nemá web spravovat:
+
+1. Administrátor deaktivuje nebo smaže její účet.
+2. Pokud osoba znala sdílené technické přístupy, je nutné změnit hesla i tam.
+3. U důležitých služeb je vhodné zkontrolovat dvoufázové ověření a vlastníky účtů.
 
 ---
 
-## 11. Nutné ověřit
+## 13. Omezení systému
 
-Následující informace nebylo možné z kódu systému 100% potvrdit a doporučujeme je ověřit přímo s technickým správcem:
-
-- **Automatická záloha databáze** – Je nastavena, nebo ji musí správce spouštět ručně?
-- **Monitoring dostupnosti** – Je nastaven automatický alert, pokud web přestane fungovat?
-- **E-mailové notifikace** – Systém aktuálně neposílá žádné notifikační e-maily (např. při chybě přihlášení nebo nahrání souboru). Pokud je tato funkce požadována, je třeba ji doplnit.
-- **Záloha nahraných obrázků** – Kde jsou obrázky zálohovány a jak často?
-- **Aktualizace systému** – Jak je plánována průběžná aktualizace použitých knihoven a závislostí?
+- Web je aktuálně pouze v češtině.
+- Akce musí být navázaná na konkrétní obchod.
+- Novinky nemají vlastní detailní URL, zobrazují se v modálních oknech.
+- Akce nemají vlastní detailní URL, zobrazují se v modálních oknech.
+- Veřejný výpis obchodů filtruje podle kategorie a názvu, ne podle patra.
+- Přímá grafická úprava SVG mapy není běžná práce editora.
+- Nahrané soubory musí být zálohované mimo Git.
+- Změna hesla uživatele v aktuální implementaci neodhlašuje ostatní zařízení.
+- V běžném CMS není obrazovka pro správu aktivních sessions.
+- E-mailové notifikace systém aktuálně neposílá.
+- Zálohovací a obnovovací skripty zmiňované v npm příkazech je nutné ověřit na produkčním serveru, protože nejsou verzované Gitem.
 
 ---
 
-## Shrnutí pro předání
+## 14. Přístupy k projektu
 
-1. Web se skládá z **veřejné části pro návštěvníky** a **administrace (CMS)** pro správce obsahu.
-2. Veškerý obsah (obchody, akce, novinky, otevírací doba, kontakty) se spravuje v administraci na adrese `/cms`.
-3. Systém rozlišuje **tři role**: editor (správa obsahu), administrátor (+ správa uživatelů), superadministrátor (plný přístup).
-4. Po přihlášení zůstane uživatel přihlášen **7 dní**; změna hesla okamžitě odhlásí všechna zařízení.
-5. Interaktivní mapa pater je technický prvek – SVG soubory upravuje pouze vývojář, propojení s obchody se nastavuje v CMS.
-6. Nahrané obrázky jsou uloženy na serveru a **musí být zálohovány zvlášť** – systém je automaticky nezálohuje.
-7. Obchody, akce a novinky lze **deaktivovat bez smazání** – doporučujeme tento přístup před trvalým odstraněním záznamu.
-8. Maximální velikost nahrávaného obrázku je **3 MB**; povolené formáty jsou JPG, PNG, WEBP, GIF, SVG.
-9. Záloha databáze existuje jako skript, který je třeba spouštět ručně nebo naplánovat automaticky.
-10. Veškerá komunikace se systémem je šifrována; hesla jsou uložena bezpečně a nelze je zobrazit v původní podobě.
+Přístupy a citlivé údaje se nemají ukládat přímo do Git repozitáře.
+
+Pro předání klientovi slouží samostatný dokument:
+
+```text
+docs/klient-pristupy.md
+```
+
+Tento soubor je přidaný do `.gitignore`, aby se omylem necommitnul. Hodnoty je potřeba doplnit ručně a klientovi předat bezpečným způsobem, například zaheslovaným souborem e-mailem a heslem přes SMS.
+
+Dokument by měl obsahovat zejména:
+
+- CMS účty,
+- Hetzner,
+- Coolify,
+- GitHub/repozitář,
+- MongoDB,
+- doménu a DNS,
+- Google Tag Manager,
+- Google Analytics,
+- Hotjar,
+- e-mailové nebo další provozní účty,
+- SSH přístupy,
+- environment proměnné,
+- zálohy a monitoring.
+
+---
+
+## 15. Shrnutí pro klienta
+
+1. Web se spravuje přes CMS na adrese `/cms`.
+2. Veřejný web zobrazuje pouze aktivní obsah a respektuje expiraci akcí a novinek.
+3. Obchody lze přiřazovat do kategorií, pater a mapových jednotek.
+4. Mapa je propojená s daty z CMS, ale SVG grafické podklady jsou technická část.
+5. Editor spravuje obsah, administrátor navíc uživatele, superadministrátor i technické mapové části.
+6. Obrázky se nahrávají na server a musí být zálohované mimo Git.
+7. Databáze a uploads jsou nejdůležitější provozní data pro obnovu webu.
+8. Přístupy se předávají zvlášť v neveřejném souboru `klient-pristupy.md`.
+9. Před produkčním spuštěním je nutné ověřit zálohy, monitoring, doménu, DNS, HTTPS a měřicí služby.

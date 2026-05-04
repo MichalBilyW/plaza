@@ -1,5 +1,5 @@
 <template>
-	<section class="py-12">
+	<section id="parkovani" class="py-12">
 		<div class="container-small px-4">
 			<!-- Nadpis -->
 			<h2

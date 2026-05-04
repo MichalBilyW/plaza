@@ -1,332 +1,515 @@
 # Composables a helpery
 
-Composables jsou umístěny v `app/composables/`. Každý composable je auto-importován Nuxtem – není potřeba explicitní import.
+Composables jsou v `app/composables/` a Nuxt je auto-importuje. Tento dokument popisuje aktualni verejne API jednotlivych composables a souvisejicich helperu kveten 2026.
 
 ---
 
-## Autentizace a CMS
+## Prehled souboru
 
-### `useCmsAuth`
+| Soubor | Ucel |
+|---|---|
+| `useCmsAuth.ts` | CMS autentizace, role, CSRF, sessions |
+| `usePlazaSeo.ts` | SEO meta tagy |
+| `useJsonLd.ts` | schema.org JSON-LD |
+| `useFlashMessages.ts` | globalni flash zpravy |
+| `useFormErrors.ts` | zpracovani API chyb ve formularich |
+| `useFilterPersistence.ts` | persistovani filtru v URL/sessionStorage |
+| `useTableSort.ts` | klientské razeni tabulek |
+| `useInteractiveMap.ts` | data a interakce verejne mapy |
+| `useMapZoom.ts` | pan/zoom ovladani mapy |
+| `useMapLogoGeometry.ts` | vypocet pozic log v SVG mape |
+| `useMapExport.ts` | export mapy do SVG/PDF |
+| `useOpeningHoursStatus.ts` | stav oteviraci doby v prazskem case |
+| modal composables | globalni stav modalu |
+| `useDataLayer.ts` | GTM dataLayer eventy |
+| `useCookieConsent.ts` | Silktide cookie consent wrapper |
+| `useSanitizeHtml.ts` | DOMPurify sanitizace HTML |
+| `useGlobalLoading.ts` | globalni loading indicator |
 
-**Soubor:** `app/composables/useCmsAuth.ts`
+---
 
-Centrální composable pro auth stav v CMS.
+## `useCmsAuth`
 
-```typescript
-const { user, isLoading, csrfToken, login, logout, fetchUser, secureFetch } = useCmsAuth()
+Soubor: `app/composables/useCmsAuth.ts`
+
+Centralni CMS auth composable. Stav je sdileny pres `useState`.
+
+```ts
+const {
+  user,
+  isLoading,
+  isSuperAdmin,
+  isAdmin,
+  isEditor,
+  csrfToken,
+  fetchUser,
+  login,
+  logout,
+  refreshToken,
+  secureFetch,
+  getSessions,
+  revokeSession,
+  revokeAllOtherSessions,
+} = useCmsAuth()
 ```
 
-| Hodnota / Metoda | Typ | Popis |
-|---|---|---|
-| `user` | `Ref<User \| null>` | Přihlášený uživatel (`useState('cms-user')`) |
-| `isLoading` | `Ref<boolean>` | Probíhá načítání uživatele |
-| `csrfToken` | `Ref<string \| null>` | Aktuální CSRF token |
-| `login(email, password)` | `async` | Přihlásí, uloží user + csrfToken |
-| `logout()` | `async` | Odhlásí a přesměruje na `/cms/login` |
-| `fetchUser()` | `async` | Načte profil z `/api/auth/me` |
-| `secureFetch(url, options)` | `async` | Fetch s CSRF tokenem, při 403 auto-retry |
+| Export | Popis |
+|---|---|
+| `user` | prihlaseny CMS uzivatel nebo `null` |
+| `isLoading` | nacitani auth stavu |
+| `isSuperAdmin` | role `superadmin` |
+| `isAdmin` | role `admin` nebo `superadmin` |
+| `isEditor` | role `editor`, `admin` nebo `superadmin` |
+| `csrfToken` | aktualni CSRF token |
+| `fetchUser()` | nacte `/api/auth/me` |
+| `login(email, password)` | prihlasi uzivatele |
+| `logout()` | odhlasi aktualni session a naviguje na `/cms/login` |
+| `refreshToken()` | obnovi access token pres refresh token |
+| `secureFetch(url, options)` | `$fetch` s credentials a `X-CSRF-Token` |
+| `getSessions()` | nacte aktivni sessions |
+| `revokeSession(sessionId)` | odhlasi jednu session |
+| `revokeAllOtherSessions()` | odhlasi ostatni sessions |
 
-**Sdílený stav:** `useState('cms-user')` – konzistentní přes všechny komponenty.
-
-**CSRF mechanismus:** `secureFetch` čte token z `csrfToken` state nebo ze cookie `csrf_token`, přidá ho do `X-CSRF-Token` headeru. Při 403 odpovědi zavolá `fetchUser()` a zopakuje request (automatická CSRF token obnova).
+`secureFetch()` pri 403 zavola `fetchUser()` a request jednou zopakuje. Prakticky to resi obnovu CSRF tokenu.
 
 ---
 
-## SEO
+## `usePlazaSeo`
 
-### `usePlazaSeo`
+Soubor: `app/composables/usePlazaSeo.ts`
 
-**Soubor:** `app/composables/usePlazaSeo.ts`
+Nastavuje SEO meta tagy, Open Graph, Twitter card, canonical URL a robots.
 
-Nastaví SEO meta tagy pro stránku.
-
-```typescript
+```ts
 usePlazaSeo({
   title: 'H&M',
-  description: 'Módní řetězec...',
+  description: 'Módní obchod v OC Plaza Liberec',
   image: '/api/uploads/uuid.jpg',
   url: 'https://ocplazaliberec.cz/obchody/hm',
-  type: 'website',  // nebo 'article'
+  type: 'website',
   noIndex: false,
 })
 ```
 
-Nastavuje: `title`, `og:title`, `og:description`, `og:image`, `og:url`, `og:type`, `og:site_name`, `twitter:card`, `robots`, canonical URL.
+Pravidla:
 
-- `title === 'OC Plaza Liberec'` → fullTitle = samotný název (bez sufixu)
-- Jinak: `H&M | OC Plaza Liberec`
-- Fallback OG image: `${baseUrl}/images/og.jpg`
+- pokud je title `OC Plaza Liberec`, nepřidává se suffix,
+- jinak se vytvori format `{title} | OC Plaza Liberec`,
+- fallback OG obrazek je `/images/og.jpg`,
+- `noIndex: true` nastavi robots noindex.
 
 ---
 
-## Flash zprávy
+## `useJsonLd`
 
-### `useFlashMessages`
+Soubor: `app/composables/useJsonLd.ts`
 
-**Soubor:** `app/composables/useFlashMessages.ts`
+Vklada schema.org JSON-LD do `<head>` pres `useHead`.
 
-Flash zprávy přežívají navigaci (uloženy v `useState`).
-
-```typescript
-const { messages, addMessage, removeMessage, clearAll } = useFlashMessages()
-
-addMessage('success', 'Obchod byl uložen')
-addMessage('error', 'Nepodařilo se uložit', { timeout: 0 })  // 0 = nezmizí
+```ts
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'ShoppingCenter',
+  name: 'OC Plaza Liberec',
+})
 ```
 
-Typy a výchozí timeouty:
+Pomocne exporty:
+
+| Export | Popis |
+|---|---|
+| `openingHoursToSchemaSpec(hours)` | prevede oteviraci dobu na schema.org format |
+| `buildBreadcrumbList(items)` | vytvori `BreadcrumbList` |
+
+---
+
+## `useFlashMessages`
+
+Soubor: `app/composables/useFlashMessages.ts`
+
+Globalni flash zpravy pres `useState`.
+
+```ts
+const { messages, addMessage, removeMessage, clearAll } = useFlashMessages()
+
+addMessage('success', 'Obchod byl ulozen')
+addMessage('error', 'Nepodarilo se ulozit', { timeout: 0 })
+```
+
+Default timeouty:
 
 | Typ | Timeout |
-|---|---|
+|---|---:|
 | `success` | 4 000 ms |
 | `error` | 8 000 ms |
 | `warning` | 6 000 ms |
 | `info` | 5 000 ms |
 
+`timeout: 0` znamena, ze zprava nezmizi automaticky.
+
 ---
 
-## Formuláře
+## `useFormErrors`
 
-### `useFormErrors`
+Soubor: `app/composables/useFormErrors.ts`
 
-**Soubor:** `app/composables/useFormErrors.ts`
+Zpracovava API chyby a mapuje field errors do formularu.
 
-Zpracovává API chyby a mapuje je na pole formuláře.
-
-```typescript
-const { errors, generalError, handleApiError, setFieldError, clearErrors } = useFormErrors()
-
-try {
-  await apiClient.shops.create(data)
-} catch (err) {
-  const message = handleApiError(err)  // extrahuje field errors z ApiErrorResponse
-}
+```ts
+const {
+  errors,
+  generalError,
+  handleApiError,
+  setFieldError,
+  clearErrors,
+} = useFormErrors()
 ```
 
-- `errors` – pole field chyb, mapováno na formulář (`errors.value['email']`)
-- `generalError` – obecná chybová zpráva pro zobrazení nad formulářem
-- `handleApiError(err)` – zpracuje `FetchError`, extrahuje `fields` z API response
+Pouziti:
+
+- `errors.value[field]` pro chybu konkretniho pole,
+- `generalError` pro obecnou chybu nad formularem,
+- `handleApiError(err)` umi extrahovat `fields` z API error response.
 
 ---
 
-## Filtrování a navigace
+## `useFilterPersistence`
 
-### `useFilterPersistence`
+Soubor: `app/composables/useFilterPersistence.ts`
 
-**Soubor:** `app/composables/useFilterPersistence.ts`
+Udrzuje filtry seznamu mezi URL query parametry a `sessionStorage`.
 
-Persistuje filtry tabulek přes `sessionStorage` a URL query parametry.
-
-```typescript
+```ts
 const { loadFilters, syncFilters, clearFilters } = useFilterPersistence('shops')
 
-// Načte filtry z URL nebo sessionStorage
 const filters = loadFilters({ page: 1, search: '', categoryId: '' })
-
-// Synchronizuje do URL a sessionStorage
 syncFilters(filters)
 ```
 
-- Priorita: URL query parametry > sessionStorage > defaultní hodnoty
-- Klíč v sessionStorage: `plaza-filters-{pageKey}`
-- Po redirectu na detail a zpět zachová filtry
+Priorita:
 
----
+1. URL query,
+2. `sessionStorage`,
+3. defaultni hodnoty.
 
-## Tabulky
+Klic v sessionStorage:
 
-### `useTableSort`
-
-**Soubor:** `app/composables/useTableSort.ts`
-
-Klientské řazení tabulek v CMS s 3-stavovým cyklem (asc → desc → reset).
-
-```typescript
-const { sortedItems, toggleSort, getSortIcon } = useTableSort(items, { field: 'name', direction: 'asc' })
+```text
+plaza-filters-{pageKey}
 ```
 
-- `toggleSort(field)` – cykluje stavy
-- `getSortIcon(field)` – vrátí `'asc'`, `'desc'` nebo `null`
-- Podporuje vnořené pole (speciální case pro `floor.name`)
+---
+
+## `useTableSort`
+
+Soubor: `app/composables/useTableSort.ts`
+
+Klientské razeni tabulek s cyklem `asc -> desc -> reset`.
+
+```ts
+const { sortedItems, sortState, toggleSort, getSortIcon } = useTableSort(items)
+```
+
+Podporuje bezna pole a specialni case pro `floor.name`.
 
 ---
 
-## Interaktivní mapa
+## `useInteractiveMap`
 
-### `useInteractiveMap`
+Soubor: `app/composables/useInteractiveMap.ts`
 
-**Soubor:** `app/composables/useInteractiveMap.ts`
+Nacita data verejne mapy a drzi stav aktivniho patra, hoveru a vybrane jednotky.
 
-Správa interaktivní SVG mapy obchodního centra.
-
-```typescript
+```ts
 const {
-  mapData, floors, currentFloor, currentUnits, state,
-  setCurrentFloor, handleUnitHover, handleUnitClick
-} = useInteractiveMap({ initialFloorId: '...' })
+  mapData,
+  floors,
+  currentFloor,
+  currentUnits,
+  state,
+  setCurrentFloor,
+  handleUnitHover,
+  handleUnitClick,
+} = useInteractiveMap()
 ```
 
-- Načítá data z `GET /api/map/units` (přes `useFetch` s key `map-units`)
-- Data jsou prefetchována na serveru (SSR payload) – mapa se zobrazí ihned bez flash
-- `state.currentFloorId` – aktivní patro
-- `state.hoveredUnit` – jednotka v hover popupu (desktop) / tap popupu (mobile)
-- `unitsMap` – `Map<unitCode, MapUnit>` pro O(1) přístup
-- `handleUnitClick` → naviguje na `/obchody/:slug` a trackuje do dataLayer
+Vlastnosti:
 
-### `useMapZoom`
-
-**Soubor:** `app/composables/useMapZoom.ts`
-
-Zoom/pan kontrola přes `@panzoom/panzoom`.
-
-- Max zoom: 5×, krok: 0.5×
-- Desktop: Ctrl/Cmd + kolečko myši, drag při přiblížení
-- Mobile: 1 prst = scroll stránky, 2 prsty = pinch-zoom
-- Na mobilu (< 768px) výchozí zoom 2×
-- `isZoomed`, `canZoomIn`, `canZoomOut` – computed pro UI stav
+- data bere z `GET /api/map/units`,
+- pouziva `useFetch` se SSR payloadem,
+- `unitsMap` dava rychly pristup podle `unitCode`,
+- klik na obsazenou prodejni jednotku naviguje na detail obchodu,
+- udalosti posila do dataLayer.
 
 ---
 
-## Modaly
+## `useMapZoom`
 
-Projekt používá modularizované modaly pro veřejný web. Každý modal má vlastní composable s globálním stavem.
+Soubor: `app/composables/useMapZoom.ts`
 
-### `useOpeningHoursModal`
+Pan/zoom mapa pres `@panzoom/panzoom`.
 
-**Soubor:** `app/composables/useOpeningHoursModal.ts`
+Chovani:
 
-```typescript
+- max zoom 5x,
+- krok zoomu 0.5x,
+- desktop: Ctrl/Cmd + kolecko,
+- mobile: pinch zoom dvema prsty,
+- pod 768 px je vychozi zoom 2x.
+
+Exporty zahrnuji stav typu `isZoomed`, `canZoomIn`, `canZoomOut` a ovladaci funkce pro UI.
+
+---
+
+## `useMapLogoGeometry`
+
+Soubor: `app/composables/useMapLogoGeometry.ts`
+
+Pocita umisteni log obchodů uvnitr SVG jednotek.
+
+Pouziva se ve dvou rezimech:
+
+| Rezim | Chovani |
+|---|---|
+| `web` | u malych jednotek muze zobrazit inicialy misto loga |
+| `export` | pokud obchod ma logo, export ho vykresli vzdy |
+
+Vypocet potrebuje zivy SVG element v DOM, protoze pouziva SVG geometricke API jako `getTotalLength()`, `getCTM()` a `baseVal`.
+
+---
+
+## `useMapExport`
+
+Soubor: `app/composables/useMapExport.ts`
+
+Exportuje mapu patra do SVG nebo PDF.
+
+```ts
+const { buildExportSvg, downloadSvg, downloadPdf, exportFloor } = useMapExport()
+```
+
+Podporovane formaty:
+
+| Format | Popis |
+|---|---|
+| `svg` | standalone SVG s mapou, logy, hlavickou a seznamem obchodů |
+| `pdf` | rasterizace SVG do canvasu a vlozeni PNG do jsPDF |
+
+Moznosti exportu:
+
+```ts
+{
+  showPlazaLogo: true,
+  showHeader: true,
+  showShopList: true,
+  mapOnly: false,
+}
+```
+
+PDF podporuje formaty `a4` a `a3`, orientace je landscape.
+
+---
+
+## `useOpeningHoursStatus`
+
+Soubor: `app/composables/useOpeningHoursStatus.ts`
+
+Vyhodnocuje, zda je centrum nebo obchod prave otevreny. Pouziva prazsky cas pres `shared/utils/pragueTime.ts`, takze neni zavisly jen na timezone serveru.
+
+```ts
+const {
+  currentDate,
+  currentDay,
+  todaySpecialHours,
+  todayOpeningHours,
+  isOpen,
+  specialNote,
+  getDayLabel,
+  isToday,
+  isSpecialHoursActive,
+  isSpecialHoursCurrentOrFuture,
+} = useOpeningHoursStatus(() => openingHours, () => specialOpeningHours)
+```
+
+Podporuje:
+
+- beznou tydenni oteviraci dobu,
+- specialni oteviraci dobu pro konkretni datum,
+- specialni oteviraci dobu pro rozsah dat,
+- intervaly pres pulnoc.
+
+---
+
+## Modal composables
+
+Soubory:
+
+- `useOpeningHoursModal.ts`
+- `useContactsModal.ts`
+- `useParkingModal.ts`
+- `useServiceModal.ts`
+- `useEventModal.ts`
+
+Pouzivaji singleton stav mimo composable funkci, takze modal je globalni v ramci aplikace.
+
+Typicky pattern:
+
+```ts
 const { isModalOpen, openModal, closeModal, toggleModal } = useOpeningHoursModal()
 ```
 
-Sdílený `ref(false)` mimo composable funkci → globální singleton stav.  
-Při `openModal()` automaticky trackuje `trackModalOpen('opening_hours')`.
+`useServiceModal` a `useEventModal` nesou i data zobrazene sluzby nebo akce.
 
-### `useContactsModal`, `useParkingModal`, `useServiceModal`, `useEventModal`
-
-**Soubory:** `app/composables/useContactsModal.ts`, `useParkingModal.ts`, `useServiceModal.ts`, `useEventModal.ts`
-
-Stejný pattern – globální singleton stav + DataLayer tracking.  
-`useServiceModal` a `useEventModal` nesou i data zobrazené položky.
+Otevreni modalu trackuje dataLayer udalost `modal_open`, pokud se modal trackuje.
 
 ---
 
-## Analytics a tracking
+## `useDataLayer`
 
-### `useDataLayer`
+Soubor: `app/composables/useDataLayer.ts`
 
-**Soubor:** `app/composables/useDataLayer.ts`
+Wrapper nad `window.dataLayer`.
 
-Centrální wrapper pro Google Tag Manager `window.dataLayer`.
+Tracking se:
 
-```typescript
+- neprovadi na serveru,
+- neprovadi na `/cms/*`,
+- inicializuje pres `window.dataLayer = window.dataLayer || []`.
+
+Exportovane event funkce:
+
+| Funkce | Event |
+|---|---|
+| `trackShopClick` | `shop_click` |
+| `trackShopView` | `shop_view` |
+| `trackEventClick` | `event_click` |
+| `trackContactClick` | `contact_click` |
+| `trackSearch` | `search` |
+| `trackFilterApply` | `filter_applied` |
+| `trackMapFloorSelect` | `map_floor_select` |
+| `trackMapUnitClick` | `map_unit_click` |
+| `trackMapSearch` | `map_search` |
+| `trackModalOpen` | `modal_open` |
+| `trackGalleryInteraction` | `gallery_interaction` |
+| `trackLoadMore` | `load_more` |
+| `trackCtaClick` | `cta_click` |
+| `trackNavClick` | `nav_click` |
+| `trackOutboundClick` | `outbound_click` |
+| `trackGridChange` | `grid_change` |
+| `trackSliderChange` | `slider_change` |
+
+---
+
+## `useCookieConsent`
+
+Soubor: `app/composables/useCookieConsent.ts`
+
+Wrapper nad Silktide Cookie Managerem.
+
+```ts
 const {
-  trackShopClick, trackShopView, trackEventClick,
-  trackContactClick, trackSearch, trackFilterApply,
-  trackMapFloorSelect, trackMapUnitClick, trackModalOpen
-} = useDataLayer()
+  hasConsent,
+  hasGivenInitialConsent,
+  openCookieSettings,
+  revokeAllConsent,
+  trackConsentInteraction,
+} = useCookieConsent()
 ```
 
-- Automaticky přeskakuje tracking na CMS stránkách (`/cms/*`)
-- Automaticky přeskakuje na serveru (`import.meta.server`)
-- Inicializace `window.dataLayer = window.dataLayer || []`
+LocalStorage klice:
+
+| Klic | Popis |
+|---|---|
+| `silktideCookieChoice_analytick` | souhlas s analytikou |
+| `silktideCookieChoice_reklamn_a_personaliza_n` | souhlas s reklamou |
+| `silktideCookieBanner_InitialChoice` | zda uzivatel udelal prvni volbu |
+
+`revokeAllConsent()` smaze volby, posle consent update do GTM/gtag a reloadne stranku.
 
 ---
 
-## Cookie consent
+## `useSanitizeHtml`
 
-### `useCookieConsent`
+Soubor: `app/composables/useSanitizeHtml.ts`
 
-**Soubor:** `app/composables/useCookieConsent.ts`
+Sanitizuje HTML z CMS pres DOMPurify.
 
-Wrapper pro Silktide Cookie Manager.
-
-```typescript
-const { hasConsent, hasGivenInitialConsent, openCookieSettings, revokeAllConsent } = useCookieConsent()
-```
-
-- `hasConsent(cookieType)` – čte `localStorage.silktideCookieChoice_{type}`
-- `openCookieSettings()` – otevře modal správy cookies
-- `revokeAllConsent()` – odvolá souhlas, aktualizuje GTM Consent Mode v2, reload stránky
-
----
-
-## HTML sanitizace
-
-### `useSanitizeHtml`
-
-**Soubor:** `app/composables/useSanitizeHtml.ts`
-
-```typescript
+```ts
 const { sanitize } = useSanitizeHtml()
-const safeHtml = sanitize(dirtyHtml)
+const safeHtml = sanitize(rawHtml)
 ```
 
-- Používá DOMPurify
-- Na serveru (SSR) vrátí raw HTML bez sanitizace (DOMPurify vyžaduje DOM)
-- Povolené tagy: `p, br, b, strong, i, em, h1-h6, ul, ol, li, a, img, table, ...`
+Dulezite omezeni:
+
+- na klientovi DOMPurify bezi,
+- na serveru pri SSR composable vraci raw HTML, protoze DOMPurify potrebuje DOM.
 
 ---
 
-## Globální loading
+## `useGlobalLoading`
 
-### `useGlobalLoading`
+Soubor: `app/composables/useGlobalLoading.ts`
 
-**Soubor:** `app/composables/useGlobalLoading.ts`
+Globalni loading stav pro requesty a navigaci.
 
-Sleduje počet aktivních requestů a navigací pro loading indikátor.
-
-```typescript
-const { isLoading, startRequest, finishRequest, startRoute, finishRoute } = useGlobalLoading()
+```ts
+const {
+  isLoading,
+  startRequest,
+  finishRequest,
+  startRoute,
+  finishRoute,
+} = useGlobalLoading()
 ```
 
-- `requestCount` + `routeCount` → `isLoading = computed(() => count > 0)`
-- Fetch wrapper v `plugins/loading-indicator.client.ts` obaluje `globalThis.fetch`
-- Nuxt hooks `page:start` / `page:finish` inkrementují/dekrementují `routeCount`
+`plugins/loading-indicator.client.ts` obaluje `globalThis.fetch` a Nuxt hooky `page:start` / `page:finish`.
 
 ---
 
-## Server utilities
+## Server helpery
 
-### `server/utils/auth.ts` – přehled exportů
+Nejde o Vue composables, ale dokumentace je zde kvuli castemu pouziti ve stejne vrstve aplikace.
+
+### `server/utils/auth.ts`
 
 | Export | Popis |
 |---|---|
-| `hashPassword(password)` | bcrypt hash (rounds=12) |
+| `hashPassword(password)` | bcrypt hash |
 | `verifyPassword(password, hash)` | bcrypt compare |
 | `generateAccessToken(user, sessionId)` | JWT sign |
-| `verifyAccessToken(token)` | JWT verify → payload |
-| `generateRefreshToken()` | crypto.randomBytes(64).hex |
-| `getRefreshTokenExpiry()` | now + 7 dní |
-| `setAuthCookies(event, access, refresh)` | Nastaví cookies |
-| `clearAuthCookies(event)` | Smaže cookies |
-| `getAccessToken(event)` | Cookie → header fallback |
-| `getRefreshTokenFromCookie(event)` | Cookie |
-| `getSessionInfo(event)` | `{ userAgent, ipAddress }` |
-| `requireAuth(event)` | AuthUser nebo 401 |
-| `requireEditor(event)` | editor/admin/superadmin nebo 403 |
-| `requireAdmin(event)` | admin/superadmin nebo 403 |
-| `requireSuperAdmin(event)` | superadmin nebo 403 |
+| `verifyAccessToken(token)` | JWT verify |
+| `generateRefreshToken()` | nahodny token |
+| `hashRefreshToken(token)` | SHA-256 hash refresh tokenu |
+| `getRefreshTokenExpiry()` | aktualni cas + 7 dni |
+| `setAuthCookies(event, access, refresh)` | nastavi auth cookies |
+| `clearAuthCookies(event)` | smaze auth cookies |
+| `getAccessToken(event)` | cookie nebo Authorization header |
+| `getRefreshTokenFromCookie(event)` | refresh token z cookie |
+| `getSessionInfo(event)` | user agent a IP |
+| `requireAuth(event)` | prihlaseny uzivatel |
+| `requireEditor(event)` | editor+ |
+| `requireAdmin(event)` | admin+ |
+| `requireSuperAdmin(event)` | superadmin |
+
+### `server/utils/csrf.ts`
+
+| Export | Popis |
+|---|---|
+| `generateCsrfToken()` | nahodny token |
+| `setCsrfCookie(event, token?)` | nastavi CSRF cookie |
+| `getCsrfTokenFromCookie(event)` | precte CSRF cookie |
+| `validateCsrf(event)` | vrati boolean validace |
+| `requireCsrf(event)` | pri chybe vyhodi 403 |
+
+### `server/utils/rateLimit.ts`
+
+MongoDB rate limiter s konfiguracemi `login`, `passwordReset` a `api`. Aktualne je pouzity jen pro login.
 
 ### `server/utils/slug.ts`
 
-```typescript
+```ts
 generateSlug(text: string): string
 generateUniqueSlug(text, checkExists, currentId?): Promise<string>
 ```
 
-- Převede českou diakritiku na ASCII
-- Nahradí mezery pomlčkami
-- Pokud slug existuje, přidá číslo (např. `hm-2`)
-
-### `server/utils/errors.ts`
-
-```typescript
-defineApiHandler(handler)  // wrapper s jednotným error handlerem
-createValidationError(message, fields?)
-createNotFoundError(resourceName)
-createUnauthorizedError()
-createForbiddenError()
-```
-
-`defineApiHandler` obaluje handler, chytí `ZodError`, `ApiError` i neočekávané chyby a převede je na konzistentní JSON response.
+Slug generator prevadi ceskou diakritiku na ASCII, normalizuje text a pri kolizi prida ciselny suffix.

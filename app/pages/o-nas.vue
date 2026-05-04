@@ -349,7 +349,7 @@
 									<p class="text-plaza-dark font-medium mb-1">
 										{{ t('aboutPage.byCarInfo') }}
 									</p>
-									<a href="#" class="text-plaza hover:underline font-medium">
+									<a href="#parkovani" class="text-plaza hover:underline font-medium">
 										{{ t('aboutPage.parkingPrices') }}
 									</a>
 								</div>

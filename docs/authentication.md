@@ -1,245 +1,268 @@
-# Autentizace a správa session
+# Autentizace a session
+
+Systém používá JWT access token a náhodný refresh token uložené v HTTP-only cookies. Každé přihlášení vytvoří záznam v MongoDB kolekci `sessions`.
 
 ---
 
-## Přehled
+## Hlavní soubory
 
-Systém používá **JWT access token + refresh token** uložené v HTTP-only cookies. Každé přihlášení vytvoří záznam v MongoDB kolekci `sessions`, což umožňuje správu více zařízení a revokaci konkrétní session.
-
----
-
-## 1. Tok přihlášení
-
-```
-Uživatel zadá email + heslo (POST /api/auth/login)
-        ↓
-Rate limiting (5 pokusů / 15 min per IP)
-        ↓
-Zod validace vstupu (loginSchema)
-        ↓
-User.findOne({ email, isActive: true }).select('+password')
-        ↓
-bcrypt.compare(password, user.password)   [SALT_ROUNDS = 12]
-        ↓
-Vytvoření Session záznamu v MongoDB
-  { userId, refreshToken, userAgent, ipAddress, isValid: true, expiresAt: +7d }
-        ↓
-Aktualizace user.lastLoginAt
-        ↓
-Generování tokenů:
-  • Access token  (JWT, 7 dní) – payload: { id, email, name, role, sessionId }
-  • Refresh token (crypto.randomBytes(64).hex, 7 dní)
-        ↓
-Nastavení HTTP-only cookies:
-  • access_token  (maxAge: 7 dní, httpOnly, sameSite: lax)
-  • refresh_token (maxAge: 7 dní, httpOnly, sameSite: lax)
-        ↓
-Nastavení CSRF cookie:
-  • csrf_token    (maxAge: 24h, httpOnly: FALSE – čitelný z JS)
-        ↓
-Response: { user: { _id, email, name, role }, csrfToken }
-```
-
-> **Poznámka:** Dokumentace v `Dokmentace_projektu.md` uvádí access token 15 min. Skutečný kód v `server/utils/auth.ts` (`getJwtConfig`) používá **7 dní** pro oba tokeny.
-
----
-
-## 2. Ověření na každém requestu
-
-Každý chráněný API endpoint volá `requireAuth(event)` nebo `requireEditor(event)` z `server/utils/auth.ts`:
-
-```
-HTTP Request s cookie access_token
-        ↓
-getAccessToken(event)
-  1. Přečte cookie access_token
-  2. Fallback: Authorization: Bearer <token> header
-        ↓
-jwt.verify(token, jwtSecret)
-        ↓
-Dekóduje payload: { id, email, name, role, sessionId }
-        ↓
-Uloží do event.context.user
-        ↓
-Pokračuje na handler
-```
-
-Pokud token chybí nebo je neplatný → **401 UNAUTHORIZED**.
-
----
-
-## 3. Obnovení session (refresh)
-
-```
-Klient: POST /api/auth/refresh (automaticky po 401)
-        ↓
-Čtení refresh_token z cookie
-        ↓
-Session.findOne({ refreshToken, isValid: true, expiresAt: { $gt: now } })
-        ↓
-        ├── Session NENALEZENA:
-        │     Hledá Session podle refreshToken (bez isValid filtru)
-        │     Pokud existuje → možný token theft → invaliduje VŠECHNY sessions userId
-        │     Smaže cookies → 401
-        │
-        └── Session NALEZENA:
-              User.findOne({ _id: session.userId, isActive: true })
-              ↓
-              Token rotation:
-                nový refreshToken = crypto.randomBytes(64).hex
-                session.refreshToken = nový
-                session.expiresAt    = now + 7d
-                session.lastActivityAt = now
-              ↓
-              Vygenerování nového access tokenu
-              ↓
-              Nastavení nových cookies
-              ↓
-              Nastavení nového CSRF cookie
-              ↓
-              Response: { user, csrfToken }
-```
-
----
-
-## 4. Multi-device přihlášení
-
-Každé přihlášení = nová Session v MongoDB. Uživatel může být přihlášen na libovolném počtu zařízení současně.
-
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Zařízení 1 │     │  Zařízení 2 │     │  Zařízení 3 │
-│  (Laptop)   │     │  (Telefon)  │     │  (Tablet)   │
-└──────┬──────┘     └──────┬──────┘     └──────┬──────┘
-       │ refresh_token_A   │ refresh_token_B   │ refresh_token_C
-       └───────────────────┼───────────────────┘
-                           ▼
-                 ┌─────────────────┐
-                 │    MongoDB      │
-                 │  Session A      │  ← userId: admin, isValid: true
-                 │  Session B      │  ← userId: admin, isValid: true
-                 │  Session C      │  ← userId: admin, isValid: true
-                 └─────────────────┘
-```
-
----
-
-## 5. Správa sessions (API)
-
-| Endpoint | Popis |
+| Soubor | Účel |
 |---|---|
-| `GET /api/auth/sessions` | Seznam aktivních sessions přihlášeného uživatele |
-| `DELETE /api/auth/sessions` | Odhlášení ze všech ostatních sessions |
-| `DELETE /api/auth/sessions/:id` | Odhlášení konkrétní session |
+| `server/utils/auth.ts` | JWT, cookies, role helpery, hash hesel |
+| `server/utils/csrf.ts` | CSRF double-submit cookie |
+| `server/utils/rateLimit.ts` | MongoDB rate limiter |
+| `server/models/User.ts` | CMS uživatelé |
+| `server/models/Session.ts` | Session záznamy |
+| `server/models/RateLimit.ts` | Rate limit záznamy |
+| `app/composables/useCmsAuth.ts` | Frontend auth state a `secureFetch` |
+| `app/middleware/cms.ts` | Ochrana CMS rout |
 
-Response `GET /api/auth/sessions`:
-```json
+---
+
+## Tokeny a cookies
+
+| Cookie | httpOnly | sameSite | maxAge | Účel |
+|---|---:|---|---:|---|
+| `access_token` | ano | `lax` | 7 dní | JWT access token |
+| `refresh_token` | ano | `lax` | 7 dní | náhodný refresh token |
+| `csrf_token` | ne | `lax` | 24 hodin | CSRF double-submit token |
+
+`secure` flag:
+
+- pokud `NUXT_COOKIE_SECURE=false`, nastaví se `secure: false`,
+- jinak je `secure` zapnutý v produkci podle `NODE_ENV === 'production'`.
+
+Poznámka: `clearAuthCookies()` maže `access_token` a `refresh_token`; CSRF cookie se samostatně nemaže.
+
+---
+
+## Expirace
+
+V `server/utils/auth.ts` je expirace tokenů aktuálně hardcoded:
+
+```ts
+accessTokenExpiresIn: '7d'
+refreshTokenExpiresIn: '7d'
+refreshTokenExpiresMs: 7 * 24 * 60 * 60 * 1000
+```
+
+`NUXT_JWT_EXPIRES_IN` je v `nuxt.config.ts` načtené do runtime configu, ale `getJwtConfig()` ho aktuálně nepoužívá. Reálná expirace access tokenu je tedy 7 dní.
+
+---
+
+## Přihlášení
+
+Endpoint: `POST /api/auth/login`
+
+Tok:
+
+1. Vypočítá rate limit key `login:<ip>`.
+2. Zkontroluje MongoDB rate limit: 5 pokusů / 15 minut, blokace 30 minut.
+3. Validuje body přes `loginSchema`.
+4. Najde aktivního uživatele podle e-mailu a explicitně načte `password`.
+5. Ověří heslo přes bcrypt.
+6. Po úspěchu resetuje rate limit pro IP.
+7. Vytvoří `Session` s refresh tokenem, user agentem, IP a expirací.
+8. Aktualizuje `lastLoginAt`.
+9. Vygeneruje JWT access token s `sessionId`.
+10. Nastaví `access_token`, `refresh_token`, `csrf_token`.
+11. Vrátí user objekt a CSRF token.
+
+JWT payload:
+
+```ts
 {
-  "sessions": [
-    {
-      "id": "...",
-      "userAgent": "Mozilla/5.0 ...",
-      "ipAddress": "192.168.1.1",
-      "lastActivityAt": "2025-01-15T10:30:00.000Z",
-      "createdAt": "2025-01-10T08:00:00.000Z",
-      "isCurrent": true
-    }
-  ],
-  "currentSessionId": "..."
+  id: string
+  email: string
+  name: string
+  role: 'superadmin' | 'admin' | 'editor'
+  sessionId: string
 }
 ```
 
 ---
 
-## 6. Odhlášení
+## Ověření chráněných endpointů
 
-```
-POST /api/auth/logout
-        ↓
-requireAuth(event)  [musí být přihlášen]
-        ↓
-Session.findOneAndUpdate(
-  { userId, refreshToken, isValid: true },
-  { isValid: false }
-)
-        ↓
-clearAuthCookies(event)  [smaže access_token + refresh_token]
-        ↓
-Response: { success: true }
-```
+Chráněné endpointy používají helpery:
 
----
+- `requireAuth(event)`
+- `requireEditor(event)`
+- `requireAdmin(event)`
+- `requireSuperAdmin(event)`
 
-## 7. Změna hesla
+`getAccessToken(event)` čte:
 
-`POST /api/auth/change-password`
+1. cookie `access_token`,
+2. fallback `Authorization: Bearer <token>`.
 
-- Vyžaduje CSRF token (`X-CSRF-Token` header)
-- Ověří aktuální heslo pomocí bcrypt
-- Hashuje nové heslo (SALT_ROUNDS = 12)
-- Neodhlašuje ostatní sessions (nutné ověřit, zda je toto záměr)
+Pokud token chybí nebo nejde ověřit, request končí 401.
 
 ---
 
-## 8. Cookies
+## CMS middleware
 
-| Cookie | httpOnly | sameSite | maxAge | Popis |
-|---|---|---|---|---|
-| `access_token` | `true` | `lax` | 7 dní | JWT access token |
-| `refresh_token` | `true` | `lax` | 7 dní | Náhodný hex token |
-| `csrf_token` | `false` | `lax` | 24 hod | CSRF ochrana – čitelný z JS |
+`app/middleware/cms.ts` běží pro CMS stránky.
 
-`secure` flag je řízen proměnnou `NUXT_COOKIE_SECURE`:
-- `NUXT_COOKIE_SECURE=false` → cookies bez `secure` (pro HTTP vývoj)
-- jinak: `secure: process.env.NODE_ENV === 'production'`
+Chování:
+
+- `/cms/login` pustí bez kontroly,
+- ostatní CMS stránky volají `GET /api/auth/me`,
+- 401 vede na `/cms/login`,
+- `/cms/spravci/**` vyžaduje `admin` nebo `superadmin`,
+- po úspěchu se user uloží do `useState('cms-user')`.
 
 ---
 
-## 9. Role a oprávnění
+## Refresh
 
-| Role | Oprávnění |
+Endpoint: `POST /api/auth/refresh`
+
+Tok:
+
+1. Přečte `refresh_token` cookie.
+2. Najde validní a neexpirovanou session.
+3. Pokud session nenajde, pokusí se najít session podle refresh tokenu bez `isValid` filtru.
+4. Pokud existuje stará/kompromitovaná session, invaliduje všechny sessions daného uživatele.
+5. Pokud je session validní, vygeneruje nový refresh token.
+6. Aktualizuje session: `refreshToken`, `expiresAt`, `lastActivityAt`, user agent a IP.
+7. Vygeneruje nový access token.
+8. Nastaví nové auth cookies a nový CSRF token.
+
+Tím se implementuje refresh token rotation a základní token theft detection.
+
+---
+
+## Odhlášení
+
+Endpoint: `POST /api/auth/logout`
+
+Vyžaduje auth. Najde aktuální session podle `userId`, `refreshToken` a `isValid=true`, nastaví `isValid=false` a smaže auth cookies.
+
+Odhlášení se týká pouze aktuálního zařízení/session.
+
+---
+
+## Správa sessions
+
+Endpointy:
+
+| Endpoint | Popis |
 |---|---|
-| `superadmin` | Plný přístup včetně `staticAroundMap` v GeneralInfo |
-| `admin` | Správa obchodů, akcí, služeb, novinek, kategorií, pater, správců |
-| `editor` | Správa obchodů, akcí, služeb, novinek, kategorií, pater (bez správců) |
+| `GET /api/auth/sessions` | aktivní sessions aktuálního uživatele |
+| `DELETE /api/auth/sessions` | zneplatní všechny ostatní sessions |
+| `DELETE /api/auth/sessions/:id` | zneplatní konkrétní session |
 
-Server-side helper funkce v `server/utils/auth.ts`:
-
-```typescript
-requireAuth(event)        // Vyžaduje jakékoli přihlášení
-requireEditor(event)      // Vyžaduje roli editor, admin nebo superadmin
-requireAdmin(event)       // Vyžaduje roli admin nebo superadmin
-requireSuperAdmin(event)  // Vyžaduje roli superadmin
-```
-
-CMS middleware `app/middleware/cms.ts`:
-- Volá `GET /api/auth/me` při každé navigaci v CMS
-- Přesměrovává na `/cms/login` při 401
-- Vrací 403 pro `/cms/spravci` pokud role není `admin` nebo `superadmin`
+Tyto endpointy existují a jsou dostupné v composable `useCmsAuth`, ale v aktuálním CMS UI není samostatná obrazovka pro přehled aktivních zařízení.
 
 ---
 
-## 10. Frontend – composable useCmsAuth
+## Změna hesla
 
-`app/composables/useCmsAuth.ts` poskytuje:
+Endpoint: `POST /api/auth/change-password`
 
-```typescript
-const { user, isLoading, csrfToken, login, logout, fetchUser, secureFetch } = useCmsAuth()
-```
+- Auth: ano
+- CSRF: ano
+- Vyžaduje aktuální heslo.
+- Nové heslo musí mít alespoň 8 znaků.
+- `newPassword` a `confirmPassword` se musí shodovat.
+- Nové heslo se ukládá jako bcrypt hash.
 
-- `user` – reaktivní stav přihlášeného uživatele (`useState('cms-user')`)
-- `csrfToken` – CSRF token načtený z cookie po přihlášení
-- `secureFetch` – wrapper kolem `$fetch` přidávající `X-CSRF-Token` header
-  - Při 403 odpovědi automaticky zavolá `fetchUser()` a zopakuje request
-- `login(email, password)` – přihlásí uživatele a uloží token do state
-- `logout()` – odhlásí a přesměruje na `/cms/login`
+Důležité: aktuální implementace po změně hesla neinvaliduje ostatní sessions. Pokud je cílem bezpečnostní reset účtu, je potřeba doplnit invalidaci sessions nebo uživatele deaktivovat a znovu aktivovat po kontrole.
 
 ---
 
-## TTL index na Session modelu
+## Role a oprávnění
 
-```typescript
-sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 })
+| Role | Server helper |
+|---|---|
+| `editor` | projde přes `requireEditor` |
+| `admin` | projde přes `requireEditor` a `requireAdmin` |
+| `superadmin` | projde přes všechny helpery včetně `requireSuperAdmin` |
+
+Pravidla správy uživatelů:
+
+- admin může spravovat editory a adminy,
+- admin nemůže vytvářet/upravovat/mazat superadminy,
+- superadmin může spravovat všechny role,
+- uživatel nemůže smazat vlastní účet.
+
+---
+
+## Hesla
+
+Hesla se hashují přes `bcryptjs`.
+
+```ts
+const SALT_ROUNDS = 12
 ```
 
-MongoDB automaticky smaže expirované session dokumenty. Není potřeba manuální cleanup.
+Model `User` má `password` nastavené jako `select: false`, takže se heslo nevrací v běžných dotazech.
+
+---
+
+## CSRF
+
+Soubor: `server/utils/csrf.ts`
+
+Použitý pattern: double-submit cookie.
+
+Tok:
+
+1. Server nastaví `csrf_token` cookie.
+2. Frontend přečte cookie a přidá `X-CSRF-Token`.
+3. Server porovná cookie a header přes `crypto.timingSafeEqual`.
+
+Explicitní CSRF ochrana je aktuálně na:
+
+- `POST /api/auth/change-password`
+- `POST /api/users`
+- `PUT /api/users/:id`
+- `DELETE /api/users/:id`
+
+Ostatní write endpointy CSRF přímo nevyžadují.
+
+---
+
+## Frontend composable `useCmsAuth`
+
+Soubor: `app/composables/useCmsAuth.ts`
+
+Exportuje:
+
+```ts
+const {
+  user,
+  isLoading,
+  isSuperAdmin,
+  isAdmin,
+  isEditor,
+  csrfToken,
+  fetchUser,
+  login,
+  logout,
+  refreshToken,
+  secureFetch,
+  getSessions,
+  revokeSession,
+  revokeAllOtherSessions,
+} = useCmsAuth()
+```
+
+`secureFetch`:
+
+- přidává `X-CSRF-Token`, pokud token existuje,
+- používá `credentials: 'include'`,
+- při 403 zavolá `fetchUser()` a request jednou zopakuje.
+
+Poznámka: název `refreshToken` ve frontend composable znamená volání `/api/auth/refresh`, nikoli hodnotu refresh tokenu.
+
+---
+
+## TTL cleanup
+
+`Session` má TTL index na `expiresAt`.
+
+`RateLimit` má TTL index na `expiresAt`.
+
+MongoDB TTL monitor běží periodicky, typicky přibližně jednou za 60 sekund. Mazání proto není okamžité na milisekundu přesně.

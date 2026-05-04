@@ -1,232 +1,251 @@
-# Deployment a provozní poznámky
+# Deployment a provozni poznamky
+
+Dokument popisuje produkcni provoz aplikace OC Plaza Liberec podle aktualniho kodu kveten 2026.
 
 ---
 
-## Přehled
+## Prehled
 
-Aplikace je nasazena jako Docker kontejner s multi-stage buildem. Infrastruktura běží na **Hetzner serveru** přes **Coolify** (self-hosted PaaS). Alternativně lze nasadit přes **Railway** (viz `nixpacks.toml`).
+Aplikace je Nuxt 4 projekt s Nitro `node-server` presetem. Produkcni build vytvari `.output/` a spousti se pres Node.js:
+
+```bash
+node .output/server/index.mjs
+```
+
+Repo obsahuje:
+
+- `Dockerfile` pro multi-stage Docker build,
+- `nixpacks.toml` s install fazi pro Nixpacks/Railway/Coolify scenare,
+- `scripts/health-check.mjs` jako verzovany post-deploy health check.
+
+Projektove poznamky pocitaji s nasazenim na Hetzner serveru pres Coolify. Skutecny build pack v Coolify je potreba overit v Coolify projektu, protoze repo podporuje Dockerfile i Nixpacks.
 
 ---
 
-## ENV proměnné
+## Runtime pozadavky
 
-Všechny citlivé hodnoty musí být nastaveny jako ENV proměnné v prostředí nasazení.
-
-### Povinné (server-only)
-
-| Proměnná | Popis |
+| Oblast | Pozadavek |
 |---|---|
-| `NUXT_MONGO_URI` | MongoDB connection string (např. `mongodb+srv://...`) |
-| `NUXT_JWT_SECRET` | Tajný klíč pro JWT podepisování – **musí být silný v produkci!** |
+| Node.js | `>=22.12.0` |
+| Databaze | MongoDB |
+| Port aplikace | default `3000` |
+| Host | default `0.0.0.0` v Docker runneru |
+| Uploady | perzistentni volume pro `.output/public/uploads` |
 
-### Volitelné (server-only)
+---
 
-| Proměnná | Výchozí | Popis |
+## ENV promenne
+
+### Povinne private promenne
+
+| Promenna | Popis |
+|---|---|
+| `NUXT_MONGO_URI` | MongoDB connection string |
+| `NUXT_JWT_SECRET` | silny nahodny JWT secret pro podepisovani tokenu |
+
+### Volitelne private promenne
+
+| Promenna | Default | Poznamka |
 |---|---|---|
-| `NUXT_JWT_EXPIRES_IN` | `7d` | Expirace JWT access tokenu |
-| `NUXT_COOKIE_SECURE` | *(dle NODE_ENV)* | `false` pro HTTP přístup v dev/staging |
+| `NUXT_JWT_EXPIRES_IN` | `7d` | nacita se do runtime configu, ale auth kod ji aktualne nepouziva |
+| `NUXT_COOKIE_SECURE` | podle `NODE_ENV` | `false` pouze pro HTTP testovani mimo produkci |
+| `NODE_ENV` | podle prostredi | produkce ma byt `production` |
+| `HOST` | `0.0.0.0` v Dockeru | host Nitro serveru |
+| `PORT` | `3000` | port Nitro serveru |
 
-### Veřejné (public – baked do klientského bundlu při buildu)
+### Public promenne
 
-| Proměnná | Výchozí | Popis |
+Tyto hodnoty se dostanou i do klientského bundlu.
+
+| Promenna | Default | Popis |
 |---|---|---|
-| `NUXT_PUBLIC_SITE_URL` | `http://localhost:3000` | Kanonická URL webu (pro SEO, OG tagy) |
-| `NUXT_PUBLIC_DEFAULT_LOCALE` | `cs` | Výchozí locale |
+| `NUXT_PUBLIC_SITE_URL` | `http://localhost:3000` | kanonicka URL webu |
+| `NUXT_PUBLIC_DEFAULT_LOCALE` | `cs` | vychozi locale |
 | `NUXT_PUBLIC_GTM_ID` | `GTM-WB3N3SCX` | Google Tag Manager ID |
 
-> **Důležité:** `NUXT_PUBLIC_SITE_URL` a `NUXT_PUBLIC_DEFAULT_LOCALE` jsou ARG/ENV v Dockerfile a musí být nastaveny jako build argumenty, nikoli jen runtime ENV.
+Poznamky:
+
+- Dockerfile ma build argumenty jen pro `NUXT_PUBLIC_SITE_URL` a `NUXT_PUBLIC_DEFAULT_LOCALE`.
+- `NUXT_PUBLIC_GTM_ID` je pouzite v `nuxt.config.ts` a `app/plugins/gtm.ts`, ale v Dockerfile neni jako `ARG`.
+- `.env.example` obsahuje `NUXT_PUBLIC_SITE_NAME` a `NUXT_PUBLIC_SITE_DESCRIPTION`, ale aktualni `nuxt.config.ts` ma tyto hodnoty zapsane natvrdo a ENV pro ne nepouziva.
+- `.env.example` neobsahuje `NUXT_PUBLIC_GTM_ID`, prestoze ho kod pouziva.
 
 ---
 
-## Build a spuštění
-
-### Lokální vývoj
+## Lokální vyvoj
 
 ```bash
 npm install
-npm run dev          # Spustí dev server na http://localhost:3000 (host: 0.0.0.0)
+npm run dev
 ```
 
-### Produkční build (lokálně)
+Dev server bezi pres `nuxt dev --host`, typicky na `http://localhost:3000`.
+
+---
+
+## Produkcni build mimo Docker
 
 ```bash
-npm run build        # Nuxt build → .output/
-npm start            # node .output/server/index.mjs
+npm run build
+npm start
 ```
 
-### Docker
+`npm start` spousti:
 
 ```bash
-# Build image
+node .output/server/index.mjs
+```
+
+---
+
+## Dockerfile
+
+`Dockerfile` ma tri stage:
+
+| Stage | Popis |
+|---|---|
+| `deps` | `node:22-alpine`, instalace dependencies pres `npm ci --include=dev` |
+| `builder` | kopie zdroju, build Nuxt aplikace, `npm prune --production` |
+| `runner` | runtime image s `.output`, `node_modules`, `package.json` |
+
+Runner:
+
+- bezi jako neprivilegovaný uzivatel `nuxtjs`,
+- instaluje `dumb-init`,
+- vytvari `/app/.output/public/uploads`,
+- vystavuje port `3000`,
+- healthcheck pouziva `wget`, ne `curl`.
+
+Healthcheck v Dockerfile:
+
+```text
+wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api/health
+```
+
+Priklad buildu:
+
+```bash
 docker build \
   --build-arg NUXT_PUBLIC_SITE_URL=https://ocplazaliberec.cz \
+  --build-arg NUXT_PUBLIC_DEFAULT_LOCALE=cs \
   -t plaza:latest .
-
-# Spuštění
-docker run -d \
-  -p 3000:3000 \
-  -e NUXT_MONGO_URI="mongodb+srv://..." \
-  -e NUXT_JWT_SECRET="super-secret" \
-  plaza:latest
 ```
 
-### Nixpacks (Railway)
+Pokud se ma menit GTM ID pri Docker buildu, je potreba ho resit pres Coolify/Nuxt runtime config nebo doplnit Dockerfile `ARG NUXT_PUBLIC_GTM_ID`.
+
+---
+
+## Nixpacks
+
+`nixpacks.toml` aktualne definuje jen install fazi:
 
 ```toml
 [phases.install]
 cmds = ["npm install --legacy-peer-deps"]
 ```
 
-Railway automaticky detekuje Nuxt a provede build + spuštění.
+Build a start prikazy by v Nixpacks/Coolify prostredi mely byt overene primo v konfiguraci aplikace.
 
 ---
 
-## Dockerfile – struktura
+## Uploady v produkci
 
-Multi-stage build (`Dockerfile`):
+Upload endpoint uklada soubory v produkci do:
 
-```
-Stage 1: deps
-  - node:22-alpine
-  - Instalace python3, make, g++ (native moduly – bcrypt)
-  - npm ci --include=dev
-
-Stage 2: builder
-  - Kopíruje node_modules z deps
-  - Nastaví ENV pro build (NODE_ENV=production, NUXT_PUBLIC_*)
-  - npm run build → .output/
-  - npm prune --production
-
-Stage 3: runner
-  - node:22-alpine
-  - dumb-init jako PID 1
-  - Neprivilegovaný uživatel nuxtjs (UID 1001)
-  - Kopíruje pouze .output/, node_modules/, package.json
-  - Vytvoří /app/.output/public/uploads/ s právy pro nuxtjs
-  - EXPOSE 3000
-  - HEALTHCHECK: curl http://127.0.0.1:3000/api/health
-```
-
----
-
-## Uploads v produkci
-
-Nahrané soubory jsou ukládány do:
-```
+```text
 /app/.output/public/uploads/
 ```
 
-Tato složka **není součástí Git repozitáře** ani Docker obrazu. Musí být zajištěna perzistence přes Docker volume:
+Tato slozka neni soucasti Git repozitare ani Docker obrazu. V produkci musi byt pripojena jako perzistentni volume. Projektove poznamky pouzivaji cestu:
 
-```bash
-docker run -v /data/plaza/uploads:/app/.output/public/uploads ...
+```text
+/data/plaza/uploads -> /app/.output/public/uploads
 ```
 
-Na produkčním serveru je cesta ke složce konfigurována v Coolify.
+Bez perzistentniho volume by se nahrane obrazky/loga ztratily pri redeploymentu kontejneru.
 
 ---
 
-## Zdravotní kontrola
+## Health check
 
-```
+Endpoint:
+
+```text
 GET /api/health
 ```
 
-Používá:
-- Docker `HEALTHCHECK` (v Dockerfile) – každých 30s, timeout 10s, 3 pokusy
-- Post-deploy skript `scripts/health-check.mjs`
+Vraci zakladni stav aplikace.
 
-### Post-deploy health check
+Post-deploy script:
 
 ```bash
 npm run health-check -- --url https://ocplazaliberec.cz
 ```
 
-Skript zkontroluje:
-- `/api/health` – response `{ status: 'ok' }`
-- `/api/shops`, `/api/categories`, `/api/floors`, `/api/events`, `/api/services` – existence pole `data`
-- Stránky `/`, `/obchody`, `/mapa`, `/o-nas` – HTTP 200 + přítomnost `<html>`
+`scripts/health-check.mjs` kontroluje:
+
+- `/api/health`,
+- hlavni API kolekce,
+- verejne stranky `/`, `/obchody`, `/mapa`, `/o-nas`.
 
 ---
 
-## Záloha a obnova databáze
+## NPM skripty
 
-### Záloha lokální DB
+| Prikaz | Popis | Poznamka |
+|---|---|---|
+| `npm run dev` | dev server | meni procesovy stav, nespoustet bez potreby |
+| `npm run build` | produkcni Nuxt build | zapisuje `.output/` |
+| `npm start` | spusteni produkcniho buildu | potrebuje existujici `.output/` |
+| `npm test` | Vitest testy | |
+| `npm run test:e2e` | Vitest s e2e konfiguraci | |
+| `npm run typecheck` | Nuxt typecheck | |
+| `npm run lint` | ESLint kontrola | |
+| `npm run lint:fix` | ESLint autofix | meni soubory |
+| `npm run format` | Prettier write | meni soubory |
+| `npm run validate` | lint + typecheck + test | |
+| `npm run predeploy` | validate + build | zapisuje build |
+| `npm run health-check` | post-deploy kontrola | verzovany script |
+| `npm run backup:db:local` | JSON zaloha lokalni DB | odkazuje na ignorovany TS script |
+| `npm run backup:db:prod` | JSON zaloha produkcni DB | odkazuje na ignorovany TS script |
+| `npm run restore:db` | obnova DB ze zalohy | destruktivni pro cilovou DB |
+| `npm run sync:prod-to-local` | sync produkce do local | odkazuje na ignorovany TS script |
+| `npm run cleanup:uploads:dry` | dry-run cleanup uploadu | odkazuje na ignorovany TS script |
+| `npm run cleanup:uploads` | presun nepouzitych uploadu | meni soubory |
+
+Dulezite: `scripts/*.ts` je v `.gitignore`. V aktualnim pracovnim adresari tyto provozni TS scripty existuji, ale nejsou verzovane Gitem. Pri cistem klonu repozitare bude verzovany pouze `scripts/health-check.mjs`, pokud se TS scripty nepredaji jinym zpusobem.
+
+---
+
+## Zaloha a obnova DB
+
+Repo ma npm prikazy pro zalohy a obnovu, ale realne zalezi na tom, zda jsou k dispozici ignorovane TS scripty:
 
 ```bash
 npm run backup:db:local
-# Výstup: mongo-backup/local/YYYY-MM-DD_HH-MM-SS/
-```
-
-### Záloha produkční DB
-
-```bash
 npm run backup:db:prod
-# Vyžaduje NUXT_MONGO_URI nastavenou v prostředí
-# Výstup: mongo-backup/production/YYYY-MM-DD_HH-MM-SS/
+npm run restore:db
 ```
 
-Zálohy jsou JSON soubory (`kolekce.json`) + metadata (`_meta.json`).
+Obnova databaze je destruktivni operace. Pred obnovou produkce musi byt udelana aktualni zaloha a musi byt jasne, na jakou `NUXT_MONGO_URI` prikaz miri.
 
-### Obnova ze zálohy
+Pro klienta a provoz je vhodne evidovat v `docs/klient-pristupy.md`:
 
-```bash
-NUXT_MONGO_URI="mongodb+srv://..." npx tsx scripts/restore-db.ts mongo-backup/local/2026-04-19_16-50-38
-```
-
-> **Varování:** Obnova **SMAŽE** obsah existujících kolekcí a naplní je daty ze zálohy. Nelze vrátit zpět.
-
-Skript automaticky převede hex ObjectId stringy zpět na Mongoose `Types.ObjectId` objekty.
+- kde se zalohy ukladaji,
+- jak casto se delaji,
+- kdo ma pristup k MongoDB,
+- jak obnovit data pri havarii,
+- zda se zalohuji i uploady.
 
 ---
 
-## Cleanup uploadů
+## MongoDB
 
-Skript `scripts/cleanup-uploads-prod.ts` prohledá produkční DB (včetně HTML obsahu) a identifikuje soubory, které nejsou referencovány v žádném záznamu.
+`server/utils/db.ts` pouziva Mongoose a cachuje connection globalne, aby se v dev/HMR a SSR zbytecne nevytvarelo vice spojeni.
 
-```bash
-# Suchý běh – pouze výpis, nic nepřesune
-npm run cleanup:uploads:dry
+Konfigurace pripojeni:
 
-# Skutečný cleanup – přesune nepoužité soubory do archivu
-npm run cleanup:uploads
-```
-
-Skript se připojí k produkční DB a porovná nahrané soubory se záznamy v databázi.
-
----
-
-## Skripty npm
-
-| Příkaz | Popis |
-|---|---|
-| `npm run dev` | Dev server s HMR |
-| `npm run build` | Produkční build |
-| `npm start` | Spustí build (`.output/server/index.mjs`) |
-| `npm test` | Vitest testy |
-| `npm run test:e2e` | E2E testy |
-| `npm run typecheck` | TypeScript kontrola |
-| `npm run lint` | ESLint |
-| `npm run lint:fix` | ESLint s auto-fix |
-| `npm run format` | Prettier |
-| `npm run validate` | lint + typecheck + test |
-| `npm run predeploy` | validate + build |
-| `npm run health-check` | Post-deploy kontrola |
-| `npm run backup:db:local` | Záloha lokální DB |
-| `npm run backup:db:prod` | Záloha produkční DB |
-| `npm run restore:db` | Obnova DB ze zálohy |
-| `npm run cleanup:uploads:dry` | Dry-run cleanup uploadů |
-| `npm run cleanup:uploads` | Cleanup uploadů |
-
----
-
-## MongoDB připojení
-
-**Soubor:** `server/utils/db.ts`
-
-Připojení je cacherováno globálně (pro SSR i HMR v dev):
-
-```typescript
+```ts
 mongoose.connect(mongoUri, {
   bufferCommands: false,
   maxPoolSize: 10,
@@ -235,33 +254,73 @@ mongoose.connect(mongoUri, {
 })
 ```
 
-Všechny modely jsou importovány v `db.ts` a registrovány při prvním připojení. Tím se zabrání problémům s tree-shakingem v produkčním buildu.
+Modely jsou importovane v `db.ts`, aby byly registrovane pri prvnim pripojeni.
+
+TTL indexy:
+
+- `sessions.expiresAt`
+- `ratelimits.expiresAt`
 
 ---
 
-## Sitemap
+## Sitemap a robots
 
-Sitemap je generována automaticky přes `@nuxtjs/sitemap`:
+Sitemap je generovana pres `@nuxtjs/sitemap`.
 
-- Statické URL definovány v `nuxt.config.ts`
-- Dynamické URL obchodů z `GET /api/__sitemap__/urls`
-- Cache: 24 hodin (`cacheMaxAgeSeconds: 86400`)
-- CMS stránky a `/cookies` jsou vyloučeny
+Konfigurace:
 
-```
+- staticke URL jsou v `nuxt.config.ts`,
+- dynamicke URL obchodů bere `/api/__sitemap__/urls`,
+- cache sitemap je 24 hodin,
+- vylouceno je `/cms`, `/cms/**`, `/api/**`, `/cookies`.
+
+Endpoint:
+
+```text
 GET /sitemap.xml
 ```
 
+Robots route je v `server/routes/robots.txt.ts`.
+
 ---
 
-## Provozní poznámky
+## CMS a SEO soukromi
 
-1. **Uploads perzistence** – při každém redeploymentu z Dockeru se nesmí přijít o `/data/plaza/uploads`. Musí být namountovaný Docker volume.
+CMS routes maji `X-Robots-Tag`:
 
-2. **MongoDB Atlas TTL index** – Session model má TTL index na `expiresAt`. MongoDB automaticky maže expirované sessions. Tato operace probíhá přibližně každých 60 sekund.
+```text
+noindex, nofollow, noarchive, nosnippet, noimageindex
+```
 
-3. **Rate limiter** – Rate limit záznamy jsou uloženy v MongoDB (kolekce `ratelimits`), přežívají restart aplikace. TTL index zajišťuje automatické mazání prošlých záznamů.
+CMS je chranene middlewarem `app/middleware/cms.ts`, ktere nacita `/api/auth/me` a pri chybe presmeruje na `/cms/login`.
 
-4. **Node.js verze** – Projekt vyžaduje Node.js >=22.12.0 (`engines` v `package.json`).
+---
 
-5. **Timezone** – Server by měl běžet v UTC. Otevírací hodiny jsou ukládány bez timezone informace (HH:mm stringy). Logika `isCurrentlyOpen` v `/api/map/units` používá `new Date()` na serveru.
+## Predprodukcni checklist
+
+- Nastavit produkcni `NUXT_MONGO_URI`.
+- Nastavit silny `NUXT_JWT_SECRET`.
+- Nastavit `NUXT_PUBLIC_SITE_URL=https://ocplazaliberec.cz`.
+- Overit GTM ID a pripadne `NUXT_PUBLIC_GTM_ID`.
+- Overit, ze cookie secure flag je v produkci aktivni.
+- Overit perzistentni volume pro uploady.
+- Overit zalohy databaze a uploadu mimo kontejner.
+- Overit DNS a SSL certifikat.
+- Provest health check po nasazeni.
+- Projit CMS login a zakladni editaci obsahu.
+- Otevrit `/sitemap.xml` a `/robots.txt`.
+- Zkontrolovat, ze `/cms` neni indexovatelne.
+
+---
+
+## Provozni rizika
+
+1. **Uploady zavisi na volume.** Bez volume se pri redeployi ztrati obrazky.
+
+2. **TS provozni scripty nejsou verzovane.** Pokud maji byt soucasti predavky, musi byt ulozene mimo Git nebo upraven `.gitignore`/repo politika.
+
+3. **GTM ID neni Docker ARG.** Pokud se ma menit pri buildu, je potreba upravit Dockerfile nebo Coolify konfiguraci.
+
+4. **`NUXT_JWT_EXPIRES_IN` nema prakticky efekt.** Auth kod pouziva 7 dni.
+
+5. **Zalohy musi zahrnovat DB i uploady.** DB sama nestaci, protoze obrazky jsou na filesystemu.

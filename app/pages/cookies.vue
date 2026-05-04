@@ -85,7 +85,7 @@
 					<NuxtLink to="/o-nas" class="text-plaza hover:underline">O nás</NuxtLink>.
 				</p>
 
-				<p class="text-sm text-plaza-gray mt-8">Poslední aktualizace: 1. 1. 2025</p>
+				<p class="text-sm text-plaza-gray mt-8">Poslední aktualizace: 4. 5. 2026</p>
 			</div>
 		</div>
 	</div>

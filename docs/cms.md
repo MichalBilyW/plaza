@@ -1,314 +1,494 @@
-# CMS – Content Management System
+# CMS - Content Management System
 
-CMS je interní nástroj pro správu obsahu OC Plaza Liberec. Je přístupný na `/cms/*` a chráněn JWT autentizací.
+CMS je interní administrace pro správu obsahu OC Plaza Liberec. Běží pod `/cms/*`, používá layout `app/layouts/cms.vue` a chrání se route middlewarem `app/middleware/cms.ts`.
 
 ---
 
-## Přístup do CMS
+## Přístup
 
-```
+```text
 https://ocplazaliberec.cz/cms/login
 ```
 
-Přihlašuje se emailem a heslem. Po přihlášení jsou nastaveny HTTP-only cookies (`access_token`, `refresh_token`, `csrf_token`).
+Přihlášení probíhá e-mailem a heslem. Po přihlášení server nastaví HTTP-only cookies:
+
+- `access_token`
+- `refresh_token`
+
+A zároveň non-httpOnly CSRF cookie:
+
+- `csrf_token`
+
+CSRF token používá composable `useCmsAuth().secureFetch()` u chráněných write operací, které CSRF na serveru vyžadují.
 
 ---
 
-## Middleware a ochrana
+## Middleware
 
 Soubor: `app/middleware/cms.ts`
 
-Middleware se spouští na každé navigaci v rámci `/cms/*` (kromě `/cms/login`):
+Chování:
 
-1. Zavolá `GET /api/auth/me` s cookies z requestu (SSR i CSR)
-2. Uloží uživatele do `useState('cms-user')`
-3. Při chybě 401 → přesměruje na `/cms/login`
-4. Pro cesty `/cms/spravci/**` zkontroluje roli – pokud není `admin` ani `superadmin`, vyhodí 403
+1. `/cms/login` je přístupný bez přihlášení.
+2. Ostatní `/cms/*` stránky volají `GET /api/auth/me`.
+3. Při úspěchu se uživatel uloží do `useState('cms-user')`.
+4. Při 401 se uživatel přesměruje na `/cms/login`.
+5. `/cms/spravci/**` vyžaduje roli `admin` nebo `superadmin`; jinak middleware vrátí 403.
+
+CMS stránky jsou zároveň vyloučené z indexace přes route rules a server middleware `server/middleware/noindex-cms.ts`.
 
 ---
 
-## Layout CMS
+## Layout a menu
 
 Soubor: `app/layouts/cms.vue`
 
-- Fixní postranní sidebar (sidebar se skrývá na mobilu, otevírá přes hamburger)
-- Responzivní: sidebar překrývá obsah na mobilu, je vedle obsahu na desktopu
-- Flash zprávy (`CmsFlashMessages`) zobrazené nad obsahem
-- Navigace obsahuje:
-  - Dashboard
-  - Obchody
-  - Akce
-  - Novinky
-  - Služby
-  - Kategorie
-  - Patra
-  - Mapa
-  - Kontakty / O nás
-  - Parkování
-  - Hlavní stránka
-  - Správci (**pouze admin/superadmin**)
-  - Můj účet
-  - Odhlásit se
+CMS používá responzivní sidebar. Na desktopu je sidebar pevně vlevo, na mobilu se otevírá přes hamburger.
+
+Menu obsahuje:
+
+- Dashboard
+- Hlavní stránka
+- Kategorie
+- Obchody
+- Patra
+- Mapa
+- Akce
+- Novinky
+- Služby
+- O nás
+- Parkování
+- Kontakty
+- Správci (jen admin/superadmin)
+- Můj účet
+- Odhlášení
+
+Flash zprávy se zobrazují přes `CmsFlashMessages` a composable `useFlashMessages`.
 
 ---
 
-## CMS sekce
+## Role
 
-### Dashboard – `/cms`
+| Role | Popis |
+|---|---|
+| `editor` | Správa obsahu bez správy uživatelů |
+| `admin` | Správa obsahu a správců kromě superadminů |
+| `superadmin` | Plný přístup včetně technických SVG mapových podkladů |
 
-- Zobrazuje statistiky: počet obchodů, akcí, novinek, služeb
-- Data načítá přímo z API
+Serverové helpery:
 
----
-
-### Obchody – `/cms/obchody`
-
-| Stránka | URL | Popis |
-|---|---|---|
-| Seznam | `/cms/obchody` | Tabulka (desktop) / karty (mobile), filtrování, stránkování |
-| Nový | `/cms/obchody/novy` | Formulář pro vytvoření obchodu |
-| Editace | `/cms/obchody/:id` | Formulář pro úpravu existujícího obchodu |
-
-**Formulář obchodu obsahuje:**
-- Základní info: název, slug (auto-generován z názvu), krátký popis, dlouhý popis (WYSIWYG)
-- Kontakty: telefon, email, web, sociální sítě
-- Umístění: výběr pater (`floorIds`), výběr kategorií (`categoryIds`), kódy jednotek (`unitCodes`)
-- Média: logo, galerie obrázků (upload přes `/api/upload`)
-- Otevírací doby: standardní + speciální výjimky
-- SEO: titulek (max 60 znaků), popis (max 160 znaků)
-- Publikace: přepínač `isActive`, datum zveřejnění `publishDate`
-
-**Oprávnění:**
-- Zobrazení a úpravy: `editor`, `admin`, `superadmin`
-- Smazání: pouze `admin`, `superadmin`
+- `requireAuth`
+- `requireEditor`
+- `requireAdmin`
+- `requireSuperAdmin`
 
 ---
 
-### Akce – `/cms/akce`
+## Přehled oprávnění
 
-| Stránka | URL | Popis |
-|---|---|---|
-| Seznam | `/cms/akce` | Drag & drop řazení, filtrování |
-| Nová | `/cms/akce/nova` | Formulář |
-| Editace | `/cms/akce/:id` | Formulář |
-
-**Formulář akce obsahuje:**
-- Interní název (pro CMS, nezobrazuje se na webu)
-- Čtvercový obrázek (upload)
-- Vazba na obchod (výběr z existujících)
-- Obsah (WYSIWYG – volitelný)
-- `isActive`, `sortOrder`
-
-**Reorder:** Drag & drop v seznamu → `PUT /api/events/reorder` s polem ID v novém pořadí.
-
-**Oprávnění:** `editor+`
-
----
-
-### Novinky – `/cms/novinky`
-
-Stejná struktura jako akce. Novinky nemají vazbu na obchod.
-
-**Formulář:**
-- Interní název
-- Čtvercový obrázek
-- Obsah (WYSIWYG)
-- `isActive`, `sortOrder`
-
-**Reorder:** `PUT /api/news/reorder`
-
-**Oprávnění:** `editor+`
-
----
-
-### Služby – `/cms/sluzby`
-
-| Stránka | URL | Popis |
-|---|---|---|
-| Seznam | `/cms/sluzby` | Drag & drop řazení |
-| Nová | `/cms/sluzby/nova` | Formulář |
-| Editace | `/cms/sluzby/:id` | Formulář |
-
-**Formulář:**
-- Ikona (upload – SVG nebo PNG)
-- Popisek (max 120 znaků – zobrazuje se na webu)
-- Popis (WYSIWYG – detailní obsah modalu)
-- `isActive`, `sortOrder`
-
-**Reorder:** `PUT /api/services/reorder`
-
-**Oprávnění:** `editor+`
-
----
-
-### Kategorie – `/cms/kategorie`
-
-Správa kategorií obchodů.
-
-**Formulář:**
-- Název (max 100 znaků)
-- Slug (auto-generován nebo ruční)
-- `isActive`, `sortOrder`
-
-**Reorder:** `PUT /api/categories/reorder`
-
-**Oprávnění:** `editor+`
-
----
-
-### Patra – `/cms/patra`
-
-Správa pater obchodního centra.
-
-**Formulář:**
-- Název (max 50 znaků)
-- Číslo patra (`level`)
-- SVG mapa patra (`svgMap`) – cesta k souboru
-- `isActive`, `sortOrder`
-
-**Reorder:** `PUT /api/floors/reorder`
-
-**Oprávnění:** `editor+`
-
----
-
-### Kontakty a otevírací doby – `/cms/kontakty`
-
-Editace singleton modelu `GeneralInfo` – sekce kontaktů:
-
-- Otevírací doby centra (standardní + speciální výjimky)
-- Kontaktní osoby (jméno, titul, telefon, email)
-- Sociální sítě (Facebook, Instagram)
-
-**Oprávnění:** `editor+`
-
----
-
-### O nás – `/cms/o-nas`
-
-Editace `GeneralInfo` – sekce obsahu stránky O nás:
-
-- Nadpis
-- Krátký text (max 500 znaků)
-- Hlavní text (WYSIWYG)
-- Galerie obrázků
-
-**Oprávnění:** `editor+`
-
----
-
-### Parkování – `/cms/parkovani`
-
-Editace `GeneralInfo` – sekce parkování:
-
-- Text o parkování (max 1000 znaků)
-- Obrázek parkoviště
-- Doplňující informace (WYSIWYG, max 10000 znaků)
-
-**Oprávnění:** `editor+`
-
----
-
-### Mapa – `/cms/mapa`
-
-Správa mapování obchodů na SVG mapu. Obsahuje:
-- Editace `staticAroundMap` (cesta k SVG okolí centra) – **pouze `superadmin`**
-- Ostatní mapové operace – `editor+`
-
----
-
-### Hlavní stránka – `/cms/hlavni-stranka`
-
-Editace singleton modelu `Homepage`:
-- Hero obrázek (upload)
-- Přepínač `showHeroBorder`
-
-**Oprávnění:** `editor+`
-
----
-
-### Správci – `/cms/spravci`
-
-**Přístup: pouze `admin` a `superadmin`**
-
-| Stránka | URL | Popis |
-|---|---|---|
-| Seznam | `/cms/spravci` | Tabulka (desktop) / karty (mobile) |
-| Nový | `/cms/spravci/novy` | Formulář |
-| Editace | `/cms/spravci/:id` | Formulář |
-
-**Formulář:**
-- Email (unikátní)
-- Jméno (2–100 znaků)
-- Heslo (min. 8 znaků – povinné při vytvoření, volitelné při editaci)
-- Role (`admin`, `editor`) – `superadmin` roli nelze přiřadit přes UI
-- `isActive`
-
-**Ochrana:**
-- Nelze smazat vlastní účet
-- Při smazání se invalidují všechny sessions uživatele
-- Editor a níže nemá přístup k tomuto menu (403 nebo schování v navigaci)
-
----
-
-### Můj účet – `/cms/ucet`
-
-Dostupné pro všechny přihlášené uživatele:
-- Zobrazení vlastních informací (jméno, email, role)
-- Formulář pro změnu hesla (`POST /api/auth/change-password`)
-- Role je zobrazena barevným štítkem (superadmin = zlatý, admin = fialový, editor = modrý)
-
----
-
-## Práva v CMS – přehledová tabulka
-
-| Sekce | superadmin | admin | editor |
+| Sekce / akce | superadmin | admin | editor |
 |---|---|---|---|
-| Dashboard | ✓ | ✓ | ✓ |
-| Obchody (zobrazení, vytvoření, editace) | ✓ | ✓ | ✓ |
-| Obchody (smazání) | ✓ | ✓ | ✗ |
-| Akce | ✓ | ✓ | ✓ |
-| Novinky | ✓ | ✓ | ✓ |
-| Služby | ✓ | ✓ | ✓ |
-| Kategorie | ✓ | ✓ | ✓ |
-| Patra | ✓ | ✓ | ✓ |
-| Kontakty / O nás / Parkování | ✓ | ✓ | ✓ |
-| Mapa (obecné) | ✓ | ✓ | ✓ |
-| Mapa (staticAroundMap) | ✓ | ✗ | ✗ |
-| Hlavní stránka | ✓ | ✓ | ✓ |
-| Správci | ✓ | ✓ | ✗ |
-| Můj účet | ✓ | ✓ | ✓ |
+| Dashboard | ano | ano | ano |
+| Obchody - vytvoření/editace | ano | ano | ano |
+| Obchody - smazání | ano | ano | ne |
+| Kategorie - vytvoření/editace/řazení | ano | ano | ano |
+| Kategorie - smazání | ano | ano | ne |
+| Patra - vytvoření/editace/řazení | ano | ano | ano |
+| Patra - smazání | ano | ano | ne |
+| SVG mapa patra (`svgMap`) | ano | ne | ne |
+| Mapa - přiřazení obchodu k jednotce | ano | ano | ano |
+| Mapa - soukromě obsazené jednotky | ano | ano | ano |
+| Statická mapa okolí (`staticAroundMap`) | ano | ne | ne |
+| Akce - vytvoření/editace/řazení | ano | ano | ano |
+| Akce - smazání | ano | ano | ne |
+| Novinky - vytvoření/editace/řazení | ano | ano | ano |
+| Novinky - smazání | ano | ano | ne |
+| Služby - vytvoření/editace/řazení | ano | ano | ano |
+| Služby - smazání | ano | ano | ne |
+| Hlavní stránka | ano | ano | ano |
+| O nás / Parkování / Kontakty | ano | ano | ano |
+| Správci | ano | ano | ne |
+| Můj účet | ano | ano | ano |
+
+Poznámka: server u některých write endpointů kontroluje role přes API. UI může některé akce skrýt, ale rozhodující je serverová kontrola.
 
 ---
 
-## Upload souborů v CMS
+## Dashboard - `/cms`
 
-Všechny obrázky v CMS se nahrávají přes `POST /api/upload`:
-- Povolené typy: JPEG, PNG, WebP, GIF, SVG
-- Maximální velikost: 3 MB
-- Soubory jsou ukládány s UUID názvem (immutable cache)
-- Výsledná URL: `/api/uploads/<uuid>.<ext>`
+Soubor: `app/pages/cms/index.vue`
+
+Dashboard načítá základní statistiky z veřejných API endpointů:
+
+- počet obchodů z `/api/shops`,
+- počet akcí z `/api/events`,
+- počet služeb z `/api/services`.
+
+Dále zobrazuje:
+
+- poslední novinky,
+- poslední akce,
+- rychlé odkazy pro vytvoření obchodu, akce a služby.
+
+Neexistuje samostatný `/api/stats` endpoint.
 
 ---
 
-## Flash zprávy
+## Obchody - `/cms/obchody`
 
-CMS používá composable `useFlashMessages` pro zobrazení zpětné vazby uživateli. Zprávy přežívají navigaci mezi stránkami (uloženy v `useState`).
+Soubory:
 
-Typy zpráv a výchozí timeouty:
-- `success` – 4 000 ms
-- `error` – 8 000 ms
-- `warning` – 6 000 ms
-- `info` – 5 000 ms
+- `app/pages/cms/obchody/index.vue`
+- `app/pages/cms/obchody/novy.vue`
+- `app/pages/cms/obchody/[id].vue`
+
+Formulář obchodu obsahuje:
+
+- název,
+- slug (ručně nebo automaticky z názvu),
+- krátký popis,
+- dlouhý WYSIWYG popis,
+- logo,
+- galerii,
+- telefon,
+- e-mail,
+- web,
+- Facebook a Instagram,
+- výběr kategorií,
+- výběr jednoho nebo více pater (`floorIds`),
+- výběr jedné nebo více jednotek mapy (`unitCodes`),
+- běžnou otevírací dobu,
+- speciální otevírací dobu,
+- SEO titulek a popis,
+- `isActive`,
+- `publishDate`.
+
+Legacy pole `floorId` a `unitCode` se při ukládání stále vyplňují z první položky `floorIds`/`unitCodes` kvůli zpětné kompatibilitě.
+
+`publishDate` není plnohodnotné embargo. Aktivní obchod s budoucím `publishDate` se na veřejných kartách a v mapě zobrazuje jako připravovaný/"Otevíráme", ale detail lze technicky stále načíst, pokud je známá URL a obchod je aktivní.
+
+Mazání obchodů vyžaduje `admin+`.
+
+---
+
+## Kategorie - `/cms/kategorie`
+
+Soubory:
+
+- `app/pages/cms/kategorie/index.vue`
+- `app/pages/cms/kategorie/nova.vue`
+- `app/pages/cms/kategorie/[id].vue`
+
+Pole:
+
+- název,
+- slug,
+- aktivní stav,
+- pořadí.
+
+Kategorie lze řadit drag & drop přes `PUT /api/categories/reorder`.
+
+Veřejný filtr používá aktivní kategorie, typicky s query `withShopsOnly=true`, aby se zobrazily jen kategorie s alespoň jedním aktivním obchodem.
+
+Smazání kategorie vyžaduje `admin+` a API zabrání smazání kategorie, která je přiřazená k obchodům.
+
+---
+
+## Patra - `/cms/patra`
+
+Soubory:
+
+- `app/pages/cms/patra/index.vue`
+- `app/pages/cms/patra/novy.vue`
+- `app/pages/cms/patra/[id].vue`
+
+Pole:
+
+- název,
+- číselná úroveň (`level`),
+- aktivní stav,
+- pořadí,
+- SVG mapa patra (`svgMap`) - pouze superadmin,
+- soukromě obsazené jednotky (`privateOccupiedUnitCodes`) - používá mapa.
+
+Patra lze řadit drag & drop přes `PUT /api/floors/reorder`.
+
+Na stránce seznamu pater je také sekce pro statickou mapu okolí centra (`staticAroundMap`). Tu může nahrát nebo odebrat pouze superadmin.
+
+Poznámka: API pro smazání patra aktuálně kontroluje vazby obchodů přes legacy `floorId`. U obchodů používajících jen `floorIds` je potřeba při mazání patra postupovat opatrně.
+
+---
+
+## Mapa - `/cms/mapa`
+
+Soubor: `app/pages/cms/mapa/index.vue`
+
+CMS mapa načítá data z `GET /api/map/units`.
+
+Umí:
+
+- zobrazit statistiky jednotek,
+- přepínat patra,
+- zobrazit interaktivní SVG mapu,
+- zobrazit tabulku jednotek,
+- přiřadit obchod k jednotce,
+- odebrat obchod z jednotky,
+- označit jednotku jako soukromě obsazenou,
+- vrátit soukromě obsazenou jednotku na prázdnou,
+- exportovat mapu patra jako SVG.
+
+Barvy/stavy v CMS:
+
+- obsazený obchod,
+- připravovaný obchod podle budoucího `publishDate`,
+- soukromě obsazená jednotka,
+- prázdná jednotka.
+
+Při přiřazení jednotky se upravuje obchod:
+
+- `unitCodes`
+- `floorIds`
+- legacy `unitCode`
+- legacy `floorId`
+
+U soukromé obsazenosti se upravuje patro:
+
+- `privateOccupiedUnitCodes`
+
+---
+
+## Akce - `/cms/akce`
+
+Soubory:
+
+- `app/pages/cms/akce/index.vue`
+- `app/pages/cms/akce/nova.vue`
+- `app/pages/cms/akce/[id].vue`
+
+Pole:
+
+- interní název,
+- čtvercový obrázek,
+- obchod (`shopId`),
+- WYSIWYG obsah,
+- aktivní stav,
+- pořadí,
+- datum `displayUntil`.
+
+Veřejný web používá `isActive=true` a `notExpired=true`, takže akce s prošlým `displayUntil` se na webu nezobrazí.
+
+Řazení probíhá přes `PUT /api/events/reorder`.
+
+Mazání akcí vyžaduje `admin+`.
+
+Endpointy `/api/events/:id/publish` a `/api/events/:id/unpublish` v kódu existují jako legacy endpointy, ale aktuální model a UI pracují s `isActive`. Nemají se používat jako primární publikační mechanismus.
+
+---
+
+## Novinky - `/cms/novinky`
+
+Soubory:
+
+- `app/pages/cms/novinky/index.vue`
+- `app/pages/cms/novinky/nova.vue`
+- `app/pages/cms/novinky/[id].vue`
+
+Pole:
+
+- interní název,
+- čtvercový obrázek,
+- WYSIWYG obsah,
+- aktivní stav,
+- pořadí,
+- datum `displayUntil`.
+
+Novinky nejsou navázané na obchod.
+
+Veřejný web používá `isActive=true` a `notExpired=true`.
+
+Řazení probíhá přes `PUT /api/news/reorder`.
+
+Mazání novinek vyžaduje `admin+`.
+
+---
+
+## Služby - `/cms/sluzby`
+
+Soubory:
+
+- `app/pages/cms/sluzby/index.vue`
+- `app/pages/cms/sluzby/nova.vue`
+- `app/pages/cms/sluzby/[id].vue`
+
+Pole:
+
+- ikona,
+- krátký popisek,
+- WYSIWYG detailní popis,
+- aktivní stav,
+- pořadí.
+
+Služby se zobrazují na stránce O nás. Pokud mají detail, otevírají se v modalu.
+
+Řazení probíhá přes `PUT /api/services/reorder`.
+
+Mazání služeb vyžaduje `admin+`.
+
+---
+
+## Hlavní stránka - `/cms/hlavni-stranka`
+
+Soubor: `app/pages/cms/hlavni-stranka.vue`
+
+Edituje singleton `Homepage`.
+
+Pole:
+
+- `heroImage`
+- `showHeroBorder`
+
+Ostatní části homepage se skládají z dalších dat: obchody, akce, novinky, mapa a obecné informace.
+
+---
+
+## O nás - `/cms/o-nas`
+
+Soubor: `app/pages/cms/o-nas.vue`
+
+Edituje singleton `GeneralInfo`.
+
+Pole:
+
+- `title`
+- `shortText`
+- `text`
+- `gallery`
+- `specialOpeningHours` pro centrum
+
+---
+
+## Parkování - `/cms/parkovani`
+
+Soubor: `app/pages/cms/parkovani.vue`
+
+Edituje část `GeneralInfo`.
+
+Pole:
+
+- `parkingContent`
+- `parkingImage`
+- `parkingOtherInfo`
+
+Pokud není `parkingImage` nastavený, veřejný web použije `/images/default-parking.jpg`.
+
+---
+
+## Kontakty - `/cms/kontakty`
+
+Soubor: `app/pages/cms/kontakty.vue`
+
+Edituje část `GeneralInfo`.
+
+Pole:
+
+- otevírací doba centra,
+- kontaktní osoby,
+- Facebook,
+- Instagram.
+
+Kontakt obsahuje:
+
+- `title`
+- `name`
+- `phone`
+- `email`
+
+Maximum je 30 kontaktů.
+
+---
+
+## Správci - `/cms/spravci`
+
+Soubory:
+
+- `app/pages/cms/spravci/index.vue`
+- `app/pages/cms/spravci/novy.vue`
+- `app/pages/cms/spravci/[id].vue`
+
+Přístup: `admin` nebo `superadmin`.
+
+Pole:
+
+- e-mail,
+- jméno,
+- heslo,
+- role,
+- aktivní stav.
+
+Pravidla:
+
+- editor nemá přístup,
+- admin nemůže vytvářet, upravovat ani mazat superadmin účty,
+- superadmin může spravovat všechny role,
+- uživatel nemůže smazat vlastní účet,
+- při smazání uživatele se invalidují jeho sessions.
+
+Create/update/delete endpointy pro uživatele vyžadují CSRF token.
+
+---
+
+## Můj účet - `/cms/ucet`
+
+Soubor: `app/pages/cms/ucet.vue`
+
+Stránka zobrazuje:
+
+- jméno,
+- e-mail,
+- roli,
+- formulář pro změnu hesla.
+
+Změna hesla vyžaduje aktuální heslo a CSRF token. Aktuální implementace po změně hesla automaticky neodhlašuje ostatní sessions.
+
+---
+
+## Upload souborů
+
+Endpoint: `POST /api/upload`
+
+Vlastnosti:
+
+- role `editor+`,
+- field `file`,
+- povolené MIME typy: JPEG, PNG, WebP, GIF, SVG,
+- limit 3 MB,
+- název souboru je UUID,
+- odpověď obsahuje `url`, `filename`, `size`, `type`.
+
+V produkci se soubory ukládají do:
+
+```text
+.output/public/uploads
+```
+
+Při deployi musí být tato cesta napojená na persistentní storage.
 
 ---
 
 ## WYSIWYG editor
 
-Pro editaci HTML obsahu (popis obchodu, obsah akce, obsah novinky apod.) se používá **Tiptap** s rozšířeními:
-- `@tiptap/starter-kit` – základní bloky
-- `@tiptap/extension-link` – odkazy
-- `@tiptap/extension-image` – obrázky
-- `@tiptap/extension-underline` – podtržení
-- `@tiptap/extension-text-align` – zarovnání
-- `@tiptap/extension-table` (+ TableRow, TableHeader, TableCell) – tabulky
+Komponenta: `app/components/cms/Wysiwyg.vue`
+
+Používá Tiptap:
+
+- `@tiptap/starter-kit`
+- `@tiptap/extension-link`
+- `@tiptap/extension-image`
+- `@tiptap/extension-underline`
+- `@tiptap/extension-text-align`
+- `@tiptap/extension-table`
+- `@tiptap/extension-table-row`
+- `@tiptap/extension-table-header`
+- `@tiptap/extension-table-cell`
+
+HTML se ukládá do databáze a na veřejném webu se sanitizuje přes `useSanitizeHtml`.
