@@ -34,3 +34,4 @@ mongo-backup/**/users.json
 
 # Client handover credentials
 docs/klient-pristupy.md
+docs/stary-dns.md

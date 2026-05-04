@@ -1,0 +1,2947 @@
+[
+  {
+    "_id": "69c52c14066b0f2f2116f132",
+    "name": "DinoPark",
+    "slug": "dinopark",
+    "description": "<p>Jediný krytý DinoPark v ČR ! Interaktivní výstava dinosaurů v životní velikosti. Více než 20 pohyblivých modelů dinosaurů se zvukovými efekty. Vzdělávací zóna s fosíliemi a 3D kinem. Vhodné pro všechny věkové kategorie. Ideální pro školní výlety.</p>",
+    "shortDescription": "Interaktivní výstava dinosaurů",
+    "logo": "/api/uploads/cab82ba6-d7aa-49aa-bd06-1ce4ad0c8ca3.png",
+    "gallery": [
+      "/api/uploads/593dca67-4c00-4c6d-9aaa-31dbdf6c99f1.jpg",
+      "/api/uploads/537e7e23-fdd5-4e41-8daa-c6d078e66a2a.jpg"
+    ],
+    "phone": "+420 377 227 494",
+    "email": "info@dinopark.eu",
+    "website": "https://www.dinopark.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/dinopark.czechia",
+      "instagram": "https://www.instagram.com/dinopark.cz/"
+    },
+    "floorId": "69c9520a21981f2fc7a5ea3f",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "DinoPark",
+    "seoDescription": "Jediný krytý DinoPark v ČR ! Potkáte tu i chodící robotické mládě stegosaura.",
+    "specialOpeningHours": [],
+    "__v": 6,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-28T15:36:44.381Z",
+    "unitCode": "220",
+    "categoryIds": [
+      "69c5295da7299fefa702e920"
+    ],
+    "floorIds": [
+      "69c9520a21981f2fc7a5ea3f",
+      "69c9522f21981f2fc7a5ea4a"
+    ],
+    "unitCodes": [
+      "220",
+      "301"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f0f2",
+    "name": "ACTION",
+    "slug": "action",
+    "description": "<p style=\"text-align: left;\"><strong>ACTION&nbsp;</strong>je nejoblíbenější diskontní obchod v Evropě s cenově dostupnými, běžnými i neobyčejnými výrobky. Pocházíme z Nizozemska, ale v současnosti máme již více než 1 900 diskontních obchodů v 9 zemích.<br><br>Také máte rádi hezké a praktické produkty? Tak to se nechte překvapit naší širokou a proměnlivou nabídkou více než 6 000 produktů ve 14 kategoriích od produktů z oblasti hobby, kreativity, až po hračky, kosmetiku, či kancelářské potřeby. Samozřejmě za co nejnižší cenu. Vždy nám záleží hlavně na nízkých cenách a vašem úsměvu.</p><p style=\"text-align: left;\"><br>Každý týden na vás v obchodě čeká 150 nových produktů a přinášíme vám ještě úžasnější a výhodnější nákupy v týdenní akci. O důvod víc, proč se u nás častěji zastavit. Skoro bychom vás chtěli varovat: nebuďte překvapeni, až se zastavíte pro čisticí přípravky, že na vás v obchodě čeká také spousta jiných praktických a hezkých věciček za nízké ceny. To je <strong>ACTION EFEKT!</strong></p>",
+    "shortDescription": "Diskontní prodejna s pestrou nabídkou za skvělé ceny",
+    "logo": "/api/uploads/5da66054-ae88-4131-8b01-c22f1f914303.png",
+    "gallery": [
+      "/api/uploads/bd89eeb8-baa3-4af7-aba4-a53521ceaefe.jpg"
+    ],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "ACTION",
+    "seoDescription": "Diskontní prodejna s pestrou nabídkou za skvělé ceny.",
+    "specialOpeningHours": [],
+    "__v": 15,
+    "createdAt": "2026-03-26T12:52:36.450Z",
+    "updatedAt": "2026-04-21T14:19:14.309Z",
+    "publishDate": null,
+    "unitCode": "118",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91a",
+      "69c5295da7299fefa702e923",
+      "69c5295ca7299fefa702e913",
+      "69e0c90694a872da513e03db"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "118"
+    ],
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/Action.CZE/?brand_redir=146101038575531",
+      "instagram": "https://www.instagram.com/action.cz/"
+    },
+    "website": "https://www.action.com/cs-cz/"
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f10a",
+    "name": "Amazonie",
+    "slug": "amazonie",
+    "description": "Amazonie je rodinné zábavní centrum plné atrakcí pro děti i dospělé. Prolézačky, skluzavky, trampolíny, lezecká stěna a speciální zóna pro nejmenší. Ideální místo pro dětské oslavy narozenin. Kavárna pro rodiče s výhledem na celé hřiště.",
+    "shortDescription": "Rodinné zábavní centrum s prolézačkami",
+    "logo": "/api/uploads/81a206d6-5336-448f-a841-b05ea3064c8f.png",
+    "gallery": [
+      "/api/uploads/54cc25c8-b4d0-4d6b-99b5-bda04aa28f28.jpg",
+      "/api/uploads/aca471b0-cf1a-4a25-8114-562adfb2395d.jpg",
+      "/api/uploads/6ea0c0e9-1e2e-40ee-a374-904acaf8c77c.jpg"
+    ],
+    "phone": "+420 485 123 004",
+    "email": "info@amazonie-liberec.cz",
+    "website": "https://www.amazonie-liberec.cz",
+    "socialLinks": {
+      "facebook": "https://facebook.com/AmazonieLiberec",
+      "instagram": "https://instagram.com/amazonie_liberec"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "10:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "10:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "10:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "10:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "10:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "10:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "10:00",
+        "close": "18:00",
+        "closed": false
+      }
+    ],
+    "isActive": false,
+    "seoTitle": "Amazonie | OC Plaza Liberec",
+    "seoDescription": "Rodinné zábavní centrum s prolézačkami",
+    "specialOpeningHours": [],
+    "__v": 6,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-08T17:15:30.154Z",
+    "publishDate": null,
+    "unitCode": null
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f1ca",
+    "name": "Sparkys",
+    "slug": "sparkys",
+    "description": "<p>Prodejna hraček pro děti všech věkových kategorií. LEGO, Playmobil, panenky, autíčka, společenské hry, kreativní sady. Dětské kočárky a autosedačky. </p>",
+    "shortDescription": "Hračky a potřeby pro děti",
+    "logo": "/api/uploads/eb49b8e1-986b-4c89-affd-b3085fc926f7.png",
+    "gallery": [
+      "/api/uploads/873e2b2f-1ddc-49b5-96b6-3bb2ca706e01.jpg",
+      "/api/uploads/d04c316a-03bf-4647-a56f-fdb6d788f135.jpg"
+    ],
+    "phone": "+420 773 751 487",
+    "email": "liberec@sparkys.cz",
+    "website": "https://www.sparkys.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/sparkyshracky",
+      "instagram": "https://www.instagram.com/sparkysdumhracek/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Sparkys",
+    "seoDescription": "Hračky a potřeby pro děti.",
+    "specialOpeningHours": [],
+    "__v": 6,
+    "createdAt": "2026-03-26T12:52:36.452Z",
+    "updatedAt": "2026-04-28T16:03:57.510Z",
+    "unitCode": "130",
+    "categoryIds": [
+      "69c5295da7299fefa702e923"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "130"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f102",
+    "name": "Alza",
+    "slug": "alza",
+    "description": "Největší český e-shop s elektronikou nyní i v OC Plaza Liberec! Vyzvedněte si své objednávky na našem AlzaBoxu nebo navštivte showroom s ukázkami nejnovější elektroniky. Notebooky, telefony, televize, domácí spotřebiče a tisíce dalších produktů.",
+    "shortDescription": "Výdejní místo a showroom největšího e-shopu",
+    "logo": "/api/uploads/f7faa3e8-429a-4a28-be73-26ab3bb4f481.png",
+    "gallery": [
+      "/api/uploads/07ffaed6-0629-4e0c-81b8-8e7154570e4d.jpg",
+      "/api/uploads/5de2059c-494f-446c-aa6a-e3bec5ba8996.jpg"
+    ],
+    "phone": "+420 225 340 111",
+    "website": "https://www.alza.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/alza.cz",
+      "instagram": "https://www.instagram.com/alza_czsk/"
+    },
+    "floorId": "69c9520a21981f2fc7a5ea3f",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Alza",
+    "seoDescription": "Výdejní místo a showroom největšího e-shopu, nejen s elektronikou.",
+    "specialOpeningHours": [],
+    "__v": 8,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-28T13:07:45.028Z",
+    "publishDate": null,
+    "unitCode": "218",
+    "categoryIds": [
+      "69c5295ca7299fefa702e916"
+    ],
+    "floorIds": [
+      "69c9520a21981f2fc7a5ea3f"
+    ],
+    "unitCodes": [
+      "218"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f0fa",
+    "name": "Alfa Wash",
+    "slug": "alfa-wash",
+    "description": "<p style=\"text-align: center;\">Ruční mytí vozidel a motocyklů. V sobotu přijímáme pouze objednané klienty.</p>",
+    "shortDescription": "Profesionální čistírna a prádelna",
+    "logo": "/api/uploads/444e8c35-c69e-4521-8920-8cc0460d1092.png",
+    "gallery": [
+      "/api/uploads/7d3c2a27-8c6b-45e6-9957-5a2428517e68.jpg"
+    ],
+    "phone": "+420 778 726 333",
+    "email": "alfa.one@email.cz",
+    "website": "https://www.alfawash.cz",
+    "floorId": "69ea74ca8a4d1622bee19dfe",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "18:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Alfa Wash",
+    "seoDescription": "Ruční mytí vozidel a motocyklů v Liberci.",
+    "specialOpeningHours": [],
+    "__v": 7,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-28T12:50:31.455Z",
+    "publishDate": null,
+    "unitCode": "400",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorIds": [
+      "69ea74ca8a4d1622bee19dfe"
+    ],
+    "unitCodes": [
+      "400"
+    ],
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/alfawashliberec",
+      "instagram": "https://www.instagram.com/mayvinci_alfa_wash_liberec?igshid=f6si2yymyhhm"
+    }
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f11a",
+    "name": "CrossCafé",
+    "slug": "crosscafe",
+    "description": "<p>Kavárnu CrossCafé najdete v samotném srdci Liberce na Šaldovo náměstí v OC Plaza. Kavárna je ideálním místě pro posezení po slouhém pracovním dni, nebo naopak pro vaši ranní dávku kofeinu na cestu do práce či školy. V letních měsících si svoji kávu či dortík můžete vychutnat na zahrádce.&nbsp;</p>",
+    "shortDescription": "Kavárna s vlastní pražírnou a domácími dezerty",
+    "logo": "/api/uploads/160c3ce6-7924-41d9-87a2-a8754cef5c5f.png",
+    "gallery": [
+      "/api/uploads/2d6e2f87-f0f7-4fe4-960e-047b57e0842e.jpg",
+      "/api/uploads/caf3133d-7a08-44cf-bf61-a0cb983dee0f.jpg"
+    ],
+    "phone": "+420 773 043 094",
+    "website": "https://www.crosscafe.cz",
+    "socialLinks": {
+      "facebook": "https://facebook.com/CrossCafe",
+      "instagram": "https://www.instagram.com/crosscafeliberec/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "CrossCafé",
+    "seoDescription": "Navštivte CrossCafe v OC Plaza Liberec. Vychutnejte si výběrovou kávu, čerstvé dorty a křupavé sendviče v příjemném prostředí.",
+    "specialOpeningHours": [],
+    "__v": 6,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-28T15:16:46.598Z",
+    "unitCode": "K01",
+    "publishDate": null,
+    "categoryIds": [
+      "69e0c8af94a872da513e03d2"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "K01"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f15a",
+    "name": "Fruitisimo",
+    "slug": "fruitisimo",
+    "description": "Fruitisimo fresh bar nabízí čerstvé ovocné a zeleninové šťávy, smoothie, fresh boxy a zdravé svačinky. Vše připraveno na místě z čerstvého ovoce a zeleniny. Bez přidaného cukru a konzervantů.",
+    "shortDescription": "Fresh bar s ovocnými šťávami a smoothie",
+    "logo": "/api/uploads/a1313896-1912-44ba-aa1e-d132754d6f71.png",
+    "gallery": [
+      "/api/uploads/918ccc53-7f42-42e5-84dd-707468d2835a.webp",
+      "/api/uploads/6d3aa6b8-c9aa-4fcc-bb75-058b52cd39e2.jpg",
+      "/api/uploads/7a43e826-7bf7-4e72-8d85-47fefbb8086a.jpg"
+    ],
+    "phone": "+420 774 300 330",
+    "website": "https://fruitisimo.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/fruitisimo",
+      "instagram": "https://www.instagram.com/fruitisimo.cz/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Fruitisimo",
+    "seoDescription": "Fresh bar s ovocnými šťávami a smoothie.",
+    "specialOpeningHours": [],
+    "__v": 5,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-21T14:44:33.876Z",
+    "unitCode": "S07",
+    "categoryIds": [],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "S07"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f19a",
+    "name": "Kytky od Pepy",
+    "slug": "kytky-od-pepy",
+    "description": "<p>Květinářství s čerstvými řezanými květinami a pokojovými rostlinami. Vazba kytic na přání, svatební floristika, smuteční vazby. Dárkové balení.</p>",
+    "shortDescription": "Květinářství a vazba kytic",
+    "logo": "/api/uploads/1eb4d5d5-4785-4a2b-ab26-868789b4bf84.png",
+    "gallery": [
+      "/api/uploads/5226b6aa-a0aa-4c46-aaa9-99ac093acdc4.jpg"
+    ],
+    "phone": "+420 733 238 820",
+    "website": "https://www.kytkyodpepy.cz",
+    "socialLinks": {
+      "facebook": "https://facebook.com/KytkyOdPepy",
+      "instagram": "https://www.instagram.com/kytkyodpepy/"
+    },
+    "floorId": "69c951a621981f2fc7a5ea1f",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Kytky od Pepy",
+    "seoDescription": "Květinářství a vazba kytic.",
+    "specialOpeningHours": [],
+    "__v": 7,
+    "createdAt": "2026-03-26T12:52:36.452Z",
+    "updatedAt": "2026-04-28T15:40:14.273Z",
+    "unitCode": "002",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d",
+      "69c5295ca7299fefa702e91a"
+    ],
+    "floorIds": [
+      "69c951a621981f2fc7a5ea1f"
+    ],
+    "unitCodes": [
+      "002"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f14a",
+    "name": "Dr. Max Lékárna",
+    "slug": "dr-max-lekarna",
+    "description": "Síť lékáren Dr. Max nabízí široký sortiment léků, vitamínů, doplňků stravy a zdravotnických pomůcek. Odborné poradenství farmaceutů. Měření tlaku, kontrola cholesterolu. Výdej na recept i volný prodej.",
+    "shortDescription": "Lékárna s odborným poradenstvím",
+    "logo": "/api/uploads/8b469a0c-e3f1-4efe-892c-c64761d37093.png",
+    "gallery": [
+      "/api/uploads/7faa4436-78d7-4087-9e26-6ab37a681e43.jpg"
+    ],
+    "phone": "+420 483 570 150",
+    "website": "https://www.drmax.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/drmaxcesko",
+      "instagram": "https://www.instagram.com/drmaxcesko/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "12:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Dr. Max Lékárna",
+    "seoDescription": "Lékárna s odborným poradenstvím.",
+    "specialOpeningHours": [],
+    "__v": 3,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-28T13:29:46.563Z",
+    "unitCode": "135",
+    "categoryIds": [
+      "69c5295ca7299fefa702e913"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "135"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f1d2",
+    "name": "Teta Drogerie",
+    "slug": "teta-drogerie",
+    "description": "Síť drogerií Teta nabízí kosmetiku, parfumérii, drogistické zboží a domácí potřeby. Věrnostní program Teta Klub s akcemi a slevami. České i zahraniční značky za výhodné ceny.",
+    "shortDescription": "Drogerie a kosmetika",
+    "logo": "/api/uploads/855eb19f-c645-4e5c-b71b-355f609d9e7f.png",
+    "gallery": [
+      "/api/uploads/4dd9a1f2-abc2-406f-aeea-74a35eaa8f00.jpg"
+    ],
+    "phone": "+420 734 176 315",
+    "email": "2315@drogerieteta.cz",
+    "website": "https://www.tetadrogerie.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/tetadrogerie",
+      "instagram": "https://www.instagram.com/teta.drogerie/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Teta Drogerie",
+    "seoDescription": "Nakupujte v Teta drogerii kosmetiku, parfémy a vše pro domácnost. Výhodné ceny, pravidelné akce a odměny pro členy Teta klubu.",
+    "specialOpeningHours": [],
+    "__v": 4,
+    "createdAt": "2026-03-26T12:52:36.452Z",
+    "updatedAt": "2026-04-21T14:41:14.002Z",
+    "unitCode": "124",
+    "categoryIds": [
+      "69c5295ca7299fefa702e913"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "124"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f112",
+    "name": "Billa",
+    "slug": "billa",
+    "description": "<p><strong>BILLA působí v&nbsp;České republice již od&nbsp;roku 1990 a&nbsp;patří mezi lídry v&nbsp;oblasti supermarketů. V&nbsp;275 prodejnách po&nbsp;celé zemi nabízí široký sortiment s&nbsp;důrazem na&nbsp;čerstvost a kvalitu – od&nbsp;pečiva a&nbsp;lahůdek až po&nbsp;ovoce, zeleninu či&nbsp;maso. BILLA se soustředí na podporu českých producentů, proto české potraviny tvoří většinu jejího sortimentu.</strong></p>",
+    "shortDescription": "Supermarket s čerstvými potravinami",
+    "logo": "/api/uploads/ac3eab68-84bc-4d9b-badf-0ae9550cb02f.png",
+    "gallery": [
+      "/api/uploads/c1237486-45f1-49c8-9ec0-783b73e49655.jpg"
+    ],
+    "phone": "+420 482 321 175",
+    "website": "https://www.billa.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/billaczechia",
+      "instagram": "https://www.instagram.com/billa_cz/"
+    },
+    "floorId": "69c951a621981f2fc7a5ea1f",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "07:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "07:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "07:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "07:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "07:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "07:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "21:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Billa",
+    "seoDescription": "Supermarket s čerstvými potravinami.",
+    "specialOpeningHours": [],
+    "__v": 9,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-28T13:13:19.666Z",
+    "publishDate": null,
+    "unitCode": "001",
+    "categoryIds": [
+      "69e0c90694a872da513e03db"
+    ],
+    "floorIds": [
+      "69c951a621981f2fc7a5ea1f"
+    ],
+    "unitCodes": [
+      "001"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f152",
+    "name": "CK Fischer & EXIM Tours",
+    "slug": "fischer-exim",
+    "description": "<p>Jsme tu, abychom <strong>plnili vaše</strong>&nbsp;<strong>cestovatelské&nbsp;sny</strong>. Vezmeme vás přesně tam, kam si přejete, ať už sníte o letecké dovolené ve Středomoří nebo v exotických destinacích. Díky dlouholeté tradici a zázemí nejsilnější cestovní skupiny v ČR vám budeme spolehlivým partnerem na každé cestě.</p>",
+    "shortDescription": "Cestovní kancelář s širokou nabídkou zájezdů",
+    "logo": "/api/uploads/85c260be-012f-4056-90d8-32cff2eee05f.png",
+    "gallery": [
+      "/api/uploads/3c5937ea-b849-4b5d-ab6a-7cdd0e034ac9.jpg"
+    ],
+    "phone": "+420 488 578 880",
+    "email": "liberec.plaza@dertouristik.cz",
+    "website": "https://www.fischer.cz",
+    "socialLinks": {
+      "facebook": "https://facebook.com/FischerCZ",
+      "instagram": "https://www.instagram.com/ck_fischer/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Fischer & Exim Tours",
+    "seoDescription": "Cestovní kancelář s širokou nabídkou zájezdů.",
+    "specialOpeningHours": [],
+    "__v": 6,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-05-03T16:34:11.644Z",
+    "unitCode": "131",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "131"
+    ],
+    "publishDate": null
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f192",
+    "name": "Knihy Dobrovský",
+    "slug": "knihy-dobrovsky",
+    "description": "<p>Prodejnu Knihy Dobrovský zdobí výběr z nepřeberného <strong>množství knih různých žánrů</strong>. Každý tu objeví čtení, které je jeho srdci milé. Nevíte, jestli kniha, kterou vybíráte, je to pravé ořechové? Knihkupci rádi pomůžou. Za dlouhá léta, co zde pracují, jim prošlo pod rukama tisíce a tisíce stránek. Na jejich doporučení se můžete spolehnout. Máte rádi turistiku? <strong>Regionální literatura</strong> má v knihkupectví čestné zastoupení.</p><p>Do prodejny nakoukněte i tehdy, jestli sháníte <strong>deskové&nbsp;hry, kalendáře, diáře, plyšáky</strong> a další drobnosti. Výběr neknižního sortimentu je opravdu pestrý.</p>",
+    "shortDescription": "Knihkupectví s širokou nabídkou titulů",
+    "logo": "/api/uploads/b7aa3f2b-7733-4baa-b7ed-31dbdddb4c0b.png",
+    "gallery": [
+      "/api/uploads/6a04a4cb-ede1-41d4-83e1-9a58ab75eab9.jpg"
+    ],
+    "phone": "+420 542 220 320",
+    "email": "poradime@knihydobrovsky.cz",
+    "website": "https://www.knihydobrovsky.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/KnihyDobrovsky.cz",
+      "instagram": "https://www.instagram.com/knihydobrovsky/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "Knihy Dobrovský",
+    "seoDescription": "Objevte svět plný příběhů v knihkupectví Knihy Dobrovský v OC Plaza Liberec. Nabízíme bestsellery, společenské hry i dárky pro vaše blízké.",
+    "specialOpeningHours": [],
+    "__v": 4,
+    "createdAt": "2026-03-26T12:52:36.452Z",
+    "updatedAt": "2026-04-28T15:40:46.688Z",
+    "unitCode": "105",
+    "categoryIds": [
+      "69c5295da7299fefa702e929"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "105"
+    ]
+  },
+  {
+    "_id": "69c52c14066b0f2f2116f182",
+    "name": "KiK",
+    "slug": "kik",
+    "description": "KiK je textilní diskont s oblečením pro celou rodinu. Dámská, pánská a dětská móda za nízké ceny. Spodní prádlo, ponožky, bytový textil a dekorace. Nové kolekce každý týden.",
+    "shortDescription": "Textilní diskont pro celou rodinu",
+    "logo": "/api/uploads/9b4d1f32-548f-4095-9cc3-ba09409c0ef8.png",
+    "gallery": [
+      "/api/uploads/65310a9c-f778-471a-afb6-ead6f8bfe5a5.jpg",
+      "/api/uploads/81c93eeb-5ede-4679-a5b9-3f1c986871ed.jpg"
+    ],
+    "website": "https://www.kik.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/kik/?brand_redir=896432453799158",
+      "instagram": "https://www.instagram.com/kik.cz/"
+    },
+    "floorId": "69c9520a21981f2fc7a5ea3f",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "19:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "seoTitle": "KiK",
+    "seoDescription": "Textilní diskont pro celou rodinu.",
+    "specialOpeningHours": [],
+    "__v": 4,
+    "createdAt": "2026-03-26T12:52:36.451Z",
+    "updatedAt": "2026-04-28T15:36:11.877Z",
+    "unitCode": "210",
+    "categoryIds": [
+      "69a710cb6d08e66a0f657c64",
+      "69c5295ca7299fefa702e91a"
+    ],
+    "floorIds": [
+      "69c9520a21981f2fc7a5ea3f"
+    ],
+    "unitCodes": [
+      "210"
+    ]
+  },
+  {
+    "_id": "69d4cb22007d6bdc2e6159f5",
+    "name": "Plasma Place",
+    "slug": "plasma-place",
+    "gallery": [
+      "/api/uploads/8ac129f3-6f54-4c82-b5ba-0d1116430e66.jpg"
+    ],
+    "floorId": "69c9520a21981f2fc7a5ea3f",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "07:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "07:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "07:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "07:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "07:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "07:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "16:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T09:15:14.768Z",
+    "updatedAt": "2026-04-28T15:57:41.103Z",
+    "__v": 4,
+    "logo": "/api/uploads/072d3190-5318-45f2-b821-8e5068b00cd8.png",
+    "unitCode": "224",
+    "categoryIds": [
+      "69c5295ca7299fefa702e913",
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorIds": [
+      "69c9520a21981f2fc7a5ea3f"
+    ],
+    "unitCodes": [
+      "224"
+    ],
+    "description": "<p>Darujte plazmu a zachraňte životy. V moderním odběrovém centru <strong>Plasma Place</strong>, které najdete přímo v OC Plaza Liberec, můžete pomoci lidem s vážným onemocněním krve, imunity nebo oběťem nehod. Plazma je nenahraditelná surovina pro výrobu léků a váš dar má obrovský smysl.  Zachraňuj životy a získej až 2 000 Kč každý měsíc. </p>",
+    "email": "info@plasmaplace.cz",
+    "phone": "+420 226 289 070",
+    "seoDescription": "Darujte plazmu v Plasma Place Liberec a získejte náhradu 1000 Kč. Moderní centrum v OC Plaza, profesionální péče a dobrý pocit z pomoci druhým.",
+    "seoTitle": "Plasma Place",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/PlasmaPlace",
+      "instagram": "https://www.instagram.com/plasmaplace_cz/"
+    },
+    "website": "https://www.plasmaplace.cz"
+  },
+  {
+    "_id": "69d4cb53007d6bdc2e615a0f",
+    "name": "Power Fitness",
+    "slug": "power-fitness",
+    "gallery": [
+      "/api/uploads/888001f3-583f-4834-a87c-25ee22a43dd2.webp",
+      "/api/uploads/b85bf9f8-1518-4c23-889b-097f3d6a8341.webp"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "07:00",
+        "close": "22:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "07:00",
+        "close": "22:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "07:00",
+        "close": "22:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "07:00",
+        "close": "22:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "07:00",
+        "close": "22:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "22:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "22:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T09:16:03.080Z",
+    "updatedAt": "2026-04-28T16:01:49.156Z",
+    "__v": 4,
+    "floorId": "69c9522f21981f2fc7a5ea4a",
+    "logo": "/api/uploads/02a7913a-b6bf-4066-950e-93165ac0587a.webp",
+    "unitCode": "308a",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorIds": [
+      "69c9522f21981f2fc7a5ea4a"
+    ],
+    "seoTitle": "Power Fitness",
+    "unitCodes": [
+      "308a"
+    ],
+    "description": "<p>V Power Fitness Liberec se zaměřujeme na to, abychom nabídli komplexní fitness zážitek pro každého. Naše moderní vybavení&nbsp;je ideální jak pro milovníky silového tréninku, tak i pro ty, kteří chtějí zlepšit svou vytrvalost a kondici.</p><p style=\"text-align: left;\">U nás najdeš vše, co potřebuješ pro svůj trénink, ať už jde o kardio trénink, silový trénink nebo o přípravu na soutěže. Naše posilovna je místem, kde můžeš růst, překonávat své limity a zároveň se cítit pohodlně.</p><p style=\"text-align: left;\">Přijď do Power Fitness Liberec. Připoj se k nám a zažij trénink, který tě posune vpřed.</p>",
+    "email": "info@power-fitness.cz",
+    "phone": "+420 721 849 070",
+    "seoDescription": "Vše co potřebuješ pro svůj trénink, ať už jde o kardio trénink, silový trénink nebo o přípravu na soutěže. Naše posilovna je místem, kde můžeš růst.",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/powerfitnessliberec",
+      "instagram": "https://www.instagram.com/powerfitnessliberec/"
+    },
+    "website": "https://power-fitness.cz/nase-studia/liberec/"
+  },
+  {
+    "_id": "69d4cb8e007d6bdc2e615a28",
+    "name": "Orion",
+    "slug": "orion",
+    "gallery": [
+      "/api/uploads/bd4feaf5-f3c4-401e-bb0c-6974402aab7c.jpg",
+      "/api/uploads/08b8636d-65b4-4654-a7c7-dedbb2554dec.jpg"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T09:17:02.978Z",
+    "updatedAt": "2026-04-28T15:53:03.905Z",
+    "__v": 4,
+    "floorId": "69c951a621981f2fc7a5ea1f",
+    "logo": "/api/uploads/6353ca26-e61b-4722-b622-d50f92d551a8.jpg",
+    "unitCode": "003",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91a"
+    ],
+    "floorIds": [
+      "69c951a621981f2fc7a5ea1f"
+    ],
+    "unitCodes": [
+      "003"
+    ],
+    "description": "<p style=\"text-align: left;\">Hledáte šikovné pomocníky do kuchyně, stylové doplňky do bytu nebo praktické vychytávky pro úklid a zahradu? Navštivte prodejnu Orion v OC Plaza Liberec. Jsme tradiční český specialista na domácí potřeby, který vám usnadňuje vaření, pečení i péči o domov.</p>",
+    "phone": "+420 720 742 316",
+    "seoDescription": "Hledáte pomocníky do kuchyně či domácnosti? Navštivte prodejnu Orion v OC Plaza Liberec. Široký výběr nádobí, doplňků a potřeb pro domov na jednom místě.",
+    "seoTitle": "Orion",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/oriontvorimevasidomacnost",
+      "instagram": "https://www.instagram.com/orion_tvorime_vasi_domacnost/"
+    },
+    "website": "https://www.oriondomacipotreby.cz"
+  },
+  {
+    "_id": "69d4cf75007d6bdc2e615a41",
+    "name": "Restaurace Jíídelna",
+    "slug": "restaurace-jiidelna",
+    "logo": "/api/uploads/9223bf8e-b73b-4870-a2ec-f9bd83254745.png",
+    "gallery": [
+      "/api/uploads/74517492-c7df-4406-b11e-573d2a9bbdd1.jpg",
+      "/api/uploads/dd670e2f-62e0-4c32-a7db-4b0ecc49053c.jpg",
+      "/api/uploads/e0269d31-23da-4270-ac16-d096a6d160c8.jpg"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:30",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "seoTitle": "Restaurace Jíídelna",
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T09:33:41.779Z",
+    "updatedAt": "2026-04-28T15:11:01.161Z",
+    "__v": 2,
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "120",
+    "categoryIds": [
+      "69e0c8af94a872da513e03d2"
+    ],
+    "description": "<p>Jíídelna je navržena tak, aby se u nás každý cítil vítán. Ať už přicházíte za rychlým obědem během pracovního dne, nebo se chcete setkat s rodinou a přáteli u chutné večeře, u nás si užijete pohodovou atmosféru a výborné jídlo. Naše samoobslužné prostředí zajišťuje rychlé odbavení, a díky férovým cenám si u nás můžete kvalitní jídlo dopřát pravidelně, bez starostí o nadměrné výdaje.</p>",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "120"
+    ],
+    "email": "info@jiidelna.cz",
+    "seoDescription": "Místo, kde se setkává kvalita, rozmanitost a cenová dostupnost!\nNaším cílem je nabídnout vám jedinečný gastronomický zážitek v srdci Liberce, a to každý den.",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/jiidelna.cz",
+      "instagram": "https://www.instagram.com/jiidelna.cz"
+    },
+    "website": "https://www.jiidelna.cz/menu"
+  },
+  {
+    "_id": "69d4e016007d6bdc2e615b5e",
+    "name": "Krásné Vůně",
+    "slug": "krasne-vune",
+    "logo": "/api/uploads/4533750c-484b-4f19-a6c6-df756a41f6c2.svg",
+    "gallery": [
+      "/api/uploads/6f161813-856b-4ffa-8876-d4064731f3ff.jpg",
+      "/api/uploads/7531d6bc-5b36-42f6-b916-30558c7924c9.jpg"
+    ],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T10:44:38.764Z",
+    "updatedAt": "2026-04-28T15:46:40.042Z",
+    "__v": 3,
+    "categoryIds": [
+      "69c5295ca7299fefa702e913"
+    ],
+    "unitCode": "134",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "134"
+    ],
+    "description": "<p>Voní stejně jako světové <strong>vůně</strong>, ale stojí jen zlomek. Prodáváme kvalitní parfémy značek SAPHIR a PURE Parfum, které jsou inspirované těmi nejoblíbenějšími světovými vůněmi. Proč platit víc, když neucítíte rozdíl? Najděte si svou oblíbenou vůni v převodníku!</p>",
+    "email": "liberec@krasnevune.cz",
+    "seoDescription": "Prodáváme kvalitní parfémy značek SAPHIR a PURE Parfum, které jsou inspirované těmi nejoblíbenějšími světovými vůněmi.",
+    "seoTitle": "Krásné vůně",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/krasnevune.cz",
+      "instagram": "https://www.instagram.com/krasnevune.cz/"
+    },
+    "website": "https://www.krasnevune.cz"
+  },
+  {
+    "_id": "69d4e6b3007d6bdc2e615dd7",
+    "name": "FastCut Barbershop",
+    "slug": "fastcut-barbershop",
+    "logo": "/api/uploads/d32804bc-b572-43fb-b559-a79e5107e2de.png",
+    "gallery": [
+      "/api/uploads/874a8c4c-a626-4f50-9126-9ef7d7576855.jpg"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T11:12:51.600Z",
+    "updatedAt": "2026-04-28T16:09:33.660Z",
+    "__v": 2,
+    "categoryIds": [],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCode": "112a",
+    "unitCodes": [
+      "112a"
+    ],
+    "description": "<p>Profesionální pánské stříhání a úpravy vousů <strong>bez objednání</strong>. Moderní barbershop s precizními střihy, úpravou vousů. Přátelská atmosféra, profesionální přístup a rychlost.</p>",
+    "phone": "+420 771 204 774",
+    "seoDescription": "Profesionální pánské stříhání a úpravy vousů bez objednání. Moderní barbershop s precizními střihy, úpravou vousů. Přátelská atmosféra, profesionální přístup.",
+    "seoTitle": "FastCut Barbershop",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/profile.php?id=61587799255406",
+      "instagram": "https://www.instagram.com/fastcutbarbershop/"
+    },
+    "website": "https://fastcut.cz"
+  },
+  {
+    "_id": "69d4ec86007d6bdc2e615fd7",
+    "name": "Komerční banka",
+    "slug": "komercni-banka",
+    "logo": "/api/uploads/81c00e78-5cf2-4608-a137-c0bac7924d85.png",
+    "gallery": [
+      "/api/uploads/8f7498e0-756e-4dab-abfc-38dc0d362c26.jpg"
+    ],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "102",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": "2026-08-01T00:00:00.000Z",
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T11:37:42.084Z",
+    "updatedAt": "2026-04-29T10:35:45.418Z",
+    "__v": 3,
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "102"
+    ]
+  },
+  {
+    "_id": "69d51607007d6bdc2e6161b6",
+    "name": "Restaurace Sakura's",
+    "slug": "restaurace-sakuras",
+    "description": "<p>Restaurace Sakura’s v OC Plaza je tu pro Vás od roku 2009. Nově zrekonstruovaná restaurace Vám nabízí velmi příjemné posezení v moderním stylu. Máme pro vás pestrou nabídku jídel z čínské a japonské kuchyně, široký výběr vín, koktejlů a tradičních čajů. Našim cílem je vytvořit atraktivní jídla s obsahem čerstvých a kvalitních surovin, abychom Vám v Sakura’s dopřáli hluboký kulinářský zážitek, na který nebudete chtít zapomenout.</p>",
+    "logo": "/api/uploads/22fd5b1b-0a1b-4338-9513-e5cf9e0717ab.jpg",
+    "gallery": [
+      "/api/uploads/eb759109-c1b7-465c-a44b-62f6bf12481a.jpg",
+      "/api/uploads/e3b5da1b-33cf-4e05-aa2e-81205cbd5891.jpg"
+    ],
+    "phone": "+420 485 111 860",
+    "website": "https://www.sakuras.cz/sakuras-liberec-plaza/",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/sakurasrestaurant/",
+      "instagram": "https://www.instagram.com/sakuras_sushi/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "103",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "10:00",
+        "close": "23:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "10:00",
+        "close": "23:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "10:00",
+        "close": "23:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "10:00",
+        "close": "23:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "10:00",
+        "close": "23:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "10:00",
+        "close": "23:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "10:00",
+        "close": "23:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "seoTitle": "Restaurace Sakura's",
+    "seoDescription": "Ochutnejte to nejlepší z asijské kuchyně v restauraci Sakura's v OC Plaza Liberec. Široký výběr čerstvého sushi, teplých specialit a autentických chutí Asie.",
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T14:34:47.610Z",
+    "updatedAt": "2026-04-28T16:04:33.822Z",
+    "__v": 2,
+    "categoryIds": [
+      "69e0c8af94a872da513e03d2"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "103"
+    ]
+  },
+  {
+    "_id": "69d51a81007d6bdc2e61625f",
+    "name": "Bubblify",
+    "slug": "bubblify",
+    "description": "<p>Osvěžte se v Bubblify OC Plaza Liberec! Namíchejte si svůj originální bubble tea s ovocnými kuličkami nebo želé. Čekají na vás nekonečné kombinace chutí a barev. Stavte se pro svůj drink.</p><p></p>",
+    "logo": "/api/uploads/a629d3a9-a378-4e86-99b4-f9874b102a1f.png",
+    "gallery": [
+      "/api/uploads/34899024-6935-4bf2-92b7-00d17f5a1548.jpg"
+    ],
+    "website": "https://bubblify.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/profile.php?id=61574672756438",
+      "instagram": "https://www.instagram.com/bubblify_plaza_liberec/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "114",
+    "openingHours": [
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": false,
+    "publishDate": null,
+    "seoTitle": "Bubblify | OC Plaza Liberec",
+    "seoDescription": "Osvěžte se v Bubblify OC Plaza Liberec! Namíchejte si svůj originální bubble tea s ovocnými kuličkami nebo želé. Stavte se pro svůj drink!",
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-07T14:53:53.445Z",
+    "updatedAt": "2026-04-22T08:03:08.967Z",
+    "__v": 5,
+    "categoryIds": [
+      "69e0c8af94a872da513e03d2"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "114"
+    ]
+  },
+  {
+    "_id": "69d6206a007d6bdc2e616656",
+    "name": "SANTÉ",
+    "slug": "sante",
+    "description": "<p>Prodejna SANTÉ nabízí kvalitní zdravotní obuv, kterou rozděluje na&nbsp;dámské boty&nbsp;,&nbsp;pánskou obuv,&nbsp;dětskou obuv zdravotní&nbsp;v různých vzorech a barvách.&nbsp;Zdravotní pantofle pánské,&nbsp;pantofle dámské,&nbsp;dětské sandály&nbsp;i celoroční boty,&nbsp;sportovní boty&nbsp;a&nbsp;pracovní obuv. </p><p>V naší prodejně&nbsp;<strong>obujeme celou rodinu pro každé roční období</strong>. V nabídce máme pouze&nbsp;<strong>obuv z precizně zpracovaných kvalitních materiálů</strong>.</p>",
+    "logo": "/api/uploads/88723fc1-b4d0-44c7-a50c-8644e7c06ee9.png",
+    "gallery": [
+      "/api/uploads/1be8be9e-0d68-437d-b3ec-8614986d628f.jpg"
+    ],
+    "phone": "+420 482 323 725",
+    "email": "info@sante-sro.cz",
+    "website": "https://www.sante-zdravotni-obuv.cz",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/SANTE.zdravotni.obuv/",
+      "instagram": "https://www.instagram.com/sante_zdravotni_obuv/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "126",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:31:22.441Z",
+    "updatedAt": "2026-04-21T15:14:59.779Z",
+    "__v": 2,
+    "categoryIds": [
+      "69c5295ca7299fefa702e913",
+      "69a710cb6d08e66a0f657c64"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "seoDescription": "Prodejna SANTÉ nabízí kvalitní zdravotní obuv, kterou rozděluje na dámské boty, pánskou obuv, dětskou obuv zdravotní v různých vzorech a barvách.",
+    "seoTitle": "SANTÉ",
+    "unitCodes": [
+      "126"
+    ]
+  },
+  {
+    "_id": "69d62187007d6bdc2e6166b1",
+    "name": "Design Service",
+    "slug": "design-service",
+    "gallery": [
+      "/api/uploads/74ca7186-d3ef-42c4-a6fb-5ab90dc08816.jpg"
+    ],
+    "openingHours": [],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:36:07.602Z",
+    "updatedAt": "2026-04-28T15:19:10.188Z",
+    "__v": 7,
+    "categoryIds": [
+      "69c5295ca7299fefa702e91a"
+    ],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "logo": "/api/uploads/c0dca461-7da3-48a4-aab2-ca9486e99bdb.jpg",
+    "unitCode": "129",
+    "description": "<p style=\"text-align: center;\">Showroom doplňků do domácnosti.</p>",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "129"
+    ],
+    "email": "obchod@designservis.cz",
+    "phone": "+420 607 900 788",
+    "seoDescription": "Showroom originálních doplňků do domácnosti.",
+    "seoTitle": "Design Service",
+    "website": "http://www.design-servis.cz"
+  },
+  {
+    "_id": "69d622b3007d6bdc2e6166d3",
+    "name": "Vihastar",
+    "slug": "vihastar",
+    "logo": "/api/uploads/e06f2b63-12c0-421c-a815-cf6be182c264.jpg",
+    "gallery": [
+      "/api/uploads/f642e447-40e9-44d7-802d-48f93473d23e.jpg"
+    ],
+    "phone": "+420 608 351 956",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/p/Vihastar-Nails-Liberec-100066495166574/",
+      "instagram": "https://www.instagram.com/vihastar.cz/"
+    },
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "115",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:41:07.561Z",
+    "updatedAt": "2026-04-28T16:06:36.754Z",
+    "__v": 3,
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d",
+      "69c5295ca7299fefa702e913"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "115"
+    ],
+    "description": "<p>Co takhle si dopřát trochu péče o sebe?  Odpočiňte si od každodenního shonu a nechte se hýčkat našimi zkušenými specialisty. Vaše ruce a nohy si to zaslouží!  Napište nám nebo zavolejte a rezervujte si svůj čas pro dokonalou péči. Těšíme se na vás!</p>",
+    "seoDescription": "Nehtový salón. Manikúra a pedikúra v centru Liberce",
+    "seoTitle": "Vihastar Studio"
+  },
+  {
+    "_id": "69d62371007d6bdc2e61672a",
+    "name": "GECO",
+    "slug": "geco",
+    "gallery": [
+      "/api/uploads/4a89a158-b959-490f-9931-6f7b5847976f.jpg"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:44:17.196Z",
+    "updatedAt": "2026-04-28T15:14:10.085Z",
+    "__v": 4,
+    "floorId": "6998e15a93a13d0796eaa812",
+    "logo": "/api/uploads/1f6a5ab2-bce0-4234-a013-62fd7b50a5ee.jpg",
+    "unitCode": "112b",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "112b"
+    ],
+    "description": "<p style=\"text-align: center;\">Jsme největší síť maloobchodních prodejen Tabák-Tisk v&nbsp;ČR.</p><p style=\"text-align: center;\">Nabízíme tabákové výrobky, netabákové výrobky s&nbsp;nikotinem, kuřácké potřeby, loterijní produkty, tisk a&nbsp;dobíjení kreditu do mobilních telefonů.</p>",
+    "email": "mail.box@geco.cz",
+    "seoDescription": "Nabízíme tabákové výrobky, netabákové výrobky s nikotinem, kuřácké potřeby, loterijní produkty, tisk a dobíjení kreditu do mobilních telefonů.",
+    "seoTitle": "GECO",
+    "website": "https://www.geco.cz"
+  },
+  {
+    "_id": "69d62402007d6bdc2e61679e",
+    "name": "Don Pealo",
+    "slug": "don-pealo",
+    "gallery": [
+      "/api/uploads/934c821f-c0a1-4396-8b29-e79024824ea1.jpg"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "07:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:46:42.991Z",
+    "updatedAt": "2026-04-19T19:08:16.622Z",
+    "__v": 4,
+    "floorId": "6998e15a93a13d0796eaa812",
+    "logo": "/api/uploads/4b197121-5ad9-4ec2-ba3e-76a3dc362b94.png",
+    "unitCode": "101",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "description": "<p>Společnost PEAL a.s.provozuje síť prodejen DON PEALO s cigaretami, vínem, sekty, destiláty, tabákovými výrobky, doutníky, kuřáckým sortimentem, nápoji, cukrovinkami a slanými potravinami. Prodejny DON PEALO slouží také jako výdejní místo pro vaše nákupy z eshopu a to ZDARMA, poštovné neplatíte!</p>",
+    "phone": "+420 702 167 209",
+    "seoDescription": "Velký výběr vína a sektů, destilátů, tabáku a doutníků, slaných i sladkých delikates nejen pro požitkáře. V centru Liberce.",
+    "seoTitle": "OC Plaza Liberec | Don Pealo",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/donpealo",
+      "instagram": "https://www.instagram.com/donpealo/"
+    },
+    "website": "https://www.donpealo.cz",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "101"
+    ]
+  },
+  {
+    "_id": "69d62439007d6bdc2e6167bb",
+    "name": "Kadeřnictví no.1",
+    "slug": "kadernictvi-czk",
+    "gallery": [
+      "/api/uploads/0244d84a-2078-4e9d-bb61-ae174fb212fa.jpg"
+    ],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "132",
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:47:37.983Z",
+    "updatedAt": "2026-04-28T15:32:18.090Z",
+    "__v": 2,
+    "logo": "/api/uploads/48392972-3e38-4b33-8948-6c15831f775f.svg",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "132"
+    ],
+    "phone": "+420 772 000 100",
+    "website": "https://kadernictvi1.cz/domu",
+    "description": "<p>Kadeřnictví No.1 je místo, kde se spojuje profesionální péče o vlasy s přátelskou atmosférou. Nabízíme širokou škálu služeb za dostupné ceny, bez nutnosti objednání, pro dámy, pány i děti.</p>",
+    "seoDescription": "Kadeřnictví bez nutnosti objednání, pro dámy, pány i děti.",
+    "seoTitle": "Kadeřnictví no.1",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/100czk",
+      "instagram": "https://www.instagram.com/kadernictvi_no.1"
+    }
+  },
+  {
+    "_id": "69d6247e007d6bdc2e6167d5",
+    "name": "ČPP",
+    "slug": "cpp",
+    "gallery": [
+      "/api/uploads/45369a1f-ec84-4d53-b57b-51ca80affeca.jpg"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "17:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:48:46.629Z",
+    "updatedAt": "2026-04-28T12:51:32.574Z",
+    "__v": 3,
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "logo": "/api/uploads/3b1d2011-8499-47e1-be09-dba0b7d6df18.png",
+    "unitCode": "112c",
+    "description": "<p>Česká podnikatelská pojišťovna (ČPP) je univerzální pojišťovnou, která nabízí svým klientům moderní produkty a&nbsp;komplexní pojistná řešení v&nbsp;oblasti životního i&nbsp;neživotního pojištění. Na českém pojistném trhu působí od roku 1995.</p>",
+    "email": "liberec@cpp.cz",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "phone": "+420 957 548 580",
+    "seoDescription": "Česká podnikatelská pojišťovna je univerzální pojišťovnou, která nabízí svým klientům moderní produkty a komplexní pojistná řešení.",
+    "seoTitle": "ČPP",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/cppcesko/",
+      "instagram": "https://www.instagram.com/cppcesko/"
+    },
+    "unitCodes": [
+      "112c"
+    ],
+    "website": "https://www.cpp.cz"
+  },
+  {
+    "_id": "69d6248f007d6bdc2e6167ee",
+    "name": "Minit",
+    "slug": "minit",
+    "gallery": [
+      "/api/uploads/9602a2e9-7820-4edb-a34d-51a891dbf365.webp",
+      "/api/uploads/50d660ca-4598-4fe4-86d3-25eb226805c2.webp"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "07:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "07:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "07:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "07:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "07:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "08:00",
+        "close": "17:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "08:00",
+        "close": "17:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:49:03.441Z",
+    "updatedAt": "2026-04-30T06:02:14.007Z",
+    "__v": 3,
+    "description": "<p>Minitky jsou nejoblíbenější mini křupavé koláčky z jemného listového těsta. Jsou plněny originálními slanými i sladkými nádivkami. Oblíbený pamlsek pro děti i dospělé. Které vám můžeme nabídnout?</p><p>Oblíbené šťavnaté mini dortíčky, neboli muffiny z jemného piškotového těsta jsou ochucené čokoládou, nebo doplněné ovocem. </p><p>Máme v nabídce několik druhů pizzy z klasického kynutého těsta.</p><p>Voňavá káva v nabídce.</p><p></p>",
+    "email": "minit@minitbakery.cz",
+    "floorId": "6998e15a93a13d0796eaa812",
+    "logo": "/api/uploads/bad2f026-dd7c-43ec-950f-aa2857a62e78.png",
+    "seoTitle": "Minit Pekárnička",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/minitkacz",
+      "instagram": "https://www.instagram.com/minitcz/"
+    },
+    "unitCode": "S04",
+    "website": "https://www.minitbakery.cz",
+    "categoryIds": [
+      "69e0c90694a872da513e03db",
+      "69e0c8af94a872da513e03d2"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "seoDescription": "Nejoblíbenější mini křupavé koláčky z jemného listového těsta.",
+    "unitCodes": [
+      "S04"
+    ]
+  },
+  {
+    "_id": "69d624ad007d6bdc2e616807",
+    "name": "Zlatnictví Kareiva",
+    "slug": "zlatnictvi-kareiva",
+    "gallery": [
+      "/api/uploads/0670ff6f-636f-452f-a281-99231a41ac75.jpg",
+      "/api/uploads/32f0d634-6c4b-49ea-be5c-e88fddd9ed7e.jpg"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:49:33.411Z",
+    "updatedAt": "2026-04-28T15:27:49.556Z",
+    "__v": 5,
+    "floorId": "6998e15a93a13d0796eaa812",
+    "logo": "/api/uploads/7443703e-c6de-43ef-8831-81a77b20c3b6.png",
+    "unitCode": "S09",
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "S09"
+    ],
+    "description": "<p>Navštivte náš stánek v OC Plaza, kde na jednom místě najdete bohatý výběr zlata a stříbra i kompletní zlatnický servis. Zakládáme si na poctivém řemesle a dlouholeté tradici.</p>",
+    "phone": "+420 485 110 651",
+    "seoDescription": "Široká nabídka prstenů, řetízků, náušnic a dalších doplňků.  Opravy, čištění a renovace šperků.",
+    "seoTitle": "Zlatnictví Kareiva"
+  },
+  {
+    "_id": "69d624df007d6bdc2e616820",
+    "name": "InJup",
+    "slug": "injup",
+    "gallery": [
+      "/api/uploads/e24686ae-b32e-4362-b0ab-edf7ab072190.jpg"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "19:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-08T09:50:23.767Z",
+    "updatedAt": "2026-04-28T13:19:06.736Z",
+    "__v": 5,
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "logo": "/api/uploads/d3a4397b-4b1a-4984-8f11-1bb001fe7731.webp",
+    "unitCode": "S03",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "S03"
+    ],
+    "description": "<p>Injup, to je prodej elektronických cigaret, veškerého příslušenství k&nbsp;elektronickým cigaretám, velký výběr příchutí – tabákové, cherry, menthol, vanilla, coffee, vodní meloun, ananas. A&nbsp;mnoho dalšího!</p><p>Elektronická cigareta je moderní trend v&nbsp;odvykání kouření. V&nbsp;případě elektronických cigaret nedochází k&nbsp;žádnému hoření a&nbsp;do těla se tak nedostávají škodlivé látky jako při kouření běžných cigaret (zejména dehet). Díky elektronickým cigaretám můžete postupně omezovat kouření a&nbsp;nakonec s&nbsp;ním třeba i&nbsp;úplně přestat.</p><p>S&nbsp;výběrem elektronické cigarety, síly nikotinu v&nbsp;liquidu (náplni) vám ochotně pomůže náš personál.</p>",
+    "phone": "+420 737 819 134",
+    "seoDescription": "Prodej veškerého příslušenství k elektronickým cigaretám, velký výběr příchutí.",
+    "seoTitle": "InJup"
+  },
+  {
+    "_id": "69e093ef94a872da513dfe7a",
+    "name": "Tchibo",
+    "slug": "tchibo",
+    "logo": "/api/uploads/f3417bdb-b054-4317-87c4-5a8e217e6b7f.png",
+    "gallery": [
+      "/api/uploads/bb95564e-6ffc-4d34-9200-2f18d553aac0.jpg"
+    ],
+    "categoryIds": [
+      "69e0c8af94a872da513e03d2"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      }
+    ],
+    "isActive": false,
+    "publishDate": "2026-08-01T00:00:00.000Z",
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-16T07:46:55.501Z",
+    "updatedAt": "2026-04-29T10:35:17.375Z",
+    "__v": 2,
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "111",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "unitCodes": [
+      "111"
+    ]
+  },
+  {
+    "_id": "69e79862c5b0dd694b72ee2e",
+    "name": "OC Plaza",
+    "slug": "oc-plaza",
+    "logo": "/api/uploads/281ffa94-982d-41cc-a98a-71fb8d6ea383.png",
+    "gallery": [],
+    "floorIds": [],
+    "categoryIds": [],
+    "unitCodes": [],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "21:00",
+        "closed": false
+      }
+    ],
+    "isActive": false,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-21T15:31:46.680Z",
+    "updatedAt": "2026-04-21T15:31:46.680Z",
+    "__v": 0
+  },
+  {
+    "_id": "69eb5b40fea4e34d250fa071",
+    "name": "Výdejní boxy",
+    "slug": "vydejni-boxy",
+    "description": "<p style=\"text-align: center;\">Vyzvedněte si svoji zásilku během nákupů v OC Plaza Liberec.</p><p style=\"text-align: center;\">U nás najdete celou řadu výdejních boxů!</p>",
+    "gallery": [
+      "/api/uploads/0330583e-3901-41cd-94d2-5a4367dd37af.webp"
+    ],
+    "floorId": "6998e15a93a13d0796eaa812",
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "categoryIds": [
+      "69c5295ca7299fefa702e91d"
+    ],
+    "unitCode": "S11",
+    "unitCodes": [
+      "S11"
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-24T12:00:00.439Z",
+    "updatedAt": "2026-04-24T12:16:09.716Z",
+    "__v": 2,
+    "logo": ""
+  },
+  {
+    "_id": "69eb5e70fea4e34d250fa2da",
+    "name": "Escape Únikové hry",
+    "slug": "escape-unikova-hra",
+    "logo": "/api/uploads/32908384-a760-461e-94ff-e7c2f12c9a23.png",
+    "gallery": [
+      "/api/uploads/827d9b42-4dea-45c9-9c2c-d5b476be11ca.jpg",
+      "/api/uploads/4c6ab19e-6cc9-4b7c-8327-4df61a301be5.jpg"
+    ],
+    "floorIds": [
+      "69c9522f21981f2fc7a5ea4a"
+    ],
+    "categoryIds": [
+      "69c5295da7299fefa702e920"
+    ],
+    "unitCodes": [
+      "313"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "09:00",
+        "close": "20:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": null,
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-24T12:13:36.139Z",
+    "updatedAt": "2026-04-28T13:37:14.220Z",
+    "__v": 2,
+    "floorId": "69c9522f21981f2fc7a5ea4a",
+    "unitCode": "313",
+    "description": "<p style=\"text-align: left;\">Postřeh, představivost, schopnost improvizovat, ale i spolupracovat v týmu – to vše je nyní ve hře!<strong>Hodina plná logického myšlení, hádanek a stop, které otestují tebe a tvé spoluhráče.</strong></p><p style=\"text-align: left;\">Prožijte společně a na vlastní kůži napínavé únikové drama ve hře <strong>Útěk z ponorky</strong>, nebo se vydejte pátrat po vzácných objevech dávné expedice v únikové hře <strong>Paleontolog</strong>.</p>",
+    "email": "liberec@one-two.eu",
+    "phone": "+420 777 107 044",
+    "seoDescription": "Únikové hry v OC Plaza Liberec. Prožijte společně a na vlastní kůži napínavé únikové drama.",
+    "seoTitle": "Escape Únikové hry",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/onetwoliberec"
+    },
+    "website": "https://one-two.eu/liberec/"
+  },
+  {
+    "_id": "69ef21bafea4e34d250fa507",
+    "name": "All You Can Eat Sakura's",
+    "slug": "all-you-can-eat-sakuras",
+    "logo": "/api/uploads/3b923f29-6b05-4351-806a-daecd02d4193.png",
+    "gallery": [
+      "/api/uploads/fb4294d7-6d7d-4a7b-9ae7-649b93425510.jpg"
+    ],
+    "floorIds": [
+      "6998e15a93a13d0796eaa812"
+    ],
+    "categoryIds": [
+      "69e0c8af94a872da513e03d2"
+    ],
+    "unitCodes": [
+      "104"
+    ],
+    "openingHours": [
+      {
+        "day": "monday",
+        "open": "11:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "tuesday",
+        "open": "11:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "wednesday",
+        "open": "11:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "thursday",
+        "open": "11:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "friday",
+        "open": "11:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "saturday",
+        "open": "11:00",
+        "close": "21:00",
+        "closed": false
+      },
+      {
+        "day": "sunday",
+        "open": "11:00",
+        "close": "21:00",
+        "closed": false
+      }
+    ],
+    "isActive": true,
+    "publishDate": "2026-05-04T00:00:00.000Z",
+    "specialOpeningHours": [],
+    "createdAt": "2026-04-27T08:43:38.584Z",
+    "updatedAt": "2026-05-04T08:41:52.773Z",
+    "__v": 5,
+    "floorId": "6998e15a93a13d0796eaa812",
+    "unitCode": "104",
+    "seoTitle": "All You Can Eat Sakura's",
+    "description": "<p>To nejlepší sushi tě čeká v Sakura’s! Naše all you can eat sushi má všechno! Široký výběr sushi od klasických až po prémiové, teplé speciality i sladké dezerty nebo ovoce. <br><br>Stačí si jen vybrat z široké nabídky talířků a ochutnávat, dokud máš hlad.</p>"
+  }
+]

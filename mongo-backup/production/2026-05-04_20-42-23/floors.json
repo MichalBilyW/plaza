@@ -1,0 +1,72 @@
+[
+  {
+    "_id": "69c951a621981f2fc7a5ea1f",
+    "name": "-2. patro",
+    "level": -2,
+    "svgMap": "/api/uploads/af46a933-cb5e-4f13-974f-875764da1bb2.svg",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2026-03-29T16:21:58.756Z",
+    "updatedAt": "2026-05-03T21:20:27.621Z",
+    "__v": 1,
+    "privateOccupiedUnitCodes": []
+  },
+  {
+    "_id": "6998e15a93a13d0796eaa812",
+    "name": "Přízemí",
+    "level": 0,
+    "mapImage": "/api/uploads/2ec4553c-302e-4e1b-aab3-fe962cab8b26.svg",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2026-02-20T22:34:02.841Z",
+    "updatedAt": "2026-04-30T06:01:04.438Z",
+    "__v": 2,
+    "svgMap": "/api/uploads/17929774-1542-48ef-939f-f61c30a78197.svg",
+    "privateOccupiedUnitCodes": [
+      "111"
+    ]
+  },
+  {
+    "_id": "69c9522f21981f2fc7a5ea4a",
+    "name": "2. patro",
+    "level": 2,
+    "svgMap": "/api/uploads/806d0138-4c8b-41da-b7ad-26ef2384e74a.svg",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2026-03-29T16:24:15.881Z",
+    "updatedAt": "2026-04-23T19:36:48.263Z",
+    "__v": 0
+  },
+  {
+    "_id": "69c9520a21981f2fc7a5ea3f",
+    "name": "1. patro",
+    "level": 1,
+    "svgMap": "/api/uploads/1b887f9a-a57a-48c7-a091-ee9e9c0e2ea0.svg",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2026-03-29T16:23:38.345Z",
+    "updatedAt": "2026-05-04T17:33:38.481Z",
+    "__v": 7,
+    "privateOccupiedUnitCodes": [
+      "213b",
+      "219",
+      "221",
+      "222",
+      "212",
+      "211",
+      "213a"
+    ]
+  },
+  {
+    "_id": "69ea74ca8a4d1622bee19dfe",
+    "name": "-3. patro",
+    "level": -3,
+    "svgMap": "/api/uploads/9e947689-4726-4769-a938-9c1005265a30.svg",
+    "privateOccupiedUnitCodes": [],
+    "isActive": true,
+    "sortOrder": 0,
+    "createdAt": "2026-04-23T19:36:42.617Z",
+    "updatedAt": "2026-05-03T21:17:04.443Z",
+    "__v": 0
+  }
+]

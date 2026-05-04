@@ -21,9 +21,22 @@
 						to="/obchody"
 						class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]"
 					>
-						<span class="font-bold text-plaza text-xl md:text-2xl lg:text-3xl">{{
-							animatedShopsCount
-						}}</span>
+						<span
+							class="relative inline-block text-right align-baseline font-bold text-plaza text-xl md:text-2xl lg:text-3xl tabular-nums"
+						>
+							<span class="invisible" aria-hidden="true">{{ props.shopsCount }}</span>
+							<span
+								class="absolute inset-0"
+								:class="{ 'opacity-0': !countersVisible }"
+							>
+								{{ animatedShopsCount }}
+							</span>
+							<span
+								v-if="!countersVisible"
+								class="absolute left-0 right-0 top-1/2 h-[0.72em] -translate-y-1/2 skeleton-shimmer rounded"
+								aria-hidden="true"
+							></span>
+						</span>
 						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
 							t('home.infoSection.shops')
 						}}</span>
@@ -48,9 +61,24 @@
 						to="/obchody?kategorie=restaurace-a-kavarny"
 						class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]"
 					>
-						<span class="font-bold text-plaza text-xl md:text-2xl lg:text-3xl">{{
-							animatedRestaurantsCount
-						}}</span>
+						<span
+							class="relative inline-block text-right align-baseline font-bold text-plaza text-xl md:text-2xl lg:text-3xl tabular-nums"
+						>
+							<span class="invisible" aria-hidden="true">{{
+								props.restaurantsCount
+							}}</span>
+							<span
+								class="absolute inset-0"
+								:class="{ 'opacity-0': !countersVisible }"
+							>
+								{{ animatedRestaurantsCount }}
+							</span>
+							<span
+								v-if="!countersVisible"
+								class="absolute left-0 right-0 top-1/2 h-[0.72em] -translate-y-1/2 skeleton-shimmer rounded"
+								aria-hidden="true"
+							></span>
+						</span>
 						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
 							t('home.infoSection.restaurants')
 						}}</span>
@@ -76,9 +104,22 @@
 						class="max-md:hidden relative group max-md:justify-center font-heading bg-white rounded-lg shadow-lg px-4 md:pl-4 md:pr-12 py-2 md:py-3.5 text-right h-auto w-[250px] md:w-[320px]"
 						@click="openParkingModal"
 					>
-						<span class="font-bold text-plaza text-xl md:text-2xl lg:text-3xl">{{
-							animatedParkingCount
-						}}</span>
+						<span
+							class="relative inline-block text-right align-baseline font-bold text-plaza text-xl md:text-2xl lg:text-3xl tabular-nums"
+						>
+							<span class="invisible" aria-hidden="true">{{ PARKING_SPOTS }}</span>
+							<span
+								class="absolute inset-0"
+								:class="{ 'opacity-0': !countersVisible }"
+							>
+								{{ animatedParkingCount }}
+							</span>
+							<span
+								v-if="!countersVisible"
+								class="absolute left-0 right-0 top-1/2 h-[0.72em] -translate-y-1/2 skeleton-shimmer rounded"
+								aria-hidden="true"
+							></span>
+						</span>
 						<span class="text-plaza-dark md:text-xl lg:text-2xl ml-1 lg:ml-1.5">{{
 							t('home.infoSection.parkingSpots')
 						}}</span>
@@ -202,7 +243,9 @@
 								:key="currentNews._id"
 								:src="currentNews.image"
 								:alt="currentNews.name || t('home.infoSection.newsAlt')"
-								loading="lazy"
+								loading="eager"
+								fetchpriority="high"
+								decoding="async"
 								class="news-slide absolute inset-0 w-full h-full object-contain"
 								:class="
 									currentNews.content
@@ -223,10 +266,10 @@
 						<!-- Hover badge -->
 						<div
 							v-if="currentNews?.content"
-							class="absolute bottom-6 right-6 md:opacity-90 touch:!opacity-100 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+							class="absolute bottom-3 right-3 md:bottom-6 md:right-6 opacity-35 md:opacity-90 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
 						>
 							<span
-								class="bg-plaza text-white px-4 py-2 rounded-[5px_20px_5px_5px] w-full shadow-lg"
+								class="bg-plaza text-white px-2.5 py-1 text-xs md:px-4 md:py-2 md:text-base rounded-[4px_12px_4px_4px] md:rounded-[5px_20px_5px_5px] w-full shadow-md md:shadow-lg"
 								v-html="t('home.infoSection.showMore')"
 							>
 							</span>
@@ -335,6 +378,7 @@ const AUTOPLAY_INTERVAL = 4000
 // === Refs ===
 const sectionRef = ref<HTMLElement | null>(null)
 const hasAnimated = ref(false)
+const countersVisible = ref(false)
 
 // === Animated counters ===
 const animatedShopsCount = ref(0)
@@ -443,13 +487,20 @@ const prevNews = () => {
 }
 
 // === Count-up animation ===
-const animateCount = (target: number, setter: (val: number) => void, duration = 3000) => {
+const animateCount = (
+	from: number,
+	target: number,
+	setter: (val: number) => void,
+	duration = 900,
+) => {
 	const startTime = performance.now()
+	const delta = target - from
 	const animate = (currentTime: number) => {
+		countersVisible.value = true
 		const elapsed = currentTime - startTime
 		const progress = Math.min(elapsed / duration, 1)
 		const eased = 1 - Math.pow(1 - progress, 4) // easeOutQuart
-		setter(Math.round(target * eased))
+		setter(Math.round(from + delta * eased))
 		if (progress < 1) requestAnimationFrame(animate)
 	}
 	requestAnimationFrame(animate)
@@ -458,9 +509,13 @@ const animateCount = (target: number, setter: (val: number) => void, duration = 
 const startCountAnimation = () => {
 	if (hasAnimated.value) return
 	hasAnimated.value = true
-	animateCount(props.shopsCount, (v) => (animatedShopsCount.value = v))
-	animateCount(props.restaurantsCount, (v) => (animatedRestaurantsCount.value = v))
-	animateCount(PARKING_SPOTS, (v) => (animatedParkingCount.value = v))
+	countersVisible.value = false
+	animatedShopsCount.value = 0
+	animatedRestaurantsCount.value = 0
+	animatedParkingCount.value = 0
+	animateCount(0, props.shopsCount, (v) => (animatedShopsCount.value = v), 1400)
+	animateCount(0, props.restaurantsCount, (v) => (animatedRestaurantsCount.value = v), 1400)
+	animateCount(0, PARKING_SPOTS, (v) => (animatedParkingCount.value = v), 1400)
 }
 
 // === Lifecycle ===
@@ -481,10 +536,14 @@ onUnmounted(() => {
 // Re-animate when props change
 watch(
 	() => [props.shopsCount, props.restaurantsCount],
-	() => {
+	([shopsCount, restaurantsCount]) => {
 		if (hasAnimated.value) {
-			animateCount(props.shopsCount, (v) => (animatedShopsCount.value = v))
-			animateCount(props.restaurantsCount, (v) => (animatedRestaurantsCount.value = v))
+			animateCount(animatedShopsCount.value, shopsCount, (v) => (animatedShopsCount.value = v))
+			animateCount(
+				animatedRestaurantsCount.value,
+				restaurantsCount,
+				(v) => (animatedRestaurantsCount.value = v),
+			)
 		}
 	},
 )

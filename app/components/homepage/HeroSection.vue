@@ -26,6 +26,7 @@
 				:alt="t('home.heroImageAlt')"
 				loading="eager"
 				fetchpriority="high"
+				decoding="async"
 				width="1536"
 				height="400"
 				class="w-full h-[240px] sm:h-[320px] md:h-[400px] object-cover"

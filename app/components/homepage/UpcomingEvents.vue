@@ -7,7 +7,7 @@
 			<!-- Desktop: side-by-side layout / Mobile: stacked -->
 			<div
 				class="flex flex-col lg:flex-row lg:items-start lg:gap-10"
-				:class="{ 'lg:justify-center': events.length <= 2 }"
+				:class="{ 'lg:justify-center': useCompactLayout }"
 			>
 				<!-- Left side: heading + perex + arrows -->
 				<div class="lg:w-[220px] shrink-0 mb-8 lg:mb-0 lg:pt-4">
@@ -64,7 +64,7 @@
 				</div>
 
 				<!-- Right side: slider -->
-				<div :class="events.length <= 2 ? 'shrink-0' : 'flex-1 min-w-0'">
+				<div :class="useCompactLayout ? 'shrink-0' : 'flex-1 min-w-0'">
 					<!-- Events skeleton -->
 					<div v-if="pending" class="flex gap-5 overflow-hidden">
 						<div
@@ -95,7 +95,7 @@
 							@resize="onSwiperResize"
 						>
 							<SwiperSlide
-								v-for="event in events"
+								v-for="(event, index) in events"
 								:key="event._id"
 								class="!w-[290px]"
 							>
@@ -114,7 +114,9 @@
 											v-if="event.image"
 											:src="event.image"
 											:alt="event.name"
-											loading="lazy"
+											:loading="index < 3 ? 'eager' : 'lazy'"
+											:fetchpriority="index < 3 ? 'high' : 'auto'"
+											decoding="async"
 											class="w-full h-full object-cover md:group-hover:brightness-95 transition duration-300"
 										/>
 										<svg
@@ -142,7 +144,8 @@
 										<img
 											:src="event.shop.logo"
 											:alt="event.shop.name"
-											loading="lazy"
+											:loading="index < 3 ? 'eager' : 'lazy'"
+											decoding="async"
 											class="max-h-[30px] max-w-[120px] object-contain"
 										/>
 									</div>
@@ -187,10 +190,12 @@ import 'swiper/css/navigation'
 const { t } = useI18n()
 const { openModal: openEventModal } = useEventModal()
 
-defineProps<{
+const props = defineProps<{
 	events: Event[]
 	pending: boolean
 }>()
+
+const useCompactLayout = computed(() => !props.pending && props.events.length <= 2)
 
 // === Swiper navigation ===
 const prevBtnRef = ref<HTMLElement | null>(null)

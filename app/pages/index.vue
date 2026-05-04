@@ -7,7 +7,7 @@
 		<HomepageHeroSection :homepage="homepage" :pending="homepagePending" />
 
 		<!-- Info + News Section -->
-		<LazyHomepageInfoNewsSection
+		<HomepageInfoNewsSection
 			:shops-count="shopsCount"
 			:restaurants-count="restaurantsCount"
 			:news="news"
@@ -15,35 +15,18 @@
 		/>
 
 		<!-- Upcoming events -->
-		<LazyHomepageUpcomingEvents :events="events" :pending="eventsPending" />
+		<HomepageUpcomingEvents :events="events" :pending="eventsPending" />
 
 		<!-- Featured shops -->
 		<LazyHomepageFeaturedShops :shops="shops" :pending="shopsPending" />
 
 		<!-- Map section -->
-		<MapSection />
+		<LazyMapSection />
 	</div>
 </template>
 
 <script setup lang="ts">
 import type { Shop, Event, News, Category, Homepage } from '@/shared/types'
-import type { FloorUnitsResponse } from '@/shared/map/units'
-
-// Prefetch map dat na serveru — data přijdou v SSR payload, MapSection je ihned zobrazí
-const { data: mapUnits } = await useFetch<FloorUnitsResponse[]>('/api/map/units', { key: 'map-units' })
-
-// Preload log obchodů defaultního patra (přízemí / první patro v odpovědi).
-// Data jsou dostupná v SSR → browser dostane <link rel="preload"> v <head>
-// ještě před tím, než JS spočítá geometrii mapy, čímž se eliminuje pozdní načítání log.
-const mapLogoPreloads = computed(() => {
-	const firstFloor = mapUnits.value?.[0]
-	if (!firstFloor) return []
-	return firstFloor.units
-		.filter((u) => u.shop?.logo)
-		.map((u) => ({ rel: 'preload' as const, as: 'image' as const, href: u.shop!.logo! }))
-})
-
-useHead(computed(() => ({ link: mapLogoPreloads.value })))
 
 const { t } = useI18n()
 
@@ -83,24 +66,40 @@ useJsonLd({
 })
 
 // === Data fetching - vše paralelně ===
-const { data: homepage, pending: homepagePending } = useFetch<Homepage>('/api/homepage', {
-	key: 'homepage',
-})
+// Viditelné homepage sekce čekáme při SSR, aby se první render nepropadl do skeletonů.
+// Mapu neblokujeme: /api/map/units načítá a parsuje SVG mapy, což zbytečně zpomaluje první HTML.
+const [
+	{ data: homepage, pending: homepagePending },
+	{ data: shopsData, pending: shopsPending },
+	{ data: categoriesData },
+	{ data: newsData, pending: newsPending },
+	{ data: eventsData, pending: eventsPending },
+] = await Promise.all([
+	useFetch<Homepage>('/api/homepage', { key: 'homepage' }),
+	useFetch<{
+		data: Shop[]
+		pagination: { total: number }
+	}>('/api/shops', {
+		key: 'homepage-shops',
+		query: { limit: 100, isActive: true },
+	}),
+	useFetch<{ data: Category[] }>('/api/categories', {
+		key: 'homepage-categories',
+		query: { withShopsOnly: true },
+	}),
+	useFetch<{ data: News[] }>('/api/news', {
+		key: 'homepage-news',
+		query: { isActive: true, notExpired: true, limit: 10 },
+	}),
+	useFetch<{ data: Event[] }>('/api/events', {
+		key: 'homepage-events',
+		query: { limit: 100, isActive: true, notExpired: true },
+	}),
+])
 
-const { data: shopsData, pending: shopsPending } = useFetch<{
-	data: Shop[]
-	pagination: { total: number }
-}>('/api/shops', {
-	key: 'homepage-shops',
-	query: { limit: 100, isActive: true },
-})
 const shops = computed(() => shopsData.value?.data || [])
 const shopsCount = computed(() => shopsData.value?.pagination?.total || 0)
 
-const { data: categoriesData } = useFetch<{ data: Category[] }>('/api/categories', {
-	key: 'homepage-categories',
-	query: { withShopsOnly: true },
-})
 const restaurantsCount = computed(() => {
 	const foodCategory = categoriesData.value?.data?.find(
 		(cat) => cat.name === 'Restaurace & kavárny',
@@ -108,15 +107,34 @@ const restaurantsCount = computed(() => {
 	return foodCategory?.shopCount || 0
 })
 
-const { data: newsData, pending: newsPending } = useFetch<{ data: News[] }>('/api/news', {
-	key: 'homepage-news',
-	query: { isActive: true, notExpired: true, limit: 10 },
-})
 const news = computed(() => newsData.value?.data || [])
-
-const { data: eventsData, pending: eventsPending } = useFetch<{ data: Event[] }>('/api/events', {
-	key: 'homepage-events',
-	query: { limit: 100, isActive: true, notExpired: true },
-})
 const events = computed(() => eventsData.value?.data || [])
+
+const criticalImagePreloads = computed(() => {
+	const urls = [
+		news.value[0]?.image,
+		...events.value.slice(0, 3).map((event) => event.image),
+		...events.value.slice(0, 3).map((event) => event.shop?.logo),
+	].filter((url): url is string => Boolean(url))
+
+	const seen = new Set<string>()
+	return urls
+		.filter((url) => {
+			if (seen.has(url)) return false
+			seen.add(url)
+			return true
+		})
+		.map((href, index) => ({
+			rel: 'preload' as const,
+			as: 'image' as const,
+			href,
+			fetchpriority: index === 0 ? 'high' : 'auto',
+		}))
+})
+
+useHead(
+	computed(() => ({
+		link: criticalImagePreloads.value,
+	})),
+)
 </script>

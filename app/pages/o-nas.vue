@@ -56,7 +56,9 @@
 							<img
 								:src="image"
 								:alt="`${t('aboutPage.galleryImage')} ${index + 1}`"
-								loading="eager"
+								:loading="index === 0 ? 'eager' : 'lazy'"
+								:fetchpriority="index === 0 ? 'high' : 'auto'"
+								decoding="async"
 								class="w-full h-full object-cover"
 							/>
 						</SwiperSlide>
@@ -68,6 +70,8 @@
 						:src="generalInfo.gallery[0]"
 						:alt="`${t('aboutPage.galleryImage')} 1`"
 						loading="eager"
+						fetchpriority="high"
+						decoding="async"
 						class="w-full aspect-[16/9] object-cover"
 					/>
 				</template>
@@ -430,9 +434,26 @@ const slideNext = () => {
 }
 
 // Fetch general info
-const { data: generalInfo, pending } = useFetch<GeneralInfo>('/api/general-info', {
+const { data: generalInfo, pending } = await useFetch<GeneralInfo>('/api/general-info', {
 	key: 'about-general-info',
 })
+
+const firstGalleryImage = computed(() => generalInfo.value?.gallery?.[0] || null)
+
+useHead(
+	computed(() => ({
+		link: firstGalleryImage.value
+			? [
+					{
+						rel: 'preload' as const,
+						as: 'image' as const,
+						href: firstGalleryImage.value,
+						fetchpriority: 'high',
+					},
+				]
+			: [],
+	})),
+)
 
 const hasGeneralInfoText = computed(() => {
 	const text = generalInfo.value?.text

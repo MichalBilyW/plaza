@@ -1,0 +1,46 @@
+[
+  {
+    "_id": "69b8560acc494574d432ac53",
+    "icon": "/api/uploads/2f9a7ece-b9da-4a0d-a892-5920c31540d1.svg",
+    "shortDescription": "Bankomaty",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2026-03-16T19:12:10.758Z",
+    "updatedAt": "2026-04-30T06:03:08.431Z",
+    "__v": 0,
+    "description": ""
+  },
+  {
+    "_id": "69b85554f36002c8d9dae21b",
+    "icon": "/api/uploads/9424770f-d8ca-4dae-b3d8-ec9b705cbd06.svg",
+    "shortDescription": "Parkování",
+    "isActive": true,
+    "sortOrder": 0,
+    "createdAt": "2026-03-16T19:09:08.509Z",
+    "updatedAt": "2026-04-29T09:56:19.175Z",
+    "__v": 0,
+    "description": "<p><img class=\"max-w-full h-auto rounded-lg\" src=\"/api/uploads/f39b9e6d-63c5-436c-8d7c-84d337766704.png\"></p>"
+  },
+  {
+    "_id": "69b85565f36002c8d9dae221",
+    "icon": "/api/uploads/278b13bc-e0b3-4bf7-81ff-15bb58213f51.svg",
+    "shortDescription": "Nabíjení pro elektromobily",
+    "description": "<p style=\"text-align: center;\">V OC Plaza naleznete celkem 5 parkovacích míst s možností nabíjení pro elektromobily. Patro -2.</p>",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2026-03-16T19:09:25.043Z",
+    "updatedAt": "2026-05-04T14:49:23.954Z",
+    "__v": 0
+  },
+  {
+    "_id": "69e683691c6170f0102830ca",
+    "icon": "/api/uploads/0fae6d7a-52c2-4c4d-a502-e25398765d74.svg",
+    "shortDescription": "Výdejní boxy",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2026-04-20T19:50:01.920Z",
+    "updatedAt": "2026-05-04T14:48:06.355Z",
+    "__v": 0,
+    "description": "<p style=\"text-align: center;\">Vstup z ulice Palachova. </p><p style=\"text-align: center;\">Vyzvedněte si svoji zásilku během nákupů v OC Plaza Liberec.</p><p style=\"text-align: center;\">U nás najdete celou řadu výdejních boxů!</p>"
+  }
+]
