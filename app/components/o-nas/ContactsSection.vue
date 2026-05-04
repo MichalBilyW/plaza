@@ -1,5 +1,5 @@
 <template>
-	<section v-if="!pending && contacts && contacts.length > 0" class="py-12">
+	<section id="kontakt" v-if="!pending && contacts && contacts.length > 0" class="py-12 scroll-mt-32">
 		<div class="container-small px-4">
 			<!-- Nadpis -->
 			<h2

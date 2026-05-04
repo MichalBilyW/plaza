@@ -275,6 +275,10 @@ export default defineNuxtConfig({
 		'/oteviraci-doba-pasaze-oc-plaza-liberec-n158': {
 			redirect: { to: '/o-nas#oteviraci-doba', statusCode: 301 },
 		},
+		'/oninky-s1': { redirect: { to: '/akce', statusCode: 301 } },
+		'/prehled-otevrenych-obchodu-n645': { redirect: { to: '/obchody', statusCode: 301 } },
+		'/petcenter-n25': { redirect: { to: '/obchody', statusCode: 301 } },
+		'/kontakt-s4': { redirect: { to: '/o-nas#kontakt', statusCode: 301 } },
 
 		// CMS routes - private, never index
 		'/cms': {
